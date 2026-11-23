@@ -54,7 +54,8 @@ some cells are in neither the store nor the dataset; it is released before the s
 
 | key | default | meaning |
 |---|---|---|
-| `lens` | required | the lens bundle folder |
+| `method` | `lens` | `lens`: a served lens over stored activations; `model_continuation`: the baseline below |
+| `lens` | required for `method=lens` | the lens bundle folder |
 | `out` | required | the readouts root: `<out>/<eval>.jsonl` with its sidecar |
 | `families`, `--fast`, `plan` | | which evals: a comma list or `all`, the fast subset, or a plan file (below) |
 | `store`, `dataset`, `dataset_revision`, `revision`, `dtype`, `model`, `device` | as on `capture` | where the activations come from |
@@ -104,6 +105,30 @@ all keys of the command: `gpus`, `modal_gpu` (default `B200`), `modal_volume`, `
 `modal_secret` (a secret holding `HF_TOKEN`, only if your dataset needs one), `modal_app`,
 `modal_timeout`, `modal_sglang` (the pip requirement of the server). The image is a starting
 point: a serving stack moves fast, so pin `modal_sglang` to the version you tested.
+
+## The model-continuation baseline
+
+How much of a lens's score could be had without reading any activation? `method=
+model_continuation` gives the unmodified subject model each question's prompt, exactly as the
+benchmark renders it, cut after a read position's token, and takes what the model says next as
+that position's readout. It is served the same way (plain generation from token ids, no token
+bank, no store), with the lenses' sampling: temperature 1.0, top-k 64 then top-p 0.95 in the
+order of `generate`, at most 256 new tokens, one sample.
+
+```bash
+uv run wsbench read --fast method=model_continuation model_dir=<model snapshot folder> \
+    out=outputs/readouts/model_continuation judge=True
+```
+
+Choices that keep the comparison with a lens fair: a row ends at the end-of-text token, not at
+the end of a chat turn, so when the cut is the last token of the user's turn the readout is
+the turn boundary followed by the model's reply; a question that is read under steering is
+continued unsteered; no lens prompt is involved, so nothing of a lens's template can leak.
+The baseline has no layer axis: there is one row per (question, position), written at one
+layer number (`layer=`, default 44), and `judge=True` judges that layer alone
+(`wsbench run ... layers=44`). `model_dir=` is a local folder with the model's files;
+`pack_cells=`, `server_args=`, `in_flight=`, `work=`, `limit=`, `shard=` / `shards=` and the
+Modal keys mean what they mean for a lens. `src/wsbench/produce/served/continuation.py`.
 
 ## Your own cell list
 

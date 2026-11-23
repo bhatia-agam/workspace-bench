@@ -1839,7 +1839,12 @@ class Read(Capture):
 
     def __init__(self) -> None:
         super().__init__()
-        self.lens = pydra.REQUIRED  # a lens bundle folder (`wsbench bundle`)
+        self.lens = ""  # method=lens: a lens bundle folder (`wsbench bundle`)
+        # lens: a served lens over stored activations | model_continuation: the baseline, what
+        # the unmodified model says next after each read position (needs model_dir=, no lens=)
+        self.method = "lens"
+        self.model_dir = ""  # method=model_continuation: a local snapshot folder of the model
+        self.layer = 44  # method=model_continuation: the one layer number its rows carry
         self.out = pydra.REQUIRED  # the readouts root: one <eval>.jsonl each, with its sidecar
         self.engine = "sglang"
         self.pack_cells = 60000  # cells decoded per server start; small evals share one
@@ -1862,7 +1867,21 @@ class Read(Capture):
 
     def finalize(self) -> None:
         super().finalize()
-        self.lens = _path(self.lens)
+        self.method = str(self.method)
+        if self.method not in ("lens", "model_continuation"):
+            raise ValueError(f"method is lens or model_continuation, got {self.method!r}")
+        self.layer = _int(self.layer)
+        if self.method == "lens":
+            if not self.lens or self.model_dir:
+                raise ValueError("method=lens needs lens=<bundle folder> (and no model_dir=)")
+            self.lens = _path(self.lens)
+        else:
+            if not self.model_dir or self.lens:
+                raise ValueError("method=model_continuation needs model_dir=<folder> and no lens=")
+            if self.greedy or self.sampler != "hf" or self.check:
+                raise ValueError("method=model_continuation takes no greedy=, sampler= or check=")
+            self.model_dir = _path(self.model_dir)
+            self.lens = None
         self.out = _path(self.out)
         self.engine = str(self.engine)
         self.pack_cells = _int(self.pack_cells)
@@ -1942,6 +1961,8 @@ class Read(Capture):
             jobs = [
                 read.job(f, specs, reads=self.reads, fast=self.fast) for f, specs in plans.items()
             ]
+        if self.method == "model_continuation":
+            return self._continuations(jobs)
         options: dict[str, Any] = {
             "greedy": self.greedy,
             "sampler": self.sampler,
@@ -2002,12 +2023,52 @@ class Read(Capture):
         )
         if not self.judge:
             return 0
+        return self._judge(jobs)
+
+    def _judge(self, jobs: list[Any], layers: str = "") -> int:
         argv = [f"readouts_root={self.out}", f"out={self.judged}"]
         argv += ["fast=True"] if self.fast else []
         argv += [f"families={','.join(j.family for j in jobs)}"]
         argv += ["allow_missing=True"] if self.limit else []
+        argv += [f"layers={layers}"] if layers else []
         print(f"\n== judge: wsbench run {' '.join(argv)}")
         return _run_command(RunFamilies, argv)
+
+    def _continuations(self, jobs: list[Any]) -> int:
+        """method=model_continuation: no lens, no store; the served model continues each
+        prompt, and the rows are judged at their one layer number."""
+        import shlex
+
+        from wsbench.produce import read, store
+        from wsbench.produce.served import continuation
+
+        options: dict[str, Any] = {"in_flight": self.in_flight}
+        if self.server_args:
+            options["server_args"] = shlex.split(self.server_args)
+        if self.work is not None:
+            options["work"] = self.work
+        try:
+            engine = continuation.ContinuationEngine(self.model_dir, **options)
+            done = read.read_continuations(
+                jobs,
+                engine,
+                self.out,
+                reader=continuation.NAME,
+                layer=self.layer,
+                pack_prompts=self.pack_cells,
+                shard=self.shard,
+                shards=self.shards,
+                limit=self.limit,
+            )
+        except (OSError, store.NoPromptError) as e:
+            print(f"read: {e}", file=sys.stderr)
+            return EXIT_USAGE
+        n_read = sum(d["status"] == "read" for d in done)
+        print(
+            f"readouts -> {self.out}/<eval>.jsonl "
+            f"({n_read} read, {len(done) - n_read} already there)"
+        )
+        return self._judge(jobs, layers=str(self.layer)) if self.judge else 0
 
 
 class Freeze(Command):
