@@ -7,10 +7,8 @@ from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 from urllib.parse import quote, urlencode
 
+from wsbench.viewer import meta
 from wsbench.viewer.query import METHOD_TITLES
-
-METHOD_CLASS = {"olens": "m-olens", "nla": "m-nla", "jlens": "m-jlens", "logit_lens": "m-logit"}
-SERIES = ("#4f46e5", "#0d9488", "#d97706", "#9333ea", "#dc2626", "#0284c7", "#65a30d", "#64748b")
 
 
 def esc(text: Any) -> str:
@@ -38,14 +36,37 @@ def select(name: str, options: Sequence[tuple[str, str]], value: str | None, lab
     )
 
 
-def run_color(n: int) -> str:
-    """The color of the n-th shown lens: its bars, chart series and column dot."""
-    return SERIES[n % len(SERIES)]
-
-
 def method_dot(method: str) -> str:
     title = METHOD_TITLES.get(method, method)
-    return f'<i class="dot {METHOD_CLASS.get(method, "m-other")}" title="{esc(title)}"></i>'
+    return f'<i class="dot m-{meta.method_key(method)}" title="{esc(title)}"></i>'
+
+
+def method_chip(method: str) -> str:
+    """The method's short alias on its colour: the same chip in every table and legend."""
+    key = meta.method_key(method)
+    title, alias, _color = meta.METHODS[key]
+    return (
+        f'<span class="mchip mc-{key}" title="{esc(title)}"><i class="dot m-{key}"></i>'
+        f"{esc(alias)}</span>"
+    )
+
+
+def method_legend(methods: Iterable[str]) -> str:
+    """One entry per method present, in the palette's order: colour, alias, full name."""
+    have = {meta.method_key(m) for m in methods}
+    items = "".join(
+        f"<span>{method_chip(k)}{esc(v[0])}</span>" for k, v in meta.METHODS.items() if k in have
+    )
+    return f'<div class="legend methods">{items}</div>' if items else ""
+
+
+def swatch(style: Mapping[str, str]) -> str:
+    """A run's line sample: its colour (the method's hue, shaded) and dash pattern."""
+    dash = f' stroke-dasharray="{style["dash"]}"' if style.get("dash") else ""
+    return (
+        f'<svg class="lsw" viewBox="0 0 22 10" aria-hidden="true"><line x1="1" y1="5" x2="21" '
+        f'y2="5" stroke="{style["color"]}" stroke-width="3"{dash}/></svg>'
+    )
 
 
 def short_label(label: str, limit: int = 30) -> str:
@@ -68,10 +89,11 @@ def fmt(value: float | None, pct: bool = False) -> str:
 
 def score_cell(
     s: Mapping[str, Any] | None, cls: str = "", pct: bool = False, top: float = 1.0,
-    color: str = "",
+    color: str = "", mark: tuple[str, str] | None = None,
 ) -> str:  # fmt: skip
-    """A number over a thin bar with its 95% CI whisker; ``top`` is the bar's full scale and
-    ``color`` the bar's own color (one per lens column)."""
+    """A number over a thin bar with its 95% CI whisker; ``top`` is the bar's full scale,
+    ``color`` the bar's own color (one per lens column) and ``mark`` the eval's integrity label
+    for this run with its reason (shown as a tag, the reason on hover)."""
     if not s or s.get("value") is None:
         return '<td class="sc none">—</td>'
     v = s["value"]
@@ -92,9 +114,16 @@ def score_cell(
     paint = f";background:{color}" if color else ""
     stale = " stale" if "different judge prompt" in (s.get("note") or "") else ""
     return (
-        f'<td class="sc {cls}{stale}" title="{esc(title)}"><b>{fmt(v, pct)}</b>'
+        f'<td class="sc {cls}{stale}" title="{esc(title)}"><b>{fmt(v, pct)}</b>{eval_mark(mark)}'
         f'<span class="bar"><i class="fill" style="width:{w:.1f}%{paint}"></i>{ci}</span></td>'
     )
+
+
+def eval_mark(mark: tuple[str, str] | None) -> str:
+    """An eval's integrity label for one run (incomplete, provisional, ...), reason on hover."""
+    if not mark or not mark[0]:
+        return ""
+    return f'<span class="tag integ" title="{esc(mark[1])}">{esc(mark[0])}</span>'
 
 
 def badge(passed: int | None, score: float | None = None) -> str:
@@ -116,7 +145,7 @@ def bar_chart(bars: Sequence[Mapping[str, Any]], pct: bool = False, width: int =
     top = 1.0 if (not pct and top <= 1.0) else top * 1.1
     inner = width - pad_l - pad_r
     h = row * len(bars) + 22
-    out = [f'<svg class="chart" viewBox="0 0 {width} {h}" role="img">']
+    out = [f'<div class="chartbox"><svg class="chart" viewBox="0 0 {width} {h}" role="img">']
     for t in (0, 0.25, 0.5, 0.75, 1.0):
         x = pad_l + inner * t
         out.append(f'<line x1="{x:.1f}" y1="4" x2="{x:.1f}" y2="{h - 18}" class="grid"/>')
@@ -142,7 +171,7 @@ def bar_chart(bars: Sequence[Mapping[str, Any]], pct: bool = False, width: int =
                 )
         tx = pad_l + inner * max(v, b.get("hi") or 0) / top + 6
         out.append(f'<text x="{tx:.1f}" y="{y + 14}" class="val">{fmt(b["value"], pct)}</text>')
-    out.append("</svg>")
+    out.append("</svg></div>")
     return "".join(out)
 
 
@@ -150,21 +179,22 @@ def line_chart(
     series: Sequence[Mapping[str, Any]], pct: bool = False, width: int = 560, height: int = 220,
     small: bool = False,
 ) -> str:  # fmt: skip
-    """Per-layer lines: ``[{label, color, points: [(layer, rate, n)]}]``."""
+    """Per-layer lines: ``[{label, color, dash, points: [(layer, rate, n)]}]``."""
     pts = [p for s in series for p in s["points"]]
     if not pts:
         return '<div class="empty">no per-layer data</div>'
     xs = sorted({p[0] for p in pts})
     top = max(p[1] for p in pts)
     top = 1.0 if (not pct and top <= 1.0) else max(top * 1.15, 1e-9)
-    pl, pr, pt, pb = (30, 8, 8, 18) if small else (40, 12, 10, 24)
+    pl, pr, pt, pb = (34, 8, 8, 18) if small else (48, 12, 10, 24)
     iw, ih = width - pl - pr, height - pt - pb
     span = (xs[-1] - xs[0]) or 1
 
     def xy(layer: float, v: float) -> tuple[float, float]:
         return pl + iw * (layer - xs[0]) / span, pt + ih * (1 - v / top)
 
-    out = [f'<svg class="chart{" small" if small else ""}" viewBox="0 0 {width} {height}">']
+    box = "" if small else '<div class="chartbox">'
+    out = [f'{box}<svg class="chart{" small" if small else ""}" viewBox="0 0 {width} {height}">']
     for t in (0, 0.5, 1.0):
         y = pt + ih * (1 - t)
         out.append(f'<line x1="{pl}" y1="{y:.1f}" x2="{width - pr}" y2="{y:.1f}" class="grid"/>')
@@ -178,7 +208,8 @@ def line_chart(
             continue
         d = " ".join(f"{'M' if i == 0 else 'L'}{x:.1f},{y:.1f}"
                      for i, (x, y) in enumerate(xy(p[0], p[1]) for p in s["points"]))  # fmt: skip
-        out.append(f'<path d="{d}" fill="none" stroke="{s["color"]}" stroke-width="1.8"/>')
+        dash = f' stroke-dasharray="{s["dash"]}"' if s.get("dash") else ""
+        out.append(f'<path d="{d}" fill="none" stroke="{s["color"]}" stroke-width="2"{dash}/>')
         if not small:
             for p in s["points"]:
                 x, y = xy(p[0], p[1])
@@ -187,14 +218,13 @@ def line_chart(
                     f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{s["color"]}">'
                     f"<title>{esc(tip)}</title></circle>"
                 )
-    out.append("</svg>")
+    out.append("</svg>" if small else "</svg></div>")
     return "".join(out)
 
 
 def legend(series: Iterable[Mapping[str, Any]]) -> str:
-    items = "".join(
-        f'<span><i style="background:{s["color"]}"></i>{esc(s["label"])}</span>' for s in series
-    )
+    """The runs of a chart: each with its line sample (colour and dash) and label."""
+    items = "".join(f"<span>{swatch(s)}{esc(s['label'])}</span>" for s in series)
     return f'<div class="legend">{items}</div>'
 
 

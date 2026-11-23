@@ -32,7 +32,14 @@ START_OP_VERSION = "start-op"
 # under each numbers-digest key the judge also sees up to two more raw samples that state that
 # number as the result of the item's operation (judge.key_examples)
 KEY_EXAMPLES_VERSION = "key-ex2"
-PROMPT_VERSION = f"{MC_CALL_VERSION}+{HEADS_VERSION}+{START_OP_VERSION}+{KEY_EXAMPLES_VERSION}"
+INSTRUMENT_V2 = f"{MC_CALL_VERSION}+{HEADS_VERSION}+{START_OP_VERSION}+{KEY_EXAMPLES_VERSION}"
+# plan 0110: bank v3 (items_v3.json, 2026-11-23: 66 of bank v2's 120 items removed, 66 new gated
+# chains) stamps +bank-v3 on every result (judge.instrument / judge.bank_tag), so floors and
+# results measured on bank v2 are never served for it. items_v2.json, items.json and the adapted
+# banks (header version <= 2) keep the stamp without a suffix. Stamp only: no prompt, gate or
+# call key changed (MC_CALL_VERSION, NATIVE_PROMPT_VERSION).
+BANK_STAMP = "+bank-v3"
+PROMPT_VERSION = INSTRUMENT_V2 + BANK_STAMP  # the registered instrument (bank v3)
 KEY_EXAMPLES_NOTE = (
     "Lines marked [another sample] are further readout samples that state the number of the "
     "line above them."

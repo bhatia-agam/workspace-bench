@@ -6,7 +6,7 @@ tuned on). The container runs ``lucky_guessing.run_family`` over the repo's own 
 ``<out>/<family>/<variant>.json`` (stored under ``variant = <variant>_<tag>`` so a freeze keeps it
 beside, never over, the Opus entry).
 
-    PYTHONPATH=src modal run scripts/lucky_guess_modal.py --family moral_rationale \\
+    PYTHONPATH=src modal run scripts/archive/lucky_guess_modal.py --family moral_rationale \\
         --variant question --model openai/gpt-6-astra --tag astra --out <dir> [--draws 5]
 """
 
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import modal
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 app = modal.App("wsb-lucky-guess")
 image = (
     modal.Image.debian_slim(python_version="3.12")

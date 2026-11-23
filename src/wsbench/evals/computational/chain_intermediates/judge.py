@@ -47,13 +47,13 @@ from wsbench.split import layer_protocols
 
 from .prompts import (
     DIGEST_TASK_NOTE,
+    INSTRUMENT_V2,
     KEY_EXAMPLES_NOTE,
     MAX_VALUES,
     MAX_VALUES_SUMMARY,
     MC_CALL_VERSION,
     NATIVE_PROMPT_VERSION,
     NEAR,
-    PROMPT_VERSION,
     SCHEMA,
     SCHEMA_MC,
     SCHEMA_SUMMARY,
@@ -105,6 +105,24 @@ def item_rule(args: JudgeArgs) -> str:
 
 def rule_stamp(pv: str, rule: str) -> str:
     return pv + "+rule-any" if rule == "any" else pv
+
+
+def bank_tag(header: dict[str, Any] | None = None) -> str:
+    """``+bank-v<N>`` for bank v<N> >= 3 (plan 0110), else empty: ``items_v2.json``, ``items.json``
+    and the adapted banks (header version <= 2) keep the stamps they always had. Added to every
+    RESULT stamp of the family (summary MC, native, ``opts=judge=free``) and to no call key.
+    Without a header: the bank judged now (``bank_path``, so ``WSB_BANK_ROOT`` included)."""
+    if header is None:
+        header, _items = load_bank(bank_path(NAME))
+    version = int(header.get("version", 1))
+    return f"+bank-v{version}" if version >= 3 else ""
+
+
+def instrument(header: dict[str, Any] | None = None) -> str:
+    """The summary MC result stamp of a bank (before the digest suffix): ``INSTRUMENT_V2`` plus
+    :func:`bank_tag`; the registered bank v3 gives ``prompts.PROMPT_VERSION``. The zero-argument
+    form is what the prompt-only freeze asks (``prompt_only.judged_bank_stamp``)."""
+    return INSTRUMENT_V2 + bank_tag(header)
 
 
 def _check_cells_opt(args: JudgeArgs) -> None:
@@ -443,7 +461,7 @@ def _columns(
 def run(args: JudgeArgs) -> FamilyResult:
     _check_cells_opt(args)
     rule = item_rule(args)
-    _header, items = load_bank(bank_path(NAME))
+    header, items = load_bank(bank_path(NAME))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}
@@ -468,6 +486,7 @@ def run(args: JudgeArgs) -> FamilyResult:
         "gold": gold,
         "near": near,
         "rule": rule,
+        "tag": bank_tag(header),
     }
     if not summary:
         return _run_native(args, chosen=chosen, **kw)
@@ -490,6 +509,7 @@ def _run_native(
     gold: dict[str, list[int]],
     near: dict[str, list[int]],
     rule: str,
+    tag: str,
 ) -> FamilyResult:
     """One free-recall call per loaded cell (``reads=full``: every read position; ``reads=lite``:
     the final token per layer, selected by ``reads.load``)."""
@@ -561,7 +581,7 @@ def _run_native(
     result = pass_rate_result(
         name=NAME,
         args=args,
-        prompt_version=pv,
+        prompt_version=rule_stamp(NATIVE_PROMPT_VERSION + tag, rule),  # pv keys the calls
         rows=rows,
         cells=cells,
         rep=rep,
@@ -889,6 +909,7 @@ def _run_summary_mc(
     gold: dict[str, list[int]],
     near: dict[str, list[int]],
     rule: str,
+    tag: str,
 ) -> FamilyResult:
     """Summary mode's MC judge (C5): every cell of an item (every layer and position) -> one
     digest -> one ``SYSTEM_MC`` call per slot; the item passes when every slot hits (``rule``).
@@ -1110,7 +1131,7 @@ def _run_summary_mc(
     result = pass_rate_result(
         name=NAME,
         args=args,
-        prompt_version=rule_stamp(digest.prompt_version(PROMPT_VERSION, args, NAME), rule),
+        prompt_version=rule_stamp(digest.prompt_version(INSTRUMENT_V2 + tag, args, NAME), rule),
         rows=rows,
         cells=cells,
         rep=rep,
@@ -1232,6 +1253,7 @@ def _run_summary(
     gold: dict[str, list[int]],
     near: dict[str, list[int]],
     rule: str,
+    tag: str,
 ) -> FamilyResult:
     """``opts=judge=free`` (the v1 summary instrument, plan 0020): every cell of an item -> one
     digest -> one free-recall call on it; pass = any of the judge's verified values is an
@@ -1251,7 +1273,7 @@ def _run_summary(
     pv = digest.prompt_version(NATIVE_PROMPT_VERSION, args, NAME)  # the calls' key
     # the result stamp adds +start-op: the start number now takes a digest key only when no
     # other number is left, so the digest (and a verdict) can differ from a v1 run's
-    stamp = digest.prompt_version(f"{NATIVE_PROMPT_VERSION}+{START_OP_VERSION}", args, NAME)
+    stamp = digest.prompt_version(f"{NATIVE_PROMPT_VERSION}+{START_OP_VERSION}{tag}", args, NAME)
     with Cache(args.out / "cells.jsonl") as cache:
         col = digest.collapse(
             NAME,

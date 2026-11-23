@@ -7,7 +7,77 @@ and is never written. Can a lens name it?
 
 ## Bank
 
-**Bank v2** (`items_v2.json`, plan 0038; the registered bank, `EvalSpec.bank`): 120 items, 84
+**Bank v3** (`items_v3.json`, plan 0110, 2026-11-23; the registered bank, `EvalSpec.bank`): 120
+items, 113 depth-2 (one intermediate) and 7 depth-3 (two), 127 scored intermediates, every one a
+multi-digit number in 10..99. It is bank v2 with the 66 items a per-item vetting marked `drop`
+removed and 66 new gated chains in their place (Camila, 2026-11-20: "drop the 66 chained items
+(how many are left? can we refill?)"). Built by `scripts/build_chain_v3.py` (`check` re-runs
+every rule below on the frozen file).
+
+- **Removed: 66** (35 depth-2, 31 depth-3; `selection.dropped_v2` in the header gives each id its
+  reason). 41 have a scored intermediate that the answer does not require: it lies between two
+  add / subtract steps, so "Add 3. Add 7." is answered by adding 10 and the 31 in between need
+  never be computed (a structural argument; lenses hit such slots less often than the others).
+  23 more have a gold of 10, 12, 15 or 25, numbers the digests of 20-54% of OTHER items hold as
+  a key, so the slot can pass by chance. 2 are duplicates (the same prompt as a kept item; a
+  chain that is the first two steps of a kept one).
+- **Kept: 54** (49 depth-2, 5 depth-3), byte-identical and in bank v2's order, with their v2 MC
+  lists, so their readouts and their cached judge calls serve bank v3.
+- **New: 66** (`chain-v3-d<depth>p-NNNN`; 64 depth-2, 2 depth-3): seed-last plain chains from
+  bank v2's generator with the start drawn from 6..60, built under six rules (`construction_v3`
+  in the header). C1: every pair of adjacent steps is one additive (add / subtract) and one
+  scaling (double / triple / halve) step, so no net offset and no x4 / x6 / x9 skips the
+  intermediate. C2: no value two steps on is one generator step from the value before the
+  slot. What C1 and C2 ban is the SINGLE-step shortcut, not every shortcut: an add-then-scale
+  answer (40 of the 66 new items: 20 then-multiply, 20 then-halve) is also reachable through a
+  different intermediate ("Add 7. Double it." from 24 is 2·24 + 14 as well as 2·31), and the
+  probes show that the model can do step 1 alone and that the reply follows step 1, not that it
+  holds `start ± a`. The lens readouts show no sign of that path (review of PR #551, the 20
+  add-then-multiply items: `scale(start)` is in 1.0% of the RL samples against 0.9% for other
+  items' values, SFT 0.8% against 0.8%). C3: an intermediate is absent from both prompt orders, at least 3 away from the start,
+  the answer and the other intermediate, not the digit reversal of start or answer, not two
+  prompt numerals side by side. C4: no intermediate in {10, 12, 15, 25}, none a multiple of 10.
+  C5: intermediates 11..99, start 6..60, answer 2..99, add / subtract operands 3..9. C6 (the
+  bank): the prompt is in no earlier chain bank, registered or adapted; a new item shares its
+  (start, first step) and its (start, first intermediate) with no other item; a gold value names
+  at most 4 slots of the bank and at most 3 new ones.
+- **Gate (new items; Qwen3.6-27B, chat render, thinking off, vLLM on Modal).** The strict v2
+  bar on the item itself (greedy correct, 10 of 10 samples at T=0.8 / top_p 0.95 / 16 tokens
+  correct, no draw writing an intermediate) AND four behavioural probes at greedy + 8 of 10:
+  step 1 alone gives intermediate 1; (depth 3) steps 1-2 give intermediate 2; the last step from
+  the last intermediate gives the answer; the item with its FIRST operation altered gives the
+  new answer (the reply follows step 1). Of 403 construction-valid candidates (240 depth-2, 163
+  depth-3) 207 depth-2 and 8 depth-3 pass the strict gate, 200 and 4 also every probe; 64 + 2
+  were taken, one per class shape per round (A = add / subtract, M = double / triple, H =
+  halve), round-robin over step-kind tuples within a shape.
+- **What this does to the bank's make-up.** Depth 3 falls from 36 items to 7: 31 of bank v2's 36
+  depth-3 items had a flaw (28 of them the add-add slot), and Qwen3.6-27B passes the strict gate
+  on only 8 of 163 depth-3 chains that alternate adding and scaling, 4 with the probes, 2 of
+  which the bank rule admits. New depth-2 shapes: add-then-halve 20, add-then-multiply 20,
+  multiply-then-add 13, halve-then-add 11. New starts run to 59 (bank v2: 2..30).
+- **Not re-filtered: the 54 kept items.** None has an add-add slot or a gold in {10, 12, 15,
+  25} (the two flaws the removal was for), but 33 of them break a rule a NEW item must satisfy
+  (the builder's `violations`; an item can break more than one): 19 with a scale-then-scale
+  slot such as "Double it. Double it.", which C1 says composes the same way as add-add
+  (`chain-d3p-0753`, the bank's first item, is one), 12 with a one-step shortcut, 6 with a
+  round gold, 4 with a gold within 3 of the start or the answer, 4 with an operand of 2, 2 with
+  a gold that is two prompt numerals side by side. The vetting judged them sound, so they stay.
+
+- **Floors on bank v3** (measured 2026-11-23; bank v2 in brackets; `evals/baselines/README.md`):
+  lucky guessing blind 0.110 (0.103), described 0.143 (0.133), uniform 0.108 (0.102), analytic
+  chance 0.119 (0.092: fewer depth-3 items, which need two lists right); prompt-only summary
+  0.983 (0.967); logit lens L63 0.000 (0.000).
+
+A bank-v2 readouts file is not a bank-v3 file (66 ids left, 66 joined; drop + add records no
+`plan_lineage`): the 54 kept items' plan rows are identical, so a bank-v3 file is the kept rows
+plus the 66 new items read, with a sidecar on bank v3's `plan_sha`. Results on bank v3 are stamped
+`+bank-v3` (`judge.instrument` / `judge.bank_tag`: summary MC, native and `opts=judge=free`
+alike; no call key moved), so no floor or result of bank v2 is drawn beside them;
+`WSB_BANK_FILE_CHAIN_INTERMEDIATES=evals/computational/chain_intermediates/items_v2.json` judges
+bank v2 under the stamp it always had, and the adapted banks (`adapted/<model>/`, header version
+2) keep theirs.
+
+**Bank v2** (`items_v2.json`, plan 0038; frozen, the registered bank until plan 0110): 120 items, 84
 depth-2 (one intermediate) and 36 depth-3 (two), **every intermediate a multi-digit number in
 10..99** (Camila: "making the intermediates multi digit, not 1-9 since it's too easy for the lens
 to say all of these numbers at once"). v1's 83 items whose intermediates are all >= 10 are kept
@@ -29,12 +99,14 @@ item's start, answer, a prompt literal or another of its intermediates (so slot 
 earns slot-1 credit); at most two are error-path values (an off-by-one or untaken-branch value
 from the item's `distractors`); two or three are other items' intermediates in the gold's
 magnitude band (gold//2 .. 2*gold+5); the rest a seeded fill from that band. The gold's rank in
-the SORTED option list is balanced over the bank (19-20 slots per rank of 8, so a "pick the
-median" heuristic gains nothing). "cannot tell from the readout" is appended LAST at judge time
+the SORTED option list is balanced over the bank (bank v3: 15-16 of the 127 slots per rank of 8;
+bank v2: 19-20 of 156; so a "pick the median" heuristic gains nothing). Bank v3's kept items keep
+their v2 lists; the new items' lists are built by the same rules against the v3 bank, the rank
+counts continued from the kept slots. "cannot tell from the readout" is appended LAST at judge time
 (`mc.options_with_cannot`), never stored or shuffled in.
 
-Example (v2): `Apply the steps below, in order, to the starting number given at the end. Add 3.
-Add 7. The starting number is 28.` -> intermediate 31, answer 38.
+Example (`chain-v3-d2p-0000`): `Apply the steps below, in order, to the starting number given at
+the end. Double it. Add 5. The starting number is 28.` -> intermediate 56, answer 61.
 
 ## Read sites
 
@@ -48,7 +120,8 @@ assistant onset after the empty think block) at every requested layer; lite is a
 so one read serves both. The full-read guard is shared (`EvalSpec.min_full_positions=20`,
 `full_contiguous=True`, `reads.check_full`): a 1-position file under `reads=full` exits 2 ("looks
 like a lite file"), and a v1 file (25 positions from " What") is refused by its sidecar's
-`plan_sha`, or, sidecar-less, by the missing v2 ids.
+`plan_sha`, or, sidecar-less, by the missing replacement ids. A bank-v2 file is refused the same
+way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
 
 ## Scoring (summary mode, the default)
 
@@ -74,7 +147,7 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   27 fail).
 - **The MC judge (Camila: "either an mc judge OR use the same method as arithmetic
   intermediates": both).** One call per (item, intermediate slot) on the item's digest
-  (`SYSTEM_MC` / `USER_MC` below; 156 calls per arm): the 8 frozen candidates plus "cannot tell
+  (`SYSTEM_MC` / `USER_MC` below; 127 calls per arm on bank v3, 156 on bank v2): the 8 frozen candidates plus "cannot tell
   from the readout" last. The gold is one unmarked candidate in the USER message; the system
   prompt is one constant with no item value (Camila: "The judge should ideally not be given the
   correct answer in the system prompt"). Schema `chain_mc`: `{"choice": int, "basis":
@@ -148,8 +221,8 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   no new calls.
 - **Floor: `null_shuffled`.** For each (item, slot), the same MC call with this item's options on
   the digest of a seeded same-depth partner whose start, answer and intermediates are all outside
-  the options; scored with the partner's evidence and keys under the same rule. 156 extra calls
-  per arm, on by default (`opts=null=off` disables it). `extras.null` = `extras.null_shuffled`,
+  the options; scored with the partner's evidence and keys under the same rule. As many extra
+  calls per arm as slots (127), on by default (`opts=null=off` disables it). `extras.null` = `extras.null_shuffled`,
   `extras.net = value - null`. Blind chance is 1/8 per slot (1/64 for a depth-3 item); the
   lucky-guessing builder (`lucky_guessing.BUILDERS`) measures it on the frozen lists.
 - **Prompt-only floor.** Measured under `po-opus-v1` (one Opus 5.5 readout per item from the whole
@@ -158,7 +231,8 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   compute every intermediate (the seed comes before every read position), so the prompt-only
   floor is expected near 1.0: a full-bank score below it means the lens recovers less than a
   reader of the prompt could compute, and there is no anti-text-inversion subset to separate
-  reading from recomputing (0 of 120 items: some panel reader solves each). Decoder-side recomputation (a prose verbalizer that sees the seed
+  reading from recomputing (the panel gate kept 0 of bank v2's 120 items: some panel reader solves
+  each; bank v3 has not been gated, see the native section). Decoder-side recomputation (a prose verbalizer that sees the seed
   and the steps and computes "half of 30 is 15" itself) is not removed by MC or ATI: this is the
   family's headline caveat.
 - **Item states.** An item with no cells keeps the missing path (undecided). A missing layer
@@ -178,8 +252,8 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   none the digest already shows), as `[another sample] <text>` lines. They join the evidence, so a
   quote from them verifies, and `KEY_EXAMPLES_NOTE` (Judge prompts, below) is added to the
   digest note of that call.
-- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v5+start-op+key-ex2", args, family)`,
-  i.e. `chain-mc-2026-10-30+heads-v5+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
+- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3", args, family)`,
+  i.e. `chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (bank v2 and the adapted banks: the same without `+bank-v3`) (judge calls keyed by
   `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate and the label check re-ask nothing) (`+reads-lite` under lite, `+rule-any`
   under `opts=rule=any`); `config.reads`, `sampling`, `sampling_source`, `reader`,
   `reads_checked`, `layers_judged` come from the shared loader.
@@ -231,8 +305,15 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   anti-text-inversion gate field (`STRICTER_PASS_FIELD`); `per_layer_hit_rate`, `layer_protocols`,
   `committed_rate` and `kinds` are diagnostics.
 - `prompt_version`: `chain-free-2026-10-30` (the ATI gate's instrument,
-  `text_inversion.gate_instrument`). ATI (plan 0071, every panel reader must fail): 0 of 120, so
-  the family has no ATI item (skipped under `anti_text_inversion=True`). The retired `cells=` key: `cells=last` exits 2 ("use
+  `text_inversion.gate_instrument`; a result on bank v3 is stamped `chain-free-2026-10-30+bank-v3`).
+  ATI (plan 0071, every panel reader must fail): 0 of 120 on bank v2, the bank the registered
+  entry was gated on. **The entry has not been re-gated on bank v3** (plan 0110 leaves the ATI
+  file untouched; the subset is re-checked in the full ATI audit, issue #559). For this family only,
+  listed by name in `text_inversion.STALE_NO_ITEM_PENDING_AUDIT` and on bank v3 only (the
+  table records its fingerprint; a pin to another bank exits "re-gate"), the entry gated on another
+  bank that holds NO id still means "no ATI item" (`text_inversion.StaleNoItem`), so
+  under `anti_text_inversion=True` the family is skipped as before, and `wsbench check
+  ati_subset` passes with a note naming it. The retired `cells=` key: `cells=last` exits 2 ("use
   reads=lite (final token) or reads=full (every read position)"); `cells=all` is accepted as a
   spelling of `reads=full`.
 
@@ -251,8 +332,8 @@ its uniform digit lists.
 
 `{"id": "<item name>", "layer": L, "pos": P, "samples": [...]}` (or `tokens` / `scores`) rows
 over the plan's positions, with the producer's sidecar (`reads`, `sampling`, `arm`, `layers`,
-`plan_sha`). `examples/readouts/chain_intermediates.jsonl` is a v1 toy file (three v1 ids, one
-position per layer; two of its ids are in v2).
+`plan_sha`). `examples/readouts/chain_intermediates.jsonl` is a toy file (three bank-v3 ids, one
+position per layer).
 
 ```
 wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.jsonl out=outputs/<arm>/chain_intermediates limit=3
@@ -262,9 +343,11 @@ wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.json
 
 ## Judge prompts
 
-Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v5+start-op+key-ex2`
-(summary MC; calls keyed by `chain-mc-2026-10-30`), `chain-free-2026-10-30` (native free recall;
-`opts=judge=free` summary results add `+start-op`). `TOKEN_NOTE` is
+Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3`
+(summary MC; calls keyed by `chain-mc-2026-10-30`), `chain-free-2026-10-30+bank-v3` (native free
+recall, calls keyed `chain-free-2026-10-30`; `opts=judge=free` summary results add `+start-op`
+before the bank tag). The tag `+bank-v3` names the registered bank; a bank-v2 or adapted bank
+stamps the same without it. `TOKEN_NOTE` is
 `mc.token_note(("numbers",))`, rendered from the family's registered `EvalSpec`
 (`flat_types=("numbers",)`, `multi_select=False`) into `SYSTEM_MC` and `SYSTEM`.
 

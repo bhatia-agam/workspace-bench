@@ -1,42 +1,41 @@
 {
  "family": "user-modeling-hard",
- "version": 2,
+ "version": 4,
  "built": "2026-11-23",
  "subject": "Qwen/Qwen3.6-27B",
- "n_items": 111,
- "n_parts": 159,
+ "n_items": 155,
+ "n_parts": 229,
  "kinds": {
-  "two": 29,
-  "three": 4,
-  "state": 37,
+  "two": 44,
+  "three": 8,
+  "state": 53,
   "expertise": 16,
   "stance": 13,
-  "fine": 12
+  "fine": 21
  },
  "parts_per_kind": {
-  "two": 58,
-  "three": 12,
-  "state": 48,
+  "two": 88,
+  "three": 24,
+  "state": 67,
   "expertise": 16,
   "stance": 13,
-  "fine": 12
+  "fine": 21
  },
  "types": {
-  "state": 55,
-  "profession": 25,
-  "country": 21,
+  "state": 83,
+  "profession": 41,
+  "country": 35,
   "expertise": 18,
+  "fine_occ": 12,
   "goal": 12,
-  "fine_occ": 7,
-  "religion": 7,
+  "religion": 8,
+  "heritage": 6,
   "diet": 4,
-  "heritage": 3,
+  "denomination": 3,
   "attitude": 2,
-  "denomination": 1,
-  "instrument": 1,
-  "life": 1,
-  "marital": 1,
-  "position": 1
+  "instrument": 2,
+  "position": 2,
+  "marital": 1
  },
  "expertise_golds": {
   "beginner": 7,
@@ -44,22 +43,22 @@
   "advanced": 3,
   "intermediate": 3
  },
- "uniform_chance": 0.1094,
+ "uniform_chance": 0.1011,
  "chance_by_kind": {
   "two": {
-   "uniform": 0.0216,
-   "modal_gold_share": 0.0345,
-   "chance": 0.0345
+   "uniform": 0.0212,
+   "modal_gold_share": 0.0032,
+   "chance": 0.0212
   },
   "three": {
    "uniform": 0.0029,
-   "modal_gold_share": 0.0029,
+   "modal_gold_share": 0.0,
    "chance": 0.0029
   },
   "state": {
-   "uniform": 0.1065,
-   "modal_gold_share": 0.027,
-   "chance": 0.1065
+   "uniform": 0.1105,
+   "modal_gold_share": 0.0566,
+   "chance": 0.1105
   },
   "expertise": {
    "uniform": 0.25,
@@ -73,9 +72,18 @@
   },
   "fine": {
    "uniform": 0.1429,
-   "modal_gold_share": 0.1429,
+   "modal_gold_share": 0.1088,
    "chance": 0.1429
   }
+ },
+ "request_variant_counts": {
+  "A": 99,
+  "B": 56
+ },
+ "provenance": {
+  "bank_v2": 110,
+  "harder_wave": 45,
+  "note": "bank_v2 = items of bank v2 (authoring waves 1-4, bank_candidate.json); harder_wave = strictly gated items of the second authoring run (authoring.wave 5, wave5_candidate.json; plan 0112)"
  },
  "chance_by_kind_note": "modal_gold_share = the expected share of the kind's items a constant guesser gets: for a part type with at least 5 parts in the kind it answers that type's most common gold, for a smaller type it guesses uniformly; every part right. chance = max(uniform, modal_gold_share); the leakage standard is one-sided: a measured guesser <= chance + 0.05",
  "request_variants": {
@@ -252,7 +260,680 @@
    "umh-state-w4021-A": "the distractors `disappointed` and `frustrated` of part 1 (gold `betrayed`) are also true of the user (let down by the flatmate, falsely blamed); both lists built without them (`burned out` + `proud`, then `nostalgic` + `insecure`) were guessable by the options-only guesser (5 and 4 of 5): redrawn once, then dropped (plan 0106 §2.4's rule) (review r3)",
    "umh-stance-w1042-B": "the distractor `ammunition for an argument` is also true of the user ('some financial or legal risk i can honestly point to'); both lists built without it (`a chance to vent`, then `a second opinion`) were guessable by the options-only guesser (4 of 5 each): redrawn once, then dropped (plan 0106 §2.4's rule) (review r3)",
    "umh-two-w1011-A": "chat names the practice that defines the value ('the meat is zabiha certified and nothing's cooked with pork or wine, since that's the only way I can eat out' for halal: zabiha is the halal slaughter standard) (review r3)",
-   "umh-two-w1027-A": "chat states the event that defines the value ('since I proposed in March and the date's set for next September' for engaged), the pattern of the dropped newlywed items (review r3)"
+   "umh-two-w1027-A": "chat states the event that defines the value ('since I proposed in March and the date's set for next September' for engaged), the pattern of the dropped newlywed items (review r3)",
+   "umh-two-w1035-A": "its life-type part (divorcing) is near-stated like the 14 items review r3 dropped ('my ex's lawyer has finally sent the financial disclosure forms. Signing the decree paperwork in a few weeks'); r3 kept it flagged for the owner, who dropped it (2026-11-23). It held the bank's only life-type part and its only relabelled gold (optician -> optometrist)",
+   "umh-two-w5120-B": "chat narrates the event that defines the value (the user's own wedding being planned, for engaged), the pattern of umh-two-w1027-A; owner decision 2026-11-23",
+   "umh-two-w5320-B": "chat narrates the event that defines the value (the user's own wedding being planned, for engaged), the pattern of umh-two-w1027-A; owner decision 2026-11-23 (it also fails the strict gate: `engaged` 3 of 10 under the stem)",
+   "umh-state-w5113-B": "the same vignette as umh-state-w5053-B (the old car goes for scrap, a tape still in the deck, gold `nostalgic`); of the two, the one with the weaker label-gate record goes (9 of 10 against 10 of 10; decided on the gate records, no arm outcome read)"
+  },
+  "not_strictly_gated": {
+   "why": "not strictly gated: a part fails the label gate's original rule (stem `My answer is:`, greedy gold and >= 8 of 10 samples gold, an empty sample counted as not gold; the no-stem leg only for an empty stem greedy) on the harder wave's draw, the one draw every item of the bank is held to. Admitted by the wave under a loosened rule (the no-stem leg for a part whose stem leg failed with an empty sample); owner decision 2026-11-23: the new items must be strictly gated",
+   "items": {
+    "umh-two-w5004-B": [
+     [
+      0,
+      "psychologist",
+      "Psychologist",
+      6,
+      10,
+      4
+     ]
+    ],
+    "umh-two-w5031-B": [
+     [
+      1,
+      "guilty",
+      "Guilty",
+      7,
+      10,
+      1
+     ]
+    ],
+    "umh-two-w5058-B": [
+     [
+      0,
+      "plumber",
+      "Plumber",
+      6,
+      10,
+      4
+     ],
+     [
+      1,
+      "relieved",
+      "Relieved",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-two-w5113-B": [
+     [
+      1,
+      "Muslim",
+      "Muslim",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-two-w5300-B": [
+     [
+      0,
+      "civil engineer",
+      "Civil Engineer",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-two-w5302-B": [
+     [
+      0,
+      "butcher",
+      "Butcher",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-two-w5314-B": [
+     [
+      1,
+      "Catholic",
+      "Catholic",
+      3,
+      10,
+      7
+     ]
+    ],
+    "umh-two-w5317-B": [
+     [
+      1,
+      "pilot",
+      "Pilot",
+      4,
+      10,
+      6
+     ]
+    ],
+    "umh-two-w5321-B": [
+     [
+      1,
+      "low-sodium",
+      "Low-sodium",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-two-w5325-B": [
+     [
+      0,
+      "bus driver",
+      "Bus driver",
+      7,
+      10,
+      3
+     ],
+     [
+      1,
+      "South Africa",
+      "South Africa",
+      6,
+      10,
+      4
+     ]
+    ],
+    "umh-two-w5330-B": [
+     [
+      0,
+      "software developer",
+      "Software Engineer",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-two-w5338-B": [
+     [
+      1,
+      "Muslim",
+      "Muslim",
+      3,
+      10,
+      7
+     ]
+    ],
+    "umh-two-w5339-B": [
+     [
+      0,
+      "Egypt",
+      "Egypt",
+      3,
+      10,
+      4
+     ]
+    ],
+    "umh-two-w5369-B": [
+     [
+      0,
+      "Pakistani",
+      "Pakistani",
+      3,
+      10,
+      5
+     ]
+    ],
+    "umh-two-w5503-B": [
+     [
+      0,
+      "psychologist",
+      "Psychologist",
+      7,
+      10,
+      1
+     ]
+    ],
+    "umh-two-w5512-B": [
+     [
+      0,
+      "musician",
+      "Musician",
+      3,
+      10,
+      2
+     ]
+    ],
+    "umh-two-w5514-B": [
+     [
+      1,
+      "Sikh",
+      "Sikh",
+      4,
+      10,
+      6
+     ]
+    ],
+    "umh-two-w5517-B": [
+     [
+      0,
+      "Indian",
+      "Indian",
+      5,
+      10,
+      4
+     ],
+     [
+      1,
+      "veterinarian",
+      "Veterinarian",
+      5,
+      10,
+      5
+     ]
+    ],
+    "umh-two-w5537-B": [
+     [
+      1,
+      "Mormon",
+      "Mormon",
+      6,
+      10,
+      4
+     ]
+    ],
+    "umh-two-w5543-B": [
+     [
+      1,
+      "accountant",
+      "Accountant",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-three-w5313-B": [
+     [
+      0,
+      "musician",
+      "Musician",
+      5,
+      10,
+      4
+     ]
+    ],
+    "umh-three-w5340-B": [
+     [
+      0,
+      "photographer",
+      "Photographer",
+      6,
+      10,
+      4
+     ],
+     [
+      2,
+      "nostalgic",
+      "Nostalgic",
+      4,
+      10,
+      6
+     ]
+    ],
+    "umh-three-w5507-B": [
+     [
+      1,
+      "Peru",
+      "Peru",
+      7,
+      10,
+      3
+     ],
+     [
+      2,
+      "proud",
+      "Proud",
+      3,
+      10,
+      7
+     ]
+    ],
+    "umh-three-w5519-B": [
+     [
+      1,
+      "Italy",
+      "Italy",
+      6,
+      10,
+      4
+     ]
+    ],
+    "umh-three-w5523-B": [
+     [
+      2,
+      "envious",
+      "Envious",
+      7,
+      10,
+      2
+     ]
+    ],
+    "umh-three-w5524-B": [
+     [
+      2,
+      "guilty",
+      "Guilt-ridden",
+      6,
+      10,
+      1
+     ]
+    ],
+    "umh-three-w5544-B": [
+     [
+      1,
+      "Sweden",
+      "Sweden",
+      6,
+      10,
+      4
+     ]
+    ],
+    "umh-three-w5557-B": [
+     [
+      1,
+      "Belgium",
+      "Belgium",
+      5,
+      10,
+      5
+     ]
+    ],
+    "umh-three-w5574-B": [
+     [
+      2,
+      "envious",
+      "Envious",
+      6,
+      10,
+      1
+     ]
+    ],
+    "umh-three-w5581-B": [
+     [
+      2,
+      "relieved",
+      "Relieved",
+      7,
+      10,
+      3
+     ]
+    ],
+    "umh-three-w5606-B": [
+     [
+      2,
+      "frustrated",
+      "Frustrated",
+      6,
+      10,
+      4
+     ]
+    ],
+    "umh-state-w5013-B": [
+     [
+      1,
+      "grieving",
+      "Grief",
+      6,
+      10,
+      2
+     ]
+    ],
+    "umh-state-w5033-B": [
+     [
+      0,
+      "numb",
+      "Numb",
+      7,
+      10,
+      2
+     ]
+    ],
+    "umh-state-w5037-B": [
+     [
+      0,
+      "disappointed",
+      "Disappointed",
+      6,
+      10,
+      3
+     ]
+    ],
+    "umh-state-w5049-B": [
+     [
+      0,
+      "proud",
+      "Proud",
+      7,
+      10,
+      2
+     ]
+    ],
+    "umh-state-w5054-B": [
+     [
+      0,
+      "resentful",
+      "Resentful",
+      7,
+      10,
+      2
+     ]
+    ],
+    "umh-fine-w5001-B": [
+     [
+      0,
+      "pastry chef",
+      "Pastry Chef",
+      7,
+      10,
+      1
+     ]
+    ],
+    "umh-fine-w5019-B": [
+     [
+      0,
+      "drums",
+      "Drum kit",
+      6,
+      10,
+      4
+     ]
+    ]
+   }
+  },
+  "second_draw_not_admitted": {
+   "why": "these items of edits.not_strictly_gated pass the same rule, unchanged, on a SECOND draw of the stem leg of their failing parts (2026-11-23; the same greedy answer; no empty sample re-drawn or skipped). The plan's first build (bank v3, 175 items, never merged) admitted them; the owner dropped them (2026-11-23): an item with two draws had two chances, and strictly gated means one draw per item for every item. On the 30 held-out samples of that second draw their mean single-draw pass probability is 0.50, and six of them are under 0.25 (the independent review of the first build). Rows: [part, gold, first draw correct of 10, first draw empty, second draw correct of 10, second draw empty]",
+   "items": {
+    "umh-two-w5004-B": [
+     [
+      0,
+      "psychologist",
+      6,
+      4,
+      9,
+      1
+     ]
+    ],
+    "umh-two-w5031-B": [
+     [
+      1,
+      "guilty",
+      7,
+      1,
+      9,
+      0
+     ]
+    ],
+    "umh-two-w5113-B": [
+     [
+      1,
+      "Muslim",
+      7,
+      3,
+      8,
+      2
+     ]
+    ],
+    "umh-two-w5300-B": [
+     [
+      0,
+      "civil engineer",
+      7,
+      3,
+      8,
+      1
+     ]
+    ],
+    "umh-two-w5302-B": [
+     [
+      0,
+      "butcher",
+      7,
+      3,
+      9,
+      1
+     ]
+    ],
+    "umh-two-w5330-B": [
+     [
+      0,
+      "software developer",
+      7,
+      3,
+      9,
+      1
+     ]
+    ],
+    "umh-two-w5503-B": [
+     [
+      0,
+      "psychologist",
+      7,
+      1,
+      9,
+      0
+     ]
+    ],
+    "umh-two-w5537-B": [
+     [
+      1,
+      "Mormon",
+      6,
+      4,
+      9,
+      1
+     ]
+    ],
+    "umh-two-w5543-B": [
+     [
+      1,
+      "accountant",
+      7,
+      3,
+      8,
+      2
+     ]
+    ],
+    "umh-three-w5313-B": [
+     [
+      0,
+      "musician",
+      5,
+      4,
+      8,
+      1
+     ]
+    ],
+    "umh-three-w5507-B": [
+     [
+      1,
+      "Peru",
+      7,
+      3,
+      8,
+      2
+     ],
+     [
+      2,
+      "proud",
+      3,
+      7,
+      8,
+      2
+     ]
+    ],
+    "umh-three-w5519-B": [
+     [
+      1,
+      "Italy",
+      6,
+      4,
+      10,
+      0
+     ]
+    ],
+    "umh-three-w5523-B": [
+     [
+      2,
+      "envious",
+      7,
+      2,
+      9,
+      1
+     ]
+    ],
+    "umh-three-w5524-B": [
+     [
+      2,
+      "guilty",
+      6,
+      1,
+      9,
+      1
+     ]
+    ],
+    "umh-three-w5581-B": [
+     [
+      2,
+      "relieved",
+      7,
+      3,
+      8,
+      2
+     ]
+    ],
+    "umh-state-w5013-B": [
+     [
+      1,
+      "grieving",
+      6,
+      2,
+      9,
+      1
+     ]
+    ],
+    "umh-state-w5033-B": [
+     [
+      0,
+      "numb",
+      7,
+      2,
+      8,
+      2
+     ]
+    ],
+    "umh-state-w5049-B": [
+     [
+      0,
+      "proud",
+      7,
+      2,
+      8,
+      2
+     ]
+    ],
+    "umh-fine-w5001-B": [
+     [
+      0,
+      "pastry chef",
+      7,
+      1,
+      8,
+      0
+     ]
+    ]
+   }
+  },
+  "no_stem_leg": {
+   "why": "the label gate's rule as written (the authoring run's `fgrade.py`: `dropped = not stem['greedy'] and bare is not None`): when the stem's GREEDY answer is empty, the same question without the stem `My answer is:` is the part's gate (greedy gold and >= 8 of 10 samples gold) and the stem samples are not counted. Rows: [item, part, gold, no-stem samples correct of 10]",
+   "parts": [
+    [
+     "umh-two-w5161-B",
+     1,
+     "proud",
+     10
+    ],
+    [
+     "umh-two-w5344-B",
+     1,
+     "Czech Republic",
+     10
+    ],
+    [
+     "umh-two-w5513-B",
+     1,
+     "Orthodox Christian",
+     10
+    ],
+    [
+     "umh-three-w5392-B",
+     1,
+     "Brazil",
+     10
+    ],
+    [
+     "umh-state-w5006-B",
+     1,
+     "proud",
+     10
+    ],
+    [
+     "umh-state-w5108-B",
+     0,
+     "numb",
+     8
+    ]
+   ]
   },
   "forms_removed": [
    [
@@ -296,6 +977,36 @@
     2,
     "stressed out",
     "`stressed` is a banned broader term of the state pool"
+   ],
+   [
+    "umh-two-w5028-A",
+    0,
+    "pipefitter plumber",
+    "names a second trade (a pipefitter) beside the gold"
+   ],
+   [
+    "umh-two-w5526-B",
+    0,
+    "agriculturalist",
+    "broader: an agricultural scientist as well"
+   ],
+   [
+    "umh-fine-w5014-B",
+    0,
+    "animal photographer",
+    "broader: a pet or studio animal photographer as well"
+   ],
+   [
+    "umh-fine-w5016-A",
+    0,
+    "Episcopalian",
+    "another church of the communion than the chat's (vicar, PCC, churchwardens)"
+   ],
+   [
+    "umh-fine-w5109-B",
+    0,
+    "signal caller",
+    "also said of the defensive play-caller: fits the distractor option `linebacker`"
    ]
   ],
   "forms_removed_r3": [
@@ -312,13 +1023,6 @@
     "carpenter",
     "woodworker",
     "broader: a hobby as well as the trade"
-   ],
-   [
-    "umh-two-w1035-A",
-    1,
-    "divorcing",
-    "separating from spouse",
-    "broader: a separation is not a divorce"
    ],
    [
     "umh-two-w1046-A",
@@ -888,15 +1592,7 @@
     "another pace category"
    ]
   ],
-  "golds_relabelled": [
-   [
-    "umh-two-w1035-A",
-    0,
-    "optician",
-    "optometrist",
-    "the subject's own gated answer is 'Optometrist' (10 of 10; open probe 'Optometrist (or Ophthalmic Optician)') and the chat's work is an optometrist's ('back-to-back refractions ... a retinal photo I referred on'); lenses that said so were refused as a neighbouring occupation. `optician` is not kept as a distractor: frame fitting is the user's work too, and in the chat's British usage ('my solicitor') an optometrist is an optician (owner decision 2026-11-23)"
-   ]
-  ],
+  "golds_relabelled": [],
   "lists_redrawn": [
    [
     "umh-two-w1055-B",
@@ -1029,6 +1725,14 @@
     "'Nobody's asked me how I'm managing. Still, I'll be there Tuesday': fed up with a situation that does not change (review r3)"
    ],
    [
+    "umh-state-w1039-A",
+    0,
+    "resentful",
+    "disappointed",
+    "relieved",
+    "'Nobody's asked me how I'm managing': care she expected and did not get, a span of its own beside the resentment of the sister's thanks, and the event that defines the value (the same pattern as `disappointed` in umh-state-w1058-A) (review r4 F2)"
+   ],
+   [
     "umh-state-w1058-A",
     0,
     "resentful",
@@ -1150,17 +1854,45 @@
    ]
   ],
   "kept_flagged": {
-   "umh-two-w1035-A": "review r3: its life-type part (divorcing) is near-stated like the 14 dropped ('my ex's lawyer has finally sent the financial disclosure forms. Signing the decree paperwork in a few weeks'); kept because the owner's decision to relabel its occupation gold presupposes the item, and it is now the bank's only life-type part: the owner decides",
    "umh-fine-w1015-A": "gold stem 'pace' occurs as 'twenty paces' (run-up length, another sense); kept"
   }
  },
  "source_sha256": {
   "bank_candidate.json": "4be2e2321bd3d88004cd39cf3815b5671da64273e0e680f65bf831cab737a7ee",
+  "wave5_candidate.json": "052df29c595831d593033230b11749cf8beee2a0e80d2c957019bdcf0177f4a0",
   "option_pools.json": "612443d26f61823eb442aea4abae2c3b99b64412aac291b6c430afd0040af1c2"
  },
+ "plan_lineage": [
+  {
+   "from": "e38048d4071dc9c627a07a68adf0f5d53ad69e38310b51892d0e0d252a912fc9",
+   "to": "2f6f60fa33b20ab1636b948cd330900e1c56bf955288548d52c7b5fa2308526e",
+   "dropped": [
+    "umh-fine-w5001-B",
+    "umh-state-w5013-B",
+    "umh-state-w5033-B",
+    "umh-state-w5049-B",
+    "umh-state-w5113-B",
+    "umh-three-w5313-B",
+    "umh-three-w5507-B",
+    "umh-three-w5519-B",
+    "umh-three-w5523-B",
+    "umh-three-w5524-B",
+    "umh-three-w5581-B",
+    "umh-two-w5004-B",
+    "umh-two-w5031-B",
+    "umh-two-w5113-B",
+    "umh-two-w5300-B",
+    "umh-two-w5302-B",
+    "umh-two-w5330-B",
+    "umh-two-w5503-B",
+    "umh-two-w5537-B",
+    "umh-two-w5543-B"
+   ]
+  }
+ ],
  "inclusion_rule": [
   "1. Lint clean: no gold and no accepted form in the chat, a stated-vs-implied audit, and a cue-rule audit (no named festival / holiday / city / place / nationality / language as a cue; no phrase carrying two attributes).",
-  "2. Label gate per part on the subject: the chat, then \"what is the user's <label>? Answer in one word or short phrase.\", thinking off; greedy correct and at least 8 of 10 samples at T=0.7. Every part must pass.",
+  "2. Label gate per part on the subject: the chat, then \"what is the user's <label>? Answer in one word or short phrase.\", thinking off, under the answer stem `My answer is:`; greedy correct and at least 8 of 10 samples at T=0.7. An empty sample is a sample that is not correct; the same question without the stem decides only when the stem's GREEDY answer is empty (edits.no_stem_leg lists the parts it decided). Every part must pass on ONE draw (the builder drops a candidate that does not, edits.not_strictly_gated; a second draw admits nothing, edits.second_draw_not_admitted).",
   "3. Open probe: the chat, the subject's own greedy reply, then \"Describe the user's attributes.\" as a second user turn; a part is volunteered when the greedy answer and at least 3 of 4 samples state the gold or a faithful paraphrase. Every part must be volunteered. Deviation from the pilot: answers are generated to 700 new tokens (the pilot's 250 cut answers off before later attributes).",
   "4. Options-only guesser (label + options, 5 shuffles per part): a 7-option part is guessable at 3 of 5 hits; open-pool parts get up to 2 fresh option draws before the item is rejected; closed scales are tested at type level."
  ],
@@ -1168,16 +1900,22 @@
   "22 items of the candidate have a gating open-probe answer that ended at the 700-token limit: every part of them was still judged stated, so truncation can only have rejected candidates.",
   "`advanced` in umh-expertise-w2003-A: a reader of the chat (Opus) does not pick it (prompt_only_ok false); kept by ruling.",
   "Two distractor options occur in their chat: `intermediate` ('intermediate Treasuries', umh-expertise-w1019-A) and `relieved` (\"Didn't feel relieved either\", umh-state-w1054-A).",
-  "8 mixed-state items list one to four of the same distractors in both parts (never a gold).",
+  "9 of the 14 mixed-state items list one or more of the same distractors in both parts (never a gold).",
   "27 items of the candidate carry the non-gating `implausible` audit flag (it fired on the fixed infobox sentence after an unrelated message).",
   "Kind-level constant-guesser rates: see chance_by_kind (expertise and stance are set by the constant guesser, above their uniform chance).",
-  "Review r3 (2026-11-23): the `life` kind is removed (owner decision) and so are the 14 multi-trait items whose life-type part is stated; `three` is left with 4 items (each with a state third part), too few for a per-kind number. umh-two-w1035-A keeps the bank's only life-type part, which is near-stated too (edits.kept_flagged): the owner decides.",
+  "Review r3 (2026-11-23): the `life` kind is removed (owner decision) and so are the 14 multi-trait items whose life-type part is stated; that left `three` with 4 items of the first authoring run (each with a state third part), too few for a per-kind number; with the harder wave's the kind has 8. umh-two-w1035-A kept the bank's only life-type part, near-stated too; the owner dropped it (plan 0112).",
   "Review r3, flagged and not edited (the strict reading of stated-not-implied for a goal: the literal request is the goal in other words): umh-stance-w1040-B, -w1047-B, -w1048-B, -w2008-B, -w2016-B and umh-two-w1055-B p1. The reviewer's sample named no stance item; the owner decides.",
   "Expertise is a closed four-level scale, so a neighbouring level that the chat also supports (`advanced` beside `expert`) cannot be swapped out; the kind stays in the headline by owner decision.",
   "Kept after the options-only check: `vegetarian` in the two vegan lists (true of a vegan as the broader value; every list without it was guessable).",
-  "The option seeds and the redraw seeds keep the prefix `umh-v1` (bank.STAMP: a bank property, so that an unchanged part keeps its option order across bank versions); it is not the judge stamp."
+  "The option seeds and the redraw seeds keep the prefix `umh-v1` (bank.STAMP: a bank property, so that an unchanged part keeps its option order across bank versions); it is not the judge stamp.",
+  "Plan 0112 (2026-11-23): 45 items come from a second authoring wave (authoring.wave 5; `two`, `three`, `state`, `fine` only; 38 of them end with a natural request), written to be harder for a reader of the chat: every trait on two or three weak cues in different sentences. They passed the bank's four inclusion rules with the strict label gate on the wave's own draw, the one draw every item has. 38 more that the wave had admitted under a loosened gate are not in the bank (edits.not_strictly_gated); 19 of those pass the same rule on a second draw of the stem leg and were in the plan's first build (bank v3, never merged): the owner dropped them, since strictly gated means one draw per item (edits.second_draw_not_admitted).",
+  "The no-stem leg of the label gate decided 6 parts (umh-two-w5161-B p1, umh-two-w5344-B p1, umh-two-w5513-B p1, umh-three-w5392-B p1, umh-state-w5006-B p1, umh-state-w5108-B p0): the stem's greedy answer was empty, so by the rule as written the same question without the stem `My answer is:` was the gate (greedy gold and >= 8 of 10). Bank v2 had no such part. The rule treats one symptom two ways: a part with an empty stem greedy is gated on the no-stem leg whatever its stem samples were, a part with a gold stem greedy and three empty stem samples is dropped (edits.no_stem_leg).",
+  "The wave's cap of 3 items per (kind, type, gold) was counted within the wave, so a state gold can be the gold of up to 6 parts of one kind.",
+  "Wave-5 countries and heritages lean on one national institution, app or word under its own name (BLIK, PromptPay, MyKad, CFDI, 'babcia', 'aso ebi') beside one or two independent details: read by hand and kept (no part rests on that one word alone); the wave's lint flag 'one sentence alone lets an attentive reader name the value' fired on most multi-trait items and never gated.",
+  "Review r4 F2: a fresh screen of the first build's 96 state parts left 43 also-true flags (83 state parts are in this bank). One rule (right to say it vs only possible) gave 1 swap, `disappointed` in umh-state-w1039-A, fixed before that build was judged; the other 42 are the absence of a swap at build time: near neighbours the chat makes possible, not true (`ashamed` beside `embarrassed`, `envious` beside `resentful`, `nostalgic` beside `grieving`). The written reasons (bank_changes_v3.md) date from 13 minutes after judging had started, 35 of the 43 are one template sentence, and the write-up moved no verdict; the swapped part and umh-state-w4019-A were not blind (their arm outcomes were known from review r3). By the same rule `burned out` in umh-state-w1039-A (swapped in review r3 after a lens arm failed on it) would have been kept; the swap stands, so that part is no harder than the rule makes it.",
+  "Mixed-state lists hold two bars for a feeling the item's OTHER situation supports: review r2 swapped it out when the other situation 'supports it', review r4 F2 only when an observer would be 'right to say it'. So `anxious` was removed from part 1 of umh-state-w4108-A (the gaffe span, 'replayed it about forty times') and of umh-state-w4026-A, and is still a distractor of part 0 of the same two messages, in each on the span that removed it from part 1."
  ],
- "gate": "Qwen3.6-27B, per part: the label gate (names the value when asked: greedy and >= 8/10 at T=0.7) and the open probe (volunteers it when asked to describe the user: greedy and >= 3/4). eval_render=chat_context: render `messages` ([system, user]) with the chat template.",
+ "gate": "Qwen3.6-27B, per part: the label gate (names the value when asked: greedy and >= 8/10 at T=0.7, empty samples counted as wrong) and the open probe (volunteers it when asked to describe the user: greedy and >= 3/4). eval_render=chat_context: render `messages` ([system, user]) with the chat template.",
  "read": "every token of the chat_context render (system turn, user turn, assistant header, empty think block), every judged layer; reads=lite reads the same positions",
  "min_render_tokens": 85,
  "items": [
@@ -2419,138 +3157,6 @@
      ],
      "gate": {
       "greedy": "Brazil",
-      "n_correct": 10,
-      "n_samples": 10,
-      "stem_dropped": false
-     },
-     "open_probe": {
-      "n_stated": 4,
-      "n_samples": 4
-     },
-     "blind_guess": {
-      "hits": 0,
-      "n": 5
-     },
-     "prompt_only_ok": true
-    }
-   ]
-  },
-  {
-   "name": "umh-two-w1035-A",
-   "kind": "two",
-   "subfamily": "two",
-   "request_variant": "A",
-   "messages": [
-    {
-     "role": "system",
-     "content": "You are a helpful assistant."
-    },
-    {
-     "role": "user",
-     "content": "Long day at the practice: back-to-back refractions, two kids needing their first frames fitted, and a retinal photo I referred on. Then lunch was a call with my solicitor about who keeps the house and how the pension gets split, because my ex's lawyer has finally sent the financial disclosure forms. Signing the decree paperwork in a few weeks apparently. Trying to think about anything that isn't that. Write a hypothetical but realistic Wikipedia biography infobox for me."
-    }
-   ],
-   "target": "optometrist + divorcing",
-   "consistency": 1.0,
-   "source": "authored:claude-opus-5-5 2026-11-20 um-hard full wave 1",
-   "gate_variant": "chat_revealed_belief",
-   "eval_render": "chat_context",
-   "readout": {
-    "kind": "every_token"
-   },
-   "authoring": {
-    "model": "claude-opus-5-5",
-    "wave": 1,
-    "cues": [
-     "back-to-back refractions",
-     "first frames fitted",
-     "a retinal photo I referred on",
-     "who keeps the house and how the pension gets split",
-     "Signing the decree paperwork in a few weeks"
-    ],
-    "tempting_wrong": "Ophthalmologist or already divorced; frame fitting and referring on suggest a high-street optician, and pending decree and asset split mean divorce is in progress."
-   },
-   "flag": "review r3: its life-type part (divorcing) is near-stated like the 14 dropped ('my ex's lawyer has finally sent the financial disclosure forms. Signing the decree paperwork in a few weeks'); kept because the owner's decision to relabel its occupation gold presupposes the item, and it is now the bank's only life-type part: the owner decides",
-   "parts": [
-    {
-     "attr_label": "occupation",
-     "judge_label": "occupation",
-     "type": "profession",
-     "gold": "optometrist",
-     "options": [
-      "optometrist",
-      "teacher",
-      "psychologist",
-      "physiotherapist",
-      "dentist",
-      "social worker",
-      "veterinarian"
-     ],
-     "gold_position": 1,
-     "option_seed": "umh-v1|umh-two-w1035-A|p0",
-     "near_neighbours": [
-      "physiotherapist"
-     ],
-     "forms": [
-      "ophthalmic optician",
-      "doctor of optometry"
-     ],
-     "cues": [
-      "back-to-back refractions",
-      "first frames fitted",
-      "a retinal photo I referred on"
-     ],
-     "gate": {
-      "greedy": "Optometrist",
-      "n_correct": 10,
-      "n_samples": 10,
-      "stem_dropped": false
-     },
-     "open_probe": {
-      "n_stated": 4,
-      "n_samples": 4
-     },
-     "blind_guess": {
-      "hits": 0,
-      "n": 5,
-      "rerun": "re-run on the list as built, with its swapped distractor(s) or relabelled gold (5 shuffles, Opus, label + options; 2026-11-21 for reviews r1 and r2, 2026-11-23 for review r3)"
-     },
-     "prompt_only_ok": true,
-     "relabelled": {
-      "from": "optician",
-      "to": "optometrist"
-     }
-    },
-    {
-     "attr_label": "current life situation",
-     "judge_label": "current life situation",
-     "type": "life",
-     "gold": "divorcing",
-     "options": [
-      "newly retired",
-      "university student",
-      "divorcing",
-      "mature student",
-      "new homeowner",
-      "widowed",
-      "retiring soon"
-     ],
-     "gold_position": 3,
-     "option_seed": "umh-v1|umh-two-w1035-A|p1",
-     "near_neighbours": [
-      "widowed"
-     ],
-     "forms": [
-      "going through a divorce",
-      "getting divorced",
-      "in divorce proceedings"
-     ],
-     "cues": [
-      "who keeps the house and how the pension gets split",
-      "Signing the decree paperwork in a few weeks"
-     ],
-     "gate": {
-      "greedy": "Divorcing",
       "n_correct": 10,
       "n_samples": 10,
       "stem_dropped": false
@@ -4858,6 +5464,2020 @@
    ]
   },
   {
+   "name": "umh-two-w5008-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Expenses form bounced back. Third time. Finance want a receipt for every parking meter, which is lovely when half the meters only take an app that emails nothing. I've redone the mileage column twice, row by row, and the total still doesn't match their system, out by 4.20. Meanwhile the desk rang at twenty to eleven last night to have me cut 200 words and get one more callback before the page locked. My bag is just spiral pads full of Teeline and a dictaphone with a dead charger. Rows pasted below. Work out where a 4.20 gap could come from if mileage is paid at 45p a mile."
+    }
+   ],
+   "target": "journalist + frustrated",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the desk rang at twenty to eleven last night to have me cut 200 words and get one more callback before the page locked",
+     "spiral pads full of Teeline and a dictaphone",
+     "Expenses form bounced back. Third time.",
+     "which is lovely when half the meters only take an app that emails nothing",
+     "I've redone the mileage column twice, row by row, and the total still doesn't match"
+    ],
+    "tempting_wrong": "Secretary or court stenographer: Teeline shorthand fits them, but the late-night call to cut 200 words before a page locks and the chase for a callback place the user on a newspaper; 'anxious' is tempting but the clipped, sarcastic repetition is about obstruction, not fear."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "journalist",
+     "options": [
+      "midwife",
+      "radiographer",
+      "journalist",
+      "accountant",
+      "translator",
+      "bank teller",
+      "hairdresser"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-two-w5008-B|p0",
+     "near_neighbours": [
+      "translator"
+     ],
+     "forms": [
+      "a journalist",
+      "reporter",
+      "news reporter",
+      "newspaper reporter"
+     ],
+     "cues": [
+      "the desk rang at twenty to eleven last night to have me cut 200 words and get one more callback before the page locked",
+      "spiral pads full of Teeline and a dictaphone"
+     ],
+     "gate": {
+      "greedy": "Journalist",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "frustrated",
+     "options": [
+      "anxious",
+      "insecure",
+      "homesick",
+      "lonely",
+      "frustrated",
+      "content",
+      "grieving"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-two-w5008-B|p1",
+     "near_neighbours": [
+      "insecure"
+     ],
+     "forms": [
+      "frustration",
+      "fed up",
+      "exasperated"
+     ],
+     "cues": [
+      "Expenses form bounced back. Third time.",
+      "which is lovely when half the meters only take an app that emails nothing",
+      "I've redone the mileage column twice, row by row, and the total still doesn't match"
+     ],
+     "gate": {
+      "greedy": "Frustrated",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5028-A",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "A",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Need to sort out a message to a client who still hasn't paid. Last Saturday he rang me at 11pm because the water heater in his rented house was spraying everywhere, so I drove over with the threaders and the torch still in the back of the truck from another job. I spent two hours on my back under his laundry sink, then went up to the rooftop tank because the float valve was stuck as well. Now he says he'll only pay once I send the CFDI, which I did Monday, and he's still stalling because he wants to wait for his December bonus on the 20th. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "plumber + Mexico",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "rang me at 11pm because the water heater in his rented house was spraying everywhere",
+     "the threaders and the torch still in the back of the truck",
+     "two hours on my back under his laundry sink",
+     "the float valve was stuck",
+     "went up to the rooftop tank",
+     "he'll only pay once I send the CFDI",
+     "wait for his December bonus on the 20th"
+    ],
+    "tempting_wrong": "General handyman or electrician; ruled out because every task cluster (water heater, threaders, torch for soldering, under-sink work, tank float valve) is water-supply work, and a CFDI rather than a generic receipt points to Mexico rather than another Spanish-speaking country."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "plumber",
+     "options": [
+      "midwife",
+      "translator",
+      "electrician",
+      "truck driver",
+      "plumber",
+      "journalist",
+      "train driver"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-two-w5028-A|p0",
+     "near_neighbours": [
+      "electrician"
+     ],
+     "forms": [
+      "plumbing technician",
+      "self-employed plumber"
+     ],
+     "cues": [
+      "rang me at 11pm because the water heater in his rented house was spraying everywhere",
+      "the threaders and the torch still in the back of the truck",
+      "two hours on my back under his laundry sink",
+      "the float valve was stuck"
+     ],
+     "gate": {
+      "greedy": "Plumber",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Mexico",
+     "options": [
+      "Mexico",
+      "Morocco",
+      "Ukraine",
+      "Canada",
+      "United States",
+      "Israel",
+      "Peru"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5028-A|p1",
+     "near_neighbours": [
+      "Peru"
+     ],
+     "forms": [
+      "in Mexico",
+      "Mexican Republic"
+     ],
+     "cues": [
+      "went up to the rooftop tank",
+      "he'll only pay once I send the CFDI",
+      "wait for his December bonus on the 20th"
+     ],
+     "gate": {
+      "greedy": "Mexico",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5051-A",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "A",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to squeeze four cheap days away into March break. I've still got 28 progress comments to write and they're due that Friday, so leaving Saturday morning is the earliest. Outdoor duty Monday to Thursday means packing happens at night. Thinking a drive, five hours max each way, somewhere with an indoor pool for my kid since it'll still be well below zero. I need to remember to pay the hydro bill before I go and renew my health card, it lapses in April. This and July–August are basically my only real time off. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "teacher + Canada",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I've still got 28 progress comments to write and they're due that Friday",
+     "Outdoor duty Monday to Thursday",
+     "This and July–August are basically my only real time off",
+     "March break",
+     "pay the hydro bill",
+     "renew my health card, it lapses in April",
+     "well below zero"
+    ],
+    "tempting_wrong": "United States, since many US school staff take spring breaks; but 'March break', paying a 'hydro' bill for electricity, and a renewable provincial-style health card point to Canada. A parent volunteer might write comments, but writing 28 comments to a deadline plus outdoor duty and summers off indicates a teacher."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "teacher",
+     "options": [
+      "fisherman",
+      "teacher",
+      "librarian",
+      "veterinarian",
+      "accountant",
+      "dentist",
+      "bank teller"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5051-A|p0",
+     "near_neighbours": [
+      "librarian"
+     ],
+     "forms": [
+      "schoolteacher",
+      "classroom teacher",
+      "school teacher"
+     ],
+     "cues": [
+      "I've still got 28 progress comments to write and they're due that Friday",
+      "Outdoor duty Monday to Thursday",
+      "This and July–August are basically my only real time off"
+     ],
+     "gate": {
+      "greedy": "Teacher",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Canada",
+     "options": [
+      "Canada",
+      "Ghana",
+      "Turkey",
+      "Netherlands",
+      "Egypt",
+      "Nigeria",
+      "United States"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5051-A|p1",
+     "near_neighbours": [
+      "United States"
+     ],
+     "forms": [
+      "in Canada",
+      "Canadian resident"
+     ],
+     "cues": [
+      "March break",
+      "pay the hydro bill",
+      "renew my health card, it lapses in April",
+      "well below zero"
+     ],
+     "gate": {
+      "greedy": "Canada",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5054-A",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "A",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Moving flats on 1.4. and the lease form wants my personal identity code typed with the hyphen before the last four characters, not the A my little sister's has. The housing company says my shared sauna turn moves to Thursday evenings, which is useless, because Thursday to Saturday I'm on my feet until closing and not home before half three. Packing's slow too. My hands are cracked from cutting limes and the sanitiser all week, and I keep catching myself eyeballing the pickle jars in centilitres, like I'm free-pouring, before I wrap them. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "bartender + Finland",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "Thursday to Saturday I'm on my feet until closing and not home before half three",
+     "My hands are cracked from cutting limes and the sanitiser all week",
+     "eyeballing the pickle jars in centilitres, like I'm free-pouring",
+     "Moving flats on 1.4.",
+     "personal identity code typed with the hyphen before the last four characters, not the A my little sister's has",
+     "The housing company says my shared sauna turn moves to Thursday evenings"
+    ],
+    "tempting_wrong": "Waiter or chef in some northern European country; the centilitre free-pouring habit and the lime-cracked hands point to pouring drinks rather than serving or cooking, and the hyphen-versus-A identity code plus the housing-company sauna turn are specifically Finnish, not Swedish or Estonian."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "bartender",
+     "options": [
+      "bartender",
+      "midwife",
+      "landscape gardener",
+      "truck driver",
+      "train driver",
+      "waiter",
+      "florist"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5054-A|p0",
+     "near_neighbours": [
+      "waiter"
+     ],
+     "forms": [
+      "barman",
+      "barmaid",
+      "barkeeper",
+      "bartending"
+     ],
+     "cues": [
+      "Thursday to Saturday I'm on my feet until closing and not home before half three",
+      "My hands are cracked from cutting limes and the sanitiser all week",
+      "eyeballing the pickle jars in centilitres, like I'm free-pouring"
+     ],
+     "gate": {
+      "greedy": "Bartender",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Finland",
+     "options": [
+      "Finland",
+      "India",
+      "Portugal",
+      "Sweden",
+      "Pakistan",
+      "Greece",
+      "Spain"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5054-A|p1",
+     "near_neighbours": [
+      "Sweden"
+     ],
+     "forms": [
+      "Finnish resident",
+      "lives in Finland",
+      "Republic of Finland",
+      "Suomi"
+     ],
+     "cues": [
+      "Moving flats on 1.4.",
+      "personal identity code typed with the hyphen before the last four characters, not the A my little sister's has",
+      "The housing company says my shared sauna turn moves to Thursday evenings"
+     ],
+     "gate": {
+      "greedy": "Finland",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5161-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Ordering 60 snack boxes for Saturday afternoon for the neighbours, since my daughter's acceptance letter came through and her new school year starts mid-July. I had the letter laminated the same day and it's on the fridge next to her old primary report cards. The caterer quoted 18.500 per box, plus 150.000 for delivery by motorbike courier. She wants payment by virtual account number, which I'll do at the minimarket counter on my way home. I've rewritten the little thank-you card for the boxes four times so her full name and the faculty fit on one line. Can you calculate the total for 60 boxes with delivery, and what it becomes if I add 10 more boxes?"
+    }
+   ],
+   "target": "Indonesia + proud",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "her new school year starts mid-July",
+     "The caterer quoted 18.500 per box, plus 150.000 for delivery by motorbike courier",
+     "She wants payment by virtual account number, which I'll do at the minimarket counter",
+     "I had the letter laminated the same day and it's on the fridge next to her old primary report cards",
+     "I've rewritten the little thank-you card for the boxes four times so her full name and the faculty fit on one line"
+    ],
+    "tempting_wrong": "Vietnam or the Philippines: big dotted prices and motorbike couriers fit Vietnam, but its school year starts in September, and paying a virtual account number at a minimarket counter is a distinctly Indonesian routine; the Philippines uses commas and peso-scale prices."
+   },
+   "parts": [
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Indonesia",
+     "options": [
+      "Morocco",
+      "Malaysia",
+      "Austria",
+      "France",
+      "Indonesia",
+      "Switzerland",
+      "Israel"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-two-w5161-B|p0",
+     "near_neighbours": [
+      "Malaysia"
+     ],
+     "forms": [
+      "Republic of Indonesia",
+      "living in Indonesia",
+      "Indonesian resident"
+     ],
+     "cues": [
+      "her new school year starts mid-July",
+      "The caterer quoted 18.500 per box, plus 150.000 for delivery by motorbike courier",
+      "She wants payment by virtual account number, which I'll do at the minimarket counter"
+     ],
+     "gate": {
+      "greedy": "Indonesia",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "proud",
+     "options": [
+      "numb",
+      "restless",
+      "proud",
+      "envious",
+      "resentful",
+      "burned out",
+      "hopeful"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-two-w5161-B|p1",
+     "near_neighbours": [],
+     "forms": [
+      "feeling proud"
+     ],
+     "cues": [
+      "I had the letter laminated the same day and it's on the fridge next to her old primary report cards",
+      "I've rewritten the little thank-you card for the boxes four times so her full name and the faculty fit on one line"
+     ],
+     "gate": {
+      "greedy": "Proud and celebratory",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": true
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5307-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "My sister's birthday dinner was Saturday and I didn't show; an agency dumped a 6,000-word job on me at 11pm Friday with a Monday 9am deadline in their time zone. She texted that it's fine and she understands. I've since ordered her the espresso machine she's wanted for two years, way over what we usually spend on each other. My Trados licence renewal also landed this week, so money's tight, but I paid for express shipping anyway. I've also offered to do her school runs every Thursday for the rest of term, even though Thursday is when I tally the week's source words and send invoices. The machine arrives Wednesday. Could you help me write a short note to tuck in the box with the machine?"
+    }
+   ],
+   "target": "translator + guilty",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b3, s3)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "an agency dumped a 6,000-word job on me at 11pm Friday with a Monday 9am deadline in their time zone",
+     "My Trados licence renewal also landed this week",
+     "Thursday is when I tally the week's source words and send invoices",
+     "She texted that it's fine and she understands.",
+     "I've since ordered her the espresso machine she's wanted for two years, way over what we usually spend on each other",
+     "I've also offered to do her school runs every Thursday for the rest of term"
+    ],
+    "tempting_wrong": "Anxious or regretful are tempting, but the sister has already said it's fine so there is nothing pending to fear, and the user keeps actively making amends (lavish gift, express shipping, weekly school runs) for a wrong they caused, which is guilt."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "translator",
+     "options": [
+      "graphic designer",
+      "translator",
+      "photographer",
+      "fisherman",
+      "tailor",
+      "journalist",
+      "farmer"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5307-B|p0",
+     "near_neighbours": [
+      "journalist"
+     ],
+     "forms": [
+      "professional translator",
+      "translation professional"
+     ],
+     "cues": [
+      "an agency dumped a 6,000-word job on me at 11pm Friday with a Monday 9am deadline in their time zone",
+      "My Trados licence renewal also landed this week",
+      "Thursday is when I tally the week's source words and send invoices"
+     ],
+     "gate": {
+      "greedy": "Translator",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "guilty",
+     "options": [
+      "guilty",
+      "disappointed",
+      "bored",
+      "betrayed",
+      "awestruck",
+      "envious",
+      "content"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5307-B|p1",
+     "near_neighbours": [],
+     "forms": [
+      "guilt-ridden",
+      "feeling guilty"
+     ],
+     "cues": [
+      "She texted that it's fine and she understands.",
+      "I've since ordered her the espresso machine she's wanted for two years, way over what we usually spend on each other",
+      "I've also offered to do her school runs every Thursday for the rest of term"
+     ],
+     "gate": {
+      "greedy": "Guilt",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5327-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I ordered a gel seat cushion and a small cooler from an online shop and paid 1,450 by PromptPay, but only the cushion turned up. The slip the courier left is dated 12/03/2568, and the box had been sitting at the little shop below my rented room for three days. I'd been away, since four nights out and two home is the usual rotation, with dispatch messaging me at 3am whenever a delivery runs late. The seller now says the cooler shipped separately and won't refund me. I do have the transfer screenshot, though I was queued at a weigh station when I paid, so the chat is a mess. Can you draft a short, firm message to the seller asking for either the cooler or a full refund within seven days?"
+    }
+   ],
+   "target": "truck driver + Thailand",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b3, s3)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "four nights out and two home is the usual rotation, with dispatch messaging me at 3am whenever a delivery runs late",
+     "I was queued at a weigh station when I paid",
+     "a gel seat cushion and a small cooler",
+     "paid 1,450 by PromptPay",
+     "The slip the courier left is dated 12/03/2568"
+    ],
+    "tempting_wrong": "Occupation could read as a courier or bus driver, but multi-night rotations, overnight dispatch messages and queuing at a weigh station point to long-haul freight; country could read as Laos or Cambodia, but PromptPay and a slip dated in the 2568 era together fix Thailand."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "truck driver",
+     "options": [
+      "architect",
+      "civil engineer",
+      "waiter",
+      "nurse",
+      "truck driver",
+      "train driver",
+      "paramedic"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-two-w5327-B|p0",
+     "near_neighbours": [
+      "train driver"
+     ],
+     "forms": [
+      "lorry driver",
+      "trucker",
+      "heavy goods vehicle driver"
+     ],
+     "cues": [
+      "four nights out and two home is the usual rotation, with dispatch messaging me at 3am whenever a delivery runs late",
+      "I was queued at a weigh station when I paid",
+      "a gel seat cushion and a small cooler"
+     ],
+     "gate": {
+      "greedy": "Truck driver",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Thailand",
+     "options": [
+      "Morocco",
+      "Thailand",
+      "Singapore",
+      "Colombia",
+      "Mexico",
+      "Israel",
+      "Greece"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5327-B|p1",
+     "near_neighbours": [
+      "Singapore"
+     ],
+     "forms": [
+      "Kingdom of Thailand"
+     ],
+     "cues": [
+      "paid 1,450 by PromptPay",
+      "The slip the courier left is dated 12/03/2568"
+     ],
+     "gate": {
+      "greedy": "Thailand",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5344-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "My mum posted the aso ebi lace for my cousin's wedding back home, and I need it made into a dress by mid-November. The customs charge on the parcel was confirmed by a message in my datová schránka this morning, and I've paid it. The seamstress I found is closed on 28. 10. for the state holiday, then has a two-week slot from the 30th. She wants two fittings before the final hem. At the reception the uncles will be spraying the couple with crisp notes all night, so I'd like pockets deep enough to keep my own stack ready. Could you draft a fitting and pickup schedule working backwards from 14 November that I can send to the seamstress?"
+    }
+   ],
+   "target": "Nigerian + Czech Republic",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b3, s3)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "My mum posted the aso ebi lace for my cousin's wedding back home",
+     "the uncles will be spraying the couple with crisp notes all night",
+     "confirmed by a message in my datová schránka this morning",
+     "closed on 28. 10. for the state holiday"
+    ],
+    "tempting_wrong": "Ghanaian or generic West African for heritage, and Slovakia for residence; aso ebi and money-spraying at receptions are specifically Nigerian customs, and the datová schránka plus a 28 October public holiday are Czech, not Slovak."
+   },
+   "parts": [
+    {
+     "attr_label": "ethnic heritage",
+     "judge_label": "ethnic heritage",
+     "type": "heritage",
+     "gold": "Nigerian",
+     "options": [
+      "Italian",
+      "Nigerian",
+      "Samoan",
+      "Filipino",
+      "Portuguese",
+      "Lebanese",
+      "Somali"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5344-B|p0",
+     "near_neighbours": [
+      "Somali"
+     ],
+     "forms": [
+      "of Nigerian descent",
+      "Nigerian heritage",
+      "Nigerian origin"
+     ],
+     "cues": [
+      "My mum posted the aso ebi lace for my cousin's wedding back home",
+      "the uncles will be spraying the couple with crisp notes all night"
+     ],
+     "gate": {
+      "greedy": "Nigerian",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Czech Republic",
+     "options": [
+      "Singapore",
+      "Portugal",
+      "Spain",
+      "Poland",
+      "Czech Republic",
+      "Mexico",
+      "Thailand"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-two-w5344-B|p1",
+     "near_neighbours": [
+      "Poland"
+     ],
+     "forms": [
+      "Czechia",
+      "the Czech Republic"
+     ],
+     "cues": [
+      "confirmed by a message in my datová schránka this morning",
+      "closed on 28. 10. for the state holiday"
+     ],
+     "gate": {
+      "greedy": "Czech Republic",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": true
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 2,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5368-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "My sister has asked me to host my nephew's first birthday on the 14th, the big one with the tray where he grabs the thread, the money or the pencil and everyone reads his future from whichever he picks. Mum will be in my kitchen from 6am making the seaweed soup she makes every birthday morning without fail. Problem is the weeks before are my busiest: grooms' fittings booked every Saturday through June, and I've still got four canvas fronts to baste before then. The flat is also half full of bolts of worsted, and the pressing ham lives on the dining table most nights. Can you draft a two-week prep timetable that fits the party shopping, cleaning and set-up around my Saturday commitments?"
+    }
+   ],
+   "target": "Korean + tailor",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b3, s3)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the big one with the tray where he grabs the thread, the money or the pencil and everyone reads his future from whichever he picks",
+     "making the seaweed soup she makes every birthday morning without fail",
+     "grooms' fittings booked every Saturday through June",
+     "four canvas fronts to baste",
+     "bolts of worsted",
+     "the pressing ham lives on the dining table"
+    ],
+    "tempting_wrong": "Chinese or generic East Asian heritage, ruled out because the first-birthday object-grabbing tray combined with seaweed soup on every birthday morning is a specifically Korean pairing; for occupation, seamstress or fashion designer, ruled out because grooms' fittings, canvas fronts, basting and worsted point to made-to-measure menswear tailoring."
+   },
+   "parts": [
+    {
+     "attr_label": "ethnic heritage",
+     "judge_label": "ethnic heritage",
+     "type": "heritage",
+     "gold": "Korean",
+     "options": [
+      "Irish",
+      "Polish",
+      "Ukrainian",
+      "Nigerian",
+      "Scottish",
+      "Korean",
+      "Japanese"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-two-w5368-B|p0",
+     "near_neighbours": [
+      "Japanese"
+     ],
+     "forms": [
+      "Korean heritage",
+      "Korean descent",
+      "of Korean descent"
+     ],
+     "cues": [
+      "the big one with the tray where he grabs the thread, the money or the pencil and everyone reads his future from whichever he picks",
+      "making the seaweed soup she makes every birthday morning without fail"
+     ],
+     "gate": {
+      "greedy": "Korean",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 2,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "tailor",
+     "options": [
+      "welder",
+      "tailor",
+      "librarian",
+      "photographer",
+      "graphic designer",
+      "hairdresser",
+      "teacher"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5368-B|p1",
+     "near_neighbours": [
+      "hairdresser"
+     ],
+     "forms": [
+      "bespoke tailor",
+      "menswear tailor",
+      "suit tailor"
+     ],
+     "cues": [
+      "grooms' fittings booked every Saturday through June",
+      "four canvas fronts to baste",
+      "bolts of worsted",
+      "the pressing ham lives on the dining table"
+     ],
+     "gate": {
+      "greedy": "Tailor",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5500-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to sort my October budget before things get hectic. Tuesdays and Fridays I'm out of bed at 3:30 for the wholesale market run, so fuel for the van is the biggest line. I also need to restock four boxes of Oasis foam bricks and a roll of chicken wire. My hands are so nicked from thorns this month that I've added a pack of proper gloves too. The monotributo payment comes out on the 20th as usual. The van insurance I still pay in cash at the Rapipago round the corner, so that needs its own reminder. Can you lay all of this out as a week-by-week payment plan for October so nothing lands on my two early market mornings?"
+    }
+   ],
+   "target": "florist + Argentina",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "Tuesdays and Fridays I'm out of bed at 3:30 for the wholesale market run",
+     "restock four boxes of Oasis foam bricks and a roll of chicken wire",
+     "My hands are so nicked from thorns this month",
+     "The monotributo payment comes out on the 20th as usual",
+     "pay in cash at the Rapipago round the corner"
+    ],
+    "tempting_wrong": "Greengrocer or market trader, from the 3:30 wholesale market runs; ruled out by the Oasis foam bricks, chicken wire and thorn cuts, which point to arranging cut stems. For country, Uruguay also has a monotributo, but Rapipago is an Argentine payment network."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "florist",
+     "options": [
+      "truck driver",
+      "florist",
+      "bus driver",
+      "fisherman",
+      "musician",
+      "landscape gardener",
+      "actor"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5500-B|p0",
+     "near_neighbours": [
+      "landscape gardener"
+     ],
+     "forms": [
+      "floral designer",
+      "flower shop owner",
+      "florist (self-employed)"
+     ],
+     "cues": [
+      "Tuesdays and Fridays I'm out of bed at 3:30 for the wholesale market run",
+      "restock four boxes of Oasis foam bricks and a roll of chicken wire",
+      "My hands are so nicked from thorns this month"
+     ],
+     "gate": {
+      "greedy": "Florist",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Argentina",
+     "options": [
+      "Chile",
+      "Israel",
+      "Netherlands",
+      "Argentina",
+      "Denmark",
+      "Morocco",
+      "Switzerland"
+     ],
+     "gold_position": 4,
+     "option_seed": "umh-v1|umh-two-w5500-B|p1",
+     "near_neighbours": [
+      "Chile"
+     ],
+     "forms": [
+      "Argentine Republic",
+      "República Argentina"
+     ],
+     "cues": [
+      "The monotributo payment comes out on the 20th as usual",
+      "pay in cash at the Rapipago round the corner"
+     ],
+     "gate": {
+      "greedy": "Argentina",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5510-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The full caution fee from the old flat came back into my account this morning, all 450,000 of it, after four months of the landlord dodging my calls. Last night I deleted the whole folder of voice notes and receipt photos I'd been keeping in case it ended up with a lawyer. I'm planning to put part of it towards power, since NEPA has been taking light most evenings this month and the gen is drinking petrol faster than ever. Then I slept straight through until nine, first time since the move. The rest should cover my nephew's second-term school fees and a small emergency fund. Can you draw up a simple budget splitting the refund between fuel and inverter batteries, the school fees and an emergency fund?"
+    }
+   ],
+   "target": "Nigeria + relieved",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "caution fee",
+     "NEPA has been taking light most evenings this month",
+     "the gen is drinking petrol faster than ever",
+     "Last night I deleted the whole folder of voice notes and receipt photos I'd been keeping in case it ended up with a lawyer",
+     "Then I slept straight through until nine, first time since the move"
+    ],
+    "tempting_wrong": "Ghana, because generators and outages are common there too; but 'NEPA' and 'taking light' are specifically Nigerian usage. For the feeling, 'frustrated' or 'anxious' fit the dispute, but it is over, the money is back, and the user is discarding evidence and sleeping in."
+   },
+   "parts": [
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Nigeria",
+     "options": [
+      "Ireland",
+      "United Kingdom",
+      "Nigeria",
+      "Hungary",
+      "Austria",
+      "Ghana",
+      "Czech Republic"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-two-w5510-B|p0",
+     "near_neighbours": [
+      "Ghana"
+     ],
+     "forms": [
+      "Federal Republic of Nigeria"
+     ],
+     "cues": [
+      "caution fee",
+      "NEPA has been taking light most evenings this month",
+      "the gen is drinking petrol faster than ever"
+     ],
+     "gate": {
+      "greedy": "Nigeria",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "relieved",
+     "options": [
+      "proud",
+      "grieving",
+      "envious",
+      "numb",
+      "bored",
+      "relieved",
+      "burned out"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-two-w5510-B|p1",
+     "near_neighbours": [
+      "proud"
+     ],
+     "forms": [
+      "feeling relieved",
+      "greatly relieved"
+     ],
+     "cues": [
+      "Last night I deleted the whole folder of voice notes and receipt photos I'd been keeping in case it ended up with a lawyer",
+      "Then I slept straight through until nine, first time since the move"
+     ],
+     "gate": {
+      "greedy": "Relieved",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5513-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I want to batch my own meals for the week, which is harder than it sounds with my hours. I'm on split shifts, in at ten for prep, a break around three, then on the pass until well after eleven. My knife roll comes home with me anyway, so chopping isn't the problem, time is. Wednesdays and Fridays I keep the fast, so no meat, dairy or eggs, and ideally no olive oil either. Saturday I finish early for once and want to be standing at the vigil in church, then take communion Sunday morning, so nothing heavy that night. Before any of this I need to buy oil for the little lamp in front of the icons. Could you sketch a five-day batch-cooking plan with portions that keep for three days in the fridge and mark which meals suit the two fast days?"
+    }
+   ],
+   "target": "chef + Orthodox Christian",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I'm on split shifts, in at ten for prep, a break around three, then on the pass until well after eleven",
+     "My knife roll comes home with me anyway",
+     "Wednesdays and Fridays I keep the fast, so no meat, dairy or eggs, and ideally no olive oil either",
+     "want to be standing at the vigil in church, then take communion Sunday morning",
+     "oil for the little lamp in front of the icons"
+    ],
+    "tempting_wrong": "Catholic or generic Christian from the vigil and communion, but strict Wednesday and Friday fasting that excludes dairy, eggs and even olive oil, standing through the vigil, and a lamp before the icons point to Orthodox Christianity; for the job, line cook or caterer, but working the pass on split shifts with one's own knife roll reads as a chef."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "chef",
+     "options": [
+      "plumber",
+      "data analyst",
+      "software developer",
+      "chef",
+      "baker",
+      "carpenter",
+      "flight attendant"
+     ],
+     "gold_position": 4,
+     "option_seed": "umh-v1|umh-two-w5513-B|p0",
+     "near_neighbours": [
+      "baker"
+     ],
+     "forms": [
+      "professional chef",
+      "restaurant chef"
+     ],
+     "cues": [
+      "I'm on split shifts, in at ten for prep, a break around three, then on the pass until well after eleven",
+      "My knife roll comes home with me anyway"
+     ],
+     "gate": {
+      "greedy": "Chef",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "religion",
+     "judge_label": "religion",
+     "type": "religion",
+     "gold": "Orthodox Christian",
+     "options": [
+      "Mormon",
+      "Orthodox Christian",
+      "Jehovah's Witness",
+      "Baha'i",
+      "atheist",
+      "Muslim",
+      "Sikh"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-two-w5513-B|p1",
+     "near_neighbours": [],
+     "forms": [
+      "Eastern Orthodox",
+      "Eastern Orthodox Christian",
+      "Orthodox Christianity"
+     ],
+     "cues": [
+      "Wednesdays and Fridays I keep the fast, so no meat, dairy or eggs, and ideally no olive oil either",
+      "want to be standing at the vigil in church, then take communion Sunday morning",
+      "oil for the little lamp in front of the icons"
+     ],
+     "gate": {
+      "greedy": "Eastern Orthodox",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": true
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5526-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I'm ordering a heated seat cover online for the tractor cab, since the old one split over the winter. The seller only takes BLIK or card, which is fine. Timing is the awkward part: from mid-April I'm out spraying the rapeseed at dawn before the wind picks up, then it's straight into first-cut silage, so anything that turns up after that sits unopened until late June. I'd collect it from the parcel locker outside the Żabka in the village. There are three listings at 189, 215 and 240, with delivery windows of two days, a week and 'up to three weeks'. Which listing makes the most sense given those delivery windows, and what should I check about fit before I buy?"
+    }
+   ],
+   "target": "farmer + Poland",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "a heated seat cover online for the tractor cab",
+     "from mid-April I'm out spraying the rapeseed at dawn before the wind picks up",
+     "then it's straight into first-cut silage",
+     "The seller only takes BLIK or card",
+     "the parcel locker outside the Żabka in the village"
+    ],
+    "tempting_wrong": "Agricultural contractor or machinery mechanic could be read from the tractor alone, but spraying his own rapeseed and putting up first-cut silage on his own calendar point to someone working his own land; Czechia or Germany are ruled out because BLIK and Żabka are both specifically Polish."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "farmer",
+     "options": [
+      "librarian",
+      "welder",
+      "florist",
+      "fisherman",
+      "teacher",
+      "landscape gardener",
+      "farmer"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-two-w5526-B|p0",
+     "near_neighbours": [
+      "fisherman"
+     ],
+     "forms": [],
+     "cues": [
+      "a heated seat cover online for the tractor cab",
+      "from mid-April I'm out spraying the rapeseed at dawn before the wind picks up",
+      "then it's straight into first-cut silage"
+     ],
+     "gate": {
+      "greedy": "Farmer",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Poland",
+     "options": [
+      "Turkey",
+      "Singapore",
+      "Ghana",
+      "Thailand",
+      "Poland",
+      "Egypt",
+      "Czech Republic"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-two-w5526-B|p1",
+     "near_neighbours": [
+      "Czech Republic"
+     ],
+     "forms": [
+      "Polska",
+      "Republic of Poland"
+     ],
+     "cues": [
+      "The seller only takes BLIK or card",
+      "the parcel locker outside the Żabka in the village"
+     ],
+     "gate": {
+      "greedy": "Poland",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 2,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5527-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to pick between two gyms near the office before their promo ends. One wants my MyKad number and a copy of a utility bill to sign up, the other only a selfie. Most weeknights I'm stuck until eight babysitting a Tableau extract refresh and fixing the joins when it falls over, so whichever stays open past ten matters. Monthly fees are 129 and 159, and the cheaper one adds a 50 joining fee. In quarter-end week the regional managers start messaging me for their sales cuts before seven, so mornings are out then. I'd pay either one by topping up through Touch 'n Go. Work out the total cost of each gym over twelve months and tell me which one fits a late-evening schedule better."
+    }
+   ],
+   "target": "data analyst + Malaysia",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "babysitting a Tableau extract refresh and fixing the joins when it falls over",
+     "the regional managers start messaging me for their sales cuts before seven",
+     "One wants my MyKad number and a copy of a utility bill to sign up",
+     "I'd pay either one by topping up through Touch 'n Go"
+    ],
+    "tempting_wrong": "Software engineer or BI developer is tempting from Tableau and joins, but being asked by managers for sales cuts to a deadline marks reporting analysis rather than building software; Singapore is tempting from the e-wallet, but MyKad is the Malaysian identity card."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "data analyst",
+     "options": [
+      "waiter",
+      "veterinarian",
+      "software developer",
+      "dentist",
+      "bricklayer",
+      "roofer",
+      "data analyst"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-two-w5527-B|p0",
+     "near_neighbours": [
+      "software developer"
+     ],
+     "forms": [
+      "business data analyst",
+      "reporting analyst"
+     ],
+     "cues": [
+      "babysitting a Tableau extract refresh and fixing the joins when it falls over",
+      "the regional managers start messaging me for their sales cuts before seven"
+     ],
+     "gate": {
+      "greedy": "Data Analyst",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Malaysia",
+     "options": [
+      "Malaysia",
+      "Indonesia",
+      "France",
+      "Greece",
+      "Italy",
+      "Mexico",
+      "Peru"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5527-B|p1",
+     "near_neighbours": [
+      "Indonesia"
+     ],
+     "forms": [
+      "Federation of Malaysia"
+     ],
+     "cues": [
+      "One wants my MyKad number and a copy of a utility bill to sign up",
+      "I'd pay either one by topping up through Touch 'n Go"
+     ],
+     "gate": {
+      "greedy": "Malaysia",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 2,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5530-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Last night a voice note meant for my partner went to the residents' group chat for the whole block instead: ninety seconds of me singing in the shower, badly. I deleted it after twenty minutes, but the counter said eleven people had already played it. My agent rang this morning with a recall for Thursday, so I'm meant to be learning the sides and checking the ring light for the self-tape in the hallway. Instead I've taken the stairs all day so I don't meet anyone from the fourth floor in the lift, and I've muted the chat. Most weeks I'm out from six till nearly midnight, so I barely know these neighbours anyway. Can you draft a short, light-hearted message I could post in the group chat to acknowledge the voice note and move things on?"
+    }
+   ],
+   "target": "actor + embarrassed",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "My agent rang this morning with a recall for Thursday",
+     "learning the sides and checking the ring light for the self-tape",
+     "Most weeks I'm out from six till nearly midnight",
+     "ninety seconds of me singing in the shower, badly",
+     "the counter said eleven people had already played it",
+     "I've taken the stairs all day so I don't meet anyone from the fourth floor in the lift, and I've muted the chat"
+    ],
+    "tempting_wrong": "Anxious or guilty: but nothing bad is pending and nobody was harmed; the issue is only that eleven neighbours heard something silly, and the user hides from them rather than worrying about consequences, which points to embarrassment."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "actor",
+     "options": [
+      "actor",
+      "physiotherapist",
+      "pilot",
+      "musician",
+      "flight attendant",
+      "notary",
+      "optician"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-two-w5530-B|p0",
+     "near_neighbours": [
+      "musician"
+     ],
+     "forms": [
+      "actress",
+      "stage actor",
+      "screen actor"
+     ],
+     "cues": [
+      "My agent rang this morning with a recall for Thursday",
+      "learning the sides and checking the ring light for the self-tape",
+      "Most weeks I'm out from six till nearly midnight"
+     ],
+     "gate": {
+      "greedy": "Actor",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "embarrassed",
+     "options": [
+      "proud",
+      "nostalgic",
+      "content",
+      "awestruck",
+      "guilty",
+      "embarrassed",
+      "insecure"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-two-w5530-B|p1",
+     "near_neighbours": [
+      "guilty"
+     ],
+     "forms": [
+      "mortified"
+     ],
+     "cues": [
+      "ninety seconds of me singing in the shower, badly",
+      "the counter said eleven people had already played it",
+      "I've taken the stairs all day so I don't meet anyone from the fourth floor in the lift, and I've muted the chat"
+     ],
+     "gate": {
+      "greedy": "Embarrassed",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-two-w5542-B",
+   "kind": "two",
+   "subfamily": "two",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to sort out a lunch for my babcia's name day on the 26th of July, which in our family has always mattered more than her birthday. I'm on closes Thursday through Saturday, so between restocking the speed rail and cashing up I won't be out until about 3am, which rules out anything before Sunday afternoon. She wants the old photo of her father in his RAF blues with the 303 Squadron patch on the table, since he never went back east after the war. I'll bring my Boston tins from work and shake a round of sours for the cousins. Can you draft a timeline for that Sunday lunch, from the shopping to the clearing up, for about fourteen people?"
+    }
+   ],
+   "target": "Polish + bartender",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "my babcia's name day on the 26th of July, which in our family has always mattered more than her birthday",
+     "her father in his RAF blues with the 303 Squadron patch on the table, since he never went back east after the war",
+     "I'm on closes Thursday through Saturday, so between restocking the speed rail and cashing up I won't be out until about 3am",
+     "I'll bring my Boston tins from work and shake a round of sours for the cousins"
+    ],
+    "tempting_wrong": "Heritage could be read as generically British because of the RAF photo, but the 303 Squadron patch, the man who never went back east, the babcia and the name day outranking a birthday point to Polish; occupation could be read as an insomniac or a chef because of the 3am finishes, but the speed rail, cashing up and Boston tins are drink-service kit."
+   },
+   "parts": [
+    {
+     "attr_label": "ethnic heritage",
+     "judge_label": "ethnic heritage",
+     "type": "heritage",
+     "gold": "Polish",
+     "options": [
+      "Samoan",
+      "Scottish",
+      "Polish",
+      "Pakistani",
+      "Irish",
+      "Filipino",
+      "Ukrainian"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-two-w5542-B|p0",
+     "near_neighbours": [
+      "Ukrainian"
+     ],
+     "forms": [
+      "Polish descent",
+      "of Polish descent",
+      "Polish heritage"
+     ],
+     "cues": [
+      "my babcia's name day on the 26th of July, which in our family has always mattered more than her birthday",
+      "her father in his RAF blues with the 303 Squadron patch on the table, since he never went back east after the war"
+     ],
+     "gate": {
+      "greedy": "Polish",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "bartender",
+     "options": [
+      "social worker",
+      "psychologist",
+      "bartender",
+      "accountant",
+      "waiter",
+      "train driver",
+      "bank teller"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-two-w5542-B|p1",
+     "near_neighbours": [
+      "waiter"
+     ],
+     "forms": [
+      "barman",
+      "barmaid",
+      "barkeeper"
+     ],
+     "cues": [
+      "I'm on closes Thursday through Saturday, so between restocking the speed rail and cashing up I won't be out until about 3am",
+      "I'll bring my Boston tins from work and shake a round of sours for the cousins"
+     ],
+     "gate": {
+      "greedy": "Bartender",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
    "name": "umh-three-w1000-B",
    "kind": "three",
    "subfamily": "three",
@@ -5558,6 +8178,686 @@
      },
      "blind_guess": {
       "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-three-w5360-B",
+   "kind": "three",
+   "subfamily": "three",
+   "request_variant": "B",
+   "third": "state",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The lottery results for the two arena dates came out at noon, and both entries came back unsuccessful. Back in January I swapped duties with a colleague so my 24-hour shift wouldn't land on that Saturday; this morning I asked him to swap them back. I'd already paid the hotel deposit at the convenience store counter using the barcode slip they emailed. Months of wearing the duty belt have rubbed the holster patch shiny on my spare trousers, and I'd been counting on two days without it. I'd even registered my My Number card for the face-check entry they use now. Nobody did anything wrong, it's a draw and plenty of people missed out. The penlight and towel set I pre-ordered arrived yesterday, and it's still sitting in its box by the door. Could you draft a short, polite message to the hotel asking whether the deposit can be refunded or moved to another weekend?"
+    }
+   ],
+   "target": "police officer + Japan + disappointed",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b3, s3)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "so my 24-hour shift wouldn't land on that Saturday",
+     "the duty belt have rubbed the holster patch shiny on my spare trousers",
+     "paid the hotel deposit at the convenience store counter using the barcode slip they emailed",
+     "I'd even registered my My Number card for the face-check entry",
+     "this morning I asked him to swap them back",
+     "Nobody did anything wrong, it's a draw and plenty of people missed out",
+     "it's still sitting in its box by the door"
+    ],
+    "tempting_wrong": "Security guard or factory shift worker for occupation, South Korea for country, and frustrated or resigned for feeling; the holster rules out unarmed guard work, the My Number card plus paying a deposit at a convenience store with a barcode slip pins Japan, and the explicit 'nobody did anything wrong' rules out frustration while the eager prior preparation, quietly undoing the swap and the unopened box left by the door point to disappointment rather than flat resignation."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "police officer",
+     "options": [
+      "journalist",
+      "bus driver",
+      "firefighter",
+      "actor",
+      "police officer",
+      "musician",
+      "translator"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-three-w5360-B|p0",
+     "near_neighbours": [
+      "firefighter"
+     ],
+     "forms": [
+      "policeman",
+      "policewoman",
+      "officer of the police"
+     ],
+     "cues": [
+      "so my 24-hour shift wouldn't land on that Saturday",
+      "the duty belt have rubbed the holster patch shiny on my spare trousers"
+     ],
+     "gate": {
+      "greedy": "Police officer",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Japan",
+     "options": [
+      "South Korea",
+      "Finland",
+      "France",
+      "Belgium",
+      "Norway",
+      "Chile",
+      "Japan"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-three-w5360-B|p1",
+     "near_neighbours": [
+      "South Korea"
+     ],
+     "forms": [
+      "Nippon",
+      "Nihon"
+     ],
+     "cues": [
+      "paid the hotel deposit at the convenience store counter using the barcode slip they emailed",
+      "I'd even registered my My Number card for the face-check entry"
+     ],
+     "gate": {
+      "greedy": "Japan",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "disappointed",
+     "options": [
+      "hopeful",
+      "relieved",
+      "disappointed",
+      "homesick",
+      "bored",
+      "ashamed",
+      "lonely"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-three-w5360-B|p2",
+     "near_neighbours": [
+      "bored"
+     ],
+     "forms": [
+      "disappointment",
+      "feeling let down"
+     ],
+     "cues": [
+      "this morning I asked him to swap them back",
+      "Nobody did anything wrong, it's a draw and plenty of people missed out",
+      "it's still sitting in its box by the door"
+     ],
+     "gate": {
+      "greedy": "Disappointed",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-three-w5392-B",
+   "kind": "three",
+   "subfamily": "three",
+   "request_variant": "B",
+   "third": "state",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "My daughter's recital was last Friday and I wasn't there; the rain finally stopped and the planter couldn't wait, so I was out on it until the headlights were all I could see. Since then I've bought the expensive ballet shoes she'd been hinting at for months, paid by Pix that same night, plus a cake from the bakery she likes. The co-op agronomist keeps ringing at six every morning about the soy stand counts, which doesn't help. The school fees came as a boleto this month and I'd forgotten it, so there's a small fine on top. I've offered to do every school run this week and I still haven't opened the video my wife sent of her dancing. Can you help me plan a short Saturday outing for just the two of us that fits between a morning and an afternoon of spraying?"
+    }
+   ],
+   "target": "farmer + Brazil + guilty",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b3, s3)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the rain finally stopped and the planter couldn't wait, so I was out on it until the headlights were all I could see",
+     "The co-op agronomist keeps ringing at six every morning about the soy stand counts",
+     "paid by Pix that same night",
+     "The school fees came as a boleto this month",
+     "I've bought the expensive ballet shoes she'd been hinting at for months",
+     "I've offered to do every school run this week",
+     "I still haven't opened the video my wife sent of her dancing"
+    ],
+    "tempting_wrong": "Anxious or sad; but the user caused the absence themselves and responds by overcompensating (gifts, school runs) and avoiding the video, which fits guilt rather than worry about a future outcome or simple sadness."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "farmer",
+     "options": [
+      "hairdresser",
+      "journalist",
+      "beekeeper",
+      "tailor",
+      "fisherman",
+      "translator",
+      "farmer"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-three-w5392-B|p0",
+     "near_neighbours": [
+      "fisherman"
+     ],
+     "forms": [],
+     "cues": [
+      "the rain finally stopped and the planter couldn't wait, so I was out on it until the headlights were all I could see",
+      "The co-op agronomist keeps ringing at six every morning about the soy stand counts"
+     ],
+     "gate": {
+      "greedy": "Farmer",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Brazil",
+     "options": [
+      "Spain",
+      "Argentina",
+      "Austria",
+      "Brazil",
+      "Germany",
+      "India",
+      "Pakistan"
+     ],
+     "gold_position": 4,
+     "option_seed": "umh-v1|umh-three-w5392-B|p1",
+     "near_neighbours": [
+      "Argentina"
+     ],
+     "forms": [
+      "Brasil",
+      "Federative Republic of Brazil"
+     ],
+     "cues": [
+      "paid by Pix that same night",
+      "The school fees came as a boleto this month"
+     ],
+     "gate": {
+      "greedy": "Brazil",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": true
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "guilty",
+     "options": [
+      "numb",
+      "relieved",
+      "guilty",
+      "embarrassed",
+      "content",
+      "nostalgic",
+      "awestruck"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-three-w5392-B|p2",
+     "near_neighbours": [
+      "embarrassed"
+     ],
+     "forms": [
+      "Feeling guilty",
+      "Guilt-ridden"
+     ],
+     "cues": [
+      "I've bought the expensive ballet shoes she'd been hinting at for months",
+      "I've offered to do every school run this week",
+      "I still haven't opened the video my wife sent of her dancing"
+     ],
+     "gate": {
+      "greedy": "Guilty",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-three-w5575-B",
+   "kind": "three",
+   "subfamily": "three",
+   "request_variant": "B",
+   "third": "state",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "At Tuesday's owners' meeting I stood up and complained for a good five minutes about whoever keeps leaving flattened boxes beside the paper bin. The caretaker then held one up with my name and flat number on the label. They'd held spare strings and a block of rosin ordered in bulk. I'm rarely home from the theatre pit before midnight, so they'd sat there through a long week. The common charge still goes on the yellow postal cheque, and I'd been busy that week with my return on Ügyfélkapu. Since then I've used the back stairs so I don't pass anyone from the meeting. The residents' chat is muted and I haven't opened the photo someone posted. Could you draft a short, light-hearted message for the residents' chat saying the boxes were mine and they're cleared away now?"
+    }
+   ],
+   "target": "musician + Hungary + embarrassed",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "They'd held spare strings and a block of rosin ordered in bulk",
+     "I'm rarely home from the theatre pit before midnight",
+     "The common charge still goes on the yellow postal cheque",
+     "my return on Ügyfélkapu",
+     "The caretaker then held one up with my name and flat number on the label",
+     "Since then I've used the back stairs so I don't pass anyone from the meeting",
+     "The residents' chat is muted and I haven't opened the photo someone posted"
+    ],
+    "tempting_wrong": "Guilty or ashamed; ruled out because no one was harmed and the user offers no amends, only hides from being seen (back stairs, unopened photo) after a public gaffe, which is embarrassment. Country might read as another post-socialist state, but the yellow postal cheque plus Ügyfélkapu point only to Hungary."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "musician",
+     "options": [
+      "baker",
+      "physiotherapist",
+      "chef",
+      "civil engineer",
+      "optician",
+      "actor",
+      "musician"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-three-w5575-B|p0",
+     "near_neighbours": [
+      "actor"
+     ],
+     "forms": [],
+     "cues": [
+      "They'd held spare strings and a block of rosin ordered in bulk",
+      "I'm rarely home from the theatre pit before midnight"
+     ],
+     "gate": {
+      "greedy": "Theatre musician",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Hungary",
+     "options": [
+      "Poland",
+      "Thailand",
+      "Hungary",
+      "France",
+      "Belgium",
+      "Singapore",
+      "Israel"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-three-w5575-B|p1",
+     "near_neighbours": [
+      "Poland"
+     ],
+     "forms": [
+      "in Hungary",
+      "Magyarország"
+     ],
+     "cues": [
+      "The common charge still goes on the yellow postal cheque",
+      "my return on Ügyfélkapu"
+     ],
+     "gate": {
+      "greedy": "Hungary",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "embarrassed",
+     "options": [
+      "proud",
+      "grieving",
+      "insecure",
+      "betrayed",
+      "frustrated",
+      "resentful",
+      "embarrassed"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-three-w5575-B|p2",
+     "near_neighbours": [],
+     "forms": [
+      "embarrassment",
+      "mortified",
+      "sheepish"
+     ],
+     "cues": [
+      "The caretaker then held one up with my name and flat number on the label",
+      "Since then I've used the back stairs so I don't pass anyone from the meeting",
+      "The residents' chat is muted and I haven't opened the photo someone posted"
+     ],
+     "gate": {
+      "greedy": "Embarrassed",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-three-w5587-B",
+   "kind": "three",
+   "subfamily": "three",
+   "request_variant": "B",
+   "third": "state",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Thinking of moving rooms again, which would be the third since last spring, even though this one is fine and the lease runs till December. The new landlord wants the deposit through MoMo and says he'll register my temporary stay with the ward office like the last one did. Work's steady, nothing to worry about there: Saturdays I'm standing from eight till eight, Mondays off, and my kit bag is all foils, section clips and a tub of 30-vol developer. The new room is 4.5 million a month against my current 3.8 million, plus 2 million for the moving truck. Most nights this week I've taken the motorbike out after eleven just to ride around with nowhere to go. Even with one episode of something on, I'm up at the window by halfway. Can you work out how much extra the move would cost me over the next twelve months compared with staying put?"
+    }
+   ],
+   "target": "hairdresser + Vietnam + restless",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b4, s4)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "Saturdays I'm standing from eight till eight, Mondays off",
+     "my kit bag is all foils, section clips and a tub of 30-vol developer",
+     "wants the deposit through MoMo",
+     "register my temporary stay with the ward office",
+     "4.5 million a month",
+     "which would be the third since last spring, even though this one is fine",
+     "taken the motorbike out after eleven just to ride around with nowhere to go",
+     "I'm up at the window by halfway"
+    ],
+    "tempting_wrong": "The feeling could be read as anxious or indecisive, but the user says work and money are fine and has already settled on moving; the late-night aimless rides and being unable to sit through an episode, plus moving for the third time from a perfectly fine room, point to restlessness."
+   },
+   "parts": [
+    {
+     "attr_label": "occupation",
+     "judge_label": "occupation",
+     "type": "profession",
+     "gold": "hairdresser",
+     "options": [
+      "bricklayer",
+      "hairdresser",
+      "beekeeper",
+      "roofer",
+      "tailor",
+      "civil engineer",
+      "architect"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-three-w5587-B|p0",
+     "near_neighbours": [
+      "tailor"
+     ],
+     "forms": [
+      "hair stylist",
+      "hairstylist",
+      "hair dresser"
+     ],
+     "cues": [
+      "Saturdays I'm standing from eight till eight, Mondays off",
+      "my kit bag is all foils, section clips and a tub of 30-vol developer"
+     ],
+     "gate": {
+      "greedy": "Hairdresser",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "country of residence",
+     "judge_label": "country of residence",
+     "type": "country",
+     "gold": "Vietnam",
+     "options": [
+      "Pakistan",
+      "Vietnam",
+      "Mexico",
+      "China",
+      "Turkey",
+      "Colombia",
+      "Egypt"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-three-w5587-B|p1",
+     "near_neighbours": [
+      "China"
+     ],
+     "forms": [
+      "Viet Nam"
+     ],
+     "cues": [
+      "wants the deposit through MoMo",
+      "register my temporary stay with the ward office",
+      "4.5 million a month"
+     ],
+     "gate": {
+      "greedy": "Vietnam",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "restless",
+     "options": [
+      "awestruck",
+      "hopeful",
+      "restless",
+      "relieved",
+      "envious",
+      "numb",
+      "proud"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-three-w5587-B|p2",
+     "near_neighbours": [
+      "hopeful"
+     ],
+     "forms": [
+      "restlessness",
+      "can't settle"
+     ],
+     "cues": [
+      "which would be the third since last spring, even though this one is fine",
+      "taken the motorbike out after eleven just to ride around with nowhere to go",
+      "I'm up at the window by halfway"
+     ],
+     "gate": {
+      "greedy": "Restless",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 2,
       "n": 5
      },
      "prompt_only_ok": true
@@ -6591,12 +9891,12 @@
      "gold": "resentful",
      "options": [
       "resentful",
-      "envious",
-      "numb",
+      "insecure",
+      "relieved",
       "anxious",
-      "disappointed",
+      "envious",
       "awestruck",
-      "insecure"
+      "numb"
      ],
      "gold_position": 1,
      "option_seed": "umh-v1|umh-state-w1039-A|p0",
@@ -6638,6 +9938,10 @@
       {
        "removed": "frustrated",
        "added": "anxious"
+      },
+      {
+       "removed": "disappointed",
+       "added": "relieved"
       }
      ]
     }
@@ -9158,6 +12462,1443 @@
      },
      "blind_guess": {
       "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5006-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "mixed_state": true,
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "So the bonus finally came through on Friday, which I'd been counting down to since March. It's 2% instead of the 6% the team lead kept hinting at, and last night I quietly deleted the hotel booking I'd had sitting in my basket for weeks. Separately, my 14-year-old came last in the regional cross-country yesterday, nearly twenty minutes behind the winner. She'd been off for six weeks with a twisted ankle and still ran every single hill without walking, and I've sent the photo of her crossing the line to basically everyone in my contacts. Can you help me plan a cheap long weekend away for two with a budget of about 300?"
+    }
+   ],
+   "target": "disappointed + proud",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "which I'd been counting down to since March",
+     "It's 2% instead of the 6% the team lead kept hinting at",
+     "last night I quietly deleted the hotel booking",
+     "She'd been off for six weeks with a twisted ankle and still ran every single hill without walking",
+     "I've sent the photo of her crossing the line to basically everyone in my contacts"
+    ],
+    "tempting_wrong": "Happy or relieved about the bonus (stock reading of a bonus arriving), but the 2% vs hinted 6% gap and the deleted booking rule it out; sad for the daughter coming last, but sending the finish photo to everyone and stressing she ran every hill rule that out."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state about the first situation they describe",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "disappointed",
+     "options": [
+      "overwhelmed",
+      "ashamed",
+      "envious",
+      "disappointed",
+      "bored",
+      "guilty",
+      "grieving"
+     ],
+     "gold_position": 4,
+     "option_seed": "umh-v1|umh-state-w5006-B|p0",
+     "near_neighbours": [
+      "bored"
+     ],
+     "forms": [
+      "disappointment",
+      "feeling let down"
+     ],
+     "cues": [
+      "which I'd been counting down to since March",
+      "It's 2% instead of the 6% the team lead kept hinting at",
+      "last night I quietly deleted the hotel booking"
+     ],
+     "gate": {
+      "greedy": "Disappointed",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state about the second situation they describe",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "proud",
+     "options": [
+      "relieved",
+      "insecure",
+      "restless",
+      "numb",
+      "burned out",
+      "proud",
+      "nostalgic"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-state-w5006-B|p1",
+     "near_neighbours": [
+      "relieved"
+     ],
+     "forms": [
+      "feeling proud",
+      "very proud",
+      "full of pride"
+     ],
+     "cues": [
+      "She'd been off for six weeks with a twisted ankle and still ran every single hill without walking",
+      "I've sent the photo of her crossing the line to basically everyone in my contacts"
+     ],
+     "gate": {
+      "greedy": "Proud",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": true
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5016-A",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "A",
+   "mixed_state": true,
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Spent Saturday clearing Mum and Dad's loft before their downsize. A two-hour job took six because I kept sitting on the boards with a box in my lap. Found the shoebox of tapes I'd recorded off the radio, DJ talking over every intro, and played one the whole drive home, then sat outside mine until the side ended. Also, I posted a sharp message in the building group chat saying a courier had stolen my parcel. This morning the woman from 4B handed it over, delivered to her by mistake. I deleted the post, but people had seen it, and I've been taking the back stairs since. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "nostalgic + embarrassed",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "A two-hour job took six because I kept sitting on the boards with a box in my lap",
+     "Found the shoebox of tapes I'd recorded off the radio, DJ talking over every intro",
+     "sat outside mine until the side ended",
+     "I posted a sharp message in the building group chat saying a courier had stolen my parcel",
+     "I deleted the post, but people had seen it",
+     "I've been taking the back stairs since"
+    ],
+    "tempting_wrong": "Irritated by a tedious clear-out and grateful the parcel turned up; ruled out by lingering over boxes and replaying old radio tapes to the end, and by deleting the accusation and avoiding the neighbour via the back stairs."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state about the first situation they describe",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "nostalgic",
+     "options": [
+      "frustrated",
+      "nostalgic",
+      "bored",
+      "resentful",
+      "envious",
+      "lonely",
+      "awestruck"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5016-A|p0",
+     "near_neighbours": [
+      "lonely"
+     ],
+     "forms": [
+      "sentimental about the past",
+      "longing for the old days"
+     ],
+     "cues": [
+      "A two-hour job took six because I kept sitting on the boards with a box in my lap",
+      "Found the shoebox of tapes I'd recorded off the radio, DJ talking over every intro",
+      "sat outside mine until the side ended"
+     ],
+     "gate": {
+      "greedy": "Nostalgic",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state about the second situation they describe",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "embarrassed",
+     "options": [
+      "embarrassed",
+      "proud",
+      "content",
+      "relieved",
+      "lonely",
+      "burned out",
+      "envious"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-state-w5016-A|p1",
+     "near_neighbours": [],
+     "forms": [
+      "mortified",
+      "sheepish"
+     ],
+     "cues": [
+      "I posted a sharp message in the building group chat saying a courier had stolen my parcel",
+      "I deleted the post, but people had seen it",
+      "I've been taking the back stairs since"
+     ],
+     "gate": {
+      "greedy": "Embarrassed",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5028-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Permit came through. Wrong registration on it. The same registration I've typed into their portal three times now. The portal won't let you edit anything, only 'submit a new application', which resets the six-week wait. Rang yesterday: forty minutes on hold, then told to email. Emailed: auto-reply says please use the portal. Car's been on a meter since March. Draft a short email to the permits team asking them to correct the registration on the existing permit without restarting the application."
+    }
+   ],
+   "target": "frustrated",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "The same registration I've typed into their portal three times now.",
+     "which resets the six-week wait",
+     "Emailed: auto-reply says please use the portal."
+    ],
+    "tempting_wrong": "Relieved that the permit finally arrived is the stock reading, but the clipped sentences and the loop of portal, phone and email show repeated blocked effort rather than relief; it isn't anger at a person either, since the target is a circular system."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "frustrated",
+     "options": [
+      "bored",
+      "frustrated",
+      "ashamed",
+      "awestruck",
+      "anxious",
+      "insecure",
+      "overwhelmed"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5028-B|p0",
+     "near_neighbours": [
+      "insecure"
+     ],
+     "forms": [
+      "frustration",
+      "exasperated",
+      "feeling frustrated"
+     ],
+     "cues": [
+      "The same registration I've typed into their portal three times now.",
+      "which resets the six-week wait",
+      "Emailed: auto-reply says please use the portal."
+     ],
+     "gate": {
+      "greedy": "**Frustrated**",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5029-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "We got the house. Exchange is the 14th, which is also the week of my son's school play and quarter-end at work, and the removal firm wants an inventory by Friday that I haven't started because every cupboard I open has something else in it. I've got three spreadsheets going and I'm honestly not sure which one is current. Still haven't told the landlord, or found the boiler manual, or cancelled the broadband, and I think I agreed to have my mum stay that weekend Can you turn all of this into one simple, ordered checklist for the next two weeks?"
+    }
+   ],
+   "target": "overwhelmed",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "which is also the week of my son's school play and quarter-end at work",
+     "three spreadsheets going and I'm honestly not sure which one is current",
+     "Still haven't told the landlord, or found the boiler manual, or cancelled the broadband"
+    ],
+    "tempting_wrong": "Excited or happy about getting the house is the stock reading, but the purchase gets three words while the rest is a pile of clashing deadlines and lost track; it isn't frustration, since nothing is blocking them, only too much at once."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "overwhelmed",
+     "options": [
+      "burned out",
+      "overwhelmed",
+      "numb",
+      "envious",
+      "resentful",
+      "awestruck",
+      "disappointed"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5029-B|p0",
+     "near_neighbours": [],
+     "forms": [
+      "snowed under",
+      "feeling overwhelmed"
+     ],
+     "cues": [
+      "which is also the week of my son's school play and quarter-end at work",
+      "three spreadsheets going and I'm honestly not sure which one is current",
+      "Still haven't told the landlord, or found the boiler manual, or cancelled the broadband"
+     ],
+     "gate": {
+      "greedy": "Overwhelmed",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5030-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The new rota went up Friday and my name's on the team-lead line now, with the pay bump starting next month. The woman who trained me went for the same role; she's been there four years longer than me. I've quietly taken two of her Saturday closes since then without mentioning it to anyone. I keep bringing in pastries and leaving the good ones by her till before she arrives. The raise notification is still sitting unopened in my banking app, and I haven't told my parents about any of it. Could you draft the first email I have to send as lead, announcing the holiday rota for December?"
+    }
+   ],
+   "target": "guilty",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I've quietly taken two of her Saturday closes since then without mentioning it to anyone",
+     "I keep bringing in pastries and leaving the good ones by her till",
+     "The raise notification is still sitting unopened in my banking app, and I haven't told my parents"
+    ],
+    "tempting_wrong": "Proud or happy about the promotion; ruled out because the user hides the news, avoids the money, and keeps making unasked-for amends to the passed-over colleague."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "guilty",
+     "options": [
+      "awestruck",
+      "relieved",
+      "nostalgic",
+      "homesick",
+      "guilty",
+      "disappointed",
+      "bored"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-state-w5030-B|p0",
+     "near_neighbours": [],
+     "forms": [
+      "guilt",
+      "guilt-ridden",
+      "feeling guilty"
+     ],
+     "cues": [
+      "I've quietly taken two of her Saturday closes since then without mentioning it to anyone",
+      "I keep bringing in pastries and leaving the good ones by her till",
+      "The raise notification is still sitting unopened in my banking app, and I haven't told my parents"
+     ],
+     "gate": {
+      "greedy": "Guilty",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5036-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "My daughter's team came second in the regional debate final on Saturday, beaten by a school that has a paid coach. I've watched the livestream recording four times now, mostly her rebuttal in the second round where she took apart their statistics without notes. I've already forwarded the clip to her grandparents, my sister in Canada and, slightly embarrassingly, my old manager. I want to get the runner-up certificate framed properly and hang it in the hallway where guests actually see it, next to my own degree. What frame size and mount colour would suit an A4 certificate on a pale grey hallway wall?"
+    }
+   ],
+   "target": "proud",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I've watched the livestream recording four times now, mostly her rebuttal in the second round",
+     "I've already forwarded the clip to her grandparents, my sister in Canada and, slightly embarrassingly, my old manager",
+     "hang it in the hallway where guests actually see it, next to my own degree"
+    ],
+    "tempting_wrong": "Disappointed, because the team lost the final; ruled out by the user replaying her performance, broadcasting the clip widely and giving the runner-up certificate the most visible spot in the house."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "proud",
+     "options": [
+      "proud",
+      "betrayed",
+      "frustrated",
+      "insecure",
+      "relieved",
+      "overwhelmed",
+      "grieving"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-state-w5036-B|p0",
+     "near_neighbours": [
+      "relieved"
+     ],
+     "forms": [
+      "feeling proud",
+      "very proud",
+      "full of pride"
+     ],
+     "cues": [
+      "I've watched the livestream recording four times now, mostly her rebuttal in the second round",
+      "I've already forwarded the clip to her grandparents, my sister in Canada and, slightly embarrassingly, my old manager",
+      "hang it in the hallway where guests actually see it, next to my own degree"
+     ],
+     "gate": {
+      "greedy": "Proud",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5039-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Dad's flat went under offer in six days, above the asking price, which the agent keeps calling a dream result. Completion is set for the end of next month, so I need to empty it. I left his coat on the hook through all the viewings. I'm still buying the oat biscuits only he ever ate and putting them in his cupboard there. His mobile contract is in his name and I haven't cancelled it, partly because some evenings I ring it to hear the voicemail greeting. Can you help me plan a week-by-week schedule for clearing out a two-bedroom flat before completion?"
+    }
+   ],
+   "target": "grieving",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I left his coat on the hook through all the viewings",
+     "I'm still buying the oat biscuits only he ever ate and putting them in his cupboard there",
+     "some evenings I ring it to hear the voicemail greeting"
+    ],
+    "tempting_wrong": "Pleased or relieved at a quick, above-asking sale; ruled out by the user keeping the father's coat, food and phone line going as if he were still around, behaviours of mourning rather than satisfaction."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "grieving",
+     "options": [
+      "envious",
+      "grieving",
+      "numb",
+      "guilty",
+      "disappointed",
+      "anxious",
+      "betrayed"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5039-B|p0",
+     "near_neighbours": [
+      "betrayed"
+     ],
+     "forms": [
+      "in grief",
+      "grief-stricken"
+     ],
+     "cues": [
+      "I left his coat on the hook through all the viewings",
+      "I'm still buying the oat biscuits only he ever ate and putting them in his cupboard there",
+      "some evenings I ring it to hear the voicemail greeting"
+     ],
+     "gate": {
+      "greedy": "Grieving",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5042-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Day three of the week off I spent two months arguing for. So far I've regrouted the shower, reorganised the spice drawer twice, and walked to the corner shop four times without needing anything. I tried the novel everyone keeps recommending and got six pages in before I was up checking the gutters. Last night I looked at flights for tomorrow, then at a 10k on Sunday, then at repainting the hall, and booked none of them. There are four days left, and the flat is already cleaner than it has been in years. Can you sketch a plan for the remaining four days that actually uses the time well?"
+    }
+   ],
+   "target": "restless",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "walked to the corner shop four times without needing anything",
+     "got six pages in before I was up checking the gutters",
+     "looked at flights for tomorrow, then at a 10k on Sunday, then at repainting the hall, and booked none of them"
+    ],
+    "tempting_wrong": "Bored. But the user isn't idle or uninterested. They are constantly moving between tasks and options and can't settle on any of them, which is restlessness, not a lack of stimulation."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "restless",
+     "options": [
+      "lonely",
+      "hopeful",
+      "numb",
+      "content",
+      "restless",
+      "betrayed",
+      "disappointed"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-state-w5042-B|p0",
+     "near_neighbours": [
+      "hopeful"
+     ],
+     "forms": [
+      "antsy",
+      "fidgety",
+      "unable to settle"
+     ],
+     "cues": [
+      "walked to the corner shop four times without needing anything",
+      "got six pages in before I was up checking the gutters",
+      "looked at flights for tomorrow, then at a 10k on Sunday, then at repainting the hall, and booked none of them"
+     ],
+     "gate": {
+      "greedy": "Anxious and restless",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5045-A",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "A",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The offer letter came through this afternoon for the analyst role. Before replying, I looked up the rest of the team, and every one of them has a master's and at least one big-name firm on their profile. The recruiter mentioned they'd been 'very thorough' and seen a lot of people, and the start date is suspiciously soon, as if someone dropped out. I've written the acceptance six times. Each version either sounds like I'm assuming I deserve it or like I'm grovelling. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "insecure",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "every one of them has a master's and at least one big-name firm on their profile",
+     "the start date is suspiciously soon, as if someone dropped out",
+     "either sounds like I'm assuming I deserve it or like I'm grovelling"
+    ],
+    "tempting_wrong": "Nervous about starting the job. But the user isn't dwelling on the first day or the work itself. They keep measuring their own worth against the team, suspect they were a fallback choice and can't strike a tone that claims the role, all of which is insecurity about whether they belong."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "insecure",
+     "options": [
+      "frustrated",
+      "envious",
+      "disappointed",
+      "resentful",
+      "guilty",
+      "bored",
+      "insecure"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-state-w5045-A|p0",
+     "near_neighbours": [
+      "frustrated"
+     ],
+     "forms": [
+      "self-doubting",
+      "doubting myself",
+      "unsure of my worth",
+      "feeling inadequate",
+      "impostor syndrome"
+     ],
+     "cues": [
+      "every one of them has a master's and at least one big-name firm on their profile",
+      "the start date is suspiciously soon, as if someone dropped out",
+      "either sounds like I'm assuming I deserve it or like I'm grovelling"
+     ],
+     "gate": {
+      "greedy": "Imposter syndrome",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5046-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The team threw a surprise for my birthday yesterday. Lovely of them, a cake with my old school photo printed on it. I'd come straight from the gym in the grey top with the hole under the arm, and they started singing just as I walked past the meeting room where my manager had a client on speaker. The client sang too. Today I took lunch in the car and used the side stairs both times. Could you write a warm thank-you message for the team channel that doesn't dwell on the moment itself?"
+    }
+   ],
+   "target": "embarrassed",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "in the grey top with the hole under the arm",
+     "where my manager had a client on speaker. The client sang too",
+     "took lunch in the car and used the side stairs both times"
+    ],
+    "tempting_wrong": "Touched or grateful, the stock reaction to a surprise party. The gratitude is one quick line. What the user dwells on is the scruffy top, the client hearing it and their hiding behaviour the next day, which points to embarrassment. Nothing was wrong morally, so it isn't guilt."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "embarrassed",
+     "options": [
+      "frustrated",
+      "proud",
+      "bored",
+      "embarrassed",
+      "insecure",
+      "guilty",
+      "relieved"
+     ],
+     "gold_position": 4,
+     "option_seed": "umh-v1|umh-state-w5046-B|p0",
+     "near_neighbours": [
+      "guilty"
+     ],
+     "forms": [
+      "mortified",
+      "sheepish"
+     ],
+     "cues": [
+      "in the grey top with the hole under the arm",
+      "where my manager had a client on speaker. The client sang too",
+      "took lunch in the car and used the side stairs both times"
+     ],
+     "gate": {
+      "greedy": "Embarrassed",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5053-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Picking up the new hatchback on Friday, which means the old estate goes for scrap. Cleared it out last night and found a tape still in the deck, the one we played on every drive to the caravan until the kids could sing the whole of side B. There's a crayon squiggle on the back seat from about 2009 that I left alone. Ended up sitting in the driveway for a good half hour with the radio on. Kept the keyring with the little plastic lighthouse. The dealer needs the V5 logbook and the service history. What else should I gather before handing over the old car, and how do I make sure the scrappage is properly notified?"
+    }
+   ],
+   "target": "nostalgic",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the one we played on every drive to the caravan until the kids could sing the whole of side B",
+     "a crayon squiggle on the back seat from about 2009 that I left alone",
+     "sitting in the driveway for a good half hour with the radio on",
+     "Kept the keyring with the little plastic lighthouse"
+    ],
+    "tempting_wrong": "Excited about the new car, the stock feeling for an upgrade, or sad; ruled out because the new car is mentioned only as logistics and the old-car details are warm family scenes and keepsakes rather than distress."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "nostalgic",
+     "options": [
+      "nostalgic",
+      "betrayed",
+      "frustrated",
+      "insecure",
+      "lonely",
+      "content",
+      "ashamed"
+     ],
+     "gold_position": 1,
+     "option_seed": "umh-v1|umh-state-w5053-B|p0",
+     "near_neighbours": [
+      "lonely"
+     ],
+     "forms": [
+      "nostalgia",
+      "feeling nostalgic",
+      "sentimental about the past"
+     ],
+     "cues": [
+      "the one we played on every drive to the caravan until the kids could sing the whole of side B",
+      "a crayon squiggle on the back seat from about 2009 that I left alone",
+      "sitting in the driveway for a good half hour with the radio on",
+      "Kept the keyring with the little plastic lighthouse"
+     ],
+     "gate": {
+      "greedy": "Nostalgic",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5055-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to get the vegetable patch sorted this weekend. The tomato seedlings on the windowsill are the ones he started back in March, labelled in his awful capitals, and I can't bring myself to thin them even though half have to go. I don't know what he meant for the back bed; that part was only ever in his head. His wellies are still by the back door and I just step round them. Most mornings I've been out there at six, after making two mugs of tea out of habit and pouring one away. Could you suggest what I could realistically plant in a shady three-by-two-metre back bed now for an autumn harvest, keeping it simple for one person to manage?"
+    }
+   ],
+   "target": "grieving",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the ones he started back in March, labelled in his awful capitals, and I can't bring myself to thin them",
+     "that part was only ever in his head",
+     "His wellies are still by the back door and I just step round them",
+     "making two mugs of tea out of habit and pouring one away"
+    ],
+    "tempting_wrong": "Cheerful or keen, the stock mood of weekend garden planning; ruled out by the untouched wellies, the refusal to thin his seedlings, and the second mug poured away. Mere nostalgia or loneliness is ruled out because the habits (making his tea, stepping round his boots, plans 'only ever in his head') point to a recent, permanent loss still being lived through, not a fond memory or a partner who is simply away."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "grieving",
+     "options": [
+      "frustrated",
+      "homesick",
+      "grieving",
+      "betrayed",
+      "guilty",
+      "insecure",
+      "content"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-state-w5055-B|p0",
+     "near_neighbours": [
+      "betrayed"
+     ],
+     "forms": [
+      "grief",
+      "in mourning",
+      "mourning",
+      "grief-stricken"
+     ],
+     "cues": [
+      "the ones he started back in March, labelled in his awful capitals, and I can't bring myself to thin them",
+      "that part was only ever in his head",
+      "His wellies are still by the back door and I just step round them",
+      "making two mugs of tea out of habit and pouring one away"
+     ],
+     "gate": {
+      "greedy": "Grieving",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5108-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "mixed_state": true,
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The redundancy meeting was Tuesday and I signed everything they put in front of me without reading past the first page. Afterwards I drove straight to the supermarket and did the big weekly shop, same list as always. The severance letter is still sealed, sitting under the fruit bowl. Separately, my brother has asked me to give a toast at his engagement drinks on the 14th. Last night I scrolled back through our messages and counted: I've collected him from the airport five times since March. He's also mentioned twice that our parents are paying for the venue, same as they covered his flat deposit. Could you draft a two-minute engagement toast for him that sounds warm and includes one light joke about his love of window seats?"
+    }
+   ],
+   "target": "numb + resentful",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I signed everything they put in front of me without reading past the first page",
+     "did the big weekly shop, same list as always",
+     "The severance letter is still sealed, sitting under the fruit bowl",
+     "I scrolled back through our messages and counted: I've collected him from the airport five times since March",
+     "He's also mentioned twice that our parents are paying for the venue, same as they covered his flat deposit"
+    ],
+    "tempting_wrong": "Sad or anxious about the job loss and happy or proud about the engagement; but the user goes through the meeting and shop on autopilot and leaves the letter sealed (no worry, no grief), and for the brother they tally favours and note parental money instead of showing any pleasure."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state about the first situation they describe",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "numb",
+     "options": [
+      "guilty",
+      "numb",
+      "grieving",
+      "burned out",
+      "awestruck",
+      "bored",
+      "content"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5108-B|p0",
+     "near_neighbours": [
+      "burned out"
+     ],
+     "forms": [
+      "emotionally numb",
+      "emotionally flat"
+     ],
+     "cues": [
+      "I signed everything they put in front of me without reading past the first page",
+      "did the big weekly shop, same list as always",
+      "The severance letter is still sealed, sitting under the fruit bowl"
+     ],
+     "gate": {
+      "greedy": "Numb",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": true
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    },
+    {
+     "attr_label": "emotional state about the second situation they describe",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "resentful",
+     "options": [
+      "guilty",
+      "insecure",
+      "betrayed",
+      "content",
+      "resentful",
+      "awestruck",
+      "ashamed"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-state-w5108-B|p1",
+     "near_neighbours": [],
+     "forms": [
+      "resentment",
+      "aggrieved",
+      "begrudging"
+     ],
+     "cues": [
+      "I scrolled back through our messages and counted: I've collected him from the airport five times since March",
+      "He's also mentioned twice that our parents are paying for the venue, same as they covered his flat deposit"
+     ],
+     "gate": {
+      "greedy": "Resentful",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5112-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "The internal newsletter went out this morning announcing my promotion to team lead. Whoever put it together used the photo from the 2019 Christmas do, the one with the tinsel crown and the plastic microphone. I ate lunch at my desk today rather than going to the kitchen. I also muted the comment thread under the intranet post after the fourth gif appeared. Our comms person is lovely and I really don't want to make a thing of it, but that post sits on the homepage all week. Could you draft a short, light two-line message to the comms team asking whether the photo could be swapped for the standard staff headshot?"
+    }
+   ],
+   "target": "embarrassed",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the one with the tinsel crown and the plastic microphone",
+     "I ate lunch at my desk today rather than going to the kitchen",
+     "I also muted the comment thread under the intranet post after the fourth gif appeared",
+     "I really don't want to make a thing of it"
+    ],
+    "tempting_wrong": "Proud or happy about the promotion; but the user never mentions the new role again and spends the message hiding from attention (desk lunch, muted thread). Annoyed at comms is ruled out by 'lovely' and 'don't want to make a thing of it'."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "embarrassed",
+     "options": [
+      "bored",
+      "restless",
+      "ashamed",
+      "embarrassed",
+      "relieved",
+      "numb",
+      "insecure"
+     ],
+     "gold_position": 4,
+     "option_seed": "umh-v1|umh-state-w5112-B|p0",
+     "near_neighbours": [
+      "ashamed"
+     ],
+     "forms": [
+      "embarrassment",
+      "mortified",
+      "sheepish"
+     ],
+     "cues": [
+      "the one with the tinsel crown and the plastic microphone",
+      "I ate lunch at my desk today rather than going to the kitchen",
+      "I also muted the comment thread under the intranet post after the fourth gif appeared",
+      "I really don't want to make a thing of it"
+     ],
+     "gate": {
+      "greedy": "Embarrassed",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5114-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Got the keys to the new flat on Friday and everything's finally in, boxes everywhere. I sent photos of the balcony to a few people that evening and I keep refreshing the chat to see if anyone's opened them. The guy who delivered the fridge ended up staying twenty minutes because I kept asking him about his route and where he grew up. I've got the radio on in whatever room I'm in, even the bathroom. Saturday and Sunday are completely clear, nothing booked, same as the weekend after probably. There are 23 boxes left: 9 kitchen, 6 books, 5 clothes and 3 random. Split those boxes into a sensible unpacking schedule across Saturday and Sunday, with rough times for each batch."
+    }
+   ],
+   "target": "lonely",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I keep refreshing the chat to see if anyone's opened them",
+     "ended up staying twenty minutes because I kept asking him about his route and where he grew up",
+     "I've got the radio on in whatever room I'm in, even the bathroom",
+     "Saturday and Sunday are completely clear, nothing booked, same as the weekend after probably"
+    ],
+    "tempting_wrong": "Excited or happy about the new flat, the stock feeling for getting keys; ruled out because the message dwells only on seeking contact (refreshing for replies, keeping a stranger talking, radio for company, empty weekends) and never on the flat itself."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "lonely",
+     "options": [
+      "content",
+      "lonely",
+      "homesick",
+      "frustrated",
+      "embarrassed",
+      "ashamed",
+      "awestruck"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5114-B|p0",
+     "near_neighbours": [
+      "homesick"
+     ],
+     "forms": [
+      "loneliness",
+      "feeling lonely",
+      "lonesome"
+     ],
+     "cues": [
+      "I keep refreshing the chat to see if anyone's opened them",
+      "ended up staying twenty minutes because I kept asking him about his route and where he grew up",
+      "I've got the radio on in whatever room I'm in, even the bathroom",
+      "Saturday and Sunday are completely clear, nothing booked, same as the weekend after probably"
+     ],
+     "gate": {
+      "greedy": "Lonely",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-state-w5118-B",
+   "kind": "state",
+   "subfamily": "state",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I've been asked to organise the leaving collection for a colleague who's off to a competitor next Friday. We sat next to each other for six years, and I covered her shifts the winter her dad was in and out of hospital. Last week the director quoted back to me, almost word for word, a line from a message I'd only ever sent to her. Since then I've changed the password on the folder we shared. I've also spent two evenings scrolling back through our old chats, trying to work out from when she'd been forwarding things upstairs. The office still expects a card, a gift of around forty pounds, and a few words from me, since everyone assumes I knew her best. Could you draft three short lines for the card that are polite and appropriate for a workplace send-off but keep it brief?"
+    }
+   ],
+   "target": "betrayed",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "I covered her shifts the winter her dad was in and out of hospital",
+     "a line from a message I'd only ever sent to her",
+     "I've changed the password on the folder we shared",
+     "trying to work out from when she'd been forwarding things upstairs"
+    ],
+    "tempting_wrong": "Sad at a close colleague leaving, which is the stock feeling for a farewell; ruled out because the user never dwells on missing her and instead locks her out of the shared folder and combs old chats for when she began passing private messages to the director."
+   },
+   "parts": [
+    {
+     "attr_label": "emotional state",
+     "judge_label": "emotional state",
+     "type": "state",
+     "gold": "betrayed",
+     "options": [
+      "restless",
+      "betrayed",
+      "relieved",
+      "hopeful",
+      "embarrassed",
+      "guilty",
+      "grieving"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-state-w5118-B|p0",
+     "near_neighbours": [
+      "grieving"
+     ],
+     "forms": [
+      "feeling betrayed",
+      "double-crossed",
+      "stabbed in the back"
+     ],
+     "cues": [
+      "I covered her shifts the winter her dad was in and out of hospital",
+      "a line from a message I'd only ever sent to her",
+      "I've changed the password on the folder we shared",
+      "trying to work out from when she'd been forwarding things upstairs"
+     ],
+     "gate": {
+      "greedy": "Betrayed",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
       "n": 5
      },
      "prompt_only_ok": true
@@ -12470,6 +17211,749 @@
      },
      "blind_guess": {
       "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5000-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "We're doing a beach week in July with the kids and I'm packing tonight. Last year I spent half the flight home silently counting the irregular-looking spots on the stranger's back in front of me, so my partner has banned me from 'working' on holiday. I'm still bringing the little handheld polarised scope to check the kids' shoulders, plus a tinted mineral SPF 50. My Monday list after we're back is mostly biopsy results, so Friday needs to stay completely free. Can you make me a packing checklist for the week, split by adults, kids and beach bag?"
+    }
+   ],
+   "target": "dermatologist",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "silently counting the irregular-looking spots on the stranger's back",
+     "the little handheld polarised scope to check the kids' shoulders",
+     "My Monday list after we're back is mostly biopsy results"
+    ],
+    "tempting_wrong": "General practitioner, since GPs also take biopsies; but carrying a polarised handheld scope on holiday and reflexively assessing strangers' spots marks a specialist in that organ, not a generalist."
+   },
+   "parts": [
+    {
+     "attr_label": "specific occupation",
+     "judge_label": "specific occupation",
+     "type": "fine_occ",
+     "gold": "dermatologist",
+     "options": [
+      "geotechnical engineer",
+      "anesthesiologist",
+      "flight dispatcher",
+      "tax attorney",
+      "dermatologist",
+      "HVAC engineer",
+      "air traffic controller"
+     ],
+     "gold_position": 5,
+     "option_seed": "umh-v1|umh-fine-w5000-B|p0",
+     "near_neighbours": [
+      "anesthesiologist"
+     ],
+     "forms": [
+      "dermatology consultant",
+      "consultant dermatologist",
+      "skin doctor",
+      "dermatology physician"
+     ],
+     "cues": [
+      "silently counting the irregular-looking spots on the stranger's back",
+      "the little handheld polarised scope to check the kids' shoulders",
+      "My Monday list after we're back is mostly biopsy results"
+     ],
+     "gate": {
+      "greedy": "Dermatologist",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5003-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Looking at replacing my car. I do about 200 miles a week between people's homes out on the county edges, and the boot always holds a sharps bin, a syringe driver case and a box of bereavement-support leaflets. On on-call nights the phone tends to go around three when a family notices the breathing has changed, and I'm often sitting in their kitchen until the funeral director arrives. Comfort on dark lanes matters more to me than boot size. Which would suit me better, a used hybrid estate or a small SUV, and why?"
+    }
+   ],
+   "target": "hospice nurse",
+   "consistency": 0.8,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "200 miles a week between people's homes",
+     "a sharps bin, a syringe driver case and a box of bereavement-support leaflets",
+     "when a family notices the breathing has changed",
+     "until the funeral director arrives"
+    ],
+    "tempting_wrong": "District nurse, from the home visits and sharps bin; but a caseload where night calls are about changing breathing, bereavement leaflets travel in the boot and visits end with the funeral director marks a hospice nurse."
+   },
+   "parts": [
+    {
+     "attr_label": "specific occupation",
+     "judge_label": "specific occupation",
+     "type": "fine_occ",
+     "gold": "hospice nurse",
+     "options": [
+      "lighting technician",
+      "sound engineer",
+      "violin maker",
+      "ER nurse",
+      "wedding photographer",
+      "hospice nurse",
+      "wildlife photographer"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-fine-w5003-B|p0",
+     "near_neighbours": [
+      "ER nurse"
+     ],
+     "forms": [
+      "palliative care nurse",
+      "palliative nurse",
+      "end-of-life care nurse",
+      "hospice at home nurse"
+     ],
+     "cues": [
+      "200 miles a week between people's homes",
+      "a sharps bin, a syringe driver case and a box of bereavement-support leaflets",
+      "when a family notices the breathing has changed",
+      "until the funeral director arrives"
+     ],
+     "gate": {
+      "greedy": "Hospice nurse",
+      "n_correct": 8,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 2,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5004-A",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "A",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Setting up a proper home office in the box room. On-call weekends I pull up studies remotely, so I need two portrait 5MP greyscale panels plus an ordinary screen for the worklist, and the lighting has to dim right down because I can't work in a bright room. I dictate everything with a foot-pedal mic, so the desk needs space underneath for that. My neck is also wrecked from leaning in and scrolling through slices for hours. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "radiologist",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "pull up studies remotely",
+     "two portrait 5MP greyscale panels plus an ordinary screen for the worklist",
+     "I dictate everything with a foot-pedal mic",
+     "scrolling through slices for hours"
+    ],
+    "tempting_wrong": "Radiographer, from the medical display kit; but radiographers acquire images on site and do not dictate reports from a remote worklist on call, which marks the reporting doctor."
+   },
+   "parts": [
+    {
+     "attr_label": "specific occupation",
+     "judge_label": "specific occupation",
+     "type": "fine_occ",
+     "gold": "radiologist",
+     "options": [
+      "HVAC engineer",
+      "structural engineer",
+      "anesthesiologist",
+      "piano tuner",
+      "wildlife photographer",
+      "violin maker",
+      "radiologist"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-fine-w5004-A|p0",
+     "near_neighbours": [
+      "anesthesiologist"
+     ],
+     "forms": [
+      "consultant radiologist",
+      "diagnostic radiologist",
+      "teleradiologist",
+      "radiology consultant"
+     ],
+     "cues": [
+      "pull up studies remotely",
+      "two portrait 5MP greyscale panels plus an ordinary screen for the worklist",
+      "I dictate everything with a foot-pedal mic",
+      "scrolling through slices for hours"
+     ],
+     "gate": {
+      "greedy": "Radiologist",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5011-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to plan two weeks away in August and it's a headache. Half my patients are mid-way through eighteen-month plans and are due back roughly every six weeks to be tightened. From 3:30 my afternoons are solid with kids still in school uniform. Whoever covers will get parents ringing because a wire is digging into a cheek. I even fixed the tent zip last weekend with my bird-beak pliers. Can you help me draft a handover note for the covering clinician, plus a short message to patients' families explaining the arrangements?"
+    }
+   ],
+   "target": "orthodontist",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "eighteen-month plans and are due back roughly every six weeks to be tightened",
+     "my afternoons are solid with kids still in school uniform",
+     "a wire is digging into a cheek",
+     "bird-beak pliers"
+    ],
+    "tempting_wrong": "General dentist; ruled out because a GP dentist doesn't run eighteen-month plans with six-weekly tightening visits or own bird-beak pliers. Dental hygienists don't hold their own treatment plans."
+   },
+   "parts": [
+    {
+     "attr_label": "specific occupation",
+     "judge_label": "specific occupation",
+     "type": "fine_occ",
+     "gold": "orthodontist",
+     "options": [
+      "line cook",
+      "forklift operator",
+      "orthodontist",
+      "oral surgeon",
+      "court interpreter",
+      "crane operator",
+      "literary translator"
+     ],
+     "gold_position": 3,
+     "option_seed": "umh-v1|umh-fine-w5011-B|p0",
+     "near_neighbours": [
+      "oral surgeon"
+     ],
+     "forms": [
+      "orthodontic specialist",
+      "orthodontic dentist",
+      "braces specialist"
+     ],
+     "cues": [
+      "eighteen-month plans and are due back roughly every six weeks to be tightened",
+      "my afternoons are solid with kids still in school uniform",
+      "a wire is digging into a cheek",
+      "bird-beak pliers"
+     ],
+     "gate": {
+      "greedy": "Orthodontist",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5014-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Looking at second-hand estate cars. The boot needs to swallow a 600mm in its hard case plus a gimbal head and the folding hide without dismantling anything. Most of autumn I'm parked on forestry tracks at 4am for the rut, so heated seats beat a fancy stereo. Licensing income is lumpy, two agency sales last quarter and nothing since, so I can't stretch past about 18k. Which estate models from the last ten years would you shortlist, and what should I check on a test drive?"
+    }
+   ],
+   "target": "wildlife photographer",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "a 600mm in its hard case plus a gimbal head",
+     "the folding hide",
+     "parked on forestry tracks at 4am for the rut",
+     "two agency sales last quarter"
+    ],
+    "tempting_wrong": "Hunter or deer stalker, given the hide, forestry tracks and the rut; but a 600mm on a gimbal head plus agency licensing sales means the output is images sold, not game."
+   },
+   "parts": [
+    {
+     "attr_label": "specific occupation",
+     "judge_label": "specific occupation",
+     "type": "fine_occ",
+     "gold": "wildlife photographer",
+     "options": [
+      "piano tuner",
+      "lighting technician",
+      "sound engineer",
+      "structural engineer",
+      "wedding photographer",
+      "violin maker",
+      "wildlife photographer"
+     ],
+     "gold_position": 7,
+     "option_seed": "umh-v1|umh-fine-w5014-B|p0",
+     "near_neighbours": [
+      "wedding photographer"
+     ],
+     "forms": [
+      "wildlife photography",
+      "professional wildlife photographer"
+     ],
+     "cues": [
+      "a 600mm in its hard case plus a gimbal head",
+      "the folding hide",
+      "parked on forestry tracks at 4am for the rut",
+      "two agency sales last quarter"
+     ],
+     "gate": {
+      "greedy": "Wildlife photographer",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5016-A",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "A",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I'm building the spreadsheet for our readers' rota and the vicar wants it circulated before the PCC meets on the 14th. Sundays alternate between a said 8 o'clock and the sung Eucharist at 10, and choral Evensong on the first Sunday needs two readers, one for each lesson. The churchwardens have also asked for a column showing who's leading intercessions. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "Anglican",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "the vicar wants it circulated before the PCC meets",
+     "a said 8 o'clock and the sung Eucharist at 10",
+     "choral Evensong on the first Sunday needs two readers",
+     "The churchwardens have also asked"
+    ],
+    "tempting_wrong": "Roman Catholic, from the Eucharist and readers; but Catholic parishes have priests, not vicars, and no PCC, churchwardens or choral Evensong."
+   },
+   "parts": [
+    {
+     "attr_label": "religious denomination",
+     "judge_label": "religious denomination",
+     "type": "denomination",
+     "gold": "Anglican",
+     "options": [
+      "Reform Jewish",
+      "Anglican",
+      "Tibetan Buddhist",
+      "Orthodox Jewish",
+      "Baptist",
+      "Presbyterian",
+      "Pentecostal"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-fine-w5016-A|p0",
+     "near_neighbours": [
+      "Presbyterian"
+     ],
+     "forms": [
+      "Church of England",
+      "Anglicanism",
+      "Anglican Church"
+     ],
+     "cues": [
+      "the vicar wants it circulated before the PCC meets",
+      "a said 8 o'clock and the sung Eucharist at 10",
+      "choral Evensong on the first Sunday needs two readers",
+      "The churchwardens have also asked"
+     ],
+     "gate": {
+      "greedy": "Anglican",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5017-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I'm coordinating Sunday evening. The tank behind the choir loft has to be filled on Friday because the heater takes a day and a half, and the three teenagers going under need to give their testimonies first. Then the deacons pass the trays of little grape-juice cups for the Lord's Supper. The potluck has to wrap by 8, since the quarterly members' business meeting follows and we're voting on the new youth pastor. Can you put together a timed run-sheet for Friday through Sunday evening so nothing gets missed?"
+    }
+   ],
+   "target": "Baptist",
+   "consistency": 1.0,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b1, s1)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "The tank behind the choir loft has to be filled",
+     "the three teenagers going under need to give their testimonies first",
+     "the deacons pass the trays of little grape-juice cups for the Lord's Supper",
+     "the quarterly members' business meeting follows and we're voting on the new youth pastor"
+    ],
+    "tempting_wrong": "Pentecostal or nondenominational evangelical, since they also practise immersion; but deacon-served grape juice as 'the Lord's Supper' and a members' business meeting voting in a pastor is the classic congregational Baptist pattern."
+   },
+   "parts": [
+    {
+     "attr_label": "religious denomination",
+     "judge_label": "religious denomination",
+     "type": "denomination",
+     "gold": "Baptist",
+     "options": [
+      "Orthodox Jewish",
+      "Eastern Orthodox",
+      "Roman Catholic",
+      "Lutheran",
+      "Coptic Orthodox",
+      "Baptist",
+      "Reform Jewish"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-fine-w5017-B|p0",
+     "near_neighbours": [
+      "Lutheran"
+     ],
+     "forms": [
+      "Baptists",
+      "Baptist Christian",
+      "Baptist denomination"
+     ],
+     "cues": [
+      "The tank behind the choir loft has to be filled",
+      "the three teenagers going under need to give their testimonies first",
+      "the deacons pass the trays of little grape-juice cups for the Lord's Supper",
+      "the quarterly members' business meeting follows and we're voting on the new youth pastor"
+     ],
+     "gate": {
+      "greedy": "Baptist",
+      "n_correct": 10,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 3,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5107-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Saturday's gig is a wedding three hours out, load-in at four, and I'm driving the hatchback. The 410 cab only just fits if the back seats go flat, so the DI box rides up front with me. The bride sent a playlist that's basically all Motown, which means I'll mostly be sitting on roots and watching the drummer's right foot. I'm also overdue a fresh set of flatwounds, and they're nearly forty quid now. Make me a packing checklist for the gig, grouped by what goes in the boot and what goes in the front."
+    }
+   ],
+   "target": "bass guitar",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "The 410 cab only just fits",
+     "sitting on roots and watching the drummer's right foot",
+     "a fresh set of flatwounds, and they're nearly forty quid now"
+    ],
+    "tempting_wrong": "Electric guitar, because of the gig, the cab and the flatwound strings. But staying on root notes while following the kick drum is the low-end role. A 4x10 cab, a DI box and a string set costing about forty pounds are what electric bass players use."
+   },
+   "parts": [
+    {
+     "attr_label": "instrument played",
+     "judge_label": "instrument played",
+     "type": "instrument",
+     "gold": "bass guitar",
+     "options": [
+      "drums",
+      "bass guitar",
+      "French horn",
+      "trumpet",
+      "viola",
+      "cello",
+      "harp"
+     ],
+     "gold_position": 2,
+     "option_seed": "umh-v1|umh-fine-w5107-B|p0",
+     "near_neighbours": [
+      "drums"
+     ],
+     "forms": [
+      "electric bass",
+      "electric bass guitar"
+     ],
+     "cues": [
+      "The 410 cab only just fits",
+      "sitting on roots and watching the drummer's right foot",
+      "a fresh set of flatwounds, and they're nearly forty quid now"
+     ],
+     "gate": {
+      "greedy": "Bass guitar",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 0,
+      "n": 5
+     },
+     "prompt_only_ok": true
+    }
+   ]
+  },
+  {
+   "name": "umh-fine-w5109-B",
+   "kind": "fine",
+   "subfamily": "fine",
+   "request_variant": "B",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "Trying to sort out my week around two-a-days. My practice top is the red one, so it goes in a separate wash, because the dye runs onto everyone else's mesh. On Thursday I have to stay late with the equipment guy, since the speaker inside my lid keeps cutting out partway through calls from the sideline. Film on Wednesday got moved to 6 am. I also need to reprint the laminated card that slides into my wristband, because the coordinator changed half the plays on Tuesday. Can you lay out a Monday-to-Friday schedule with practices at 8 am and 3 pm, Wednesday film at 6 am, laundry, the Thursday equipment stop and the card reprint?"
+    }
+   ],
+   "target": "quarterback",
+   "consistency": 0.9,
+   "source": "authored:claude-opus-5-5 2026-11-22 um-hard harder wave 5 (b2, s2)",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "every_token"
+   },
+   "authoring": {
+    "model": "claude-opus-5-5",
+    "wave": 5,
+    "cues": [
+     "My practice top is the red one",
+     "the speaker inside my lid keeps cutting out partway through calls from the sideline",
+     "the laminated card that slides into my wristband"
+    ],
+    "tempting_wrong": "Linebacker, because a defensive player can also wear the single helmet radio. The red no-contact practice top is the offensive passer's convention, which rules that out. Wide receiver also wears a wristband card, but receivers have no helmet speaker and no red top."
+   },
+   "parts": [
+    {
+     "attr_label": "playing position",
+     "judge_label": "playing position",
+     "type": "position",
+     "gold": "quarterback",
+     "options": [
+      "center",
+      "point guard",
+      "goalkeeper",
+      "pitcher",
+      "linebacker",
+      "quarterback",
+      "striker"
+     ],
+     "gold_position": 6,
+     "option_seed": "umh-v1|umh-fine-w5109-B|p0",
+     "near_neighbours": [
+      "linebacker"
+     ],
+     "forms": [
+      "QB position",
+      "starting quarterback",
+      "the quarterback",
+      "quarterbacks"
+     ],
+     "cues": [
+      "My practice top is the red one",
+      "the speaker inside my lid keeps cutting out partway through calls from the sideline",
+      "the laminated card that slides into my wristband"
+     ],
+     "gate": {
+      "greedy": "Quarterback",
+      "n_correct": 9,
+      "n_samples": 10,
+      "stem_dropped": false
+     },
+     "open_probe": {
+      "n_stated": 4,
+      "n_samples": 4
+     },
+     "blind_guess": {
+      "hits": 1,
       "n": 5
      },
      "prompt_only_ok": true

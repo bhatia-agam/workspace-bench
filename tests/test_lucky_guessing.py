@@ -49,7 +49,7 @@ def test_lists_match_the_judges_builders():
     for it in lg.load_bank("conjunctive_association")[:5]:
         shown, gold, _ = build_options(it)
         assert conj[it["id"]].lists == [shown[:-1]] and conj[it["id"]].golds == [gold]
-    _h, bank = lg.load_bank_file(REPO / "evals/basic/directed_modulation/items.json")
+    _h, bank = lg.load_bank_file(REPO / "evals/basic/directed_modulation/items_v2.json")
     dm = {it.id: it for it in lg.build_family("directed_modulation")}
     for item_id, (opts, gold) in list(dm_options(bank).items())[:5]:
         assert dm[item_id].lists == [opts] and dm[item_id].golds == [gold]
@@ -107,7 +107,7 @@ def test_golds_name_the_bank_answers():
     um = {str(it["name"]): it for it in lg.load_bank("user_modeling")["items"]}
     for it in lg.build_family("user_modeling"):
         assert it.lists[0][it.golds[0] - 1] == display_value(str(um[it.id]["attr"]))
-    _h, dm_bank = lg.load_bank_file(REPO / "evals/basic/directed_modulation/items.json")
+    _h, dm_bank = lg.load_bank_file(REPO / "evals/basic/directed_modulation/items_v2.json")
     dm = {it["id"]: it for it in dm_bank}
     for it in lg.build_family("directed_modulation"):
         assert it.lists[0][it.golds[0] - 1] == dm[it.id]["concept"]

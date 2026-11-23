@@ -125,9 +125,3 @@ class Session:
             self.client, self.pushed = _build(token), pushed or 0.0
             print(f"[adapt-auth] 401: switched to the token pushed {time.ctime(self.pushed)}")
             return True
-
-
-def is_auth_error(exc: Exception) -> bool:
-    import anthropic
-
-    return isinstance(exc, anthropic.AuthenticationError)

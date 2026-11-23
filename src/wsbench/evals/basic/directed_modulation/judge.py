@@ -23,9 +23,9 @@ from wsbench.results import FamilyResult
 
 from . import score
 from .prompts import (
+    INSTRUMENT_V1,
     JUDGE_PROMPT_VERSION,
     N_DISTRACTORS,
-    PROMPT_VERSION,
     SCHEMA,
     SEED,
     SYSTEM,
@@ -97,6 +97,18 @@ def group_of(concept: str) -> str:
     if g is None:
         raise ValueError(f"{GROUPS_FILE.name}: concept {concept!r} has no relatedness group")
     return g
+
+
+def instrument(header: dict[str, Any] | None = None) -> str:
+    """The result stamp of a bank: ``INSTRUMENT_V1`` plus ``+bank-v<N>`` for bank v<N> >= 2 (bank
+    v2, plan 0109: no dont_think items, 37 new think items; the frozen 100-item ``items.json``
+    and the adapted banks carry no ``version``: no suffix). Without a header: the bank judged
+    now (``bank_path``, so ``WSB_BANK_ROOT`` included), which is what the prompt-only freeze asks
+    (``prompt_only.judged_bank_stamp``): an adapted set's floor is frozen on its own stamp."""
+    if header is None:
+        header, _items = load_bank(bank_path(FAMILY))
+    version = int(header.get("version", 1))
+    return INSTRUMENT_V1 + (f"+bank-v{version}" if version >= 2 else "")
 
 
 def _rng(seed: int, key: str) -> random.Random:
@@ -228,7 +240,8 @@ def decode(
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    _header, bank = load_bank(bank_path(FAMILY))
+    header, bank = load_bank(bank_path(FAMILY))
+    stamp = instrument(header)
     scope = item_scope(bank, args)
     by_id = {it["id"]: it for it in scope}
     cells, rep = reads.load(args, FAMILY, ids=list(by_id))
@@ -237,7 +250,14 @@ def run(args: JudgeArgs) -> FamilyResult:
     require_cells(FAMILY, missing, len(by_id) * len(layers), args)
     if digest.summary_mode(args):
         return _run_summary(
-            args, scope=scope, bank=bank, cells=cells, rep=rep, layers=layers, missing=missing
+            args,
+            scope=scope,
+            bank=bank,
+            cells=cells,
+            rep=rep,
+            layers=layers,
+            missing=missing,
+            stamp=stamp,
         )
     rows, n_empty = readout_rows(cells)
     tokens = rep.kind == "tokens"
@@ -263,7 +283,7 @@ def run(args: JudgeArgs) -> FamilyResult:
             calls,
             schema=SCHEMA,
             judge=args.judge,
-            prompt_version=JUDGE_PROMPT_VERSION,  # the cache key; the stamp is PROMPT_VERSION
+            prompt_version=JUDGE_PROMPT_VERSION,  # the cache key; the stamp is instrument()
             cache=cache,
             spend=spend,
             concurrency=args.concurrency,
@@ -297,6 +317,7 @@ def run(args: JudgeArgs) -> FamilyResult:
         n_empty=n_empty,
         skipped_rows=sum(rep.skipped.values()),
         spend=spend,
+        prompt_version=stamp,
     )
     return with_readout_count(result, scope, cells)
 
@@ -310,6 +331,7 @@ def _run_summary(
     rep: Any,
     layers: list[int],
     missing: list[tuple[str, int]],
+    stamp: str,
 ) -> FamilyResult:
     """Summary mode (plan 0020): every item's cells -> one digest -> ONE judge call per item on
     it, the evidence gate on the digest's evidence samples. An item with no cells has no row
@@ -322,7 +344,7 @@ def _run_summary(
     options = option_sets(bank)
     spend = Spend()
     pre = Preflighter(args.dry_run)
-    pv = digest.prompt_version(PROMPT_VERSION, args, FAMILY)  # the stamp (instrument)
+    pv = digest.prompt_version(stamp, args, FAMILY)  # the stamp (instrument)
     pv_calls = digest.prompt_version(JUDGE_PROMPT_VERSION, args, FAMILY)  # the judge cache key
     with Cache(args.out / "cells.jsonl") as cache:
         col = digest.collapse(

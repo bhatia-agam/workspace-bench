@@ -23,7 +23,9 @@ from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
 BANK = REPO / "evals/computational/chain_intermediates/items.json"
-EXAMPLE = REPO / "examples/readouts/chain_intermediates.jsonl"
+# the v1 toy readouts (three v1 ids), a byte copy of examples/readouts/chain_intermediates.jsonl as
+# it was before plan 0110 gave the examples file bank v3 ids: the v1-era tests keep their inputs
+EXAMPLE = REPO / "tests/fixtures/chain_intermediates_v1_toy.jsonl"
 
 
 @pytest.fixture(autouse=True)
@@ -495,7 +497,8 @@ def test_perm_null_excludes_own_values():
 def test_bank_v2():
     import hashlib
 
-    assert registry.bank_path("chain_intermediates").name == "items_v2.json"
+    # bank v2 is frozen; the registered bank is v3 since plan 0110 (tests/test_chain_bank_v3.py)
+    assert registry.bank_path("chain_intermediates").name == "items_v3.json"
     header, items = load_bank(BANK_V2)
     assert header["version"] == 2 and header["supersedes"] == "items.json"
     assert len(items) == 120
@@ -978,11 +981,11 @@ def test_summary_gets_every_position_and_layer(tmp_path, monkeypatch, toy_v2):
 
 
 def test_reads_full_rejects_v1_span_file(tmp_path, monkeypatch):
-    """A v1-plan file (25 positions from " What", no v2 replacement ids): with a v1 sidecar it
-    exits 2 on plan_sha; sidecar-less, the missing v2 ids exit 2, and under allow_missing the
-    run is incomplete and its unenforced partial ids are reported."""
-    _h, v2 = load_bank(BANK_V2)
-    kept = [it["id"] for it in v2 if not it["id"].startswith("chain-v2-")]
+    """A v1-plan file (25 positions from " What", no v2 / v3 replacement ids): with a v1 sidecar
+    it exits 2 on plan_sha; sidecar-less, the missing replacement ids exit 2, and under
+    allow_missing the run is incomplete and its unenforced partial ids are reported."""
+    _h, bank = load_bank(registry.bank_path("chain_intermediates"))  # the registered bank (v3)
+    kept = [it["id"] for it in bank if not it["id"].startswith(("chain-v2-", "chain-v3-"))]
     rows = [
         {"id": i, "layer": L, "pos": p, "samples": ["x"]}
         for i in kept[:3]

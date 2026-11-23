@@ -343,7 +343,6 @@ def convert_read_json(path: Path, out: Path) -> LoadReport:
 
 SAMPLINGS = ("bullet4", "prose1", "tokens10")
 SIDECAR_SUFFIX = ".meta.json"
-SIDECAR_KEYS = ("reads", "sampling", "reader", "arm", "layers", "plan_sha", "producer_sha", "fast")
 
 
 def sidecar_path(path: Path) -> Path:
