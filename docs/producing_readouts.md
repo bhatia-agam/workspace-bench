@@ -333,6 +333,108 @@ In Python, `wsbench.produce.store.cells_for(store, eval, plan_rows, tokenizer, b
 the one call that returns cells: from the store, else from a `pull` function, else from a
 forward pass, which it writes back to the store.
 
+## A served engine (reference code)
+
+The producer above reads one activation at a time. `wsbench.produce.served` is reference code
+for the fast way to read a slot lens: a lens that replaces ONE prompt token's input embedding
+with the activation, scaled as `norm_L * h / ||h||`. Instead of sending embeddings to a
+server, the cells' slot vectors are appended as extra vocabulary rows of a copy of the lens
+model (the "token bank"), and each request is plain token ids whose slot position holds that
+cell's bank row id. A stock SGLang server with continuous batching then decodes all rows
+together, and a row leaves the batch the moment it ends.
+
+Two details keep the readouts equal in kind to the producer's. A logit processor inside the
+server masks the bank ids, and the engine asks again for any row that still sampled one (a
+bank id is never kept). A second, optional processor applies top-k and then top-p in the
+order Hugging Face `generate` does; the server's own sampler applies both to the full
+distribution, which keeps a larger nucleus.
+
+It is small on purpose (`src/wsbench/produce/served/`, one job per module), to be run as it is
+or adapted:
+
+| module | what it holds |
+|---|---|
+| `bundle.py` | the lens bundle: `load`, `merge` (a LoRA folded into a copy of the model, file by file, on the CPU), `from_adapter` |
+| `bank.py` | `slot_rows` (the slot vectors), `build_bank` (the model copy with the bank rows) |
+| `sampling.py` | `SamplingPlan` (a bundle's sampling as server parameters), `hf_top_k_top_p` |
+| `processors.py` | the two logit processors (the only module that imports `sglang`) |
+| `server.py` | start and stop a local SGLang server process |
+| `engine.py` | the `Engine` protocol, `SGLangEngine`, `load` |
+
+**The lens bundle.** The engine needs one folder and nothing else: the model files with the
+lens's adapter folded in (what a server can load), a `lens.json`, and a marker
+file `MERGE_DONE` that says the folder is complete. `lens.json` holds:
+
+| key | meaning |
+|---|---|
+| `name` | the lens's name |
+| `model`, `model_revision` | the subject model's id and the revision the lens reads (the residual store's key) |
+| `prompts` | per layer, `{"<layer>": {"ids": [...], "slot": int, "norm": float}}`: the readout prompt's token ids, the index of the slot token in them, and the norm the activation is scaled to |
+| `stop_ids` | token ids that end a readout |
+| `ban_ids`, `ban_min_new` | token ids that are never sampled, and how many new tokens come before a stop token may end the readout; `[]` and `0` for no ban |
+| `base_vocab` | rows of the model's embedding table; bank row `j` is token id `base_vocab + j` |
+| `prefix_ids` | token ids put in front of every readout before it is decoded to text; usually `[]` |
+| `sampling` | `{temperature, top_p, top_k, max_new_tokens, k}`; `k` readouts are sampled per cell |
+| `sampling_kind` | what the readouts sidecar declares: `prose1` or `bullet4` |
+
+**Making one.** For the bundled O-lens (`method=olens`: a PEFT LoRA on the subject and the
+carrier prompt with one activation slot), `wsbench bundle` builds the folder from two local
+folders, on the CPU and without loading the model:
+
+```
+uv run wsbench bundle adapter=<PEFT adapter folder> model=<subject snapshot folder> out=bundles/my-lens
+```
+
+| key | default | meaning |
+|---|---|---|
+| `adapter` | | a local PEFT adapter folder (`adapter_config.json`, `adapter_model.safetensors`); plain LoRA only, DoRA and rsLoRA are refused |
+| `model` | | a local folder with the subject's files (config, tokenizer, weights) |
+| `out` | | the bundle folder to write; it needs about the model's size on disk |
+| `name` | the `out` folder's name | |
+| `prompt`, `alpha` | the O-lens's | the carrier prompt (with `{layer}` and `{char}`) and the slot norm: the slot vector is `alpha * unit(h)` at every layer |
+| `model_id`, `revision` | Qwen/Qwen3.6-27B at the revision the banks were built on | recorded as `model` and `model_revision`; `revision=<sha>` is required for another model |
+| `temperature`, `top_p`, `top_k`, `max_new_tokens`, `samples` | `1.0`, `0.95`, `64`, `256`, `1` | the bundle's `sampling` |
+| `bullet` | `False` | a single-bullet lens: 4 readouts per cell and `sampling_kind` `bullet4` |
+
+**A lens with its own model code** (trained elsewhere, not a PEFT adapter on the subject)
+plugs in by writing the same folder: save a copy of the lens model that a server can load,
+write `lens.json` with the keys above, then the `MERGE_DONE` file. If the lens is a LoRA,
+`bundle.merge(snapshot, out_dir, lora_state, scaling, meta)` does all three. The engine only
+needs the lens to be a slot lens: the activation enters at one token position, with a norm
+that depends on the layer alone.
+
+**Reading cells.** Cells come from the residual store; the engine returns `k` strings per
+cell, in cell order:
+
+```python
+from wsbench.produce.served import bundle, engine
+
+lens = bundle.load("bundles/my-lens")
+eng = engine.load("sglang", lens)      # options: work=, max_bank=, server_args=, sampler=, greedy=, ...
+texts = eng.decode(cells)              # cells: list[wsbench.produce.store.Cell] -> list[list[str]]
+eng.stats.as_dict(), eng.checks        # seconds per stage, token-length and ban checks
+eng.close()
+```
+
+`decode` builds the bank for the cells, starts the server on it, sends the requests, and stops
+the server; more than `max_bank` cells are read as several banks. The server samples, so
+readouts are not seeded. `sampler="hf"` (the default) uses the Hugging Face filter order and
+needs temperature 1.0; `sampler="native"` leaves top-k and top-p to the server. Writing the
+texts in the readouts contract (§3) is the caller's job.
+
+**What it needs.** `sglang` and `httpx` beside the `gpu` extra (`uv pip install sglang
+httpx`; they are not in the lock file), and one GPU that holds the model. The default server
+flags (`engine.DEFAULT_SERVER_ARGS`) are scheduler settings chosen on one GPU type: a B200
+with 183 GiB, for Qwen3.6-27B at 768 running requests. A smaller GPU needs fewer running
+requests: pass your own flags with `server_args=[...]`. Other GPUs and other models were not
+measured. The scratch folder (`work=`, a temporary folder by default) holds the bank: two
+rewritten weight files and symlinks to the rest.
+
+**Another serving stack.** Write a class with the members of `engine.Engine` (`name`,
+`sampler`, `stats`, `tokens`, `decode(cells)`, `close()`) and return it from `engine.load`.
+An engine whose server accepts prompt embeddings needs no bank: it embeds `prompts[layer].ids`,
+replaces the row at `slot` with `bank.slot_rows(...)`, and sends that.
+
 ## What the plan does not carry
 
 - **Model-dependence.** The banks were gated on Qwen3.6-27B; `wsbench capable` re-runs that gate on
