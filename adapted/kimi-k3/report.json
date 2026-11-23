@@ -921,17 +921,65 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 100,
-   "n_items": 100,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 102,
+   "n_items": 102,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
-   "status": "full"
+   "status": "full",
+   "freeze_notes": [
+    "35 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-18-neg', 'dm-pair-19-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-23-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
+     "to": "31881e432cc9c4149671fd23735d5651900fadd353b859a19f8f4516b9fe807f",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-18-neg",
+      "dm-pair-19-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-23-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:33:46+00:00"
+    }
+   ],
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 35 dont_think items left the set; the 65 kept originals (35 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on Kimi-K3 (copies the carrier, never names the concept, greedy AND >= 8/10): 37 pass. 102/102 ship (72 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more."
   },
   "moral_rationale": {
    "target": 195,
@@ -2640,11 +2688,17 @@
     "pool_size": 31999
    },
    "note": "plan 0078 (English only): 407 per-item passes of 31999 pool rows (rejected at canon1 18961, gate 7176, Opus floor 5347, review 97, build 11); Opus prompt-only floor 0 by construction; tier C screens and epoch leakers applied R58 (the per-run test, a guesser >= 3/5 and blind + described >= 4/10, in >= 2 of 5 runs; 5-run screens and 5-run epoch measurements, decided on the 5-run mean); lucky screen: tiers A/B 61 of 186 leakers excluded; tier C 59 of 223 leak in >= 2 of 5 screen runs (R58); item-quality drops: independent audit 13, cue sweep 1, option review 1, same-entity sweep 2, other 7; confirm round 1 on 84: blind 0.086 / described 0.200 vs chance 0.193 + 0.05 (ub90 0.116 / 0.250) FAIL; 16 per-item leakers; confirm round 2 on 65: blind 0.012 / described 0.111 vs chance 0.194 + 0.05 (ub90 0.020 / 0.158) PASS; 7 per-item leakers dropped without back-fill (post-drop 0.010 / 0.010); floor-of-record re-test on 58: blind 0.021 / described 0.072 vs chance 0.194 + 0.05 (ub90 0.034 / 0.111) PASS; 3 per-item leakers dropped without back-fill (R49, Camila's strict rule: 3 dropped); R49 single re-measure (new floor of record) on 55: blind 0.018 / described 0.055 vs chance 0.194 + 0.05 (ub90 0.035 / 0.086) PASS; 2 per-item leakers (reported, not dropped: R49 measures once): r12iv0307, r15iv1589; tier C (R51-R54, gw sibling route): 6 batches of new invented entities, eligible per batch b1 16/2000, b2 28/2000, b3 32/2000, b4 27/2000, b5 33/2000, b6 28/2000; capped eligible 164 on a base of 55 (54 after the r12iv2510 review drop); stop (i) capped eligible 103 >= 2.0 x (100 - 55); epoch round 1 confirm on 207 (tier C 153): blind 0.026 / described 0.117 vs chance 0.192 + 0.05 (ub90 0.033 / 0.142); tier C alone 0.028 / 0.130 vs 0.191 + 0.05; PASS; per-item leakers 23 (20 tier C); the tier C ones dropped without back-fill; base-item flags reported, not dropped; epoch round 1 floor on 187 (tier C 133): blind 0.016 / described 0.077 vs chance 0.191 + 0.05 (ub90 0.022 / 0.098); tier C alone 0.015 / 0.059 vs 0.190 + 0.05; PASS; per-item leakers 13 (7 tier C); the tier C ones dropped without back-fill; base-item flags reported, not dropped; epoch round 1 remeasure on 180 (tier C 126): blind 0.014 / described 0.097 vs chance 0.191 + 0.05 (ub90 0.018 / 0.121); tier C alone 0.010 / 0.102 vs 0.190 + 0.05; PASS; per-item leakers 13 (10 tier C) (reported, not dropped: R49 measures once): c1iv1890, c2iv0947, c2iv1011, c3iv0600, c3iv1445, c3iv1724, c5iv0231, c5iv1586, c6iv1013, c6iv1610, r14iv0464, r14iv0562, r4iv0716; epoch closed: passed; shipped 180; status full (target reached) | Camila 2026-11-08 (decision 4, consistency with plan 0077 §0): the 13 final re-measure >= 2-of-5 leakers reported above are dropped without back-fill or re-measure; 180 -> 167 items (54 base -> 51, tier C 126 -> 116); status full (167 >= target 100). The lucky floor of record (run 1 of the re-measure on 180) and the stock-subject-v1 floor were measured on the 180-item set and are marked stale in floors/ (no per-item record)."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5d09f2b3+dirty",
-  "adapt_sha256": "9371e4d9da59115f"
+  "git": "a520f06b",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "kimi-k3",
  "label": "Kimi-K3",

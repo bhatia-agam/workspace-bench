@@ -2145,18 +2145,51 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 86,
-   "n_items": 72,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 74,
+   "n_items": 74,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "untried",
-   "note": "72/100 (untried: originals only). 86 gate passes, but 14 dm-pair-*-neg members are not shipped because their pos twins failed (pairs atomic); every group ships complete."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 21 dont_think items left the set; the 51 kept originals (21 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on Kimi-K2-Instruct-0905 (copies the carrier, never names the concept, greedy AND >= 8/10): 23 pass, 14 fail (dm-think-38, dm-think-39, dm-think-43, dm-think-46, dm-think-48, dm-think-53, dm-think-54, dm-think-57, dm-think-58, dm-think-59, dm-think-61, dm-think-63, dm-think-68, dm-think-69). 74/102 ship (44 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "21 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-10-neg', 'dm-pair-12-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "ef0cee29776725e6cd7acea807ad5f5396ed21ff1ec1d3588186d895a3d5cb8a",
+     "to": "e3b36ffc9de21a6683b25be9f09dd9039acc5e425a4ed93cbde084151a9158ad",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-10-neg",
+      "dm-pair-12-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg"
+     ],
+     "at": "2026-11-23T03:33:41+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -2244,11 +2277,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 109 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "PROMPT-ONLY PREDICTOR (I-N share_diff, 95% CI): BEFORE (42 pairs) predict_single +0.024 [0, .073], predict_normal +0.024 [0, .073], prompttext 0/0, cot_any_sample +0.167 [0, .341]; at 31 pairs +0.000 / +0.000; AFTER (final 109 pairs) predict_single +0.000 [0, 0] (I2/N2), predict_normal +0.018 [-.018, .055] (I3/N1), prompttext 0/0, cot_any_sample +0.138 [.036, .241]. 109/40 pairs (full). Build deviations: window widened mid-build to 2024-04..2025-12 after the confirm projection came in at 58.5 < 60; gw-side offsets via the OffsetTok copy (slow tokenizer); first install crashed in render_ids, the 16:40 install succeeded after #478. Drops: builder R20 audit 17 pairs (1 wrong hint), independent audit 11 pairs (42 -> 31, below 40). Pre-approved top-up: densify 2024-06..2025-04 with flash's 672 extra3 series (#483 tooling; web-check 39/40, 1 excluded) -> 188 pairs; carry-forward of the 28 earlier drops (both twins) and a fresh-context audit 2 of the 138 new pairs (51 dropped: N readable / known before 29, incumbent/favourite/streak 9, duplicate event 13) -> 109. Bar at 109: date_leak.pass true, day AUROC .543, cell excess +.042, obscurity .585, guess .515, prior_fame .495; estimated cutoff 2025-05 (fade 2024-10..2025-04)."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "26176139+dirty",
-  "adapt_sha256": "bcfd721e23d3e856"
+  "git": "ae11dd8a",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "drops": {
   "basic_readout": {

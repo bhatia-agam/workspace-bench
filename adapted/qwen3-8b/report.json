@@ -1484,18 +1484,62 @@
    }
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
    "n_original_pass": 97,
-   "n_items": 94,
+   "n_items": 97,
    "n_new": 0,
    "n_candidates_gated": 0,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (no Brief): compliance-gated on Qwen3-8B (copies the carrier, never names the concept, >= 8/10), pairs atomic: 97 pass, 94/100 ship",
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 32 dont_think items left the set; the 62 kept originals (32 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on Qwen3-8B (copies the carrier, never names the concept, greedy AND >= 8/10): 35 pass, 2 fail (dm-think-39, dm-think-55). 97/102 ship (67 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
+   "freeze_notes": [
+    "32 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-19-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-23-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "b5dbad13148b7c59084626f641cd99bde1d2452e232f9a1c9b64f535c124679a",
+     "to": "a54ef2995135df9c0b477e37c43546e6d3a4f00e16a37497c223472cc69185b5",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-19-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-23-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:34:04+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -2266,11 +2310,17 @@
     "pool_size": 19999
    },
    "note": "plan 0078 (English only): 629 per-item passes of 19999 pool rows (rejected at canon1 7017, gate 9647, Opus floor 2200, review 323, build 183); Opus prompt-only floor 0 by construction; lucky screen: 197 of 626 leakers excluded, 3 unscreened (failed draw) excluded; item-quality drops: independent audit 16, same-entity sweep 4, cue sweep 15, option review 1; confirm round 1 on 283: blind 0.042 / described 0.113 vs chance 0.194 + 0.05 (ub90 0.053 / 0.135) PASS; 27 per-item leakers dropped without back-fill (post-drop 0.016 / 0.034); floor-of-record re-test on 256: blind 0.013 / described 0.098 vs chance 0.193 + 0.05 (ub90 0.018 / 0.119) PASS; 19 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 252: blind 0.019 / described 0.090 vs chance 0.193 + 0.05 (ub90 0.026 / 0.110) PASS; 19 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 239: blind 0.023 / described 0.080 vs chance 0.193 + 0.05 (ub90 0.031 / 0.101) PASS; 18 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 237: blind 0.015 / described 0.098 vs chance 0.193 + 0.05 (ub90 0.022 / 0.120) PASS; 18 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 236: blind 0.019 / described 0.107 vs chance 0.193 + 0.05 (ub90 0.028 / 0.130) PASS; 22 per-item leakers dropped without back-fill (R49, Camila's strict rule: 22 dropped); R49 single re-measure (new floor of record) on 214: blind 0.012 / described 0.096 vs chance 0.192 + 0.05 (ub90 0.017 / 0.119) PASS; 16 per-item leakers (reported, not dropped: R49 measures once): r12iv0023, r12iv0837, r12iv2818, r14iv0489, r14iv1698, r14iv1930, r14iv2854, r15iv0435, r15iv0973, r15iv1211, r15iv1772, r15iv1881, r15iv2979, r15iv3036, r16iv1142, r16iv1330; shipped 214; status full (target reached)"
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "25604c93",
-  "adapt_sha256": "2afc9d88930d1a70"
+  "git": "e5ad69a5",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "qwen3-8b",
  "label": "Qwen3-8B",
