@@ -277,6 +277,62 @@ What it is not: fast. It reads one prompt at a time on one GPU, which is right f
 position, a question or a family, and wrong for the whole benchmark at every token; the in-house
 runs fan that out over Modal.
 
+## The residual store
+
+The subject model's activations do not depend on the readout method, so they are captured once
+and kept: `wsbench capture` runs the model over a read plan and writes the residual stream at
+every planned cell to a store on disk, and every method can then read the same vectors without
+running the model again.
+
+```
+uv run wsbench capture families=poetry,multihop store=outputs/store   # needs --extra gpu
+uv run wsbench capture --fast store=outputs/store                     # the fast subset's plan
+uv run wsbench capture plan=my_cells.jsonl store=outputs/store        # any cell list
+```
+
+Each eval prints where its cells came from, for example
+`poetry: 3322 cells = 3322 from the store + 0 pulled from the dataset + 0 captured (0 forward
+passes)`. A second run of the same command makes no forward pass and does not load the model.
+
+| key | default | meaning |
+|---|---|---|
+| `families` | | a comma list, or `all`; with `--fast`, the fast subset's evals |
+| `plan` | | a plan file instead of `families=`: rows in the format `wsbench plan` writes |
+| `store` | `outputs/store` | the store's root folder |
+| `model`, `revision` | Qwen/Qwen3.6-27B at the revision the banks were built on | the subject; `revision=<sha>` is required for another model |
+| `dtype` | `fp32` | the subject's dtype during capture: `fp32` (the forward runs in float32) or `bf16` (the model as shipped); vectors are stored as bf16 either way |
+| `reads` | `full` | `lite` captures the lite sites only |
+| `limit` | `0` | the first N items of each eval |
+| `shard`, `shards` | `0`, `1` | this process captures every `shards`-th item from `shard` (items sorted by id): one process per GPU |
+| `device` | `cuda` | |
+
+**What is stored.** One folder per model revision, capture dtype and eval:
+`<store>/<revision>/<dtype>/<eval>/<pack>.safetensors` (`acts`, one row per cell) with a
+`<pack>.json` beside it that lists the pack's items and, per item, its cells as
+`[layer, position, token]`. Every stored item carries a key: the sha256 of its exact token ids,
+its read positions, its layers and its steering. A read asks for items by id and key, so a
+vector is only handed out for the prompt, positions and layers it was captured at. An item
+stored under another key (the bank or the plan changed since) is refused, counted in the
+printed line, and captured again; a pack found under another revision or dtype than its folder
+is an error.
+
+**A plan file from somewhere else.** `plan=` takes any cell list in the plan's row format, so
+activations for prompts outside this benchmark are captured and read the same way. The minimal
+row gives the exact token ids, the positions and the layers:
+
+```json
+{"family": "my_eval", "id": "item-1", "render": "captured",
+ "positions": {"kind": "positions", "positions": [3, 7]}, "layers": [20, 44],
+ "extra": {"input_ids": [151644, 872, 198]}, "lite_positions": {"kind": "same"}}
+```
+
+A row may also give text to render (`"render": "chat"` with `"text"`, see the table in §1) and
+any positions rule. `family` is a free name here; it only names the store folder.
+
+In Python, `wsbench.produce.store.cells_for(store, eval, plan_rows, tokenizer, backend=...)` is
+the one call that returns cells: from the store, else from a `pull` function, else from a
+forward pass, which it writes back to the store.
+
 ## What the plan does not carry
 
 - **Model-dependence.** The banks were gated on Qwen3.6-27B; `wsbench capable` re-runs that gate on
