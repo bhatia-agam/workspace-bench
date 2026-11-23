@@ -15,6 +15,9 @@ from wsbench.viewer import store
 USAGE = """usage: wsbench viewer <command> [key=value ...] [--show | --help]
 
   ingest <dir> adapter=wsb|hb|bank|tokens [store=DIR]   add a lens (or the question banks)
+  ingest <runs.json> adapter=manifest [store=DIR]       add the runs a manifest lists
+  check [store=DIR]      every manifest run's scores against its own result files
+  sources [store=DIR]    runs whose readout files are gone from this machine
   serve [store=DIR] [port=8600]                  open the viewer on http://127.0.0.1:<port>
 
 ingest keys
@@ -30,9 +33,20 @@ ingest keys
   adapter=tokens <dir> = a workspace-bench checkout: tokenize every prompt of model= with the
                 subject tokenizer (offline), so the token strip shows the whole prompt
   adapter=bank  <dir> = a workspace-bench checkout: every model's questions (adapted/<model>/)
+  adapter=manifest  <runs.json> = a runs manifest (README, 'Runs manifest'): each finished run
+                is fetched from its volume and ingested, one lens at a time; a run in
+                progress or unchanged is reported and left.  run=NAME lens=ID bench=wsb|hb
+                (only those)  readouts=none|index|copy (none: readouts stay on the volume and
+                are read on demand; index: fetch each eval's readout file once for the cell
+                index and flags; copy: keep all text)  cache=DIR (downloads; default
+                $WSB_VIEWER_CACHE or ~/.cache/wsbench-viewer)  hb_repo=DIR  families=a,b
+                environment=NAME (the Modal environment of runs that name none)
+                keep_downloads=True (keep the judge-call caches and cell files in the cache;
+                by default they are removed once the run is stored, the result files stay)
   common        store=DIR (default $WSB_VIEWER_STORE or outputs/viewer_store)
                 build_dir=DIR (build the database on a fast local disk, then move it)
                 force=True (re-ingest an unchanged source)
+check keys      run=RUN_ID (one run)  cache=DIR (the ingest cache, to re-read result files)
 serve keys      host=127.0.0.1  port=8600  private=False (True shows items marked private)
 """
 
@@ -67,16 +81,39 @@ class Ingest(Options):
         self.copy_max_mb = 4096
         self.judge = None
         self.safety_dir = None
+        self.run = None  # adapter=manifest: only the run of this name
+        self.bench = None
+        self.cache = None
+        self.environment = None
+        self.keep_downloads = False  # adapter=manifest: leave every download in the cache
 
     def finalize(self) -> None:
         if self.adapter not in ADAPTERS:
             raise ValueError(f"adapter must be one of {', '.join(ADAPTERS)}, not {self.adapter!r}")
         self.force = _bool(self.force)
+        self.keep_downloads = _bool(self.keep_downloads)
         self.copy_max_mb = int(self.copy_max_mb)
+        if self.adapter == "manifest":
+            self.readouts = self.readouts or "none"
         for key in ("items", "families", "model"):
             setattr(self, key, _text(getattr(self, key)))
-        for key in ("src", "store", "readouts", "lens", "method", "label", "hb_repo", "repo",
-                    "build_dir", "judge", "safety_dir"):  # fmt: skip
+        for key in (
+            "src",
+            "store",
+            "readouts",
+            "lens",
+            "method",
+            "label",
+            "hb_repo",
+            "repo",
+            "build_dir",
+            "judge",
+            "safety_dir",
+            "run",
+            "bench",
+            "cache",
+            "environment",
+        ):
             v = getattr(self, key)
             setattr(self, key, None if v is None else str(v))
 
@@ -96,8 +133,32 @@ class Serve(Options):
         self.private = _bool(self.private)
 
 
-ADAPTERS = ("wsb", "hb", "bank", "tokens")
-COMMANDS: dict[str, type[Options]] = {"ingest": Ingest, "serve": Serve}
+class Check(Options):
+    def __init__(self) -> None:
+        super().__init__()
+        self.store = None
+        self.run = None
+        self.cache = None
+
+    def finalize(self) -> None:
+        for key in ("store", "run", "cache"):
+            v = getattr(self, key)
+            setattr(self, key, None if v is None else str(v))
+
+
+class Sources(Options):
+    def __init__(self) -> None:
+        super().__init__()
+        self.store = None
+
+    def finalize(self) -> None:
+        self.store = None if self.store is None else str(self.store)
+
+
+ADAPTERS = ("wsb", "hb", "bank", "tokens", "manifest")
+COMMANDS: dict[str, type[Options]] = {
+    "ingest": Ingest, "serve": Serve, "check": Check, "sources": Sources,
+}  # fmt: skip
 EXIT_USAGE = 2
 
 
@@ -116,7 +177,118 @@ def _list(v: str | None) -> list[str] | None:
     return [x for x in v.split(",") if x] if v else None
 
 
+def _mb(n: int) -> str:
+    return f"{n / 2**20:.1f} MB"
+
+
+def _differs(r: dict) -> None:
+    """Say where the judged folder and the run's own results file disagree."""
+    for subset, bad in (r.get("differs") or {}).items():
+        if bad:
+            print(f"  {subset}: {len(bad)} evals differ from the run's results file:")
+            for line in bad[:5]:
+                print(f"    {line}")
+
+
+def _ingest_manifest(o: Ingest) -> int:
+    from wsbench.viewer.ingest import reader
+
+    src = Path(o["src"]).expanduser()
+    if not src.is_file():
+        raise SystemExit(f"viewer ingest: {src} is not a runs manifest file")
+    root = store.root(o["store"])
+    out = reader.ingest_manifest(
+        src, root, run=o["run"], lens=o["lens"], bench=o["bench"], environment=o["environment"],
+        cache=Path(o["cache"]) if o["cache"] else None, readouts=o["readouts"],
+        build_dir=Path(o["build_dir"]) if o["build_dir"] else None,
+        repo=Path(o["repo"]) if o["repo"] else None,
+        hb_repo=Path(o["hb_repo"]) if o["hb_repo"] else None, force=o["force"],
+        families=_list(o["families"]), keep_downloads=o["keep_downloads"],
+    )  # fmt: skip
+    if not out:
+        print("no run of the manifest matches")
+    said: set[str] = set()
+    for r in out:
+        head = f"{r['bench']} {r['run']} {r['lens']}" + (f" [{r['set']}]" if r.get("set") else "")
+        n, freed = r.get("cleaned") or (0, 0)
+        if n and r["run_id"] not in said:  # once per run, not once per set entry
+            said.add(r["run_id"])
+            print(f"{r['run_id']}: removed {n} downloaded files from the cache ({_mb(freed)}): "
+                  "judge-call caches, cell and readout files, now in the run database; the "
+                  "result files stay (keep_downloads=True keeps all)")  # fmt: skip
+        if r["status"] == "ingested":
+            print(f"{head}: ingested as {r['run_id']}: {r['evals']} evals, sets "
+                  f"{', '.join(r['sets'])}; database {_mb(r['db_bytes'])}, downloaded "
+                  f"{r['downloaded_files']} files ({_mb(r['downloaded_bytes'])}), "
+                  f"{r['seconds']} s")  # fmt: skip
+            lazy = r["readouts"]["on_volume"]
+            if lazy:
+                print(f"  readouts of {len(lazy)} evals stay on the volume (read on demand)")
+            for gone in r.get("removed") or []:
+                print(f"  removed the separate run {gone}: it is now a set of this run")
+            _differs(r)
+        elif r["status"] == "facts updated":
+            print(f"{head}: files unchanged, facts updated in place ({r['run_id']}): "
+                  f"{', '.join(r.get('changed') or []) or 'as its full run'}")  # fmt: skip
+            _differs(r)
+        elif r["status"] == "set ingested":
+            from wsbench.viewer.query import is_earlier_fast, subset_title
+
+            what = r.get("subset") or ""
+            said = f" ({subset_title(what)})" if is_earlier_fast(what) else ""
+            print(f"{head}: stored as a set of {r['run_id']}{said}")
+        elif r["status"] == "unchanged":
+            print(f"{head}: unchanged, skipped (force=True re-ingests)")
+        elif r["status"] == "failed":
+            print(f"{head}: FAILED, the store keeps what it had: {r.get('why')}")
+        else:
+            print(f"{head}: {r['status']}, skipped ({r.get('why')}); run the same command "
+                  "again when it is finished")  # fmt: skip
+    failed = sum(1 for r in out if r["status"] == "failed")
+    if failed:
+        print(f"{failed} of {len(out)} entries FAILED (exit code 1)")
+    print(f"check the scores: wsbench viewer check store={root}")
+    return 1 if failed else 0
+
+
+def _check(o: Check) -> int:
+    from wsbench.viewer import checks
+
+    root = store.root(o["store"])
+    got = checks.store_scores(
+        root, [o["run"]] if o["run"] else None, Path(o["cache"]) if o["cache"] else None
+    )
+    if not got:
+        print(f"{root}: no run ingested from a manifest")
+    bad = 0
+    for rid, r in got.items():
+        state = "ok" if not r["mismatches"] else f"{len(r['mismatches'])} MISMATCHES"
+        print(f"{rid}: {r['checked']} scores, {state} (against {r['against']})")
+        for line in r["mismatches"]:
+            print(f"  {line}")
+        bad += len(r["mismatches"])
+    return 1 if bad else 0
+
+
+def _sources(o: Sources) -> int:
+    import os
+
+    from wsbench.viewer import checks
+
+    root = store.root(o["store"])
+    rows = checks.missing_sources(root)
+    for r in rows:
+        where = os.path.commonpath(r["missing"]) if len(r["missing"]) > 1 else r["missing"][0]
+        print(f"{r['run_id']}: {len(r['missing'])} readout files gone ({where}); "
+              f"{r['n_without_text']} of {r['n_cells']} cells have no text in the store and "
+              "show the 'not available' marker")  # fmt: skip
+    print(f"{len(rows)} runs with readout files that no longer exist")
+    return 0
+
+
 def _ingest(o: Ingest) -> int:
+    if o["adapter"] == "manifest":
+        return _ingest_manifest(o)
     src = Path(o["src"]).expanduser().resolve()
     if not src.is_dir():
         raise SystemExit(f"viewer ingest: {src} is not a directory")
@@ -208,6 +380,10 @@ def main(argv: list[str]) -> int:
         return 0
     if isinstance(command, Ingest):
         return _ingest(command)
+    if isinstance(command, Check):
+        return _check(command)
+    if isinstance(command, Sources):
+        return _sources(command)
     return _serve(command)
 
 
