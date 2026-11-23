@@ -191,7 +191,7 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 
 ## Fast subset (`--fast`)
 
-`--fast` judges the frozen subset `fast-v4` (`evals/fast/README.md`): 16 families
+`--fast` judges the frozen subset `fast-v5` (`evals/fast/README.md`): 16 families
 (the core tier without `jailbreak_recognition` and `agentic_misalignment`), a seeded random
 half of each family's units plus the whole strict ATI subset, 1,441 read items. **A full
 readouts file is always judgeable with `--fast`**: the judge keeps the fast items itself, so
@@ -203,19 +203,21 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 ```
 
 - The fast plan is the full plan's rows of the fast read items: same render, layers and
-  positions rule for every family (no `fast-v4` row carries a reduced-position rule), so a
+  positions rule for every family (no `fast-v5` row carries a reduced-position rule), so a
   producer of the full plan needs nothing new. A pair, a headline unit or a slot is read with
   every row it needs (both members of a pair, the rows an introspection item's twins read, a
   slot's puzzle), which is why a family's read items can outnumber its units.
-- Declare the file in its sidecar: `"fast": "fast-v4"` and `"plan_sha"` = the FAST plan's sha
+- Declare the file in its sidecar: `"fast": "fast-v5"` and `"plan_sha"` = the FAST plan's sha
   (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows
   `wsbench plan --fast` wrote), with `"reads": "full"`. A file that declares `fast` is judged only with
   `--fast`. `wsbench produce family=F --fast` does all of this.
 - A FAST file declaring another version is judged only when that version reads the family's
   same items at the same positions (`fast.same_reads`; with a `plan_sha`, or the same bank).
+  `fast-v4` does for every family but `chain_intermediates` (`fast-v5` is `fast-v4` re-cut for
+  that family's bank `items_v3.json`), so a `fast-v4` FAST file of another family is judged as it is.
   The older versions (`fast-v1` .. `fast-v3`, `fast-safety-v1` / `-v2`) read other items than
-  `fast-v4`, so their FAST files are refused under `--fast`: judge from a full file, or produce
-  the `fast-v4` plan. (Their reduced-position rows, `fast_of` with `last_n` / `punct_special`,
+  `fast-v5`, so their FAST files are refused under `--fast`: judge from a full file, or produce
+  the `fast-v5` plan. (Their reduced-position rows, `fast_of` with `last_n` / `punct_special`,
   exist only in those frozen files: `wsbench.readplan.resolve(rule, tokens)` still resolves
   them, on DECODED token strings.) `--fast-safety` is retired.
 - `--fast` takes full reads only (no `reads=lite`), on the registered

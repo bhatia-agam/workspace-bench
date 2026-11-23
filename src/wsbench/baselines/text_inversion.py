@@ -2020,6 +2020,25 @@ class NotInScope(SystemExit):
     runner reports it as skipped, not failed."""
 
 
+# Plan 0110, issue #559: the families whose registered ``panel-v2`` entry may be gated on
+# another bank and still be read as "no ATI item", provided it holds no id, each with the
+# ``bank_fingerprint`` of the ONE bank the exemption was granted for. chain_intermediates moved
+# to bank v3 with the ATI file frozen until the full ATI audit; its entry (bank v2, 0 ids) gates
+# nothing. Listed by name and by bank: on any other bank (a pin to bank v1, a later bank v4),
+# and for every other family's stale entry, with ids or without, the check fails closed.
+STALE_NO_ITEM_PENDING_AUDIT: dict[str, str] = {
+    # items_v3.json, plan 0110
+    "chain_intermediates": "9dabbad41dccc8e1857614da9c44666ed34fcaa664f2c6bb796554075a65b846",
+}
+
+
+class StaleNoItem(NotInScope):
+    """The registered entry of a ``STALE_NO_ITEM_PENDING_AUDIT`` family, gated on another bank
+    and holding no id, read on the bank recorded there (plan 0110): still "no ATI item", skipped
+    like a current zero-id entry and named by ``wsbench check ati_subset``. Whether that bank
+    has an ATI item is settled by the full ATI audit (issue #559)."""
+
+
 def subset(family: str, dst: Path | None = None) -> list[str]:
     """The frozen ATI ids of ``family`` (see ``subset_entry``)."""
     return list(subset_entry(family, dst)["ids"])
@@ -2048,6 +2067,13 @@ def subset_entry(
     own file under ``WSB_BANK_ROOT``, plan 0079). A family the scope leaves out by design (not
     gated, or no surviving item) raises ``NotInScope`` (skipped by the runner); a missing entry or
     one gated under another judge instrument or bank raises ``SystemExit`` (failed/2, re-gate).
+    The one exception (plan 0110): chain_intermediates only, listed by name in
+    ``STALE_NO_ITEM_PENDING_AUDIT`` with the fingerprint of its bank v3. Its registered
+    ``panel-v2`` entry, gated on another bank and holding NO id, stays "no ATI item"
+    (``StaleNoItem``, a ``NotInScope``) while the bank in use is that recorded bank, until the
+    ATI audit (issue #559). Every other entry on another bank still exits "re-gate": one with at
+    least one id, one of any other family (ids or not), one of an adapted set's gate, and this
+    family's own on any bank but the recorded one.
     An ``OPT_IN_ENTRIES`` family named in ``opt_in`` is served like a pinned one (plan 0088)."""
 
     dst = frozen_path() if dst is None else dst
@@ -2081,7 +2107,18 @@ def subset_entry(
             f"{family}: {SCOPE} subset was gated under a retired panel rule "
             f"({entry['gate']}: {why}); re-gate"
         )
-    if entry.get("gate") in BANK_SHA_GATES and entry.get("bank_sha") != bank_fingerprint(family):
+    if entry.get("gate") in BANK_SHA_GATES and entry.get("bank_sha") != (
+        in_use := bank_fingerprint(family)
+    ):
+        if (
+            STALE_NO_ITEM_PENDING_AUDIT.get(family) == in_use  # this family, on this bank only
+            and entry.get("gate") == GATE_VERSION  # the registered panel, never an adapted set's
+            and not entry["ids"]
+        ):
+            raise StaleNoItem(
+                f"{family}: no item survives the {SCOPE} gate (the entry is stale: it was gated "
+                f"on a different bank and holds no id; it awaits the ATI audit, issue #559)"
+            )
         raise SystemExit(
             f"{family}: {SCOPE} subset was gated on a different bank (bank_sha mismatch: items "
             f"were added, retired or edited since gating); re-gate"

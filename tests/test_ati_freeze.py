@@ -68,6 +68,16 @@ def test_registered_strict_ati_macro_admits_exactly_the_eight():
     assert reasons == dict.fromkeys(small, "n<20 (ATI)")
 
 
+def test_strict_ati_macro_is_unchanged_by_the_stale_chain_entry():
+    """Plan 0110: chain_intermediates' zero-id entry is bank v2's and the family is on bank v3.
+    It has no ATI row, as before, and the macro is the same eight families and 350 ids."""
+    rows = _registered_rows()  # a SystemExit of subset_entry for any family fails here
+    assert "chain_intermediates" not in {r.family for r in rows}
+    m = macro(rows)
+    assert set(m["families"]) == STRICT_ATI_FAMILIES and len(m["families"]) == 8
+    assert sum(r.extras["ati_n_ids"] for r in rows if r.family in STRICT_ATI_FAMILIES) == 350
+
+
 @pytest.mark.parametrize("fam", ["nyt_connections", "hinted_cutoff"])
 def test_nyt_and_hinted_cutoff_are_out(fam):
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))

@@ -38,12 +38,31 @@ LOOPED_SHA256 = {
     "looped.py": "41efcd5ddbe1e09bb6d227da582d187e3e74cb88281e90b6f0a3b7baca767282",
     "loop_layout.py": "35d743f3987ebe1118f4d2913263bee3f6d4ae0a275216d9cfb44a0b9db2b200",
 }
-if VARIANT not in ("", "dory-4b"):
-    raise SystemExit(f"ADAPT_INTROSPECTION={VARIANT!r}: expected unset or dory-4b")
+# ADAPT_INTROSPECTION=inkling-2-mini: transformers 5.24.0 (the first release with inkling2_loop)
+# plus `kernels` (its NVFP4 path; Blackwell only, so B200), weights from the subject's own
+# volume; HFEngine.load unrolls the model (wsbench.adapt.inkling_loop)
+INKLING_TRANSFORMERS = "transformers==5.24.0"
+if VARIANT not in ("", "dory-4b", "inkling-2-mini"):
+    raise SystemExit(f"ADAPT_INTROSPECTION={VARIANT!r}: expected unset, dory-4b or inkling-2-mini")
 app = modal.App("adapt-introspection" + (f"-{VARIANT}" if VARIANT else ""))
-hf = modal.Volume.from_name("adapt-hf-cache", create_if_missing=True)
+INKLING = VARIANT == "inkling-2-mini"
+hf = modal.Volume.from_name("inkling-2-mini" if INKLING else "adapt-hf-cache",
+                            create_if_missing=not INKLING)  # fmt: skip
+GPU = "B200" if INKLING else "H200"
+HF_HOME = "/hf/hf" if INKLING else "/hf"  # the subject volume keeps its hub cache under hf/hub
 image = modal.Image.debian_slim(python_version="3.12")
-if VARIANT == "dory-4b":
+if INKLING:
+    image = image.pip_install(
+        "torch==2.11.0",
+        INKLING_TRANSFORMERS,
+        "kernels",
+        "accelerate>=1.14",
+        "safetensors",
+        "huggingface_hub",
+        "numpy",
+    )
+    path = "/root/wsb/src"
+elif VARIANT == "dory-4b":
     image = image.apt_install("git").pip_install(
         "torch==2.11.0",
         DORY_TRANSFORMERS,
@@ -73,17 +92,29 @@ else:
         "numpy",
     )
     path = "/root/wsb/src"
-image = image.env({"HF_HOME": "/hf", "PYTHONPATH": path, "PYTHONUNBUFFERED": "1"}).add_local_dir(
-    str(WSB / "src/wsbench"), "/root/wsb/src/wsbench", ignore=["**/__pycache__"]
+image = image.env(
+    {
+        "HF_HOME": HF_HOME,
+        "PYTHONPATH": path,
+        "PYTHONUNBUFFERED": "1",
+        **({"HF_HUB_OFFLINE": "1"} if INKLING else {}),
+    }
+).add_local_dir(str(WSB / "src/wsbench"), "/root/wsb/src/wsbench", ignore=["**/__pycache__"])
+
+
+@app.function(
+    image=image,
+    gpu=GPU,
+    volumes={"/hf": hf.read_only() if INKLING else hf},
+    timeout=8 * 3600,
+    memory=131072,
 )
-
-
-@app.function(image=image, gpu="H200", volumes={"/hf": hf}, timeout=8 * 3600, memory=131072)
 def measure(job: dict) -> bytes:
     from wsbench.adapt import introspection as ii
 
     engine = ii.HFEngine.load(job["hf_id"], job.get("revision"))
-    hf.commit()
+    if not INKLING:  # the subject's own volume is never written
+        hf.commit()
     return ii.save_result(ii.measure(engine, job))
 
 

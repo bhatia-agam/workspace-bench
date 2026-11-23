@@ -1,6 +1,6 @@
 # Fast subset (`--fast`)
 
-`--fast` is the fast tier of [Tiers](tiers.md): **`fast-v4`**, a frozen, seeded random half of
+`--fast` is the fast tier of [Tiers](tiers.md): **`fast-v5`**, a frozen, seeded random half of
 the core tier. For every core family but `jailbreak_recognition` and `agentic_misalignment` it
 holds `ceil(n / 2)` of the family's scored units, drawn at random with a recorded seed, plus
 the whole strict ATI subset, which is never sampled: 16 families, 1,203 units, 1,441 read items
@@ -8,7 +8,7 @@ the whole strict ATI subset, which is never sampled: 16 families, 1,203 units, 1
 
 | flag | version | families | units | read items |
 |---|---|---|---|---|
-| `--fast` | `fast-v4` | 16 | 1,203 | 1,441 |
+| `--fast` | `fast-v5` | 16 | 1,203 | 1,441 |
 
 ```bash
 uv run wsbench plan --fast out=outputs/plan-fast                         # the fast read plan
@@ -19,7 +19,7 @@ uv run wsbench report dir=outputs/judged/mylens-fast --fast
 - **Readouts.** `--fast` judges the fast items of each family's readouts file. A **full**
   file is always judgeable with `--fast` (the judge keeps the fast items itself), so existing
   full readouts need no re-read; a producer that wants the smaller read follows
-  `wsbench plan --fast` (`docs/producing_readouts.md` § Fast subset). Every `fast-v4` family is read at its
+  `wsbench plan --fast` (`docs/producing_readouts.md` § Fast subset). Every `fast-v5` family is read at its
   full positions. `--fast` is `fast=True` on `plan`, `produce`, `judge`, `run` and `report`.
 - **What a fast value is.** Each family is rescored on its fast units by its own rule (pairs,
   slots, class differences as in the full family); the fast macro is the mean over the 16
@@ -43,10 +43,14 @@ uv run wsbench report dir=outputs/judged/mylens-fast --fast
   cut with the same seed by `scripts/fast_cut_core_half.py`; a family's draw depends only on
   the seed, its name and its own units, so every other family keeps its units and its fast
   results.
+- **`fast-v4`** is the same cut as it stood until `chain_intermediates` moved to its bank
+  `items_v3.json`: `fast-v5` re-draws that one family on the new bank and holds the other 15
+  entries byte for byte, so their `fast-v4` result rows and FAST readouts files are valid under
+  `--fast`; a `fast-v4` row of `chain_intermediates` is `stale fast subset (fast-v4)`.
 - **Older versions.** `fast-v1` .. `fast-v3` (selected on 23 arms' outcomes) and
   `fast-safety-v1` / `-v2` stay frozen in the repo. Their result rows are
-  `stale fast subset (<v>)` under `fast-v4`; an old fast results directory is reported as it
-  was with `wsbench report dir=<dir> fast_version=<v>`. Their FAST readouts files hold other items than `fast-v4`
+  `stale fast subset (<v>)` under `fast-v5`; an old fast results directory is reported as it
+  was with `wsbench report dir=<dir> fast_version=<v>`. Their FAST readouts files hold other items than `fast-v5`
   reads and are refused; full readouts files are valid inputs as ever. **`--fast-safety` is
   retired** (a usage error that says so): the two safety families are core families, run with
   `wsbench run families=jailbreak_recognition,agentic_misalignment`.

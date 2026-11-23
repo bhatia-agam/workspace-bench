@@ -37,6 +37,10 @@ Image recipes (``Subject.modal_image``):
   ``muse-spark`` volume (no HF secret: nothing is fetched from the hub). Carries flashinfer's
   prebuilt JIT cache (sm103a + sm100a): JIT-building the trtllm MoE on B300 segfaults gcc.
 
+- ``inkling``: vLLM's Inkling-2-Mini image (``vllm/vllm-openai:inkling-2-mini``, pinned by digest;
+  vLLM 0.35 nightly, no pip wheel exists), its own python; weights = the hub-cache snapshot dir
+  on the ``inkling-2-mini`` volume (read-only at ``/hf``, ``HF_HUB_OFFLINE``). Text only.
+
 kimi-k3 uses ``default`` (trust_remote_code, ``language_model_only``, gpu_memory_utilization 0.95
 in its engine kwargs) with its weights on the ``kimi-k3`` volume, mounted at the default
 recipe's ``/hf``: ``modal_weights`` is the hub-cache snapshot dir under it (``hf/hub/...``).
@@ -58,6 +62,7 @@ Deploy (Camila's env; ``MODAL=/root/.cache/cfinf-modal-venv/bin/modal``, from th
     ADAPT_SUBJECT=deepseek-v4-pro $MODAL deploy scripts/adapt_modal.py  # adapt-v4-pro (B300:8 TP8)
     ADAPT_SUBJECT=kimi-k3 $MODAL deploy scripts/adapt_modal.py      # adapt-kimi-k3 (B300:8 TP8)
     ADAPT_SUBJECT=muse-spark-open $MODAL deploy scripts/adapt_modal.py  # B300:8|B200:8, TP8
+    ADAPT_SUBJECT=inkling-2-mini $MODAL deploy scripts/adapt_modal.py   # B200, 16 replicas
     # then every adapt command for that subject (backend="modal") uses its app transparently;
     # ADAPT_BACKEND=modal sends a box-sized subject to the shared app instead of the 4090
 
@@ -123,6 +128,10 @@ RECIPES: dict[str, dict] = {
     # Dory (NVIDIA looped 4B): the shared hub-cache volume (writable, as the default recipe's),
     # on vLLM 0.33.0, the first release registering DoryForCausalLM (and its DoryConfig)
     "dory": {"mount": "/hf", "env": {"HF_HOME": "/hf"}, "resources": {}, "hub_cache": True},
+    # Inkling-2-Mini: vLLM's own Inkling image (no pip wheel; vLLM 0.35 nightly), pinned by
+    # digest; weights = the hub-cache snapshot dir on the subject's volume (read-only, at /hf)
+    "inkling": {"mount": "/hf", "env": {"HF_HOME": "/hf", "HF_HUB_OFFLINE": "1"},
+                "resources": {}},
     "muse": {  # Muse-Spark-Open: a plain snapshot dir on the muse-spark volume
         "mount": "/vol",
         "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda", "MAX_JOBS": "4"},
@@ -134,6 +143,12 @@ MUSE_VLLM = "vllm==0.33.0"  # Muse-Spark (MuseSparkForConditionalGeneration) nee
 # and cc1plus segfaults building it on the B300 (gcc ICE in trtllm_batched_gemm_runner.cu, every
 # TP rank, container crash-loop). Install flashinfer's prebuilt JIT cache instead: the meta package
 # (provider discovery) --no-deps plus the B300 (sm103a) and B200 (sm100a) providers only.
+# Inkling-2-Mini (Inkling2LoopForConditionalGeneration): no vLLM release serves it yet; the
+# recipes.vllm.ai image, pinned by its multi-arch index digest (tag inkling-2-mini, 2026-11-20)
+INKLING_IMAGE = (
+    "vllm/vllm-openai@sha256:c2dc759f5984f69c1e2418c6af7c26eb756f5ed2a8934c768ae1253645d1449e"
+)
+PY_LINK = 'command -v python || ln -s "$(command -v python3)" /usr/local/bin/python'
 DORY_VLLM = "vllm==0.33.0"  # DoryForCausalLM + DoryConfig are registered from 0.33.0 on
 FLASHINFER_JIT = "0.7.2.post1+cu130"
 FLASHINFER_INDEX = "https://flashinfer.ai/whl/cu130"
@@ -192,6 +207,10 @@ def _image(recipe: str) -> modal.Image:
             modal.Image.from_registry("nvidia/cuda:13.0.1-devel-ubuntu24.04", add_python="3.12")
             .uv_pip_install(DORY_VLLM, "huggingface_hub", "hf_transfer")
             .env(env)
+        )
+    if recipe == "inkling":  # the image's own python + vLLM; Modal needs a `python` on PATH
+        return (
+            modal.Image.from_registry(INKLING_IMAGE).entrypoint([]).run_commands(PY_LINK).env(env)
         )
     if recipe == "dsv4":  # DeepGEMM JIT-compiles at runtime and asserts a CUDA home (nvcc)
         return (

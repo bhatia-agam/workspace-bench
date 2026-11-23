@@ -306,10 +306,6 @@ NATIVE_ENGLISH: dict[str, str] = {"en": "English", "zh": "Chinese"} | {
 }
 
 
-def case_sensitive_forms() -> frozenset[str]:
-    return frozenset(f for lg in LANGUAGES.values() for f in lg.case_sensitive)
-
-
 # ---------------------------------------------------------------------------------------------
 # naming-context forms (plan F6): what the v2 language unit is scored with
 # ---------------------------------------------------------------------------------------------
@@ -506,13 +502,6 @@ def _input_named(
     return False
 
 
-def input_naming(text: str, names: Sequence[str], case_sensitive: Collection[str] = ()) -> bool:
-    """``text`` names the INPUT as being in one of the English language ``names`` by the
-    ln-2026-10-31f form ("a Spanish fill-in prompt", "the French antonym of premier"):
-    the naming of the passage itself, which needs no other anchor."""
-    return _input_named(text, names, case_sensitive, _INPUT_AFTER)
-
-
 # round 3 review (PR #208): for multilingual's ANCHORING (``family.anchored``), only a noun
 # that can be the passage itself, never one followed by a gloss: "<Lang> word / phrase / text"
 # names any word ("Kylmäinen is a Finnish word that translates to 'refrigerator'", "the Turkish
@@ -532,7 +521,7 @@ _PASSAGE_AFTER = (
 def input_passage_naming(
     text: str, names: Sequence[str], case_sensitive: Collection[str] = ()
 ) -> bool:
-    """:func:`input_naming` restricted to a passage noun with no gloss after it ("a Polish
+    """The input-naming form restricted to a passage noun with no gloss after it ("a Polish
     riddle", "a Spanish arithmetic question"; never "a Finnish word that means ...")."""
     return _input_named(text, names, case_sensitive, _PASSAGE_AFTER)
 

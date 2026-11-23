@@ -135,6 +135,10 @@ def test_introspection_bank_unchanged_by_the_refill():
 # re-gated on their current banks; user_modeling bank v3 entered with its full-panel statuses; the
 # r5-rebuilt banks were re-gated on theirs from the cached panel answers.
 PENDING_REGATE: dict[str, str] = {}
+# Plan 0110 (2026-11-23): chain_intermediates moved to bank v3 and its entry (panel-v2 on bank
+# v2, 0 gated ids of 120) is not re-gated: the ATI file is frozen until the full ATI audit
+# (issue #559). ``text_inversion.STALE_NO_ITEM_PENDING_AUDIT`` lists it by name: its stale entry
+# with no id is still served as "no ATI item"; any other family's stale entry fails this test.
 
 
 def test_every_panel_entry_is_gated_on_the_current_bank(frozen):
@@ -147,11 +151,34 @@ def test_every_panel_entry_is_gated_on_the_current_bank(frozen):
         if not f.startswith("_")
         and e.get("gate") == ti.GATE_VERSION
         and e["bank_sha"] != ti.bank_fingerprint(f)
+        and f not in ti.STALE_NO_ITEM_PENDING_AUDIT  # plan 0110: listed by name (next test)
     ]
     # nothing is stale outside the family PRs that changed their bank / plan ...
     assert sorted(set(stale) - CHANGED_BY_FAMILY_PRS) == []
     # ... and exactly the recorded pending re-gates are stale (one leaves once re-gated)
     assert sorted(stale) == sorted(PENDING_REGATE)
+
+
+def test_the_stale_no_item_list_is_exactly_the_registered_stale_zero_id_entries(frozen):
+    """Plan 0110: the allow-list equals the registered entries that are stale by ``bank_sha``
+    and hold no id; each is left out of the ATI scope (not failed), and no listed family's
+    entry is stale with ids."""
+    stale = {
+        f: e
+        for f, e in frozen.items()
+        if not f.startswith("_")
+        and e.get("gate") == ti.GATE_VERSION
+        and e["bank_sha"] != ti.bank_fingerprint(f)
+    }
+    # ... each recorded with the fingerprint of the bank registered today
+    assert {
+        f: ti.bank_fingerprint(f) for f, e in stale.items() if not e["ids"]
+    } == ti.STALE_NO_ITEM_PENDING_AUDIT
+    assert set(ti.STALE_NO_ITEM_PENDING_AUDIT) == {"chain_intermediates"}
+    for fam in ti.STALE_NO_ITEM_PENDING_AUDIT:
+        with pytest.raises(ti.NotInScope, match=r"stale.*issue #559") as e:
+            ti.subset_entry(fam, ti.FROZEN)
+        assert isinstance(e.value, ti.StaleNoItem)
 
 
 def test_knowledge_cutoff_nocot_retirements():
