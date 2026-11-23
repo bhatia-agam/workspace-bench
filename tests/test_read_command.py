@@ -606,3 +606,50 @@ def test_sum_stats_adds_totals_and_keeps_each_shard():
     (row,) = got["evals"]
     assert (row["family"], row["cells"], row["tokens"], row["forward_passes"]) == ("a", 40, 80, 0)
     assert len(got["shards"]) == 2
+
+
+# ---------------------------------------------------------------- the guide's examples
+
+
+def guide_commands():
+    """Every `wsbench read ...` command of docs/fast_path.md, continuation lines joined."""
+    import re
+
+    from wsbench import registry
+
+    text = (registry.REPO_ROOT / "docs/fast_path.md").read_text()
+    text = text.replace("\\\n", " ")
+    found = re.findall(
+        r"^\s*(?:CUDA_VISIBLE_DEVICES=\$i )?uv run wsbench read (.*?)(?: &)?$", text, re.M
+    )
+    return [re.sub(r"\s+", " ", c).strip() for c in found]
+
+
+def fill(command):
+    """A documented command with its placeholders filled in, as argv."""
+    import re
+    import shlex
+
+    command = command.replace("<model revision sha>", "0123456789abcdef0123")
+    command = re.sub(r"<[^>]+>", "x", command).replace("$i", "0")
+    return ["fast=True" if a == "--fast" else a for a in shlex.split(command)]
+
+
+def test_every_read_command_of_the_guide_parses():
+    import pydra
+
+    commands = guide_commands()
+    assert len(commands) >= 6 and any("launcher=modal" in c for c in commands)
+    for command in commands:
+        cmd = cli.Read()
+        pydra.apply_overrides(cmd, fill(command))  # finalize runs: a usage error would raise
+
+
+def test_the_modal_example_names_the_revision_of_a_model_given_as_a_folder():
+    import pydra
+
+    (modal,) = [c for c in guide_commands() if "launcher=modal" in c]
+    assert "model=/model/" in modal and "revision=" in modal
+    without = [a for a in fill(modal) if not a.startswith("revision=")]
+    with pytest.raises(ValueError, match="revision=<sha> is required"):
+        pydra.apply_overrides(cli.Read(), without)

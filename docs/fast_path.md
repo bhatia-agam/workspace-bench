@@ -63,8 +63,30 @@ smaller GPU needs fewer running requests (`server_args="... --max-running-reques
 that was not measured. Host memory holds the cells of the evals being read (5,120 values of
 two bytes per cell: about 0.6 GB per 60,000 cells).
 
-Measured with the in-house reader this code was written from, on B200 GPUs, one trained slot
-lens at 11 layers, one sample per cell; carried over, not measured again with `wsbench read`:
+**Measured with this code.** `wsbench read fast=True launcher=modal gpus=8` as it is, one trained
+slot lens at 11 layers, one sample per cell, NVIDIA B200 GPUs, a real SGLang server:
+
+| | |
+|---|---|
+| what was read | 16 evals, 1,441 questions, 438,790 cells; 19.5 million readout tokens |
+| where the cells came from | 425,513 pulled from the dataset; 13,277 captured: the 23 `knowledge_cutoff` questions the dataset leaves out, 23 forward passes |
+| GPU time | 1.52 GPU-hours in all, 80.3 cells per GPU-second end to end |
+| of which the capture container | 148 GPU-seconds: the dataset pull, one load of the 27B model, the 23 forward passes |
+| of which the 8 read containers | 1.48 GPU-hours, 82.5 cells per GPU-second; 86.4 cells per second of decoding (server start, token bank and requests) |
+| wall-clock | 14.0 min from the first container to the last part; 15.3 min to the joined files and sidecars |
+| after the join | 16 readouts files with sidecars, 438,790 rows; `wsbench run fast=True ... dry_run=True` accepts them |
+| checks | no banned token, no row stopped early, no bank id sampled |
+
+The GPU time is taken from the containers' log times; the launcher printed no time of its own
+in that run (the join now saves and prints the summed totals). An earlier run of the same read,
+before the capture step and the join were built in, loaded the model once per process and took
+1.59 GPU-hours. The in-house reader this code was written from read the same subset on the
+same hardware in 1.40 GPU-hours and 11.7 minutes with every cell already in its store. Some
+question banks, and with them the fast subset's questions, have changed since that run: the
+figures describe the subset as it was read, with the counts in the table.
+
+**Carried over from the in-house reader.** Measured with that tool, on B200 GPUs, the same
+kind of lens; not measured with `wsbench read`:
 
 | what was read | cells | GPU-hours to read | wall-clock to read | start to score |
 |---|---|---|---|---|
@@ -74,10 +96,9 @@ lens at 11 layers, one sample per cell; carried over, not measured again with `w
 
 With fewer GPUs the GPU-hours stay and the wall-clock grows in proportion. Folding an adapter
 into a servable copy of the model took about two minutes on one GPU in that tool; `wsbench
-bundle` does it on the CPU and was not timed. Nothing in this table has been reproduced with
-the code on this page.
+bundle` does it on the CPU and was not timed.
 
-What has been run with the code on this page, on one B200 with a real SGLang server:
+**A small parity check with this code**, on one B200:
 
 | check | result |
 |---|---|
@@ -86,9 +107,9 @@ What has been run with the code on this page, on one B200 with a real SGLang ser
 | The same cells and merged weights through the in-house reader, greedy | token ids identical on 187 of 187 rows |
 | `wsbench read families=typo limit=2`, then `wsbench try dry_run=True` and `wsbench judge dry_run=True` on its file | ran end to end; the file was accepted |
 
-The whole check took 5.9 GPU-minutes. It covers greedy decoding on a bundle that linked the
-in-house reader's merged weights. Not covered by a GPU run yet: `wsbench bundle` on a real
-adapter, sampled (non-greedy) agreement, `launcher=modal`, and `method=model_continuation`.
+Not covered by a GPU run yet: `wsbench bundle` on a real adapter (the runs used weights that
+were already merged), sampled agreement between the two tools, `method=model_continuation`,
+and a read of every eval.
 
 ## Run it on your own GPU
 
@@ -176,6 +197,7 @@ modal` and a Modal account; nothing else in the repository imports Modal.
 ```bash
 uv run wsbench read fast=True launcher=modal gpus=8 modal_volume=<your volume> \
     modal_lens_volume=<volume with the bundle> lens=/lens/my-lens \
+    modal_model_volume=<volume with the model> model=/model/<folder> revision=<model revision sha> \
     store=/data/store out=/data/readouts/my-lens
 modal volume get <your volume> readouts/my-lens outputs/readouts/my-lens
 uv run wsbench run fast=True readouts_root=outputs/readouts/my-lens out=outputs/judged/my-lens
@@ -191,12 +213,15 @@ The volume `modal_volume` is mounted at `modal_mount` (default `/data`) and hold
 and the readouts, so `store=` and `out=` are paths under it. The lens bundle and the subject
 model's files can live on volumes of their own, mounted read-only: `modal_lens_volume` at
 `modal_lens_mount` (default `/lens`, then `lens=/lens/<bundle>`) and `modal_model_volume` at
-`modal_model_mount` (default `/model`, then `model=/model/<folder>`; without it the capture
-step downloads the model from the hub). The other settings, all keys of the command: `gpus`,
+`modal_model_mount` (default `/model`, then `model=/model/<folder>` together with
+`revision=<sha>`: a model given as a folder does not say which revision it is, and the
+revision keys the store; without the model volume, leave both out and the capture step
+downloads the default model from the hub). The other settings, all keys of the command: `gpus`,
 `modal_gpu` (default `B200`), `modal_secret` (a secret holding `HF_TOKEN`, only if your
 dataset needs one), `modal_app`, `modal_timeout`, `modal_sglang` (the pip requirement of the
 server). The image is a starting point: a serving stack moves fast, so pin `modal_sglang` to
-the version you tested. While it runs, the containers' lines are printed in your terminal.
+the version you tested. The measured run above went through this launcher unchanged. While it
+runs, the containers' lines are printed in your terminal.
 
 ## The model-continuation baseline
 

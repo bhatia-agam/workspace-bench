@@ -211,14 +211,18 @@ Several GPUs are several processes (`shard=i shards=n`), or `launcher=modal gpus
 [docs/fast_path.md](docs/fast_path.md) explains the design, every key, and how to adapt it to
 another serving stack.
 
-Hardware and time. `wsbench read` has been run on one NVIDIA B200 with a real SGLang server
-on a small check: 187 cells (8 questions of `typo` and `poetry` at 11 layers), pulled from the
-dataset with no forward pass of the model, decoded in 145 seconds, of which 111 were the
-server start and 26 the requests. Under greedy decoding its token ids were identical, on all
-187 rows, to those of the in-house reader this code was written from. The larger timings below
-were measured with that in-house reader, on B200 GPUs (183 GiB each; 174 GiB in use at 768
-requests running) with one trained slot lens at 11 layers and one sample per cell. They are
-carried over and have not been measured again with `wsbench read`.
+Hardware and time. Measured with this code: `wsbench read fast=True launcher=modal gpus=8` (16
+evals, 1,441 questions, 438,790 cells; one trained slot lens at 11 layers, one sample per
+cell) on NVIDIA B200 GPUs took 1.52 GPU-hours, 14.0 minutes to the last part and 15.3 minutes
+to the joined readouts files. 425,513 cells were pulled from the dataset; the 13,277 cells of
+the 23 `knowledge_cutoff` questions the dataset leaves out were captured in 23 forward passes
+with one load of the model. That is 80.3 cells per GPU-second end to end. Under greedy
+decoding, on a 187-cell check, its token ids were identical to those of the in-house reader
+this code was written from.
+
+The larger timings below were measured with that in-house reader, on B200 GPUs (183 GiB each;
+174 GiB in use at 768 requests running) with the same kind of lens. They are carried over and
+have not been measured with `wsbench read`.
 
 | what was read | cells | GPU-hours to read | wall-clock to read | start to score |
 |---|---|---|---|---|
@@ -227,8 +231,8 @@ carried over and have not been measured again with `wsbench read`.
 | Every eval at the time (30 evals) | 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 2 h 29 min |
 
 "Start to score" includes judging, which overlaps the read (`wsbench run wait=`) and takes
-longer than it. The fast subset has been selected again since (16 evals, 1,441 questions,
-438,790 cells) and has not been timed; by cell count it is about two thirds of the row above.
+longer than it. The fast subset has been selected again since that row; the 16-eval selection
+measured with this code above was read only, not judged.
 One GPU that holds the model serves one pack of up to 60,000 cells at a time; a smaller GPU
 needs fewer requests running (`server_args=`) and was not measured. With the activations
 pulled from the dataset no GPU time goes into capturing them; capturing every eval took 0.8
