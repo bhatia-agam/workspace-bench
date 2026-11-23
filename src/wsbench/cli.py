@@ -1625,7 +1625,9 @@ class Capture(Command):
         # local folder holding a copy of it, or none
         self.dataset = "agu18dec/workspacebench_residuals"
         self.dataset_revision = ""  # default: the revision evals/residuals/map.json was built on
-        self.check = False  # only say where each eval's cells are; no download, no model
+        # only say where each eval's cells are: no vector is downloaded and no model loaded (the
+        # tokenizer is needed to render the plan, and is fetched once if it is not cached)
+        self.check = False
 
     def finalize(self) -> None:
         self.dataset = str(self.dataset or "none")

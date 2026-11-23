@@ -322,7 +322,7 @@ passes)`. A second run of the same command makes no forward pass and does not lo
 | `device` | `cuda` | |
 | `dataset` | `agu18dec/workspacebench_residuals` | the published residuals, asked before the model runs: a Hugging Face dataset id, a local folder that holds a copy of it, or `none` |
 | `dataset_revision` | the revision the map was built on | another revision of that dataset |
-| `check` | `False` | `True`: one line per eval saying how many cells are in the store, in the dataset and in neither; downloads no vectors and loads no model |
+| `check` | `False` | `True`: one line per eval saying how many cells are in the store, in the dataset and in neither; downloads no vectors and loads no model (it renders the plan, so it needs the tokenizer, which is fetched once if it is not cached) |
 
 **What is stored.** One folder per model revision, capture dtype and eval:
 `<store>/<revision>/<dtype>/<eval>/<pack>.safetensors` (`acts`, one row per cell) with a

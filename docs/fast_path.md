@@ -31,6 +31,60 @@ readouts files that `wsbench run` judges.
    with its sidecar, packs small evals into one server start, resumes where it stopped, and
    with `judge=True` hands the files to `wsbench run`. `src/wsbench/produce/read.py`.
 
+## What is stored
+
+The 32-bit capture of the reference model, which is what `dtype=fp32` (the default) reads:
+
+| set | evals | cells in the plan | cells stored | not stored |
+|---|---|---|---|---|
+| Every eval | 32 | 3,407,387 | 3,239,252 | 168,135 |
+| The core evals | 18 | 2,906,722 | 2,884,128 | 22,594 |
+| The fast subset | 16 | 438,790 | 425,513 | 13,277 |
+
+Not stored: `user_modeling_hard` (142,252 cells), not captured and uploaded yet; 39
+`knowledge_cutoff` questions (22,594 cells, 13,277 of them in the fast subset), left out on
+purpose; `jlens_concept_pr` (3,289 cells), which ships no prompts. `wsbench read` runs the
+model for the first two and cannot read the third. The capture is 39.7 GB in
+`float32-capture/`; the repository root holds an older, partial 16-bit capture (28 evals,
+1,371,161 cells, 20.6 GB, neither safety eval), read with `dtype=bf16`. An eval's files are
+downloaded when it is first read. `wsbench capture families=all check=True` prints the current
+state per eval.
+
+## Hardware and time
+
+Built for one GPU that holds the model per serving process: for the reference model an NVIDIA
+B200 (183 GiB), where the served reader used 174 GiB at the default 768 running requests. A
+smaller GPU needs fewer running requests (`server_args="... --max-running-requests <n>"`);
+that was not measured. Host memory holds the cells of the evals being read (5,120 values of
+two bytes per cell: about 0.6 GB per 60,000 cells).
+
+Measured with the in-house reader this code was written from, on B200 GPUs, one trained slot
+lens at 11 layers, one sample per cell; carried over, not measured again with `wsbench read`:
+
+| what was read | cells | GPU-hours to read | wall-clock to read | start to score |
+|---|---|---|---|---|
+| Two questions, not judged | 803 | 0.04 | 4.5 min on 1 GPU | 4.5 min |
+| The fast subset as it was selected then (22 evals) | 657,690 | 1.98 | 16 min on 12 GPUs | 52 min |
+| Every eval at the time (30 evals) | 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 2 h 29 min |
+
+With fewer GPUs the GPU-hours stay and the wall-clock grows in proportion. Folding an adapter
+into a servable copy of the model took about two minutes on one GPU in that tool; `wsbench
+bundle` does it on the CPU and was not timed. Nothing in this table has been reproduced with
+the code on this page.
+
+What has been run with the code on this page, on one B200 with a real SGLang server:
+
+| check | result |
+|---|---|
+| `wsbench capture` for 8 questions of `typo` and `poetry` | 187 cells pulled from the dataset, 0 forward passes |
+| The served engine on those 187 cells, greedy | 145 s: 8 s to build the token bank, 111 s server start, 26 s of requests; 8,455 tokens; no banned token, no bank id sampled |
+| The same cells and merged weights through the in-house reader, greedy | token ids identical on 187 of 187 rows |
+| `wsbench read families=typo limit=2`, then `wsbench try dry_run=True` and `wsbench judge dry_run=True` on its file | ran end to end; the file was accepted |
+
+The whole check took 5.9 GPU-minutes. It covers greedy decoding on a bundle that linked the
+in-house reader's merged weights. Not covered by a GPU run yet: `wsbench bundle` on a real
+adapter, sampled (non-greedy) agreement, `launcher=modal`, and `method=model_continuation`.
+
 ## Run it on your own GPU
 
 ```bash
@@ -40,7 +94,7 @@ uv pip install "sglang[all]" httpx          # the serving stack (not installed b
 # once per lens: fold the adapter into a servable copy of the model
 uv run wsbench bundle adapter=<adapter folder> model=<model snapshot folder> out=bundles/my-lens
 
-# where are the cells? (downloads nothing, loads nothing)
+# where are the cells? (no vectors downloaded, no model loaded)
 uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens check=True
 
 # read the fast subset, then judge and report
@@ -98,6 +152,11 @@ uv run wsbench read --fast launcher=modal gpus=12 modal_volume=<your volume> \
 modal volume get <your volume> readouts/my-lens outputs/readouts/my-lens
 uv run wsbench run --fast readouts_root=outputs/readouts/my-lens out=outputs/judged/my-lens
 ```
+
+An image for this path needs, beside SGLang and `httpx`, the packages `wsbench` itself imports
+(`pydra-config` and `pronouncing` are the two a serving image does not already have; the
+launcher's `PACKAGES` lists them), and network access to the Hugging Face hub for the dataset
+pull; an anonymous pull works, no token is needed for the public dataset.
 
 The volume is mounted at `modal_mount` (default `/data`), so `lens=`, `store=` and `out=` are
 paths under it, and the bundle has to be on the volume first (`modal volume put`). Settings,
