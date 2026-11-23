@@ -8,6 +8,7 @@ decide. ``python -m wsbench.adapt author model=<m> family=<f> tier=<t> n=<n> [st
 import datetime as dt
 import hashlib
 import json
+import os
 import random
 import re
 import string
@@ -260,19 +261,6 @@ def _flat_um(it: dict) -> dict:
 
 
 FAV = "What is your favorite {}? Answer in one word."
-
-
-def _implicit(x: dict) -> dict:
-    """The question only; the gold is whatever the subject commits to (``run.restamp``)."""
-    x["prompt"] = FAV.format(str(x.pop("topic", "")).strip())
-    x["subfamily"], x["target"], x["intermediates"] = "implicit", "", []
-    x["units"] = [{"role": "readout", "lang": "en", "headline": True, "match": []}]
-    return x
-
-
-def _flat_implicit(it: dict) -> dict:
-    p = it.get("prompt", "")
-    return {**it, "topic": p.removeprefix("What is your favorite ").split("?")[0]}
 
 
 # --- basic_readout_st v5 (plan 0060 A2): the bank's question form, slice, task_context and mc ---
@@ -658,19 +646,6 @@ def _flat_mt(it: dict) -> dict:
     )
     out["distractors"] = ((it.get("mc") or {}).get(role) or {}).get("distractors")
     return out
-
-
-def _mt_readout(x: dict) -> dict:
-    forms = list(dict.fromkeys([x.get("target", ""), *x.get("target_alts", [])]))
-    forms = [f for f in forms if f]
-    x["intermediates"] = forms[:1]
-    x["units"] = [
-        {"role": "readout", "required": True, "multi_token": True, "forms": {"en": forms}}
-    ]
-    x["mc"] = {
-        "readout": {"gold": forms[0] if forms else "", "distractors": x.pop("distractors", [])}
-    }
-    return x
 
 
 # the briefs whose builder reads the subject's native languages (``_native``; plan 0075 §2.6)
@@ -1551,6 +1526,10 @@ def _parse(text: str) -> tuple[list[dict], int]:
 
 
 STREAM_RETRIES = 4  # a long authoring stream the peer closes mid-reply is re-asked, not fatal
+# the effort every authoring call STARTS at (adaptive thinking at that effort, e.g. "low"); unset =
+# the model default first. Speed only: the same brief, lint and gate. An empty all-thinking reply
+# is still re-asked once at "low" unless the call already was low
+EFFORT_ENV = "ADAPT_AUTHOR_EFFORT"
 
 
 def _transport_error(e: BaseException) -> bool:
@@ -1583,7 +1562,7 @@ def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: in
     for call in range((n + per - 1) // per):
         k = min(per, n - wrote)
         brief = render_brief(model, family, tier, k, steer, made)
-        effort: str | None = None  # the model default first
+        effort: str | None = os.environ.get(EFFORT_ENV, "").strip().lower() or None
         drops = 0
         while True:
             seen = session.pushed
@@ -1601,7 +1580,7 @@ def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: in
                 # a hard brief (multihop_st t2) can spend all 32k tokens thinking and write no text;
                 # ask once more at low effort instead of keeping an empty call (2026-11-08)
                 has_text = any(blk.type == "text" and blk.text.strip() for blk in msg.content)
-                if effort is None and msg.stop_reason == "max_tokens" and not has_text:
+                if effort != "low" and msg.stop_reason == "max_tokens" and not has_text:
                     usage = getattr(msg, "usage", None)  # the empty call is still spend
                     tok_in += int(getattr(usage, "input_tokens", 0) or 0)
                     tok_out += int(getattr(usage, "output_tokens", 0) or 0)

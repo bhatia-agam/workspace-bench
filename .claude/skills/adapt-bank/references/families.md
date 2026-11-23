@@ -19,9 +19,9 @@ change edits this table in the same PR.
 | basic_readout_st | `evals/basic/basic_readout_st/items_v8.json` |
 | basic_readout | `evals/basic/basic_readout/items_v7.json` |
 | buggy_code | `evals/computational/buggy_code/items_v2.json` |
-| chain_intermediates | `evals/computational/chain_intermediates/items_v2.json` |
+| chain_intermediates | `evals/computational/chain_intermediates/items_v3.json` |
 | conjunctive_association | `evals/association/conjunctive_association/items_v6.json` |
-| directed_modulation | `evals/basic/directed_modulation/items.json` |
+| directed_modulation | `evals/basic/directed_modulation/items_v2.json` |
 | hinted_cutoff | `evals/model_specific/hinted_cutoff/items_v2.json` |
 | introspection | `evals/model_specific/introspection/items_v2.json` |
 | jailbreak_recognition | `evals/safety/jailbreak_recognition/items_v2.json` |
@@ -455,7 +455,7 @@ migrated with `scripts/migrate_0101.py set`.
 
 ---
 
-## Association (chat_summarize render, SIX layers)
+## Association (chat_summarize render, GRID layers)
 
 ### user_modeling — the user attribute the subject infers
 - **Gate:** "Based on that conversation, what is the user's {attr_label}?" Greedy + ≥ 8/10.

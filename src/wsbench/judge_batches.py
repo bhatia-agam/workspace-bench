@@ -30,7 +30,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-BACKENDS = ("live", "batches")
 API_MAX_REQUESTS = 100_000  # per batch (the API's limit)
 API_MAX_BYTES = 256_000_000
 _TRANSIENT = (408, 409, 429, 500, 502, 503, 504, 520, 529)

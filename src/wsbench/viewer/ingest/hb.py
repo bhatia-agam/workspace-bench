@@ -3,7 +3,9 @@ cells.jsonl`` + ``index/<judge>/index.json``) into the viewer store. HB is read 
 ``hallucination_bench`` package is never imported."""
 
 import json
+import re
 from collections import defaultdict
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +31,31 @@ TAG_KEYS = (
     "same_slot_alternative", "continuation_text", "contradicted_before_marker", "excuse_verdict",
     "reason", "prefix_clash",
 )  # fmt: skip
+
+
+def reads(rel: str) -> bool:
+    """Whether ``ingest`` reads the file at ``rel``, a path under a lens directory: the claim
+    families' cells and arm summaries, the index, and the safety families' count, record and
+    result files. Everything else a judged tree holds (joint cells, raw call caches, digests)
+    is not read, so a caller that fetches a tree need not fetch it."""
+    parts = rel.strip("/").split("/")
+    name = parts[-1]
+    if parts[0] == "index":
+        return name == "index.json"
+    if parts[0] in CLAIM_EVALS.values():
+        return len(parts) == 4 and name in ("cells.jsonl", "summary_v2.json")
+    if parts[0] == "or":
+        return (
+            (name == "index_counts.jsonl" and parts[-2] == "offtopic_index")
+            or name == "sj_records_full.jsonl"
+            or parts[-2] == "offtopic"
+        )
+    if parts[0] == "br_index_root":
+        return name == "index_counts.jsonl"
+    if parts[0] == "benign_roleplay":
+        in_layer = len(parts) >= 3 and parts[-3] == "jailbreak_recognition"
+        return in_layer and parts[-2].startswith("L") and name in ("results.json", "cells.jsonl")
+    return False
 
 
 def leaf_weights(index: dict[str, Any], family: str) -> dict[str, float]:
@@ -83,10 +110,10 @@ def write_eval(cat, model: str, name: str, m: meta.EvalMeta, n_items: int, pre_g
 
 def ingest_cells(
     con, family: str, cells: Path, weights: dict[str, float], bank: dict[str, dict],
-    only: set[str] | None,
+    only: set[str] | None, source_name: Callable[[Path], str] | None = None,
 ) -> dict[str, Any]:  # fmt: skip
     """Stream one arm's cells.jsonl: readouts, segments, and the counts the index is made of."""
-    writer = CellWriter(con)
+    writer = CellWriter(con, source_name)
     src = writer.source(cells)
     segs: list[tuple] = []
     per_layer: dict[int, list[float]] = defaultdict(lambda: [0.0, 0])  # weighted, claims
@@ -184,6 +211,58 @@ def write_index_scores(cat, rid: str, index: dict[str, Any], lens: str) -> dict[
     return by_family
 
 
+def write_index_rows(cat, rid: str, index: dict[str, Any], lens: str) -> int:
+    """Every row of index.json as it is (``hb_index``): per layer (the joint row ``all`` is
+    layer ``store.JOINT_LAYER``) each family's value, and each macro column of the row."""
+    rows = index.get("rows") or []
+    mine = [r for r in rows if r.get("method") == lens] or rows
+    n = 0
+    for r in mine:
+        layer = r.get("layer")
+        if layer == "all":
+            layer = store.JOINT_LAYER
+        if not isinstance(layer, int):
+            continue
+        cells = [(k, "family", v) for k, v in (r.get("families") or {}).items()]
+        cells += [(k, "macro", v) for k, v in r.items() if k not in ("method", "layer", "families")]
+        for key, kind, v in cells:
+            if isinstance(v, int | float) and not isinstance(v, bool):
+                v = {"v": v}
+            if not isinstance(v, dict) or not isinstance(v.get("v"), int | float):
+                continue
+            ci = (
+                v.get("ci") if isinstance(v.get("ci"), list) and len(v["ci"]) == 2 else (None, None)
+            )
+            cat.execute(
+                "INSERT OR REPLACE INTO hb_index VALUES (?,?,?,?,?,?,?,?,?)",
+                (rid, layer, key, kind, v["v"], ci[0], ci[1], v.get("n"), v.get("n_items")),
+            )
+            n += 1
+    return n
+
+
+FAILED_RE = re.compile(r"^n_(?:failed_(\w+)|(\w+)_failed)$")
+
+
+def arm_integrity(summary: dict[str, Any]) -> tuple[str, str, dict[str, Any]]:
+    """``(label, reason, counters)`` of one judged arm from its own ``summary_v2.json``:
+    provisional while judge calls stay failed or cells are missing."""
+    health = summary.get("health") or {}
+    cells = health.get("n_cells") or health.get("n_expected_cells")
+    failed = {}
+    for k, v in health.items():
+        m = FAILED_RE.match(k)
+        if m and isinstance(v, int) and v:
+            failed[m.group(1) or m.group(2)] = v
+    why = [f"{v} of {cells} {stage} calls failed" for stage, v in failed.items()]
+    if health.get("n_missing"):
+        why.append(f"{health['n_missing']} of {health.get('n_expected_cells')} cells missing")
+    facts = {f"failed_{k}": v for k, v in failed.items()} | {
+        k: health[k] for k in ("n_cells", "n_expected_cells", "n_missing") if k in health
+    }
+    return ("provisional" if why else ""), "; ".join(why), facts
+
+
 def ingest(
     lens_dir: Path,
     store_root: Path,
@@ -200,10 +279,14 @@ def ingest(
     judge: str | None = None,
     safety_dir: Path | None = None,
     readouts: Path | None = None,
+    run_name: str | None = None,
+    source: str | None = None,
+    source_name: Callable[[Path], str] | None = None,
 ) -> dict[str, Any]:
     """Ingest one lens's HallucinationBench output. Idempotent like the WSB adapter.
     ``safety_dir`` is a second directory to search for the non-claim families (overrefusal,
-    benign_roleplay); ``readouts`` holds their readout files (``hb_overrefusal.jsonl`` ...)."""
+    benign_roleplay); ``readouts`` holds their readout files (``hb_overrefusal.jsonl`` ...).
+    ``run_name``, ``source`` and ``source_name`` are as in the WSB adapter."""
     lens = lens or lens_dir.name
     judge = judge or JUDGE
     index = load_index(lens_dir, judge)
@@ -219,7 +302,7 @@ def ingest(
     safety_files = [f for pat in patterns if (f := _find(dirs, pat))]
     if not arms and not index and not safety_files:
         raise SystemExit(f"{lens_dir}: no <family>/{judge}/<arm>/cells.jsonl and no index.json")
-    rid = store.run_id(BENCH, model, lens)
+    rid = store.run_id(BENCH, model, lens, run_name)
     files = [d / "cells.jsonl" for d in arms.values()]
     files.append(lens_dir / "index" / judge / "index.json")
     files += safety_files
@@ -230,11 +313,14 @@ def ingest(
     if old and old["source_sig"] == sig and not force and db_path.exists():
         cat.close()
         return {"run_id": rid, "skipped": True}
-    for table in ("score", "verdict", "layer_stat"):
+    for table in store.PER_RUN_TABLES:
         cat.execute(f"DELETE FROM {table} WHERE run_id = ?", (rid,))
     metas = meta.load_hb(hb_repo)
     only = set(items) if items else None
     by_family = write_index_scores(cat, rid, index, lens) if only is None else {}
+    if only is None:
+        write_index_rows(cat, rid, index, lens)
+        cat.execute("INSERT OR REPLACE INTO run_set VALUES (?,?,0,'judged','')", (rid, "full"))
     summary: dict[str, Any] = {"run_id": rid, "skipped": False, "families": {}, "check": {}}
     with store.building(db_path, build_dir) as tmp:
         con = store.connect(tmp, store.RUN_DDL)
@@ -243,10 +329,17 @@ def ingest(
         for fam, adir in arms.items():
             bank = write_bank(cat, hb_repo, model, fam)
             sv = adir / "summary_v2.json"
-            cfg = (
-                json.loads(sv.read_text(encoding="utf-8")).get("config", {}) if sv.exists() else {}
+            arm_summary = json.loads(sv.read_text(encoding="utf-8")) if sv.exists() else {}
+            cfg = arm_summary.get("config", {})
+            state, why, facts = arm_integrity(arm_summary)
+            if arm_summary:
+                cat.execute(
+                    "INSERT OR REPLACE INTO run_eval VALUES (?,?,?,?,?)",
+                    (rid, fam, state, why, store.dumps(facts)),
+                )
+            got = ingest_cells(
+                con, fam, adir / "cells.jsonl", leaf_weights(index, fam), bank, only, source_name
             )
-            got = ingest_cells(con, fam, adir / "cells.jsonl", leaf_weights(index, fam), bank, only)
             write_eval(cat, model, fam, metas[fam], len(got["per_item"]) or len(bank),
                        bool(cfg.get("pre_gate")))  # fmt: skip
             for iid in got["per_item"]:
@@ -315,14 +408,21 @@ def ingest(
         con.execute("INSERT INTO readout (readout) VALUES ('optimize')")
         con.commit()
         con.close()
-    for fam in by_family:  # index families without cells here: scores only
-        if fam not in arms and fam in metas and fam not in summary["families"]:
-            write_eval(cat, model, fam, metas[fam], 0, False)
+    for order, fam in enumerate(by_family):  # index families without cells here: scores only
+        if fam not in arms and fam not in summary["families"]:
+            m = metas.get(fam) or meta.fallback(fam, order)
+            have = cat.execute(
+                "SELECT 1 FROM eval WHERE bench = ? AND model = ? AND eval = ?", (BENCH, model, fam)
+            ).fetchone()
+            if fam in metas or not have:
+                write_eval(cat, model, fam, m, 0, False)
     run_meta = {"index_version": index.get("version"), "check": summary["check"], "items": items}
+    if run_name:
+        run_meta["run"] = run_name
     cat.execute(
         "INSERT OR REPLACE INTO run VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (rid, BENCH, lens, label or lens, method or guess_method(lens), model, judge, "claim map",
-         str(lens_dir), sig, f"runs/{rid}.db", store.now(), store.dumps(run_meta)),
+         source or str(lens_dir), sig, f"runs/{rid}.db", store.now(), store.dumps(run_meta)),
     )  # fmt: skip
     cat.commit()
     cat.close()

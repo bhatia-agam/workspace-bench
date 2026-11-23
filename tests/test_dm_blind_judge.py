@@ -144,8 +144,8 @@ def capture(fam: str, pkg: Any, tmp: Path, monkeypatch, *, agg: str, layers, pos
 
 
 CASES = [
-    (DM, dm_pkg, "summary", {"digest": 100, "dm_concept": 100}),
-    (DM, dm_pkg, "native", {"dm_concept": 200}),
+    (DM, dm_pkg, "summary", {"digest": 102, "dm_concept": 102}),  # bank v2 (plan 0109)
+    (DM, dm_pkg, "native", {"dm_concept": 204}),
     (DMO, dmo_pkg, "summary", {"digest": 98}),  # regex-scored: no judge call
     (MCDM, mcdm_pkg, "summary", {"digest": 116, "picks": 116}),
 ]
@@ -217,18 +217,19 @@ def test_dm_topic_guesser_is_measured_but_not_a_floor():
     the valid floors (options-only, described) are within chance + 5."""
     assert {DM: frozenset({"topic"})} == lg.NOT_A_FLOOR
     e = lg.floors()[DM]
-    assert e["topic"]["mean"] == pytest.approx(0.758)  # still measured and recorded
+    # re-measured on bank v2 (plan 0109, 102 items, fresh draws: the think lists changed)
+    assert e["topic"]["mean"] == pytest.approx(0.759, abs=1e-3)  # still measured and recorded
     chance = lg.analytic_floor(lg.build_family(DM))
     assert chance == pytest.approx(0.2)
     rows = {r["variant"]: r for r in lg.standard(DM, e)}
     assert set(rows) == {"blind", "described"} and all(r["pass"] for r in rows.values())
-    assert rows["blind"]["value"] == pytest.approx(0.148)
-    assert rows["described"]["value"] == pytest.approx(0.168)
+    assert rows["blind"]["value"] == pytest.approx(0.224, abs=1e-3)
+    assert rows["described"]["value"] == pytest.approx(0.202, abs=1e-3)
     assert lg.leakage_failures(e, chance, DM) == {}
-    assert lg.bar(e, DM) == (pytest.approx(0.168), "described")
+    assert lg.bar(e, DM) == (pytest.approx(0.224, abs=1e-3), "blind")
     # the other direction: without the family (the round-4 reading) the topic guesser binds
-    assert lg.leakage_failures(e, chance) == {"topic": pytest.approx(0.758)}
-    assert lg.bar(e) == (pytest.approx(0.758), "topic")
+    assert lg.leakage_failures(e, chance) == {"topic": pytest.approx(0.759, abs=1e-3)}
+    assert lg.bar(e) == (pytest.approx(0.759, abs=1e-3), "topic")
 
 
 def test_topic_stays_a_floor_for_every_other_family():
