@@ -15,7 +15,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from wsbench import fast, readplan, registry, tiers  # noqa: E402
+from wsbench import fast, groups, readplan, registry, tiers  # noqa: E402
 
 START, END = "<!-- evals table: start -->", "<!-- evals table: end -->"
 
@@ -81,9 +81,12 @@ def table() -> str:
                 f"| {scored_by(name)} | {len(readplan.plan(name)):,} |"
             )
     lines.append("")
-    lines.append(
-        f"`group=<category>` selects a category by its key ({', '.join(registry.CATEGORIES)})."
-    )
+    line = f"`group=<category>` selects a category by its key ({', '.join(registry.CATEGORIES)})."
+    for group, extra in groups.ALSO_IN.items():
+        also = ", ".join(f"`{n}`" for n in extra)
+        home = ", ".join(sorted({f"`{registry.FAMILIES[n].group}`" for n in extra}))
+        line += f" `group={group}` also selects {also}, which is listed under {home}."
+    lines.append(line)
     return "\n".join(lines)
 
 

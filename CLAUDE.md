@@ -1237,8 +1237,8 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   others. Register an existing guard or test file (`checks.pytest_outcome`) instead of
   rewriting it; external checks come in by dotted path through `$WSB_CHECKS`.
 - `group=<category>` on `plan` and `run` (`groups.py`): the families of one registry category
-  (`registry.CATEGORIES`), with no additions (`role_bound_association` is in
-  `anti_bag_of_features` only). `computation` is accepted for `computational`.
+  (`registry.CATEGORIES`). Its one addition is `groups.ALSO_IN`: `group=association` also
+  selects `role_bound_association`. `computation` is accepted for `computational`.
 - `judge_backend=batches` / `$WSB_JUDGE_BACKEND` (`judge_batches.py`, `docs/judge_backends.md`):
   the opt-in Message Batches backend of Claude judge calls; the default stays live.
 - `wsbench capture` + `produce/store.py` (`docs/producing_readouts.md` § The residual store):
