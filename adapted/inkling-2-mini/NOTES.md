@@ -61,6 +61,11 @@ An Oracle lens should be matched against this split.
   - Passes 1 and 2 are included.
 - The bench's 11-layer grid remaps by depth to sites 15, 19, 21, 25, 27, 31, 33, 37, 39, 43, 45.
 - Introspection injects at entry 9 (12/64 by depth; a site).
+- **`min_grid_positions` = 12** for association, conjunctive_association, role_bound_association and multilingual_typo.
+  - Inkling's chat_summarize render gives every item exactly 12 suffix read positions, below the
+    family's 19 (and one multilingual_typo item gives 12 against 13).
+  - `reads.min_full_positions` lowers the `reads=full` span to it under the set root, as Dory's 18.
+  - It is a property of the template's render length, not of the loop.
 
 ## J-lens and logit lens
 

@@ -668,7 +668,8 @@
    "freeze_notes": [
     "3 previously shipped ids leave the bank: ['association-au-t1-w100c2-wb-scuba-diving', 'association-au-t1-w102c1-nf-diwali', 'association-au-t1-w104c1-wb-car-wash']"
    ],
-   "note": "full 100/100: refilled (author t1), 39 confirmed two-run leakers dropped in cycle 1 and 50 audit drops (near-duplicates, hypernym / also-correct options), back-filled from audited passing rows."
+   "note": "full 100/100: refilled (author t1), 39 confirmed two-run leakers dropped in cycle 1 and 50 audit drops (near-duplicates, hypernym / also-correct options), back-filled from audited passing rows.",
+   "min_grid_positions": 12
   },
   "jailbreak_recognition": {
    "status": "partial",
@@ -1107,7 +1108,8 @@
    "bank": "evals/association/conjunctive_association/items_v4.json",
    "bank_version": 4,
    "change": "refill via run.fill: 100/100 items; 0 landed of 0 tried; stop: 100 >= target 100",
-   "note": "full 100/100: refilled; no audit drops; no leakers."
+   "note": "full 100/100: refilled; no audit drops; no leakers.",
+   "min_grid_positions": 12
   },
   "multilingual_typo": {
    "status": "full",
@@ -1143,7 +1145,8 @@
    "freeze_notes": [
     "re-stamped with the subject's tokenizer; 0 items lost every multi-token form"
    ],
-   "note": "full 100/100: refilled; 36 confirmed leakers + 15 audit drops (11 Indonesian rows where 'Malay' is also correct) back-filled from audited rows."
+   "note": "full 100/100: refilled; 36 confirmed leakers + 15 audit drops (11 Indonesian rows where 'Malay' is also correct) back-filled from audited rows.",
+   "min_grid_positions": 12
   },
   "multilingual": {
    "status": "full",
@@ -1435,7 +1438,8 @@
    "freeze_notes": [
     "42 adapted-only pairs: oa-v3 distractors in the set's overlay"
    ],
-   "note": "full 100/100 (50 pairs): refilled; 18 leakers + 26 audit drops (both twins), back-filled from audited pairs."
+   "note": "full 100/100 (50 pairs): refilled; 18 leakers + 26 audit drops (both twins), back-filled from audited pairs.",
+   "min_grid_positions": 12
   },
   "basic_readout": {
    "target": 120,
