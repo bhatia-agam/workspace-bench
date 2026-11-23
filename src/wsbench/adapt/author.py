@@ -263,19 +263,6 @@ def _flat_um(it: dict) -> dict:
 FAV = "What is your favorite {}? Answer in one word."
 
 
-def _implicit(x: dict) -> dict:
-    """The question only; the gold is whatever the subject commits to (``run.restamp``)."""
-    x["prompt"] = FAV.format(str(x.pop("topic", "")).strip())
-    x["subfamily"], x["target"], x["intermediates"] = "implicit", "", []
-    x["units"] = [{"role": "readout", "lang": "en", "headline": True, "match": []}]
-    return x
-
-
-def _flat_implicit(it: dict) -> dict:
-    p = it.get("prompt", "")
-    return {**it, "topic": p.removeprefix("What is your favorite ").split("?")[0]}
-
-
 # --- basic_readout_st v5 (plan 0060 A2): the bank's question form, slice, task_context and mc ---
 BR_SUFFIX = "? Answer in one word."
 BR_FIXED = {
@@ -659,19 +646,6 @@ def _flat_mt(it: dict) -> dict:
     )
     out["distractors"] = ((it.get("mc") or {}).get(role) or {}).get("distractors")
     return out
-
-
-def _mt_readout(x: dict) -> dict:
-    forms = list(dict.fromkeys([x.get("target", ""), *x.get("target_alts", [])]))
-    forms = [f for f in forms if f]
-    x["intermediates"] = forms[:1]
-    x["units"] = [
-        {"role": "readout", "required": True, "multi_token": True, "forms": {"en": forms}}
-    ]
-    x["mc"] = {
-        "readout": {"gold": forms[0] if forms else "", "distractors": x.pop("distractors", [])}
-    }
-    return x
 
 
 # the briefs whose builder reads the subject's native languages (``_native``; plan 0075 §2.6)

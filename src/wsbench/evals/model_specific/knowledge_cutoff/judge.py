@@ -226,20 +226,6 @@ def _would(
     return out
 
 
-def sample_support(
-    ln: digest.Line, at: Mapping[tuple[int, int], Sequence[Cell]], rules: ItemRules
-) -> tuple[set[str], bool]:
-    """``(options this ONE sample presents, flood)``. A prose sample presents an option when
-    one of its bullets' answer heads names it; a token list when it names exactly one option
-    under the token rules (a list naming two or more singles out none). On a numeric item a
-    sample that is a number flood (``digest.number_flood`` on the WHOLE sample) presents
-    nothing (``flood`` True when that voided some support)."""
-    got = _would(ln, at, rules, enum_masked(at.get((ln.layer or 0, ln.pos or 0), [])))
-    if got and rules.numeric and digest.number_flood(ln):
-        return set(), True
-    return got, False
-
-
 @dataclass
 class Support:
     counts: dict[str, int]

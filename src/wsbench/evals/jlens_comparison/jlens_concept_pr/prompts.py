@@ -311,12 +311,6 @@ def _tok_norm(s: str) -> str:
     return s.casefold()
 
 
-def grounding_tokens(text: str | dict[str, Any]) -> list[str]:
-    """The ``token`` field of every Stage-P grade, in response order (``""`` when absent)."""
-    grades = _data(text).get("grades", [])
-    return [str(g.get("token", "")) if isinstance(g, dict) else "" for g in grades]
-
-
 def parse_stage_p(
     text: str | dict[str, Any],
     concepts: Sequence[str],
