@@ -73,18 +73,6 @@ class TokenType(StrEnum):
     WORD = "word"  # alphanumeric content (Latin words, digits)
 
 
-# The sentence-boundary class the headline hypothesis (C1) is stated over.
-BOUNDARY_TYPES = frozenset({TokenType.NEWLINE, TokenType.TERMINATOR})
-# Everything Unicode would call punctuation (the broad "punctuation" claim).
-PUNCT_TYPES = frozenset(
-    {
-        TokenType.NEWLINE,
-        TokenType.TERMINATOR,
-        TokenType.COMMA,
-        TokenType.COLON,
-        TokenType.OTHER_PUNCT,
-    }
-)
 # Content tokens (the C2 "content word" comparison group; CJK kept separate for the controls).
 CONTENT_TYPES = frozenset({TokenType.WORD, TokenType.CJK})
 

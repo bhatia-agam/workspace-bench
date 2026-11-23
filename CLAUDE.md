@@ -108,7 +108,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 ## Family conventions
 - `wsbench/family.py` holds the helpers the newer families share: `require_cells` (missing
   cells exit 2 unless `allow_missing=True`; a dry run only reports), `cell_text` (a token bag is
-  judged scored but verified against bare tokens), `last_pos_rows`, `quote_in` (verbatim after
+  judged scored but verified against bare tokens), `quote_in` (verbatim after
   `mc.fold`), `tri_state` (pass / fail / undecided), `rate` / `mean`, `pass_rate_result` (the
   pass-rate `FamilyResult` epilogue: decided-only value, bootstrap CI, completeness, counts).
   A pass-rate family's `run()` is: load bank -> `item_scope` -> `load_readouts` -> select cells ->

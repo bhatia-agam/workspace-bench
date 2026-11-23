@@ -43,7 +43,6 @@ RETIRED_VARIANTS = {
     "an old --fast-safety results directory with `wsbench report dir=<dir> "
     "fast_version=fast-safety-v2` (or fast-safety-v1)"
 }
-POSITION_KINDS = ("last_n", "punct_special")  # the fast positions rules (readplan `fast_of`)
 N_RESAMPLES = 2000
 MAX_MISSING_SHARE = 0.10  # more of the entry's units without an outcome -> incomplete
 GUARD_TOL = 1e-9

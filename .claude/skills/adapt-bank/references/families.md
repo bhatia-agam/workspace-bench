@@ -455,7 +455,7 @@ migrated with `scripts/migrate_0101.py set`.
 
 ---
 
-## Association (chat_summarize render, SIX layers)
+## Association (chat_summarize render, GRID layers)
 
 ### user_modeling — the user attribute the subject infers
 - **Gate:** "Based on that conversation, what is the user's {attr_label}?" Greedy + ≥ 8/10.
