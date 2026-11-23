@@ -115,6 +115,17 @@ def scored_by(bench: str, name: str) -> str:
     return SCORED_BY_RULE if spec.scorer else SCORED_BY_JUDGE
 
 
+def also_in() -> dict[str, tuple[str, ...]]:
+    """The benchmark's second category listings, ``{category: (evals of another category it
+    also lists)}``: ``wsbench.groups.ALSO_IN`` when the benchmark has that table, else none.
+    The viewer follows the benchmark either way and names no eval itself."""
+    try:
+        from wsbench import groups
+    except ImportError:
+        return {}
+    return {k: tuple(v) for k, v in (getattr(groups, "ALSO_IN", None) or {}).items()}
+
+
 class Store:
     """One opened store. Connections are shared across request threads behind a lock."""
 
@@ -680,8 +691,9 @@ class Store:
 
     def groups(self, bench: str, model: str) -> list[dict]:
         """The evals by category: ``[{key, title, evals}]``. WorkspaceBench follows the
-        registry's categories in their order, each eval once, under its own category; another
-        bench keeps the groups it was stored with."""
+        registry's categories in their order; where the benchmark lists an eval under a second
+        category (``also_in``), that category shows it too, marked ``also_in`` = the title of
+        its own category. Another bench keeps the groups it was stored with."""
         evs = self.evals(bench, model)
         out: dict[str, dict] = {}
         if bench != "wsb":
@@ -690,8 +702,14 @@ class Store:
                 out.setdefault(title, {"key": title, "title": title, "evals": []})
                 out[title]["evals"].append(e)
             return list(out.values())
+        extra = also_in()
+        by_name = {e["eval"]: e for e in evs}
         for key in (*registry.CATEGORIES, OTHER_CATEGORY):
             members = [e for e in evs if e["category"] == key]
+            for name in extra.get(key, ()):
+                e = by_name.get(name)
+                if e is not None and e["category"] != key:
+                    members.append(e | {"also_in": category_title(e["category"])})
             if members:
                 out[key] = {"key": key, "title": category_title(key), "evals": members}
         return list(out.values())
