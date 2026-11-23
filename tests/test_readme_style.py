@@ -30,6 +30,7 @@ PAGES = [
             "summarizer",
             "producing_readouts",
             "read_sites",
+            "fast_path",
         )
     ),
 ]

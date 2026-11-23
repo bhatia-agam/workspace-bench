@@ -208,3 +208,23 @@ def test_an_eval_whose_bank_ships_no_prompts_is_skipped_by_name(env, tmp_path, m
     assert cli.main([*argv, "dataset=none", "check=True"]) == 0
     out = capsys.readouterr().out
     assert "toy: skipped, nothing to capture" in out and "ok: 4 cells in the plan" in out
+
+
+def test_check_fetches_no_dataset_file(env, tmp_path, monkeypatch, capsys):
+    st, where, root = env
+    folders = {"full/toy": publish(st, root, "full/toy", [spec("a")])}
+    monkeypatch.setattr(ds, "load_map", lambda: mapping(folders))
+
+    def no_fetch(*args, **kw):
+        def fetch(path):
+            raise AssertionError(f"check=True fetched {path}")
+
+        return fetch
+
+    monkeypatch.setattr(ds, "hub_fetch", no_fetch)
+    monkeypatch.setattr(st, "Subject", lambda *a, **k: Subject())
+    plan = tmp_path / "plan.jsonl"
+    plan.write_text(json.dumps(spec("a").row()) + "\n")
+    argv = ["capture", f"plan={plan}", f"store={where.root}", "model=m", f"revision={REV}"]
+    assert cli.main([*argv, "dataset=someone/residuals", "check=True"]) == 0
+    assert "4 in the dataset + 0 in neither" in capsys.readouterr().out
