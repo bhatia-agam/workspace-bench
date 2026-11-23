@@ -94,8 +94,8 @@ def test_registration():
     assert registry.get(FAMILY) is SPEC and SPEC.title == "Association (hard)"
     assert SPEC.group == "association" == registry.category_of(FAMILY)
     assert tiers.tier_of(FAMILY) == "full" and FAMILY not in tiers.CORE
-    assert registry.bank_path(FAMILY) == registry.family_root(FAMILY) / "items.json"
-    assert SPEC.judge.prompt_version == prompts.PROMPT_VERSION == "assoc-hard-v1+gate-h2+bank-v2"
+    assert registry.bank_path(FAMILY) == registry.family_root(FAMILY) / "items_v3.json"
+    assert SPEC.judge.prompt_version == prompts.PROMPT_VERSION == "assoc-hard-v1+gate-h2+bank-v3"
     assert judge.instrument(judge.load_items()[0]) == prompts.PROMPT_VERSION
     assert SPEC.min_full_positions == 19 and SPEC.full_contiguous and not SPEC.sources
     assert "—" not in SPEC.title and "—" not in SPEC.calls_per_arm
@@ -177,7 +177,7 @@ def test_summary_asks_each_item_in_three_draws(tmp_path, monkeypatch, items):
     assert rows[UNNATURAL]["unanimous"] and rows[UNNATURAL]["pass_first_ask"]
     assert rows[OBSCURE]["pass"] is False and rows[OBSCURE]["outcome"] == "cannot_tell"
     assert r.value == pytest.approx(1 / 3) and r.chance == 1 / 8
-    assert r.config["prompt_version"].startswith("assoc-hard-v1+gate-h2+bank-v2+maj3v+digest-")
+    assert r.config["prompt_version"].startswith("assoc-hard-v1+gate-h2+bank-v3+maj3v+digest-")
     assert r.config["aggregate"] == "summary" and r.config["draws"] == 3
     users = [u for n, _s, u in fake.calls if n == "readout_mc"]
     assert all(u.startswith(digest.SUMMARY_NOTE) for u in users)
@@ -188,7 +188,7 @@ def test_one_draw_is_the_single_call_instrument(tmp_path, monkeypatch, items):
     script = Script(items, {UNNATURAL: [("a violin made of ice", ICE)]})
     r, fake, rows = _run(tmp_path, monkeypatch, script, extra={"draws": "1"})
     assert fake.n("readout_mc") == 3 and "+maj" not in r.config["prompt_version"]
-    assert r.config["prompt_version"].startswith("assoc-hard-v1+gate-h2+bank-v2+digest-")
+    assert r.config["prompt_version"].startswith("assoc-hard-v1+gate-h2+bank-v3+digest-")
     assert rows[UNNATURAL]["pass"] is True and len(rows[UNNATURAL]["draws"]) == 1
 
 
@@ -203,7 +203,7 @@ def test_native_asks_one_call_per_item_and_layer(tmp_path, monkeypatch, items):
     script = Script(items, {UNNATURAL: [(None, ""), ("a violin made of ice", ICE)]})
     r, fake, rows = _run(tmp_path, monkeypatch, script, extra={"aggregate": "native"})
     assert fake.n("readout_mc") == 3 * 2 and fake.n("digest") == 0
-    assert r.config["prompt_version"] == "assoc-hard-v1+gate-h2+bank-v2"
+    assert r.config["prompt_version"] == "assoc-hard-v1+gate-h2+bank-v3"
     assert rows[UNNATURAL]["pass"] is True and rows[UNNATURAL]["earliest_layer"] == 44
     assert all(s == prompts.SYSTEM_NATIVE for n, s, _u in fake.calls if n == "readout_mc")
     assert prompts.NATIVE_NOTE_PROSE in fake.calls[0][2]

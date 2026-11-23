@@ -1,0 +1,4888 @@
+{
+ "version": 1,
+ "built": "2026-11-23",
+ "model": "claude-opus-5-5",
+ "what": "per complex item the composed cell C+B that replaces the off-grid option, its grid, the 5-draw scene screen and two options-only guesser measurements (blind / described, hits of 5; replicate draws of one prompt) on the new list; `swaps` = the same evidence for a replaced distractor the scene names; `kept` = whether this run keeps the item; `dropped` = items this run removes, with the reason",
+ "prompts": {
+  "COMPOSE_SYSTEM": "You edit one multiple-choice option. Every option of the list joins two parts (a thing and its qualifier, its material, or the place it is in), all written to one pattern in one language. You get the worked options of the list, one of them to rewrite, and the part to exchange. Write that option with the one part exchanged and everything else kept: the same language, pattern, word order and other part, with the article and agreement corrected. Add nothing.",
+  "COMPOSE_USER": "Language: {lang}\nWorked options:\n{worked}\n\nRewrite the option: {donor}\nExchange its part \"{old}\" for \"{head}\".",
+  "SWAP_SYSTEM": "You write multiple-choice options for a benchmark. You get a correct concept, its category and the options already listed. Propose six further members of the same category, each as specific, as well known and written in the same language and form (article included) as the listed options, none of them the correct concept, a synonym of it, or already listed.",
+  "SWAP_USER": "Correct concept: {gold}\nCategory: {category}\nAlready listed:\n{listing}",
+  "SCREEN_SYSTEM": "You read a short passage that evokes one concept without naming it. Pick the listed concept the passage evokes. Answer with the option number.",
+  "SCREEN_USER": "PASSAGE:\n{scene}\n\nWhich concept does the passage evoke?\n{listing}",
+  "guessers": "wsbench.baselines.lucky_guessing blind / described, family line 'association'"
+ },
+ "items": {
+  "ah-b4-cq01-carpenter-dull-teeth": {
+   "replaced": "a rusty hammer",
+   "new": "a bent saw",
+   "grid": {
+    "heads": [
+     "a saw",
+     "a chisel"
+    ],
+    "qualifiers": [
+     "blunt",
+     "rusty",
+     "bent"
+    ],
+    "cells": {
+     "a blunt saw": [
+      "blunt",
+      "a saw"
+     ],
+     "a rusty saw": [
+      "rusty",
+      "a saw"
+     ],
+     "a bent saw": [
+      "bent",
+      "a saw"
+     ],
+     "a blunt chisel": [
+      "blunt",
+      "a chisel"
+     ],
+     "a rusty chisel": [
+      "rusty",
+      "a chisel"
+     ],
+     "a bent chisel": [
+      "bent",
+      "a chisel"
+     ]
+    }
+   },
+   "screen": [
+    "a blunt saw",
+    "a blunt saw",
+    "a blunt saw",
+    "a blunt saw",
+    "a blunt saw"
+   ],
+   "guess": {
+    "final": {
+     "blind": 1,
+     "described": 1
+    },
+    "confirm": {
+     "blind": 2,
+     "described": 1
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq03-bouillon-fond-perce": {
+   "replaced": "une passoire fêlée",
+   "new": "une casserole rayée",
+   "grid": {
+    "heads": [
+     "une casserole",
+     "une poêle"
+    ],
+    "qualifiers": [
+     "trouee",
+     "felee",
+     "rayee"
+    ],
+    "cells": {
+     "une casserole trouée": [
+      "trouee",
+      "une casserole"
+     ],
+     "une casserole fêlée": [
+      "felee",
+      "une casserole"
+     ],
+     "une casserole rayée": [
+      "rayee",
+      "une casserole"
+     ],
+     "une poêle trouée": [
+      "trouee",
+      "une poêle"
+     ],
+     "une poêle fêlée": [
+      "felee",
+      "une poêle"
+     ],
+     "une poêle rayée": [
+      "rayee",
+      "une poêle"
+     ]
+    }
+   },
+   "screen": [
+    "une casserole trouée",
+    "une casserole trouée",
+    "une casserole trouée",
+    "une casserole trouée",
+    "une casserole trouée"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 1
+    },
+    "confirm": {
+     "blind": 1,
+     "described": 1
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq04-january-yard-handle": {
+   "replaced": "a rusted gate",
+   "new": "a flooded pump",
+   "grid": {
+    "heads": [
+     "a pump",
+     "a trough"
+    ],
+    "qualifiers": [
+     "frozen",
+     "rusted",
+     "flooded"
+    ],
+    "cells": {
+     "a frozen pump": [
+      "frozen",
+      "a pump"
+     ],
+     "a rusted pump": [
+      "rusted",
+      "a pump"
+     ],
+     "a flooded pump": [
+      "flooded",
+      "a pump"
+     ],
+     "a frozen trough": [
+      "frozen",
+      "a trough"
+     ],
+     "a rusted trough": [
+      "rusted",
+      "a trough"
+     ],
+     "a flooded trough": [
+      "flooded",
+      "a trough"
+     ]
+    }
+   },
+   "screen": [
+    "a frozen pump",
+    "a frozen pump",
+    "a frozen pump",
+    "a frozen pump",
+    "a frozen pump"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq05-dressing-table-reflection": {
+   "replaced": "a foggy vase",
+   "new": "a chipped mirror",
+   "grid": {
+    "heads": [
+     "a mirror",
+     "a window"
+    ],
+    "qualifiers": [
+     "cracked",
+     "foggy",
+     "chipped"
+    ],
+    "cells": {
+     "a cracked mirror": [
+      "cracked",
+      "a mirror"
+     ],
+     "a foggy mirror": [
+      "foggy",
+      "a mirror"
+     ],
+     "a chipped mirror": [
+      "chipped",
+      "a mirror"
+     ],
+     "a cracked window": [
+      "cracked",
+      "a window"
+     ],
+     "a foggy window": [
+      "foggy",
+      "a window"
+     ],
+     "a chipped window": [
+      "chipped",
+      "a window"
+     ]
+    }
+   },
+   "screen": [
+    "a cracked mirror",
+    "a cracked mirror",
+    "a cracked mirror",
+    "a cracked mirror",
+    "a cracked mirror"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq07-birthday-red-sphere": {
+   "replaced": "an overinflated ball",
+   "new": "a bald balloon",
+   "grid": {
+    "heads": [
+     "a balloon",
+     "a tire"
+    ],
+    "qualifiers": [
+     "deflated",
+     "overinflated",
+     "bald"
+    ],
+    "cells": {
+     "a deflated balloon": [
+      "deflated",
+      "a balloon"
+     ],
+     "an overinflated balloon": [
+      "overinflated",
+      "a balloon"
+     ],
+     "a bald balloon": [
+      "bald",
+      "a balloon"
+     ],
+     "a deflated tire": [
+      "deflated",
+      "a tire"
+     ],
+     "an overinflated tire": [
+      "overinflated",
+      "a tire"
+     ],
+     "a bald tire": [
+      "bald",
+      "a tire"
+     ]
+    }
+   },
+   "screen": [
+    "a deflated balloon",
+    "a deflated balloon",
+    "a deflated balloon",
+    "a deflated balloon",
+    "a deflated balloon"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 2
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 3
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq08-camp-lake-overturned-hull": {
+   "replaced": "a drifting raft",
+   "new": "a sunken canoe",
+   "grid": {
+    "heads": [
+     "a canoe",
+     "a rowboat"
+    ],
+    "qualifiers": [
+     "capsized",
+     "drifting",
+     "sunken"
+    ],
+    "cells": {
+     "a capsized canoe": [
+      "capsized",
+      "a canoe"
+     ],
+     "a drifting canoe": [
+      "drifting",
+      "a canoe"
+     ],
+     "a sunken canoe": [
+      "sunken",
+      "a canoe"
+     ],
+     "a capsized rowboat": [
+      "capsized",
+      "a rowboat"
+     ],
+     "a drifting rowboat": [
+      "drifting",
+      "a rowboat"
+     ],
+     "a sunken rowboat": [
+      "sunken",
+      "a rowboat"
+     ]
+    }
+   },
+   "screen": [
+    "a capsized canoe",
+    "a capsized canoe",
+    "a capsized canoe",
+    "a capsized canoe",
+    "a capsized canoe"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq09-storm-parlour-soaked-keys": {
+   "replaced": "a burnt drum",
+   "new": "a mouldy piano",
+   "grid": {
+    "heads": [
+     "a piano",
+     "a violin"
+    ],
+    "qualifiers": [
+     "waterlogged",
+     "burnt",
+     "mouldy"
+    ],
+    "cells": {
+     "a waterlogged piano": [
+      "waterlogged",
+      "a piano"
+     ],
+     "a burnt piano": [
+      "burnt",
+      "a piano"
+     ],
+     "a mouldy piano": [
+      "mouldy",
+      "a piano"
+     ],
+     "a waterlogged violin": [
+      "waterlogged",
+      "a violin"
+     ],
+     "a burnt violin": [
+      "burnt",
+      "a violin"
+     ],
+     "a mouldy violin": [
+      "mouldy",
+      "a violin"
+     ]
+    }
+   },
+   "screen": [
+    "a waterlogged piano",
+    "a waterlogged piano",
+    "a waterlogged piano",
+    "a waterlogged piano",
+    "a waterlogged piano"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq11-stove-dribbling-whistle-pot": {
+   "replaced": "a whistling blender",
+   "new": "a smoking kettle",
+   "grid": {
+    "heads": [
+     "a kettle",
+     "a toaster"
+    ],
+    "qualifiers": [
+     "leaking",
+     "whistling",
+     "smoking"
+    ],
+    "cells": {
+     "a leaking kettle": [
+      "leaking",
+      "a kettle"
+     ],
+     "a whistling kettle": [
+      "whistling",
+      "a kettle"
+     ],
+     "a smoking kettle": [
+      "smoking",
+      "a kettle"
+     ],
+     "a leaking toaster": [
+      "leaking",
+      "a toaster"
+     ],
+     "a whistling toaster": [
+      "whistling",
+      "a toaster"
+     ],
+     "a smoking toaster": [
+      "smoking",
+      "a toaster"
+     ]
+    }
+   },
+   "screen": [
+    "a leaking kettle",
+    "a leaking kettle",
+    "a leaking kettle",
+    "a leaking kettle",
+    "a leaking kettle"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq14-quarry-core-bit-worn-smooth": {
+   "replaced": "a jammed lathe",
+   "new": "a rusty drill",
+   "grid": {
+    "heads": [
+     "a drill",
+     "a saw"
+    ],
+    "qualifiers": [
+     "blunt",
+     "jammed",
+     "rusty"
+    ],
+    "cells": {
+     "a blunt drill": [
+      "blunt",
+      "a drill"
+     ],
+     "a jammed drill": [
+      "jammed",
+      "a drill"
+     ],
+     "a rusty drill": [
+      "rusty",
+      "a drill"
+     ],
+     "a blunt saw": [
+      "blunt",
+      "a saw"
+     ],
+     "a jammed saw": [
+      "jammed",
+      "a saw"
+     ],
+     "a rusty saw": [
+      "rusty",
+      "a saw"
+     ]
+    }
+   },
+   "screen": [
+    "a blunt drill",
+    "a blunt drill",
+    "a blunt drill",
+    "a blunt drill",
+    "a blunt drill"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq15-seafront-white-fronds": {
+   "replaced": "a rain-soaked oak",
+   "new": "a frost-covered palm",
+   "grid": {
+    "heads": [
+     "a palm",
+     "a pine"
+    ],
+    "qualifiers": [
+     "snow-covered",
+     "rain-soaked",
+     "frost-covered"
+    ],
+    "cells": {
+     "a snow-covered palm": [
+      "snow-covered",
+      "a palm"
+     ],
+     "a rain-soaked palm": [
+      "rain-soaked",
+      "a palm"
+     ],
+     "a frost-covered palm": [
+      "frost-covered",
+      "a palm"
+     ],
+     "a snow-covered pine": [
+      "snow-covered",
+      "a pine"
+     ],
+     "a rain-soaked pine": [
+      "rain-soaked",
+      "a pine"
+     ],
+     "a frost-covered pine": [
+      "frost-covered",
+      "a pine"
+     ]
+    }
+   },
+   "screen": [
+    "a snow-covered palm",
+    "a snow-covered palm",
+    "a snow-covered palm",
+    "a snow-covered palm",
+    "a snow-covered palm"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq16-farmyard-empty-shaft": {
+   "replaced": "a frozen barn",
+   "new": "a muddy well",
+   "grid": {
+    "heads": [
+     "a well",
+     "a pond"
+    ],
+    "qualifiers": [
+     "dry",
+     "frozen",
+     "muddy"
+    ],
+    "cells": {
+     "a dry well": [
+      "dry",
+      "a well"
+     ],
+     "a frozen well": [
+      "frozen",
+      "a well"
+     ],
+     "a muddy well": [
+      "muddy",
+      "a well"
+     ],
+     "a dry pond": [
+      "dry",
+      "a pond"
+     ],
+     "a frozen pond": [
+      "frozen",
+      "a pond"
+     ],
+     "a muddy pond": [
+      "muddy",
+      "a pond"
+     ]
+    }
+   },
+   "screen": [
+    "a dry well",
+    "a dry well",
+    "a dry well",
+    "a dry well",
+    "a dry well"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq18-desert-hum-crescent": {
+   "replaced": "a whistling cave",
+   "new": "a crumbling dune",
+   "grid": {
+    "heads": [
+     "a dune",
+     "a cliff"
+    ],
+    "qualifiers": [
+     "singing",
+     "whistling",
+     "crumbling"
+    ],
+    "cells": {
+     "a singing dune": [
+      "singing",
+      "a dune"
+     ],
+     "a whistling dune": [
+      "whistling",
+      "a dune"
+     ],
+     "a crumbling dune": [
+      "crumbling",
+      "a dune"
+     ],
+     "a singing cliff": [
+      "singing",
+      "a cliff"
+     ],
+     "a whistling cliff": [
+      "whistling",
+      "a cliff"
+     ],
+     "a crumbling cliff": [
+      "crumbling",
+      "a cliff"
+     ]
+    }
+   },
+   "screen": [
+    "a singing dune",
+    "a singing dune",
+    "a singing dune",
+    "a singing dune",
+    "a singing dune"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq21-geologist-ringing-trunk": {
+   "replaced": "a charred fence",
+   "new": "a polished tree",
+   "grid": {
+    "heads": [
+     "a tree",
+     "a bone"
+    ],
+    "qualifiers": [
+     "petrified",
+     "charred",
+     "polished"
+    ],
+    "cells": {
+     "a petrified tree": [
+      "petrified",
+      "a tree"
+     ],
+     "a charred tree": [
+      "charred",
+      "a tree"
+     ],
+     "a polished tree": [
+      "polished",
+      "a tree"
+     ],
+     "a petrified bone": [
+      "petrified",
+      "a bone"
+     ],
+     "a charred bone": [
+      "charred",
+      "a bone"
+     ],
+     "a polished bone": [
+      "polished",
+      "a bone"
+     ]
+    }
+   },
+   "screen": [
+    "a petrified tree",
+    "a petrified tree",
+    "a petrified tree",
+    "a petrified tree",
+    "a petrified tree"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 3
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq22-weeds-and-hammock": {
+   "replaced": "a greedy baker",
+   "new": "a clumsy farmer",
+   "grid": {
+    "heads": [
+     "a farmer",
+     "a fisherman"
+    ],
+    "qualifiers": [
+     "lazy",
+     "greedy",
+     "clumsy"
+    ],
+    "cells": {
+     "a lazy farmer": [
+      "lazy",
+      "a farmer"
+     ],
+     "a greedy farmer": [
+      "greedy",
+      "a farmer"
+     ],
+     "a clumsy farmer": [
+      "clumsy",
+      "a farmer"
+     ],
+     "a lazy fisherman": [
+      "lazy",
+      "a fisherman"
+     ],
+     "a greedy fisherman": [
+      "greedy",
+      "a fisherman"
+     ],
+     "a clumsy fisherman": [
+      "clumsy",
+      "a fisherman"
+     ]
+    }
+   },
+   "screen": [
+    "a lazy farmer",
+    "a lazy farmer",
+    "a lazy farmer",
+    "a lazy farmer",
+    "a lazy farmer"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq28-scowling-red-nose": {
+   "replaced": "a shy juggler",
+   "new": "a cheerful clown",
+   "grid": {
+    "heads": [
+     "a clown",
+     "a mime"
+    ],
+    "qualifiers": [
+     "grumpy",
+     "shy",
+     "cheerful"
+    ],
+    "cells": {
+     "a grumpy clown": [
+      "grumpy",
+      "a clown"
+     ],
+     "a shy clown": [
+      "shy",
+      "a clown"
+     ],
+     "a cheerful clown": [
+      "cheerful",
+      "a clown"
+     ],
+     "a grumpy mime": [
+      "grumpy",
+      "a mime"
+     ],
+     "a shy mime": [
+      "shy",
+      "a mime"
+     ],
+     "a cheerful mime": [
+      "cheerful",
+      "a mime"
+     ]
+    }
+   },
+   "screen": [
+    "a grumpy clown",
+    "a grumpy clown",
+    "a grumpy clown",
+    "a grumpy clown",
+    "a grumpy clown"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 4,
+     "described": 0
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq29-divers-reef-hull": {
+   "replaced": "a stranded train",
+   "new": "a burning ship",
+   "grid": {
+    "heads": [
+     "a ship",
+     "a plane"
+    ],
+    "qualifiers": [
+     "sunken",
+     "stranded",
+     "burning"
+    ],
+    "cells": {
+     "a sunken ship": [
+      "sunken",
+      "a ship"
+     ],
+     "a stranded ship": [
+      "stranded",
+      "a ship"
+     ],
+     "a burning ship": [
+      "burning",
+      "a ship"
+     ],
+     "a sunken plane": [
+      "sunken",
+      "a plane"
+     ],
+     "a stranded plane": [
+      "stranded",
+      "a plane"
+     ],
+     "a burning plane": [
+      "burning",
+      "a plane"
+     ]
+    }
+   },
+   "screen": [
+    "a sunken ship",
+    "a sunken ship",
+    "a sunken ship",
+    "a sunken ship",
+    "a sunken ship"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq32-chef-warm-milk": {
+   "replaced": "a noisy fan",
+   "new": "a cracked fridge",
+   "grid": {
+    "heads": [
+     "a fridge",
+     "a kettle"
+    ],
+    "qualifiers": [
+     "broken",
+     "noisy",
+     "cracked"
+    ],
+    "cells": {
+     "a broken fridge": [
+      "broken",
+      "a fridge"
+     ],
+     "a noisy fridge": [
+      "noisy",
+      "a fridge"
+     ],
+     "a cracked fridge": [
+      "cracked",
+      "a fridge"
+     ],
+     "a broken kettle": [
+      "broken",
+      "a kettle"
+     ],
+     "a noisy kettle": [
+      "noisy",
+      "a kettle"
+     ],
+     "a cracked kettle": [
+      "cracked",
+      "a kettle"
+     ]
+    }
+   },
+   "screen": [
+    "a broken fridge",
+    "a broken fridge",
+    "a broken fridge",
+    "a broken fridge",
+    "a broken fridge"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq33-driveway-white-mound": {
+   "replaced": "a mud-covered bench",
+   "new": "a leaf-covered car",
+   "grid": {
+    "heads": [
+     "a car",
+     "a bicycle"
+    ],
+    "qualifiers": [
+     "snow-covered",
+     "mud-covered",
+     "leaf-covered"
+    ],
+    "cells": {
+     "a snow-covered car": [
+      "snow-covered",
+      "a car"
+     ],
+     "a mud-covered car": [
+      "mud-covered",
+      "a car"
+     ],
+     "a leaf-covered car": [
+      "leaf-covered",
+      "a car"
+     ],
+     "a snow-covered bicycle": [
+      "snow-covered",
+      "a bicycle"
+     ],
+     "a mud-covered bicycle": [
+      "mud-covered",
+      "a bicycle"
+     ],
+     "a leaf-covered bicycle": [
+      "leaf-covered",
+      "a bicycle"
+     ]
+    }
+   },
+   "screen": [
+    "a snow-covered car",
+    "a snow-covered car",
+    "a snow-covered car",
+    "a snow-covered car",
+    "a snow-covered car"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq42-florist-prize-sky-colour": {
+   "replaced": "a black tulip",
+   "new": "a green rose",
+   "grid": {
+    "heads": [
+     "a rose",
+     "an orchid"
+    ],
+    "qualifiers": [
+     "blue",
+     "black",
+     "green"
+    ],
+    "cells": {
+     "a blue rose": [
+      "blue",
+      "a rose"
+     ],
+     "a black rose": [
+      "black",
+      "a rose"
+     ],
+     "a green rose": [
+      "green",
+      "a rose"
+     ],
+     "a blue orchid": [
+      "blue",
+      "an orchid"
+     ],
+     "a black orchid": [
+      "black",
+      "an orchid"
+     ],
+     "a green orchid": [
+      "green",
+      "an orchid"
+     ]
+    }
+   },
+   "screen": [
+    "a blue rose",
+    "a blue rose",
+    "a blue rose",
+    "a blue rose",
+    "a blue rose"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq43-chef-ankle-deep-soup": {
+   "replaced": "a burnt garage",
+   "new": "a cluttered kitchen",
+   "grid": {
+    "heads": [
+     "a kitchen",
+     "a bathroom"
+    ],
+    "qualifiers": [
+     "flooded",
+     "burnt",
+     "cluttered"
+    ],
+    "cells": {
+     "a flooded kitchen": [
+      "flooded",
+      "a kitchen"
+     ],
+     "a burnt kitchen": [
+      "burnt",
+      "a kitchen"
+     ],
+     "a cluttered kitchen": [
+      "cluttered",
+      "a kitchen"
+     ],
+     "a flooded bathroom": [
+      "flooded",
+      "a bathroom"
+     ],
+     "a burnt bathroom": [
+      "burnt",
+      "a bathroom"
+     ],
+     "a cluttered bathroom": [
+      "cluttered",
+      "a bathroom"
+     ]
+    }
+   },
+   "screen": [
+    "a flooded kitchen",
+    "a flooded kitchen",
+    "a flooded kitchen",
+    "a flooded kitchen",
+    "a flooded kitchen"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq46-stars-through-rafters": {
+   "replaced": "a windowless shed",
+   "new": "a doorless house",
+   "grid": {
+    "heads": [
+     "a house",
+     "a barn"
+    ],
+    "qualifiers": [
+     "roofless",
+     "windowless",
+     "doorless"
+    ],
+    "cells": {
+     "a roofless house": [
+      "roofless",
+      "a house"
+     ],
+     "a windowless house": [
+      "windowless",
+      "a house"
+     ],
+     "a doorless house": [
+      "doorless",
+      "a house"
+     ],
+     "a roofless barn": [
+      "roofless",
+      "a barn"
+     ],
+     "a windowless barn": [
+      "windowless",
+      "a barn"
+     ],
+     "a doorless barn": [
+      "doorless",
+      "a barn"
+     ]
+    }
+   },
+   "screen": [
+    "a roofless house",
+    "a roofless house",
+    "a roofless house",
+    "a roofless house",
+    "a roofless house"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 3
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq53-cabin-porch-terry-plank": {
+   "replaced": "a soaked rug",
+   "new": "a scorched towel",
+   "grid": {
+    "heads": [
+     "a towel",
+     "a blanket"
+    ],
+    "qualifiers": [
+     "frozen",
+     "soaked",
+     "scorched"
+    ],
+    "cells": {
+     "a frozen towel": [
+      "frozen",
+      "a towel"
+     ],
+     "a soaked towel": [
+      "soaked",
+      "a towel"
+     ],
+     "a scorched towel": [
+      "scorched",
+      "a towel"
+     ],
+     "a frozen blanket": [
+      "frozen",
+      "a blanket"
+     ],
+     "a soaked blanket": [
+      "soaked",
+      "a blanket"
+     ],
+     "a scorched blanket": [
+      "scorched",
+      "a blanket"
+     ]
+    }
+   },
+   "screen": [
+    "a frozen towel",
+    "a frozen towel",
+    "a frozen towel",
+    "a frozen towel",
+    "a frozen towel"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq55-lavrador-trator-palha": {
+   "replaced": "um casaco molhado",
+   "new": "um chapéu rasgado",
+   "grid": {
+    "heads": [
+     "um chapéu",
+     "um sapato"
+    ],
+    "qualifiers": [
+     "amassado",
+     "molhado",
+     "rasgado"
+    ],
+    "cells": {
+     "um chapéu amassado": [
+      "amassado",
+      "um chapéu"
+     ],
+     "um chapéu molhado": [
+      "molhado",
+      "um chapéu"
+     ],
+     "um chapéu rasgado": [
+      "rasgado",
+      "um chapéu"
+     ],
+     "um sapato amassado": [
+      "amassado",
+      "um sapato"
+     ],
+     "um sapato molhado": [
+      "molhado",
+      "um sapato"
+     ],
+     "um sapato rasgado": [
+      "rasgado",
+      "um sapato"
+     ]
+    }
+   },
+   "screen": [
+    "um chapéu amassado",
+    "um chapéu amassado",
+    "um chapéu amassado",
+    "um chapéu amassado",
+    "um chapéu amassado"
+   ],
+   "guess": {
+    "final": {
+     "blind": 3,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cq57-stranded-giant-on-the-sand": {
+   "replaced": "a breaching orca",
+   "new": "a captive whale",
+   "grid": {
+    "heads": [
+     "a whale",
+     "a dolphin"
+    ],
+    "qualifiers": [
+     "beached",
+     "breaching",
+     "captive"
+    ],
+    "cells": {
+     "a beached whale": [
+      "beached",
+      "a whale"
+     ],
+     "a breaching whale": [
+      "breaching",
+      "a whale"
+     ],
+     "a captive whale": [
+      "captive",
+      "a whale"
+     ],
+     "a beached dolphin": [
+      "beached",
+      "a dolphin"
+     ],
+     "a breaching dolphin": [
+      "breaching",
+      "a dolphin"
+     ],
+     "a captive dolphin": [
+      "captive",
+      "a dolphin"
+     ]
+    }
+   },
+   "screen": [
+    "a beached whale",
+    "a beached whale",
+    "a beached whale",
+    "a beached whale",
+    "a beached whale"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cq60-bare-pink-layer": {
+   "replaced": "a one-legged goose",
+   "new": "a blind chicken",
+   "grid": {
+    "heads": [
+     "a chicken",
+     "a duck"
+    ],
+    "qualifiers": [
+     "featherless",
+     "one-legged",
+     "blind"
+    ],
+    "cells": {
+     "a featherless chicken": [
+      "featherless",
+      "a chicken"
+     ],
+     "a one-legged chicken": [
+      "one-legged",
+      "a chicken"
+     ],
+     "a blind chicken": [
+      "blind",
+      "a chicken"
+     ],
+     "a featherless duck": [
+      "featherless",
+      "a duck"
+     ],
+     "a one-legged duck": [
+      "one-legged",
+      "a duck"
+     ],
+     "a blind duck": [
+      "blind",
+      "a duck"
+     ]
+    }
+   },
+   "screen": [
+    "a featherless chicken",
+    "a featherless chicken",
+    "a featherless chicken",
+    "a featherless chicken",
+    "a featherless chicken"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu02-harbour-paper-anchor": {
+   "replaced": "a rudder made of glass",
+   "new": "an anchor made of ice",
+   "grid": {
+    "heads": [
+     "an anchor",
+     "a compass"
+    ],
+    "qualifiers": [
+     "made of paper",
+     "made of glass",
+     "made of ice"
+    ],
+    "cells": {
+     "an anchor made of paper": [
+      "made of paper",
+      "an anchor"
+     ],
+     "an anchor made of glass": [
+      "made of glass",
+      "an anchor"
+     ],
+     "an anchor made of ice": [
+      "made of ice",
+      "an anchor"
+     ],
+     "a compass made of paper": [
+      "made of paper",
+      "a compass"
+     ],
+     "a compass made of glass": [
+      "made of glass",
+      "a compass"
+     ],
+     "a compass made of ice": [
+      "made of ice",
+      "a compass"
+     ]
+    }
+   },
+   "screen": [
+    "an anchor made of paper",
+    "an anchor made of paper",
+    "an anchor made of paper",
+    "an anchor made of paper",
+    "an anchor made of paper"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu03-etable-seau-glace": {
+   "replaced": "un râteau en cire",
+   "new": "un seau en sucre",
+   "grid": {
+    "heads": [
+     "un seau",
+     "un panier"
+    ],
+    "qualifiers": [
+     "en glace",
+     "en cire",
+     "en sucre"
+    ],
+    "cells": {
+     "un seau en glace": [
+      "en glace",
+      "un seau"
+     ],
+     "un seau en cire": [
+      "en cire",
+      "un seau"
+     ],
+     "un seau en sucre": [
+      "en sucre",
+      "un seau"
+     ],
+     "un panier en glace": [
+      "en glace",
+      "un panier"
+     ],
+     "un panier en cire": [
+      "en cire",
+      "un panier"
+     ],
+     "un panier en sucre": [
+      "en sucre",
+      "un panier"
+     ]
+    }
+   },
+   "screen": [
+    "un seau en glace",
+    "un seau en glace",
+    "un seau en glace",
+    "un seau en glace",
+    "un seau en glace"
+   ],
+   "guess": {
+    "final": {
+     "blind": 4,
+     "described": 2
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 3
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cu04-drummer-jelly-kit": {
+   "replaced": "a trumpet made of glass",
+   "new": "a drum made of smoke",
+   "grid": {
+    "heads": [
+     "a drum",
+     "a violin"
+    ],
+    "qualifiers": [
+     "made of jelly",
+     "made of glass",
+     "made of smoke"
+    ],
+    "cells": {
+     "a drum made of jelly": [
+      "made of jelly",
+      "a drum"
+     ],
+     "a drum made of glass": [
+      "made of glass",
+      "a drum"
+     ],
+     "a drum made of smoke": [
+      "made of smoke",
+      "a drum"
+     ],
+     "a violin made of jelly": [
+      "made of jelly",
+      "a violin"
+     ],
+     "a violin made of glass": [
+      "made of glass",
+      "a violin"
+     ],
+     "a violin made of smoke": [
+      "made of smoke",
+      "a violin"
+     ]
+    }
+   },
+   "screen": [
+    "a drum made of jelly",
+    "a drum made of jelly",
+    "a drum made of jelly",
+    "a drum made of jelly",
+    "a drum made of jelly"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu10-misa-en-ruta": {
+   "replaced": "una escuela en un barco",
+   "new": "un hospital en un autobús",
+   "grid": {
+    "heads": [
+     "un autobús",
+     "un tren"
+    ],
+    "qualifiers": [
+     "iglesia en un",
+     "escuela en un",
+     "hospital en un"
+    ],
+    "cells": {
+     "una iglesia en un autobús": [
+      "iglesia en un",
+      "un autobús"
+     ],
+     "una escuela en un autobús": [
+      "escuela en un",
+      "un autobús"
+     ],
+     "un hospital en un autobús": [
+      "hospital en un",
+      "un autobús"
+     ],
+     "una iglesia en un tren": [
+      "iglesia en un",
+      "un tren"
+     ],
+     "una escuela en un tren": [
+      "escuela en un",
+      "un tren"
+     ],
+     "un hospital en un tren": [
+      "hospital en un",
+      "un tren"
+     ]
+    }
+   },
+   "screen": [
+    "una iglesia en un autobús",
+    "una iglesia en un autobús",
+    "una iglesia en un autobús",
+    "una iglesia en un autobús",
+    "una iglesia en un autobús"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu13-orli-sui-binari": {
+   "replaced": "una calzoleria su un autobus",
+   "new": "una barberia su un tram",
+   "grid": {
+    "heads": [
+     "un tram",
+     "un traghetto"
+    ],
+    "qualifiers": [
+     "sartoria su un",
+     "calzoleria su un",
+     "barberia su un"
+    ],
+    "cells": {
+     "una sartoria su un tram": [
+      "sartoria su un",
+      "un tram"
+     ],
+     "una calzoleria su un tram": [
+      "calzoleria su un",
+      "un tram"
+     ],
+     "una barberia su un tram": [
+      "barberia su un",
+      "un tram"
+     ],
+     "una sartoria su un traghetto": [
+      "sartoria su un",
+      "un traghetto"
+     ],
+     "una calzoleria su un traghetto": [
+      "calzoleria su un",
+      "un traghetto"
+     ],
+     "una barberia su un traghetto": [
+      "barberia su un",
+      "un traghetto"
+     ]
+    }
+   },
+   "screen": [
+    "una sartoria su un tram",
+    "una sartoria su un tram",
+    "una sartoria su un tram",
+    "una sartoria su un tram",
+    "una sartoria su un tram"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu16-feather-forge-tool": {
+   "replaced": "a ladder made of glass",
+   "new": "a hammer made of ice",
+   "grid": {
+    "heads": [
+     "a hammer",
+     "a broom"
+    ],
+    "qualifiers": [
+     "made of feathers",
+     "made of glass",
+     "made of ice"
+    ],
+    "cells": {
+     "a hammer made of feathers": [
+      "made of feathers",
+      "a hammer"
+     ],
+     "a hammer made of glass": [
+      "made of glass",
+      "a hammer"
+     ],
+     "a hammer made of ice": [
+      "made of ice",
+      "a hammer"
+     ],
+     "a broom made of feathers": [
+      "made of feathers",
+      "a broom"
+     ],
+     "a broom made of glass": [
+      "made of glass",
+      "a broom"
+     ],
+     "a broom made of ice": [
+      "made of ice",
+      "a broom"
+     ]
+    }
+   },
+   "screen": [
+    "a hammer made of feathers",
+    "a hammer made of feathers",
+    "a hammer made of feathers",
+    "a hammer made of feathers",
+    "a hammer made of feathers"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu18-granite-woodwind-recital": {
+   "replaced": "a violin made of glass",
+   "new": "a flute made of ice",
+   "grid": {
+    "heads": [
+     "a flute",
+     "a drum"
+    ],
+    "qualifiers": [
+     "made of stone",
+     "made of glass",
+     "made of ice"
+    ],
+    "cells": {
+     "a flute made of stone": [
+      "made of stone",
+      "a flute"
+     ],
+     "a flute made of glass": [
+      "made of glass",
+      "a flute"
+     ],
+     "a flute made of ice": [
+      "made of ice",
+      "a flute"
+     ],
+     "a drum made of stone": [
+      "made of stone",
+      "a drum"
+     ],
+     "a drum made of glass": [
+      "made of glass",
+      "a drum"
+     ],
+     "a drum made of ice": [
+      "made of ice",
+      "a drum"
+     ]
+    }
+   },
+   "screen": [
+    "a flute made of stone",
+    "a flute made of stone",
+    "a flute made of stone",
+    "a flute made of stone",
+    "a flute made of stone"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu21-choir-paper-cymbals": {
+   "replaced": "a trumpet made of glass",
+   "new": "cymbals made of ice",
+   "grid": {
+    "heads": [
+     "cymbals",
+     "a drum"
+    ],
+    "qualifiers": [
+     "made of paper",
+     "made of glass",
+     "made of ice"
+    ],
+    "cells": {
+     "cymbals made of paper": [
+      "made of paper",
+      "cymbals"
+     ],
+     "cymbals made of glass": [
+      "made of glass",
+      "cymbals"
+     ],
+     "cymbals made of ice": [
+      "made of ice",
+      "cymbals"
+     ],
+     "a drum made of paper": [
+      "made of paper",
+      "a drum"
+     ],
+     "a drum made of glass": [
+      "made of glass",
+      "a drum"
+     ],
+     "a drum made of ice": [
+      "made of ice",
+      "a drum"
+     ]
+    }
+   },
+   "screen": [
+    "cymbals made of paper",
+    "cymbals made of paper",
+    "cymbals made of paper",
+    "cymbals made of paper",
+    "cymbals made of paper"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu22-pews-beside-the-millstones": {
+   "replaced": "a library inside a water tower",
+   "new": "a bakery inside a windmill",
+   "grid": {
+    "heads": [
+     "a windmill",
+     "a lighthouse"
+    ],
+    "qualifiers": [
+     "church inside a",
+     "library inside a",
+     "bakery inside a"
+    ],
+    "cells": {
+     "a church inside a windmill": [
+      "church inside a",
+      "a windmill"
+     ],
+     "a library inside a windmill": [
+      "library inside a",
+      "a windmill"
+     ],
+     "a bakery inside a windmill": [
+      "bakery inside a",
+      "a windmill"
+     ],
+     "a church inside a lighthouse": [
+      "church inside a",
+      "a lighthouse"
+     ],
+     "a library inside a lighthouse": [
+      "library inside a",
+      "a lighthouse"
+     ],
+     "a bakery inside a lighthouse": [
+      "bakery inside a",
+      "a lighthouse"
+     ]
+    }
+   },
+   "screen": [
+    "a church inside a windmill",
+    "a church inside a windmill",
+    "a church inside a windmill",
+    "a church inside a windmill",
+    "a church inside a windmill"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu23-tickets-below-the-lamp": {
+   "replaced": "a library inside a water tower",
+   "new": "a bakery inside a lighthouse",
+   "grid": {
+    "heads": [
+     "a lighthouse",
+     "a windmill"
+    ],
+    "qualifiers": [
+     "cinema inside a",
+     "library inside a",
+     "bakery inside a"
+    ],
+    "cells": {
+     "a cinema inside a lighthouse": [
+      "cinema inside a",
+      "a lighthouse"
+     ],
+     "a library inside a lighthouse": [
+      "library inside a",
+      "a lighthouse"
+     ],
+     "a bakery inside a lighthouse": [
+      "bakery inside a",
+      "a lighthouse"
+     ],
+     "a cinema inside a windmill": [
+      "cinema inside a",
+      "a windmill"
+     ],
+     "a library inside a windmill": [
+      "library inside a",
+      "a windmill"
+     ],
+     "a bakery inside a windmill": [
+      "bakery inside a",
+      "a windmill"
+     ]
+    }
+   },
+   "screen": [
+    "a cinema inside a lighthouse",
+    "a cinema inside a lighthouse",
+    "a cinema inside a lighthouse",
+    "a cinema inside a lighthouse",
+    "a cinema inside a lighthouse"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu29-wax-sledge-on-the-farm": {
+   "replaced": "a kite made of glass",
+   "new": "a sled made of paper",
+   "grid": {
+    "heads": [
+     "a sled",
+     "a raft"
+    ],
+    "qualifiers": [
+     "made of wax",
+     "made of glass",
+     "made of paper"
+    ],
+    "cells": {
+     "a sled made of wax": [
+      "made of wax",
+      "a sled"
+     ],
+     "a sled made of glass": [
+      "made of glass",
+      "a sled"
+     ],
+     "a sled made of paper": [
+      "made of paper",
+      "a sled"
+     ],
+     "a raft made of wax": [
+      "made of wax",
+      "a raft"
+     ],
+     "a raft made of glass": [
+      "made of glass",
+      "a raft"
+     ],
+     "a raft made of paper": [
+      "made of paper",
+      "a raft"
+     ]
+    }
+   },
+   "screen": [
+    "a sled made of wax",
+    "a sled made of wax",
+    "a sled made of wax",
+    "a sled made of wax",
+    "a sled made of wax"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu30-potter-clay-overcoat": {
+   "replaced": "a scarf made of glass",
+   "new": "a coat made of stone",
+   "grid": {
+    "heads": [
+     "a coat",
+     "a hat"
+    ],
+    "qualifiers": [
+     "made of clay",
+     "made of glass",
+     "made of stone"
+    ],
+    "cells": {
+     "a coat made of clay": [
+      "made of clay",
+      "a coat"
+     ],
+     "a coat made of glass": [
+      "made of glass",
+      "a coat"
+     ],
+     "a coat made of stone": [
+      "made of stone",
+      "a coat"
+     ],
+     "a hat made of clay": [
+      "made of clay",
+      "a hat"
+     ],
+     "a hat made of glass": [
+      "made of glass",
+      "a hat"
+     ],
+     "a hat made of stone": [
+      "made of stone",
+      "a hat"
+     ]
+    }
+   },
+   "screen": [
+    "a coat made of clay",
+    "a coat made of clay",
+    "a coat made of clay",
+    "a coat made of clay",
+    "a coat made of clay"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 2
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 3
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cu32-choir-robe-of-feathers-hats": {
+   "replaced": "a glove made of glass",
+   "new": "a hat made of paper",
+   "grid": {
+    "heads": [
+     "a hat",
+     "a scarf"
+    ],
+    "qualifiers": [
+     "made of bread",
+     "made of glass",
+     "made of paper"
+    ],
+    "cells": {
+     "a hat made of bread": [
+      "made of bread",
+      "a hat"
+     ],
+     "a hat made of glass": [
+      "made of glass",
+      "a hat"
+     ],
+     "a hat made of paper": [
+      "made of paper",
+      "a hat"
+     ],
+     "a scarf made of bread": [
+      "made of bread",
+      "a scarf"
+     ],
+     "a scarf made of glass": [
+      "made of glass",
+      "a scarf"
+     ],
+     "a scarf made of paper": [
+      "made of paper",
+      "a scarf"
+     ]
+    }
+   },
+   "screen": [
+    "a hat made of bread",
+    "a hat made of bread",
+    "a hat made of bread",
+    "a hat made of bread",
+    "a hat made of bread"
+   ],
+   "guess": {
+    "final": {
+     "blind": 4,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b4-cu36-pupils-among-the-nets": {
+   "replaced": "a library on a ferry",
+   "new": "a hospital on a fishing boat",
+   "grid": {
+    "heads": [
+     "a fishing boat",
+     "a cargo ship"
+    ],
+    "qualifiers": [
+     "school on a",
+     "library on a",
+     "hospital on a"
+    ],
+    "cells": {
+     "a school on a fishing boat": [
+      "school on a",
+      "a fishing boat"
+     ],
+     "a library on a fishing boat": [
+      "library on a",
+      "a fishing boat"
+     ],
+     "a hospital on a fishing boat": [
+      "hospital on a",
+      "a fishing boat"
+     ],
+     "a school on a cargo ship": [
+      "school on a",
+      "a cargo ship"
+     ],
+     "a library on a cargo ship": [
+      "library on a",
+      "a cargo ship"
+     ],
+     "a hospital on a cargo ship": [
+      "hospital on a",
+      "a cargo ship"
+     ]
+    }
+   },
+   "screen": [
+    "a school on a fishing boat",
+    "a school on a fishing boat",
+    "a school on a fishing boat",
+    "a school on a fishing boat",
+    "a school on a fishing boat"
+   ],
+   "guess": {
+    "final": {
+     "blind": 1,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu39-lemurs-down-the-aisle": {
+   "replaced": "a circus on a ship",
+   "new": "a zoo on a train",
+   "grid": {
+    "heads": [
+     "a zoo",
+     "a library"
+    ],
+    "qualifiers": [
+     "on an airplane",
+     "on a ship",
+     "on a train"
+    ],
+    "cells": {
+     "a zoo on an airplane": [
+      "on an airplane",
+      "a zoo"
+     ],
+     "a zoo on a ship": [
+      "on a ship",
+      "a zoo"
+     ],
+     "a zoo on a train": [
+      "on a train",
+      "a zoo"
+     ],
+     "a library on an airplane": [
+      "on an airplane",
+      "a library"
+     ],
+     "a library on a ship": [
+      "on a ship",
+      "a library"
+     ],
+     "a library on a train": [
+      "on a train",
+      "a library"
+     ]
+    }
+   },
+   "screen": [
+    "a zoo on an airplane",
+    "a zoo on an airplane",
+    "a zoo on an airplane",
+    "a zoo on an airplane",
+    "a zoo on an airplane"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu47-feather-bridge-river": {
+   "replaced": "a boat made of glass",
+   "new": "a bridge made of paper",
+   "grid": {
+    "heads": [
+     "a bridge",
+     "a tower"
+    ],
+    "qualifiers": [
+     "made of feathers",
+     "made of glass",
+     "made of paper"
+    ],
+    "cells": {
+     "a bridge made of feathers": [
+      "made of feathers",
+      "a bridge"
+     ],
+     "a bridge made of glass": [
+      "made of glass",
+      "a bridge"
+     ],
+     "a bridge made of paper": [
+      "made of paper",
+      "a bridge"
+     ],
+     "a tower made of feathers": [
+      "made of feathers",
+      "a tower"
+     ],
+     "a tower made of glass": [
+      "made of glass",
+      "a tower"
+     ],
+     "a tower made of paper": [
+      "made of paper",
+      "a tower"
+     ]
+    }
+   },
+   "screen": [
+    "a bridge made of feathers",
+    "a bridge made of feathers",
+    "a bridge made of feathers",
+    "a bridge made of feathers",
+    "a bridge made of feathers"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu58-cocoa-plank-beach": {
+   "replaced": "a kayak made of ice",
+   "new": "a surfboard made of cheese",
+   "grid": {
+    "heads": [
+     "a surfboard",
+     "a skateboard"
+    ],
+    "qualifiers": [
+     "made of chocolate",
+     "made of ice",
+     "made of cheese"
+    ],
+    "cells": {
+     "a surfboard made of chocolate": [
+      "made of chocolate",
+      "a surfboard"
+     ],
+     "a surfboard made of ice": [
+      "made of ice",
+      "a surfboard"
+     ],
+     "a surfboard made of cheese": [
+      "made of cheese",
+      "a surfboard"
+     ],
+     "a skateboard made of chocolate": [
+      "made of chocolate",
+      "a skateboard"
+     ],
+     "a skateboard made of ice": [
+      "made of ice",
+      "a skateboard"
+     ],
+     "a skateboard made of cheese": [
+      "made of cheese",
+      "a skateboard"
+     ]
+    }
+   },
+   "screen": [
+    "a surfboard made of chocolate",
+    "a surfboard made of chocolate",
+    "a surfboard made of chocolate",
+    "a surfboard made of chocolate",
+    "a surfboard made of chocolate"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b4-cu59-falegname-disco-rovere": {
+   "replaced": "una mela di vetro",
+   "new": "una pizza di gomma",
+   "grid": {
+    "heads": [
+     "una pizza",
+     "una torta"
+    ],
+    "qualifiers": [
+     "di legno",
+     "di vetro",
+     "di gomma"
+    ],
+    "cells": {
+     "una pizza di legno": [
+      "di legno",
+      "una pizza"
+     ],
+     "una pizza di vetro": [
+      "di vetro",
+      "una pizza"
+     ],
+     "una pizza di gomma": [
+      "di gomma",
+      "una pizza"
+     ],
+     "una torta di legno": [
+      "di legno",
+      "una torta"
+     ],
+     "una torta di vetro": [
+      "di vetro",
+      "una torta"
+     ],
+     "una torta di gomma": [
+      "di gomma",
+      "una torta"
+     ]
+    }
+   },
+   "screen": [
+    "una pizza di legno",
+    "una pizza di legno",
+    "una pizza di legno",
+    "una pizza di legno",
+    "una pizza di legno"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 3
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq01-courtroom-gavel-split": {
+   "replaced": "a polished bell",
+   "new": "a rusty gavel",
+   "grid": {
+    "heads": [
+     "a gavel",
+     "a hammer"
+    ],
+    "qualifiers": [
+     "broken",
+     "polished",
+     "rusty"
+    ],
+    "cells": {
+     "a broken gavel": [
+      "broken",
+      "a gavel"
+     ],
+     "a polished gavel": [
+      "polished",
+      "a gavel"
+     ],
+     "a rusty gavel": [
+      "rusty",
+      "a gavel"
+     ],
+     "a broken hammer": [
+      "broken",
+      "a hammer"
+     ],
+     "a polished hammer": [
+      "polished",
+      "a hammer"
+     ],
+     "a rusty hammer": [
+      "rusty",
+      "a hammer"
+     ]
+    }
+   },
+   "screen": [
+    "a broken gavel",
+    "a broken gavel",
+    "a broken gavel",
+    "a broken gavel",
+    "a broken gavel"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq05-chess-clock-melted-pieces": {
+   "replaced": "shattered dice",
+   "new": "burnt chess pieces",
+   "grid": {
+    "heads": [
+     "chess pieces",
+     "checkers pieces"
+    ],
+    "qualifiers": [
+     "melted",
+     "shattered",
+     "burnt"
+    ],
+    "cells": {
+     "melted chess pieces": [
+      "melted",
+      "chess pieces"
+     ],
+     "shattered chess pieces": [
+      "shattered",
+      "chess pieces"
+     ],
+     "burnt chess pieces": [
+      "burnt",
+      "chess pieces"
+     ],
+     "melted checkers pieces": [
+      "melted",
+      "checkers pieces"
+     ],
+     "shattered checkers pieces": [
+      "shattered",
+      "checkers pieces"
+     ],
+     "burnt checkers pieces": [
+      "burnt",
+      "checkers pieces"
+     ]
+    }
+   },
+   "screen": [
+    "melted chess pieces",
+    "melted chess pieces",
+    "melted chess pieces",
+    "melted chess pieces",
+    "melted chess pieces"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 2,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq07-textile-mill-scissors": {
+   "replaced": "rusty pliers",
+   "new": "loose scissors",
+   "grid": {
+    "heads": [
+     "scissors",
+     "knife"
+    ],
+    "qualifiers": [
+     "blunt",
+     "rusty",
+     "loose"
+    ],
+    "cells": {
+     "blunt scissors": [
+      "blunt",
+      "scissors"
+     ],
+     "rusty scissors": [
+      "rusty",
+      "scissors"
+     ],
+     "loose scissors": [
+      "loose",
+      "scissors"
+     ],
+     "blunt knife": [
+      "blunt",
+      "knife"
+     ],
+     "rusty knife": [
+      "rusty",
+      "knife"
+     ],
+     "loose knife": [
+      "loose",
+      "knife"
+     ]
+    }
+   },
+   "screen": [
+    "blunt scissors",
+    "blunt scissors",
+    "blunt scissors",
+    "blunt scissors",
+    "blunt scissors"
+   ],
+   "guess": {
+    "final": {
+     "blind": 3,
+     "described": 1
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 0
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq10-cruzamento-guarda-apito": {
+   "replaced": "um radar quebrado",
+   "new": "um semáforo pintado",
+   "grid": {
+    "heads": [
+     "um semáforo",
+     "uma cancela"
+    ],
+    "qualifiers": [
+     "quebrado",
+     "novo",
+     "pintado"
+    ],
+    "cells": {
+     "um semáforo quebrado": [
+      "quebrado",
+      "um semáforo"
+     ],
+     "um semáforo novo": [
+      "novo",
+      "um semáforo"
+     ],
+     "um semáforo pintado": [
+      "pintado",
+      "um semáforo"
+     ],
+     "uma cancela quebrada": [
+      "quebrado",
+      "uma cancela"
+     ],
+     "uma cancela nova": [
+      "novo",
+      "uma cancela"
+     ],
+     "uma cancela pintada": [
+      "pintado",
+      "uma cancela"
+     ]
+    }
+   },
+   "screen": [
+    "um semáforo quebrado",
+    "um semáforo quebrado",
+    "um semáforo quebrado",
+    "um semáforo quebrado",
+    "um semáforo quebrado"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq11-ward-silver-beads": {
+   "replaced": "a new syringe",
+   "new": "a dirty thermometer",
+   "grid": {
+    "heads": [
+     "a thermometer",
+     "a stethoscope"
+    ],
+    "qualifiers": [
+     "broken",
+     "new",
+     "dirty"
+    ],
+    "cells": {
+     "a broken thermometer": [
+      "broken",
+      "a thermometer"
+     ],
+     "a new thermometer": [
+      "new",
+      "a thermometer"
+     ],
+     "a dirty thermometer": [
+      "dirty",
+      "a thermometer"
+     ],
+     "a broken stethoscope": [
+      "broken",
+      "a stethoscope"
+     ],
+     "a new stethoscope": [
+      "new",
+      "a stethoscope"
+     ],
+     "a dirty stethoscope": [
+      "dirty",
+      "a stethoscope"
+     ]
+    }
+   },
+   "screen": [
+    "a broken thermometer",
+    "a broken thermometer",
+    "a broken thermometer",
+    "a broken thermometer",
+    "a broken thermometer"
+   ],
+   "guess": {
+    "final": {
+     "blind": 1,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq12-building-site-jib-street": {
+   "replaced": "a rusted bulldozer",
+   "new": "a burning crane",
+   "grid": {
+    "heads": [
+     "a crane",
+     "an excavator"
+    ],
+    "qualifiers": [
+     "toppled",
+     "rusted",
+     "burning"
+    ],
+    "cells": {
+     "a toppled crane": [
+      "toppled",
+      "a crane"
+     ],
+     "a rusted crane": [
+      "rusted",
+      "a crane"
+     ],
+     "a burning crane": [
+      "burning",
+      "a crane"
+     ],
+     "a toppled excavator": [
+      "toppled",
+      "an excavator"
+     ],
+     "a rusted excavator": [
+      "rusted",
+      "an excavator"
+     ],
+     "a burning excavator": [
+      "burning",
+      "an excavator"
+     ]
+    }
+   },
+   "screen": [
+    "a toppled crane",
+    "a toppled crane",
+    "a toppled crane",
+    "a toppled crane",
+    "a toppled crane"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 1
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 1
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq15-divers-survey-passage": {
+   "replaced": "a frozen canyon",
+   "new": "a collapsed cave",
+   "grid": {
+    "heads": [
+     "a cave",
+     "a mine"
+    ],
+    "qualifiers": [
+     "flooded",
+     "frozen",
+     "collapsed"
+    ],
+    "cells": {
+     "a flooded cave": [
+      "flooded",
+      "a cave"
+     ],
+     "a frozen cave": [
+      "frozen",
+      "a cave"
+     ],
+     "a collapsed cave": [
+      "collapsed",
+      "a cave"
+     ],
+     "a flooded mine": [
+      "flooded",
+      "a mine"
+     ],
+     "a frozen mine": [
+      "frozen",
+      "a mine"
+     ],
+     "a collapsed mine": [
+      "collapsed",
+      "a mine"
+     ]
+    }
+   },
+   "screen": [
+    "a flooded cave",
+    "a flooded cave",
+    "a flooded cave",
+    "a flooded cave",
+    "a flooded cave"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq19-stakes-toppled-each-autumn": {
+   "replaced": "a frozen waterfall",
+   "new": "a toppling glacier",
+   "grid": {
+    "heads": [
+     "a glacier",
+     "a snowman"
+    ],
+    "qualifiers": [
+     "melting",
+     "frozen",
+     "toppling"
+    ],
+    "cells": {
+     "a melting glacier": [
+      "melting",
+      "a glacier"
+     ],
+     "a frozen glacier": [
+      "frozen",
+      "a glacier"
+     ],
+     "a toppling glacier": [
+      "toppling",
+      "a glacier"
+     ],
+     "a melting snowman": [
+      "melting",
+      "a snowman"
+     ],
+     "a frozen snowman": [
+      "frozen",
+      "a snowman"
+     ],
+     "a toppling snowman": [
+      "toppling",
+      "a snowman"
+     ]
+    }
+   },
+   "screen": [
+    "a melting glacier",
+    "a melting glacier",
+    "a melting glacier",
+    "a melting glacier",
+    "a melting glacier"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq23-gummy-clinic-smile": {
+   "replaced": "a barefoot tailor",
+   "new": "a bald dentist",
+   "grid": {
+    "heads": [
+     "a dentist",
+     "a baker"
+    ],
+    "qualifiers": [
+     "toothless",
+     "barefoot",
+     "bald"
+    ],
+    "cells": {
+     "a toothless dentist": [
+      "toothless",
+      "a dentist"
+     ],
+     "a barefoot dentist": [
+      "barefoot",
+      "a dentist"
+     ],
+     "a bald dentist": [
+      "bald",
+      "a dentist"
+     ],
+     "a toothless baker": [
+      "toothless",
+      "a baker"
+     ],
+     "a barefoot baker": [
+      "barefoot",
+      "a baker"
+     ],
+     "a bald baker": [
+      "bald",
+      "a baker"
+     ]
+    }
+   },
+   "screen": [
+    "a toothless dentist",
+    "a toothless dentist",
+    "a toothless dentist",
+    "a toothless dentist",
+    "a toothless dentist"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq28-courthouse-steps-resoler": {
+   "replaced": "a bald wigmaker",
+   "new": "a shaggy cobbler",
+   "grid": {
+    "heads": [
+     "a cobbler",
+     "a barber"
+    ],
+    "qualifiers": [
+     "barefoot",
+     "bald",
+     "shaggy"
+    ],
+    "cells": {
+     "a barefoot cobbler": [
+      "barefoot",
+      "a cobbler"
+     ],
+     "a bald cobbler": [
+      "bald",
+      "a cobbler"
+     ],
+     "a shaggy cobbler": [
+      "shaggy",
+      "a cobbler"
+     ],
+     "a barefoot barber": [
+      "barefoot",
+      "a barber"
+     ],
+     "a bald barber": [
+      "bald",
+      "a barber"
+     ],
+     "a shaggy barber": [
+      "shaggy",
+      "a barber"
+     ]
+    }
+   },
+   "screen": [
+    "a barefoot cobbler",
+    "a barefoot cobbler",
+    "a barefoot cobbler",
+    "a barefoot cobbler",
+    "a barefoot cobbler"
+   ],
+   "guess": {
+    "final": {
+     "blind": 1,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 1,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq29-courtroom-evidence-car-dented": {
+   "replaced": "a polished boat",
+   "new": "a rusty car",
+   "grid": {
+    "heads": [
+     "a car",
+     "a bicycle"
+    ],
+    "qualifiers": [
+     "wrecked",
+     "polished",
+     "rusty"
+    ],
+    "cells": {
+     "a wrecked car": [
+      "wrecked",
+      "a car"
+     ],
+     "a polished car": [
+      "polished",
+      "a car"
+     ],
+     "a rusty car": [
+      "rusty",
+      "a car"
+     ],
+     "a wrecked bicycle": [
+      "wrecked",
+      "a bicycle"
+     ],
+     "a polished bicycle": [
+      "polished",
+      "a bicycle"
+     ],
+     "a rusty bicycle": [
+      "rusty",
+      "a bicycle"
+     ]
+    }
+   },
+   "screen": [
+    "a wrecked car",
+    "a wrecked car",
+    "a wrecked car",
+    "a wrecked car",
+    "a wrecked car"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq30-museum-hangar-grounded-wings": {
+   "replaced": "a stalled sailboat",
+   "new": "a capsized airplane",
+   "grid": {
+    "heads": [
+     "an airplane",
+     "a helicopter"
+    ],
+    "qualifiers": [
+     "crashed",
+     "stalled",
+     "capsized"
+    ],
+    "cells": {
+     "a crashed airplane": [
+      "crashed",
+      "an airplane"
+     ],
+     "a stalled airplane": [
+      "stalled",
+      "an airplane"
+     ],
+     "a capsized airplane": [
+      "capsized",
+      "an airplane"
+     ],
+     "a crashed helicopter": [
+      "crashed",
+      "a helicopter"
+     ],
+     "a stalled helicopter": [
+      "stalled",
+      "a helicopter"
+     ],
+     "a capsized helicopter": [
+      "capsized",
+      "a helicopter"
+     ]
+    }
+   },
+   "screen": [
+    "a crashed airplane",
+    "a crashed airplane",
+    "a crashed airplane",
+    "a crashed airplane",
+    "a crashed airplane"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq38-archivio-cactus-congelato": {
+   "replaced": "un bambù bruciato",
+   "new": "un cactus allagato",
+   "grid": {
+    "heads": [
+     "un cactus",
+     "un girasole"
+    ],
+    "qualifiers": [
+     "congelato",
+     "bruciato",
+     "allagato"
+    ],
+    "cells": {
+     "un cactus congelato": [
+      "congelato",
+      "un cactus"
+     ],
+     "un cactus bruciato": [
+      "bruciato",
+      "un cactus"
+     ],
+     "un cactus allagato": [
+      "allagato",
+      "un cactus"
+     ],
+     "un girasole congelato": [
+      "congelato",
+      "un girasole"
+     ],
+     "un girasole bruciato": [
+      "bruciato",
+      "un girasole"
+     ],
+     "un girasole allagato": [
+      "allagato",
+      "un girasole"
+     ]
+    }
+   },
+   "screen": [
+    "un cactus congelato",
+    "un cactus congelato",
+    "un cactus congelato",
+    "un cactus congelato",
+    "un cactus congelato"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq43-archivists-wading-shelves": {
+   "replaced": "a burned bookshop",
+   "new": "a collapsed library",
+   "grid": {
+    "heads": [
+     "a library",
+     "a museum"
+    ],
+    "qualifiers": [
+     "flooded",
+     "burned",
+     "collapsed"
+    ],
+    "cells": {
+     "a flooded library": [
+      "flooded",
+      "a library"
+     ],
+     "a burned library": [
+      "burned",
+      "a library"
+     ],
+     "a collapsed library": [
+      "collapsed",
+      "a library"
+     ],
+     "a flooded museum": [
+      "flooded",
+      "a museum"
+     ],
+     "a burned museum": [
+      "burned",
+      "a museum"
+     ],
+     "a collapsed museum": [
+      "collapsed",
+      "a museum"
+     ]
+    }
+   },
+   "screen": [
+    "a flooded library",
+    "a flooded library",
+    "a flooded library",
+    "a flooded library",
+    "a flooded library"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 3,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq48-quirofano-con-maleza": {
+   "replaced": "un cine incendiado",
+   "new": "un hospital embrujado",
+   "grid": {
+    "heads": [
+     "un hospital",
+     "un hotel"
+    ],
+    "qualifiers": [
+     "abandonado",
+     "incendiado",
+     "embrujado"
+    ],
+    "cells": {
+     "un hospital abandonado": [
+      "abandonado",
+      "un hospital"
+     ],
+     "un hospital incendiado": [
+      "incendiado",
+      "un hospital"
+     ],
+     "un hospital embrujado": [
+      "embrujado",
+      "un hospital"
+     ],
+     "un hotel abandonado": [
+      "abandonado",
+      "un hotel"
+     ],
+     "un hotel incendiado": [
+      "incendiado",
+      "un hotel"
+     ],
+     "un hotel embrujado": [
+      "embrujado",
+      "un hotel"
+     ]
+    }
+   },
+   "screen": [
+    "un hospital abandonado",
+    "un hospital abandonado",
+    "un hospital abandonado",
+    "un hospital abandonado",
+    "un hospital abandonado"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq51-bank-director-coffee-splash": {
+   "replaced": "a wrinkled scarf",
+   "new": "a torn tie",
+   "grid": {
+    "heads": [
+     "a tie",
+     "a shirt"
+    ],
+    "qualifiers": [
+     "stained",
+     "wrinkled",
+     "torn"
+    ],
+    "cells": {
+     "a stained tie": [
+      "stained",
+      "a tie"
+     ],
+     "a wrinkled tie": [
+      "wrinkled",
+      "a tie"
+     ],
+     "a torn tie": [
+      "torn",
+      "a tie"
+     ],
+     "a stained shirt": [
+      "stained",
+      "a shirt"
+     ],
+     "a wrinkled shirt": [
+      "wrinkled",
+      "a shirt"
+     ],
+     "a torn shirt": [
+      "torn",
+      "a shirt"
+     ]
+    }
+   },
+   "screen": [
+    "a stained tie",
+    "a stained tie",
+    "a stained tie",
+    "a stained tie",
+    "a stained tie"
+   ],
+   "guess": {
+    "final": {
+     "blind": 1,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 4,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq53-rugby-winger-clay-studs": {
+   "replaced": "a wet coat",
+   "new": "a dusty boot",
+   "grid": {
+    "heads": [
+     "a boot",
+     "a glove"
+    ],
+    "qualifiers": [
+     "muddy",
+     "wet",
+     "dusty"
+    ],
+    "cells": {
+     "a muddy boot": [
+      "muddy",
+      "a boot"
+     ],
+     "a wet boot": [
+      "wet",
+      "a boot"
+     ],
+     "a dusty boot": [
+      "dusty",
+      "a boot"
+     ],
+     "a muddy glove": [
+      "muddy",
+      "a glove"
+     ],
+     "a wet glove": [
+      "wet",
+      "a glove"
+     ],
+     "a dusty glove": [
+      "dusty",
+      "a glove"
+     ]
+    }
+   },
+   "screen": [
+    "a muddy boot",
+    "a muddy boot",
+    "a muddy boot",
+    "a muddy boot",
+    "a muddy boot"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 4
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq56-passport-office-ragged-banner": {
+   "replaced": "a faded blanket",
+   "new": "a stained flag",
+   "grid": {
+    "heads": [
+     "a flag",
+     "a curtain"
+    ],
+    "qualifiers": [
+     "tattered",
+     "faded",
+     "stained"
+    ],
+    "cells": {
+     "a tattered flag": [
+      "tattered",
+      "a flag"
+     ],
+     "a faded flag": [
+      "faded",
+      "a flag"
+     ],
+     "a stained flag": [
+      "stained",
+      "a flag"
+     ],
+     "a tattered curtain": [
+      "tattered",
+      "a curtain"
+     ],
+     "a faded curtain": [
+      "faded",
+      "a curtain"
+     ],
+     "a stained curtain": [
+      "stained",
+      "a curtain"
+     ]
+    }
+   },
+   "screen": [
+    "a tattered flag",
+    "a tattered flag",
+    "a tattered flag",
+    "a tattered flag",
+    "a tattered flag"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq57-gummy-tank-predator": {
+   "replaced": "a blind snake",
+   "new": "a tailless shark",
+   "grid": {
+    "heads": [
+     "a shark",
+     "a crocodile"
+    ],
+    "qualifiers": [
+     "toothless",
+     "blind",
+     "tailless"
+    ],
+    "cells": {
+     "a toothless shark": [
+      "toothless",
+      "a shark"
+     ],
+     "a blind shark": [
+      "blind",
+      "a shark"
+     ],
+     "a tailless shark": [
+      "tailless",
+      "a shark"
+     ],
+     "a toothless crocodile": [
+      "toothless",
+      "a crocodile"
+     ],
+     "a blind crocodile": [
+      "blind",
+      "a crocodile"
+     ],
+     "a tailless crocodile": [
+      "tailless",
+      "a crocodile"
+     ]
+    }
+   },
+   "screen": [
+    "a toothless shark",
+    "a toothless shark",
+    "a toothless shark",
+    "a toothless shark",
+    "a toothless shark"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq58-stuck-in-starting-gate": {
+   "replaced": "a tiny cat",
+   "new": "a sleepy horse",
+   "grid": {
+    "heads": [
+     "a horse",
+     "a dog"
+    ],
+    "qualifiers": [
+     "fat",
+     "tiny",
+     "sleepy"
+    ],
+    "cells": {
+     "a fat horse": [
+      "fat",
+      "a horse"
+     ],
+     "a tiny horse": [
+      "tiny",
+      "a horse"
+     ],
+     "a sleepy horse": [
+      "sleepy",
+      "a horse"
+     ],
+     "a fat dog": [
+      "fat",
+      "a dog"
+     ],
+     "a tiny dog": [
+      "tiny",
+      "a dog"
+     ],
+     "a sleepy dog": [
+      "sleepy",
+      "a dog"
+     ]
+    }
+   },
+   "screen": [
+    "a fat horse",
+    "a fat horse",
+    "a fat horse",
+    "a fat horse",
+    "a fat horse"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 0
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cq61-trembling-maned-cargo": {
+   "replaced": "a greedy bear",
+   "new": "a lazy lion",
+   "grid": {
+    "heads": [
+     "a lion",
+     "a wolf"
+    ],
+    "qualifiers": [
+     "cowardly",
+     "greedy",
+     "lazy"
+    ],
+    "cells": {
+     "a cowardly lion": [
+      "cowardly",
+      "a lion"
+     ],
+     "a greedy lion": [
+      "greedy",
+      "a lion"
+     ],
+     "a lazy lion": [
+      "lazy",
+      "a lion"
+     ],
+     "a cowardly wolf": [
+      "cowardly",
+      "a wolf"
+     ],
+     "a greedy wolf": [
+      "greedy",
+      "a wolf"
+     ],
+     "a lazy wolf": [
+      "lazy",
+      "a wolf"
+     ]
+    }
+   },
+   "screen": [
+    "a cowardly lion",
+    "a cowardly lion",
+    "a cowardly lion",
+    "a cowardly lion",
+    "a cowardly lion"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 4
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 1
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq66-theatre-dropped-scalpel": {
+   "replaced": "a forgetful pilot",
+   "new": "a nervous surgeon",
+   "grid": {
+    "heads": [
+     "a surgeon",
+     "a dentist"
+    ],
+    "qualifiers": [
+     "clumsy",
+     "forgetful",
+     "nervous"
+    ],
+    "cells": {
+     "a clumsy surgeon": [
+      "clumsy",
+      "a surgeon"
+     ],
+     "a forgetful surgeon": [
+      "forgetful",
+      "a surgeon"
+     ],
+     "a nervous surgeon": [
+      "nervous",
+      "a surgeon"
+     ],
+     "a clumsy dentist": [
+      "clumsy",
+      "a dentist"
+     ],
+     "a forgetful dentist": [
+      "forgetful",
+      "a dentist"
+     ],
+     "a nervous dentist": [
+      "nervous",
+      "a dentist"
+     ]
+    }
+   },
+   "screen": [
+    "a clumsy surgeon",
+    "a clumsy surgeon",
+    "a clumsy surgeon",
+    "a clumsy surgeon",
+    "a clumsy surgeon"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cq68-pequeno-guarda-redes-final": {
+   "replaced": "um atacante lento",
+   "new": "um goleiro magro",
+   "grid": {
+    "heads": [
+     "um goleiro",
+     "um zagueiro"
+    ],
+    "qualifiers": [
+     "baixo",
+     "lento",
+     "magro"
+    ],
+    "cells": {
+     "um goleiro baixo": [
+      "baixo",
+      "um goleiro"
+     ],
+     "um goleiro lento": [
+      "lento",
+      "um goleiro"
+     ],
+     "um goleiro magro": [
+      "magro",
+      "um goleiro"
+     ],
+     "um zagueiro baixo": [
+      "baixo",
+      "um zagueiro"
+     ],
+     "um zagueiro lento": [
+      "lento",
+      "um zagueiro"
+     ],
+     "um zagueiro magro": [
+      "magro",
+      "um zagueiro"
+     ]
+    }
+   },
+   "screen": [
+    "um goleiro baixo",
+    "um goleiro baixo",
+    "um goleiro baixo",
+    "um goleiro baixo",
+    "um goleiro baixo"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu16-judge-hammer-of-ice": {
+   "replaced": "a bell made of glass",
+   "new": "a gavel made of wax",
+   "grid": {
+    "heads": [
+     "a gavel",
+     "a hammer"
+    ],
+    "qualifiers": [
+     "made of ice",
+     "made of glass",
+     "made of wax"
+    ],
+    "cells": {
+     "a gavel made of ice": [
+      "made of ice",
+      "a gavel"
+     ],
+     "a gavel made of glass": [
+      "made of glass",
+      "a gavel"
+     ],
+     "a gavel made of wax": [
+      "made of wax",
+      "a gavel"
+     ],
+     "a hammer made of ice": [
+      "made of ice",
+      "a hammer"
+     ],
+     "a hammer made of glass": [
+      "made of glass",
+      "a hammer"
+     ],
+     "a hammer made of wax": [
+      "made of wax",
+      "a hammer"
+     ]
+    }
+   },
+   "screen": [
+    "a gavel made of ice",
+    "a gavel made of ice",
+    "a gavel made of ice",
+    "a gavel made of ice",
+    "a gavel made of ice"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu17-stetho-chocolat": {
+   "replaced": "un scalpel en caramel",
+   "new": "un stéthoscope en sucre",
+   "grid": {
+    "heads": [
+     "un stéthoscope",
+     "un thermomètre"
+    ],
+    "qualifiers": [
+     "en chocolat",
+     "en caramel",
+     "en sucre"
+    ],
+    "cells": {
+     "un stéthoscope en chocolat": [
+      "en chocolat",
+      "un stéthoscope"
+     ],
+     "un stéthoscope en caramel": [
+      "en caramel",
+      "un stéthoscope"
+     ],
+     "un stéthoscope en sucre": [
+      "en sucre",
+      "un stéthoscope"
+     ],
+     "un thermomètre en chocolat": [
+      "en chocolat",
+      "un thermomètre"
+     ],
+     "un thermomètre en caramel": [
+      "en caramel",
+      "un thermomètre"
+     ],
+     "un thermomètre en sucre": [
+      "en sucre",
+      "un thermomètre"
+     ]
+    }
+   },
+   "screen": [
+    "un stéthoscope en chocolat",
+    "un stéthoscope en chocolat",
+    "un stéthoscope en chocolat",
+    "un stéthoscope en chocolat",
+    "un stéthoscope en chocolat"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 2
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 1
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu20-handschuhe-aus-honig": {
+   "replaced": "Hüte aus Wachs",
+   "new": "Handschuhe aus Sirup",
+   "grid": {
+    "heads": [
+     "Handschuhe",
+     "Socken"
+    ],
+    "qualifiers": [
+     "aus honig",
+     "aus wachs",
+     "aus sirup"
+    ],
+    "cells": {
+     "Handschuhe aus Honig": [
+      "aus honig",
+      "Handschuhe"
+     ],
+     "Handschuhe aus Wachs": [
+      "aus wachs",
+      "Handschuhe"
+     ],
+     "Handschuhe aus Sirup": [
+      "aus sirup",
+      "Handschuhe"
+     ],
+     "Socken aus Honig": [
+      "aus honig",
+      "Socken"
+     ],
+     "Socken aus Wachs": [
+      "aus wachs",
+      "Socken"
+     ],
+     "Socken aus Sirup": [
+      "aus sirup",
+      "Socken"
+     ]
+    }
+   },
+   "screen": [
+    "Handschuhe aus Honig",
+    "Handschuhe aus Honig",
+    "Handschuhe aus Honig",
+    "Handschuhe aus Honig",
+    "Handschuhe aus Honig"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu29-frozen-bench-of-justice": {
+   "replaced": "a lamp made of glass",
+   "new": "a desk made of sand",
+   "grid": {
+    "heads": [
+     "a desk",
+     "a chair"
+    ],
+    "qualifiers": [
+     "made of ice",
+     "made of glass",
+     "made of sand"
+    ],
+    "cells": {
+     "a desk made of ice": [
+      "made of ice",
+      "a desk"
+     ],
+     "a desk made of glass": [
+      "made of glass",
+      "a desk"
+     ],
+     "a desk made of sand": [
+      "made of sand",
+      "a desk"
+     ],
+     "a chair made of ice": [
+      "made of ice",
+      "a chair"
+     ],
+     "a chair made of glass": [
+      "made of glass",
+      "a chair"
+     ],
+     "a chair made of sand": [
+      "made of sand",
+      "a chair"
+     ]
+    }
+   },
+   "screen": [
+    "a desk made of ice",
+    "a desk made of ice",
+    "a desk made of ice",
+    "a desk made of ice",
+    "a desk made of ice"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 0
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu30-banker-transparent-knot": {
+   "replaced": "a belt made of wood",
+   "new": "a necktie made of paper",
+   "grid": {
+    "heads": [
+     "a necktie",
+     "a scarf"
+    ],
+    "qualifiers": [
+     "made of glass",
+     "made of wood",
+     "made of paper"
+    ],
+    "cells": {
+     "a necktie made of glass": [
+      "made of glass",
+      "a necktie"
+     ],
+     "a necktie made of wood": [
+      "made of wood",
+      "a necktie"
+     ],
+     "a necktie made of paper": [
+      "made of paper",
+      "a necktie"
+     ],
+     "a scarf made of glass": [
+      "made of glass",
+      "a scarf"
+     ],
+     "a scarf made of wood": [
+      "made of wood",
+      "a scarf"
+     ],
+     "a scarf made of paper": [
+      "made of paper",
+      "a scarf"
+     ]
+    }
+   },
+   "screen": [
+    "a necktie made of glass",
+    "a necktie made of glass",
+    "a necktie made of glass",
+    "a necktie made of glass",
+    "a necktie made of glass"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 5
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 5
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu32-folded-sheet-express": {
+   "replaced": "a chair made of glass",
+   "new": "a train made of wood",
+   "grid": {
+    "heads": [
+     "a train",
+     "a boat"
+    ],
+    "qualifiers": [
+     "made of paper",
+     "made of glass",
+     "made of wood"
+    ],
+    "cells": {
+     "a train made of paper": [
+      "made of paper",
+      "a train"
+     ],
+     "a train made of glass": [
+      "made of glass",
+      "a train"
+     ],
+     "a train made of wood": [
+      "made of wood",
+      "a train"
+     ],
+     "a boat made of paper": [
+      "made of paper",
+      "a boat"
+     ],
+     "a boat made of glass": [
+      "made of glass",
+      "a boat"
+     ],
+     "a boat made of wood": [
+      "made of wood",
+      "a boat"
+     ]
+    }
+   },
+   "screen": [
+    "a train made of paper",
+    "a train made of paper",
+    "a train made of paper",
+    "a train made of paper",
+    "a train made of paper"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 1
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu33-granite-fringe-exhibit": {
+   "replaced": "a hat made of glass",
+   "new": "a scarf made of paper",
+   "grid": {
+    "heads": [
+     "a scarf",
+     "a glove"
+    ],
+    "qualifiers": [
+     "made of stone",
+     "made of glass",
+     "made of paper"
+    ],
+    "cells": {
+     "a scarf made of stone": [
+      "made of stone",
+      "a scarf"
+     ],
+     "a scarf made of glass": [
+      "made of glass",
+      "a scarf"
+     ],
+     "a scarf made of paper": [
+      "made of paper",
+      "a scarf"
+     ],
+     "a glove made of stone": [
+      "made of stone",
+      "a glove"
+     ],
+     "a glove made of glass": [
+      "made of glass",
+      "a glove"
+     ],
+     "a glove made of paper": [
+      "made of paper",
+      "a glove"
+     ]
+    }
+   },
+   "screen": [
+    "a scarf made of stone",
+    "a scarf made of stone",
+    "a scarf made of stone",
+    "a scarf made of stone",
+    "a scarf made of stone"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 4
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 3
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu35-chemist-cheddar-garment": {
+   "replaced": "a raincoat made of bread",
+   "new": "a lab coat made of chocolate",
+   "grid": {
+    "heads": [
+     "a lab coat",
+     "an apron"
+    ],
+    "qualifiers": [
+     "made of cheese",
+     "made of bread",
+     "made of chocolate"
+    ],
+    "cells": {
+     "a lab coat made of cheese": [
+      "made of cheese",
+      "a lab coat"
+     ],
+     "a lab coat made of bread": [
+      "made of bread",
+      "a lab coat"
+     ],
+     "a lab coat made of chocolate": [
+      "made of chocolate",
+      "a lab coat"
+     ],
+     "an apron made of cheese": [
+      "made of cheese",
+      "an apron"
+     ],
+     "an apron made of bread": [
+      "made of bread",
+      "an apron"
+     ],
+     "an apron made of chocolate": [
+      "made of chocolate",
+      "an apron"
+     ]
+    }
+   },
+   "screen": [
+    "a lab coat made of cheese",
+    "a lab coat made of cheese",
+    "a lab coat made of cheese",
+    "a lab coat made of cheese",
+    "a lab coat made of cheese"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 0
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu43-wobbling-crossroads-signal": {
+   "replaced": "a bench made of chocolate",
+   "new": "a traffic light made of ice",
+   "grid": {
+    "heads": [
+     "a traffic light",
+     "a mailbox"
+    ],
+    "qualifiers": [
+     "made of jelly",
+     "made of chocolate",
+     "made of ice"
+    ],
+    "cells": {
+     "a traffic light made of jelly": [
+      "made of jelly",
+      "a traffic light"
+     ],
+     "a traffic light made of chocolate": [
+      "made of chocolate",
+      "a traffic light"
+     ],
+     "a traffic light made of ice": [
+      "made of ice",
+      "a traffic light"
+     ],
+     "a mailbox made of jelly": [
+      "made of jelly",
+      "a mailbox"
+     ],
+     "a mailbox made of chocolate": [
+      "made of chocolate",
+      "a mailbox"
+     ],
+     "a mailbox made of ice": [
+      "made of ice",
+      "a mailbox"
+     ]
+    }
+   },
+   "screen": [
+    "a traffic light made of jelly",
+    "a traffic light made of jelly",
+    "a traffic light made of jelly",
+    "a traffic light made of jelly",
+    "a traffic light made of jelly"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 3
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 3
+    }
+   },
+   "kept": false
+  },
+  "ah-b5-cu44-curbside-water-outlet-inspection": {
+   "replaced": "a parking meter made of paper",
+   "new": "a fire hydrant made of ice",
+   "grid": {
+    "heads": [
+     "a fire hydrant",
+     "a mailbox"
+    ],
+    "qualifiers": [
+     "made of glass",
+     "made of paper",
+     "made of ice"
+    ],
+    "cells": {
+     "a fire hydrant made of glass": [
+      "made of glass",
+      "a fire hydrant"
+     ],
+     "a fire hydrant made of paper": [
+      "made of paper",
+      "a fire hydrant"
+     ],
+     "a fire hydrant made of ice": [
+      "made of ice",
+      "a fire hydrant"
+     ],
+     "a mailbox made of glass": [
+      "made of glass",
+      "a mailbox"
+     ],
+     "a mailbox made of paper": [
+      "made of paper",
+      "a mailbox"
+     ],
+     "a mailbox made of ice": [
+      "made of ice",
+      "a mailbox"
+     ]
+    }
+   },
+   "screen": [
+    "a fire hydrant made of glass",
+    "a fire hydrant made of glass",
+    "a fire hydrant made of glass",
+    "a fire hydrant made of glass",
+    "a fire hydrant made of glass"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu47-coin-post-hourly-ticket": {
+   "replaced": "a mailbox made of ice",
+   "new": "a parking meter made of glass",
+   "grid": {
+    "heads": [
+     "a parking meter",
+     "a fire hydrant"
+    ],
+    "qualifiers": [
+     "made of chocolate",
+     "made of ice",
+     "made of glass"
+    ],
+    "cells": {
+     "a parking meter made of chocolate": [
+      "made of chocolate",
+      "a parking meter"
+     ],
+     "a parking meter made of ice": [
+      "made of ice",
+      "a parking meter"
+     ],
+     "a parking meter made of glass": [
+      "made of glass",
+      "a parking meter"
+     ],
+     "a fire hydrant made of chocolate": [
+      "made of chocolate",
+      "a fire hydrant"
+     ],
+     "a fire hydrant made of ice": [
+      "made of ice",
+      "a fire hydrant"
+     ],
+     "a fire hydrant made of glass": [
+      "made of glass",
+      "a fire hydrant"
+     ]
+    }
+   },
+   "screen": [
+    "a parking meter made of chocolate",
+    "a parking meter made of chocolate",
+    "a parking meter made of chocolate",
+    "a parking meter made of chocolate",
+    "a parking meter made of chocolate"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu57-lab-twisted-snack-clear": {
+   "replaced": "a croissant made of rubber",
+   "new": "a pretzel made of stone",
+   "grid": {
+    "heads": [
+     "a pretzel",
+     "a bagel"
+    ],
+    "qualifiers": [
+     "made of glass",
+     "made of rubber",
+     "made of stone"
+    ],
+    "cells": {
+     "a pretzel made of glass": [
+      "made of glass",
+      "a pretzel"
+     ],
+     "a pretzel made of rubber": [
+      "made of rubber",
+      "a pretzel"
+     ],
+     "a pretzel made of stone": [
+      "made of stone",
+      "a pretzel"
+     ],
+     "a bagel made of glass": [
+      "made of glass",
+      "a bagel"
+     ],
+     "a bagel made of rubber": [
+      "made of rubber",
+      "a bagel"
+     ],
+     "a bagel made of stone": [
+      "made of stone",
+      "a bagel"
+     ]
+    }
+   },
+   "screen": [
+    "a pretzel made of glass",
+    "a pretzel made of glass",
+    "a pretzel made of glass",
+    "a pretzel made of glass",
+    "a pretzel made of glass"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 3
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 2
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu58-court-exhibit-throwing-toy": {
+   "replaced": "a kite made of glass",
+   "new": "a frisbee made of chocolate",
+   "grid": {
+    "heads": [
+     "a frisbee",
+     "a boomerang"
+    ],
+    "qualifiers": [
+     "made of concrete",
+     "made of glass",
+     "made of chocolate"
+    ],
+    "cells": {
+     "a frisbee made of concrete": [
+      "made of concrete",
+      "a frisbee"
+     ],
+     "a frisbee made of glass": [
+      "made of glass",
+      "a frisbee"
+     ],
+     "a frisbee made of chocolate": [
+      "made of chocolate",
+      "a frisbee"
+     ],
+     "a boomerang made of concrete": [
+      "made of concrete",
+      "a boomerang"
+     ],
+     "a boomerang made of glass": [
+      "made of glass",
+      "a boomerang"
+     ],
+     "a boomerang made of chocolate": [
+      "made of chocolate",
+      "a boomerang"
+     ]
+    }
+   },
+   "screen": [
+    "a frisbee made of concrete",
+    "a frisbee made of concrete",
+    "a frisbee made of concrete",
+    "a frisbee made of concrete",
+    "a frisbee made of concrete"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 0
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu59-sala-espera-hexagonos": {
+   "replaced": "un balón de voleibol de queso",
+   "new": "un balón de fútbol de cristal",
+   "grid": {
+    "heads": [
+     "un balón de fútbol",
+     "un balón de baloncesto"
+    ],
+    "qualifiers": [
+     "de jabon",
+     "de queso",
+     "de cristal"
+    ],
+    "cells": {
+     "un balón de fútbol de jabón": [
+      "de jabon",
+      "un balón de fútbol"
+     ],
+     "un balón de fútbol de queso": [
+      "de queso",
+      "un balón de fútbol"
+     ],
+     "un balón de fútbol de cristal": [
+      "de cristal",
+      "un balón de fútbol"
+     ],
+     "un balón de baloncesto de jabón": [
+      "de jabon",
+      "un balón de baloncesto"
+     ],
+     "un balón de baloncesto de queso": [
+      "de queso",
+      "un balón de baloncesto"
+     ],
+     "un balón de baloncesto de cristal": [
+      "de cristal",
+      "un balón de baloncesto"
+     ]
+    }
+   },
+   "screen": [
+    "un balón de fútbol de jabón",
+    "un balón de fútbol de jabón",
+    "un balón de fútbol de jabón",
+    "un balón de fútbol de jabón",
+    "un balón de fútbol de jabón"
+   ],
+   "guess": {
+    "final": {
+     "blind": 0,
+     "described": 1
+    },
+    "confirm": {
+     "blind": 0,
+     "described": 0
+    }
+   },
+   "kept": true
+  },
+  "ah-b5-cu63-mill-swirled-candy-stick": {
+   "replaced": "a doughnut made of glass",
+   "new": "a lollipop made of stone",
+   "grid": {
+    "heads": [
+     "a lollipop",
+     "a cupcake"
+    ],
+    "qualifiers": [
+     "made of wool",
+     "made of glass",
+     "made of stone"
+    ],
+    "cells": {
+     "a lollipop made of wool": [
+      "made of wool",
+      "a lollipop"
+     ],
+     "a lollipop made of glass": [
+      "made of glass",
+      "a lollipop"
+     ],
+     "a lollipop made of stone": [
+      "made of stone",
+      "a lollipop"
+     ],
+     "a cupcake made of wool": [
+      "made of wool",
+      "a cupcake"
+     ],
+     "a cupcake made of glass": [
+      "made of glass",
+      "a cupcake"
+     ],
+     "a cupcake made of stone": [
+      "made of stone",
+      "a cupcake"
+     ]
+    }
+   },
+   "screen": [
+    "a lollipop made of wool",
+    "a lollipop made of wool",
+    "a lollipop made of wool",
+    "a lollipop made of wool",
+    "a lollipop made of wool"
+   ],
+   "guess": {
+    "final": {
+     "blind": 5,
+     "described": 1
+    },
+    "confirm": {
+     "blind": 5,
+     "described": 0
+    }
+   },
+   "kept": false
+  }
+ },
+ "swaps": {},
+ "dropped": {
+  "ah-b4-cq62-matou-sous-l-averse": "grid pass: the list does not fit the grid (1 / 2 / 2 compounds on B / on B' / off the grid)",
+  "ah-b4-cq04-january-yard-handle": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b4-cq05-dressing-table-reflection": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b4-cq15-seafront-white-fronds": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b4-cq18-desert-hum-crescent": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b4-cq21-geologist-ringing-trunk": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 0}, 'confirm': {'blind': 5, 'described': 3}})",
+  "ah-b4-cq28-scowling-red-nose": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 0}, 'confirm': {'blind': 4, 'described': 0}})",
+  "ah-b4-cq42-florist-prize-sky-colour": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b4-cq43-chef-ankle-deep-soup": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b4-cq46-stars-through-rafters": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 3}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b4-cq57-stranded-giant-on-the-sand": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b4-cu03-etable-seau-glace": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 4, 'described': 2}, 'confirm': {'blind': 5, 'described': 3}})",
+  "ah-b4-cu30-potter-clay-overcoat": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 2}, 'confirm': {'blind': 5, 'described': 3}})",
+  "ah-b4-cu32-choir-robe-of-feathers-hats": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 4, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b5-cq05-chess-clock-melted-pieces": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 2, 'described': 5}})",
+  "ah-b5-cq07-textile-mill-scissors": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 3, 'described': 1}, 'confirm': {'blind': 5, 'described': 0}})",
+  "ah-b5-cq10-cruzamento-guarda-apito": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b5-cq11-ward-silver-beads": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 1, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b5-cq12-building-site-jib-street": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 1}, 'confirm': {'blind': 5, 'described': 1}})",
+  "ah-b5-cq23-gummy-clinic-smile": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b5-cq28-courthouse-steps-resoler": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 1, 'described': 5}, 'confirm': {'blind': 1, 'described': 5}})",
+  "ah-b5-cq30-museum-hangar-grounded-wings": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b5-cq43-archivists-wading-shelves": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 3, 'described': 5}})",
+  "ah-b5-cq51-bank-director-coffee-splash": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 1, 'described': 5}, 'confirm': {'blind': 4, 'described': 5}})",
+  "ah-b5-cq53-rugby-winger-clay-studs": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 4}})",
+  "ah-b5-cq56-passport-office-ragged-banner": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b5-cq58-stuck-in-starting-gate": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 0}, 'confirm': {'blind': 5, 'described': 0}})",
+  "ah-b5-cq68-pequeno-guarda-redes-final": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 5}, 'confirm': {'blind': 0, 'described': 5}})",
+  "ah-b5-cu17-stetho-chocolat": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 2}, 'confirm': {'blind': 5, 'described': 1}})",
+  "ah-b5-cu29-frozen-bench-of-justice": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 0}, 'confirm': {'blind': 5, 'described': 0}})",
+  "ah-b5-cu30-banker-transparent-knot": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 5}, 'confirm': {'blind': 5, 'described': 5}})",
+  "ah-b5-cu33-granite-fringe-exhibit": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 4}, 'confirm': {'blind': 0, 'described': 3}})",
+  "ah-b5-cu35-chemist-cheddar-garment": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 0}, 'confirm': {'blind': 5, 'described': 0}})",
+  "ah-b5-cu43-wobbling-crossroads-signal": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 0, 'described': 3}, 'confirm': {'blind': 0, 'described': 3}})",
+  "ah-b5-cu63-mill-swirled-candy-stick": "grid pass: guessable from the new list in both measurements ({'final': {'blind': 5, 'described': 1}, 'confirm': {'blind': 5, 'described': 0}})"
+ },
+ "context_items": [
+  "ah-b1-ob04-aboriginal-tube-circular-breath",
+  "ah-b1-ob07-geology-rock-strike-tones",
+  "ah-b1-ob11-club-budget-mixed-pole",
+  "ah-b1-ob19-farmer-heated-pen-spoons",
+  "ah-b1-ob25-rink-referee-red-ocean",
+  "ah-b1-ob28-rail-inspector-heat-shimmer",
+  "ah-b1-ob48-festa-junina-milho-panela",
+  "ah-b1-ob49-storm-wading-pink-filter",
+  "ah-b1-cq13-ajedrez-loro-joven",
+  "ah-b1-cq19-drummer-no-rhythm",
+  "ah-b1-cq25-archive-ivy-windows",
+  "ah-b1-cq26-lab-tree-bare",
+  "ah-b1-cu01-frozen-concert-strings",
+  "ah-b1-cu06-palco-de-marmore",
+  "ah-b1-cu07-folded-chapel-ringer",
+  "ah-b1-cu23-ward-under-the-rotating-lamp",
+  "ah-b1-cu26-lanes-across-the-nave",
+  "ah-b1-cu27-akten-in-der-tiefe",
+  "ah-b2-ob02-mouth-frame-twang",
+  "ah-b2-ob08-barrister-vicarage-lawn-hoops",
+  "ah-b2-ob28-bank-clerk-green-sunset-flash",
+  "ah-b2-ob30-quarry-drum-trembling",
+  "ah-b2-ob31-jardin-cylindre-gradue",
+  "ah-b2-ob33-brew-kettle-floating-glass",
+  "ah-b2-cq03-meson-tomates-aplastados",
+  "ah-b2-cq16-priest-rows-down-the-nave",
+  "ah-b2-cu07-quarry-soft-tool",
+  "ah-b2-cu09-rotor-stacks-quiet",
+  "ah-b2-cu10-cuentas-bajo-cubierta",
+  "ah-b3-ob02-duck-billed-creek",
+  "ah-b3-ob06-criniera-scena",
+  "ah-b3-ob10-stinkender-baum-campus",
+  "ah-b3-ob23-stranded-river-bend",
+  "ah-b3-ob24-comboio-arcos-vale",
+  "ah-b3-ob25-dialect-ferry-cliffs",
+  "ah-b3-ob30-swamp-fan-boat-fishing",
+  "ah-b3-ob33-thai-cooking-three-wheeler",
+  "ah-b3-ob35-theatre-zeppelin-tour",
+  "ah-b3-ob42-bar-association-gala",
+  "ah-b3-ob43-chapel-ringed-tallow",
+  "ah-b3-ob48-mina-de-prata-andina",
+  "ah-b3-cq05-fairground-horses-mid-gallop",
+  "ah-b3-cq08-evidence-bag-bloom",
+  "ah-b3-cq12-plaza-basin-coins",
+  "ah-b3-cu03-lavoura-cacau-doce",
+  "ah-b3-cu05-geologist-swinging-granite",
+  "ah-b3-cu06-cumple-volante-horneado",
+  "ah-b3-cu17-granja-humo-pliegos",
+  "ah-b3-cu20-teatro-seduta-fondente",
+  "ah-b3-cu21-chapel-entrance-beeswax",
+  "ah-b3-cu23-barbells-before-the-bench",
+  "ah-b3-cu36-verdict-over-the-clouds"
+ ]
+}

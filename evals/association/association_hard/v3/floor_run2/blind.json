@@ -1,0 +1,5145 @@
+{
+ "family": "association_hard",
+ "variant": "blind",
+ "rule": "single pick",
+ "model": "claude-opus-5-5",
+ "prompt_version": "lucky-2026-09-16",
+ "instrument": "assoc-hard-v1+gate-h2+bank-v3",
+ "temperature": 1.0,
+ "seed": 20260908,
+ "limit": 0,
+ "n_lists": [
+  1
+ ],
+ "n_options": [
+  8
+ ],
+ "family_description": "which thing an unseen short scene evokes without naming it; some options are a thing with a qualifier, an unusual material or an unusual place",
+ "bank": "the bank after the one backfill (100 items; plan 0116 floor run 2)",
+ "analytic_floor": 0.125,
+ "aggregate": {
+  "mean": 0.01,
+  "std": 0.01224744871391589,
+  "majority": 0.0,
+  "exact": null,
+  "any_hit": null,
+  "mean_picks": null,
+  "by_n_concepts": null,
+  "per_draw": [
+   0.0,
+   0.01,
+   0.01,
+   0.03,
+   0.0
+  ],
+  "n_items": 100,
+  "n_draws": 5,
+  "n_api_fail": 0,
+  "invalid_rate": 0.0,
+  "n_invalid": 0
+ },
+ "spend_usd": 0.0,
+ "written": "2026-11-23T20:06:25+00:00",
+ "per_item": {
+  "ah-b1-ob04-aboriginal-tube-circular-breath": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a didgeridoo\n  2. a bullroarer\n  3. a bugle\n  4. a ram's horn shofar\n  5. a bagpipe\n  6. an alphorn\n  7. a panpipe\n  8. a conch shell",
+   "topic": "an Aboriginal wind instrument",
+   "kind": "obscure"
+  },
+  "ah-b1-ob07-geology-rock-strike-tones": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a marimbula\n  2. a celesta\n  3. a balafon\n  4. a lithophone\n  5. a crystallophone\n  6. a waterphone\n  7. a gyil\n  8. a metallophone",
+   "topic": "a stone percussion instrument",
+   "kind": "obscure"
+  },
+  "ah-b1-ob11-club-budget-mixed-pole": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. floorball\n  2. bossaball\n  3. netball\n  4. hurling\n  5. korfball\n  6. sepak takraw\n  7. tchoukball\n  8. kabaddi",
+   "topic": "a niche mixed-gender team sport",
+   "kind": "obscure"
+  },
+  "ah-b1-ob19-farmer-heated-pen-spoons": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. intarsia\n  2. marquetry\n  3. parquetry\n  4. boullework\n  5. xylography\n  6. japanning\n  7. ebonizing\n  8. pyrography",
+   "topic": "a wood decoration technique",
+   "kind": "obscure"
+  },
+  "ah-b1-ob25-rink-referee-red-ocean": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a bioluminescent bay\n  2. a sardine run\n  3. a coral spawning event\n  4. a whale fall\n  5. a jellyfish bloom\n  6. a marine heatwave\n  7. a coral bleaching event\n  8. a red tide",
+   "topic": "a marine biological phenomenon",
+   "kind": "obscure"
+  },
+  "ah-b1-ob28-rail-inspector-heat-shimmer": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a halo\n  2. a fogbow\n  3. a moonbow\n  4. a corona\n  5. a glory\n  6. a sun dog\n  7. a mirage\n  8. a green flash",
+   "topic": "an atmospheric optical phenomenon",
+   "kind": "obscure"
+  },
+  "ah-b1-ob48-festa-junina-milho-panela": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. o curau\n  2. o baião de dois\n  3. o vatapá\n  4. o tacacá\n  5. a tapioca\n  6. a pamonha\n  7. o acarajé\n  8. a moqueca",
+   "topic": "a prato regional brasileiro",
+   "kind": "obscure"
+  },
+  "ah-b1-ob49-storm-wading-pink-filter": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a heron\n  2. a marabou\n  3. a spoonbill\n  4. a shoebill\n  5. an ibis\n  6. a flamingo\n  7. a jacana\n  8. an avocet",
+   "topic": "a wading bird",
+   "kind": "obscure"
+  },
+  "ah-b1-cq13-ajedrez-loro-joven": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un gato\n  2. un pájaro anciano\n  3. un gato anciano\n  4. un gato herido\n  5. un pájaro recién nacido\n  6. un pájaro\n  7. un gato recién nacido\n  8. un pájaro herido",
+   "topic": "an animal con cualificador de edad",
+   "kind": "complex_qualified"
+  },
+  "ah-b1-cq19-drummer-no-rhythm": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": true,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. an offbeat singer\n  2. a singer\n  3. an offbeat drummer\n  4. a stage-shy singer\n  5. a stage-shy drummer\n  6. a drummer\n  7. a tone-deaf drummer\n  8. a tone-deaf singer",
+   "topic": "a musician with contradicting trait",
+   "kind": "complex_qualified"
+  },
+  "ah-b1-cq25-archive-ivy-windows": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a bridge\n  2. an overgrown bridge\n  3. a flooded building\n  4. an overgrown building\n  5. a flooded bridge\n  6. a building\n  7. a crumbling building\n  8. a crumbling bridge",
+   "topic": "a building with vegetation state",
+   "kind": "complex_qualified"
+  },
+  "ah-b1-cq26-lab-tree-bare": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": true,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a dead tree\n  2. a bush\n  3. a young tree\n  4. a dead bush\n  5. a flowering bush\n  6. a tree\n  7. a flowering tree\n  8. a young bush",
+   "topic": "a plant with state",
+   "kind": "complex_qualified"
+  },
+  "ah-b1-cu01-frozen-concert-strings": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a violin\n  2. a cello made of ice\n  3. a cello made of paper\n  4. a cello made of glass\n  5. a cello\n  6. a violin made of glass\n  7. a violin made of ice\n  8. a violin made of paper",
+   "topic": "an impossible-material instrument",
+   "kind": "complex_unnatural"
+  },
+  "ah-b1-cu06-palco-de-marmore": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. uma cortina de ferro\n  2. uma toalha de pedra\n  3. uma toalha de vidro\n  4. uma cortina de pedra\n  5. uma cortina de vidro\n  6. uma toalha de ferro\n  7. uma cortina\n  8. uma toalha",
+   "topic": "an objeto de material impossível",
+   "kind": "complex_unnatural"
+  },
+  "ah-b1-cu07-folded-chapel-ringer": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a bell made of glass\n  2. a drum made of paper\n  3. a drum made of wax\n  4. a bell\n  5. a drum\n  6. a drum made of glass\n  7. a bell made of wax\n  8. a bell made of paper",
+   "topic": "an impossible-material religious object",
+   "kind": "complex_unnatural"
+  },
+  "ah-b1-cu23-ward-under-the-rotating-lamp": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a hospital inside a lighthouse\n  2. a windmill\n  3. a bakery inside a windmill\n  4. a library inside a lighthouse\n  5. a lighthouse\n  6. a hospital inside a windmill\n  7. a library inside a windmill\n  8. a bakery inside a lighthouse",
+   "topic": "a medical institution in a tower",
+   "kind": "complex_unnatural"
+  },
+  "ah-b1-cu26-lanes-across-the-nave": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. an ice rink in a cathedral\n  2. an ice rink\n  3. a bowling alley in a mosque\n  4. a bowling alley in a cathedral\n  5. an ice rink in a mosque\n  6. a bowling alley\n  7. a bowling alley in a monastery\n  8. an ice rink in a monastery",
+   "topic": "a sports venue in a religious building",
+   "kind": "complex_unnatural"
+  },
+  "ah-b1-cu27-akten-in-der-tiefe": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. eine Bibliothek\n  2. eine Bibliothek in einem Zeppelin\n  3. eine Bibliothek in einem U-Boot\n  4. ein Archiv in einem Leuchtturm\n  5. eine Bibliothek in einem Leuchtturm\n  6. ein Archiv\n  7. ein Archiv in einem Zeppelin\n  8. ein Archiv in einem U-Boot",
+   "topic": "an Aktenverwahrung in einem Tauchfahrzeug",
+   "kind": "complex_unnatural"
+  },
+  "ah-b2-ob02-mouth-frame-twang": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a marimbula\n  2. a likembe\n  3. a hang drum\n  4. a mbira\n  5. a music box\n  6. a jaw harp\n  7. a sansula\n  8. a kalimba",
+   "topic": "a plucked idiophone",
+   "kind": "obscure"
+  },
+  "ah-b2-ob08-barrister-vicarage-lawn-hoops": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. quoits\n  2. badminton\n  3. kubb\n  4. horseshoes\n  5. pétanque\n  6. bocce\n  7. croquet\n  8. rounders",
+   "topic": "a lawn sport",
+   "kind": "obscure"
+  },
+  "ah-b2-ob28-bank-clerk-green-sunset-flash": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a glory\n  2. a circumzenithal arc\n  3. a fogbow\n  4. a sun dog\n  5. a green flash\n  6. an anticrepuscular ray\n  7. a Brocken spectre\n  8. a light pillar",
+   "topic": "an optical atmospheric phenomenon",
+   "kind": "obscure"
+  },
+  "ah-b2-ob30-quarry-drum-trembling": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a sonar scanner\n  2. a barometer\n  3. a Geiger counter\n  4. a compass\n  5. a lie detector\n  6. a metal detector\n  7. a seismograph\n  8. a weather vane",
+   "topic": "a geophysical recording instrument",
+   "kind": "obscure"
+  },
+  "ah-b2-ob31-jardin-cylindre-gradue": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un hygromètre\n  2. une girouette\n  3. un ballon-sonde\n  4. une manche à air\n  5. un baromètre\n  6. un pluviomètre\n  7. un anémomètre\n  8. un thermomètre",
+   "topic": "an instrument de météorologie",
+   "kind": "obscure"
+  },
+  "ah-b2-ob33-brew-kettle-floating-glass": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a pressure gauge\n  2. a manometer\n  3. a rain gauge\n  4. a thermometer\n  5. a voltmeter\n  6. a hydrometer\n  7. an anemometer\n  8. a barometer",
+   "topic": "a density measuring instrument",
+   "kind": "obscure"
+  },
+  "ah-b2-cq03-meson-tomates-aplastados": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un cuchillo desafilado\n  2. un machete oxidado\n  3. un machete\n  4. un cuchillo oxidado\n  5. un machete desafilado\n  6. un cuchillo\n  7. un machete roto\n  8. un cuchillo roto",
+   "topic": "a herramienta de cocina deteriorada",
+   "kind": "complex_qualified"
+  },
+  "ah-b2-cq16-priest-rows-down-the-nave": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a flooded church\n  2. an abandoned library\n  3. a church\n  4. a library\n  5. a flooded library\n  6. an abandoned church\n  7. a burning library\n  8. a burning church",
+   "topic": "a building in a surprising state",
+   "kind": "complex_qualified"
+  },
+  "ah-b2-cu07-quarry-soft-tool": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a pickaxe\n  2. a shovel made of paper\n  3. a pickaxe made of rubber\n  4. a shovel\n  5. a pickaxe made of paper\n  6. a pickaxe made of glass\n  7. a shovel made of glass\n  8. a shovel made of rubber",
+   "topic": "an everyday object of impossible material",
+   "kind": "complex_unnatural"
+  },
+  "ah-b2-cu09-rotor-stacks-quiet": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a bakery in a submarine\n  2. a bakery\n  3. a library in a hot-air balloon\n  4. a library in a helicopter\n  5. a library\n  6. a bakery in a helicopter\n  7. a bakery in a hot-air balloon\n  8. a library in a submarine",
+   "topic": "an institution inside a vehicle",
+   "kind": "complex_unnatural"
+  },
+  "ah-b2-cu10-cuentas-bajo-cubierta": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. una biblioteca en un dirigible\n  2. una farmacia en un dirigible\n  3. un dirigible\n  4. un banco en un submarino\n  5. un submarino\n  6. una farmacia en un submarino\n  7. un banco en un dirigible\n  8. una biblioteca en un submarino",
+   "topic": "an institución dentro de un vehículo",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-ob02-duck-billed-creek": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a long-beaked echidna\n  2. a platypus\n  3. an otter\n  4. a hedgehog\n  5. a pangolin\n  6. a short-beaked echidna\n  7. an anteater\n  8. a wombat",
+   "topic": "a monotreme mammal",
+   "kind": "obscure"
+  },
+  "ah-b3-ob06-criniera-scena": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un pesce leone\n  2. un pesce luna\n  3. un pesce martello\n  4. una murena\n  5. un cavalluccio marino\n  6. un pesce scatola\n  7. un pesce palla\n  8. un pesce pagliaccio",
+   "topic": "a specie di pesce",
+   "kind": "obscure"
+  },
+  "ah-b3-ob10-stinkender-baum-campus": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. ein Feigenbaum\n  2. ein Ginkgobaum\n  3. ein Olivenbaum\n  4. ein Walnussbaum\n  5. ein Zitronenbaum\n  6. ein Lorbeerbaum\n  7. ein Kirschbaum\n  8. ein Zedernbaum",
+   "topic": "a Baumart",
+   "kind": "obscure"
+  },
+  "ah-b3-ob23-stranded-river-bend": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a plunge pool\n  2. a crater lake\n  3. a sinkhole\n  4. a tarn\n  5. a kettle hole\n  6. a lagoon\n  7. a cenote\n  8. an oxbow lake",
+   "topic": "a landscape feature",
+   "kind": "obscure"
+  },
+  "ah-b3-ob24-comboio-arcos-vale": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. um aqueduto\n  2. um minarete\n  3. um campanário\n  4. um farol\n  5. um menir\n  6. um zigurate\n  7. um obelisco\n  8. um viaduto",
+   "topic": "an unusual structure",
+   "kind": "obscure"
+  },
+  "ah-b3-ob25-dialect-ferry-cliffs": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a fjord\n  2. a cirque\n  3. a drumlin\n  4. a cenote\n  5. a moraine\n  6. a butte\n  7. a tombolo\n  8. a ria",
+   "topic": "a landscape feature",
+   "kind": "obscure"
+  },
+  "ah-b3-ob30-swamp-fan-boat-fishing": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. an airboat\n  2. a hydrofoil\n  3. an outrigger\n  4. a coracle\n  5. a pirogue\n  6. an iceboat\n  7. a sampan\n  8. an umiak",
+   "topic": "a watercraft",
+   "kind": "obscure"
+  },
+  "ah-b3-ob33-thai-cooking-three-wheeler": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a tuk-tuk\n  2. a dolmus\n  3. a jeepney\n  4. a marshrutka\n  5. a matatu\n  6. a songthaew\n  7. a sidecar taxi\n  8. a chiva bus",
+   "topic": "a motor vehicle",
+   "kind": "obscure"
+  },
+  "ah-b3-ob35-theatre-zeppelin-tour": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a gyroplane\n  2. a flying boat\n  3. a gas balloon\n  4. an airship\n  5. a paraglider\n  6. a hot-air balloon\n  7. a hang glider\n  8. a sailplane",
+   "topic": "an aircraft",
+   "kind": "obscure"
+  },
+  "ah-b3-ob42-bar-association-gala": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a waistcoat chain\n  2. a pair of cufflinks\n  3. a boutonniere\n  4. a cummerbund\n  5. an ascot\n  6. a pair of spats\n  7. a shirt stud set\n  8. a pocket square",
+   "topic": "a formalwear accessory",
+   "kind": "obscure"
+  },
+  "ah-b3-ob43-chapel-ringed-tallow": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a joss-stick timer\n  2. a fuse clock\n  3. a rope clock\n  4. an incense clock\n  5. a candle clock\n  6. an oil-lamp clock\n  7. a dragon boat incense timer\n  8. a slow-match timer",
+   "topic": "a fire-based timekeeping device",
+   "kind": "obscure"
+  },
+  "ah-b3-ob48-mina-de-prata-andina": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. um suanpan\n  2. um schoty\n  3. um tchotki\n  4. um japamala\n  5. um misbaha\n  6. um sorobã\n  7. um komboskini\n  8. um quipu",
+   "topic": "a registo numérico de cordões com nós",
+   "kind": "obscure"
+  },
+  "ah-b3-cq05-fairground-horses-mid-gallop": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a deserted Ferris wheel\n  2. a Ferris wheel\n  3. a carousel\n  4. a flooded carousel\n  5. a flooded Ferris wheel\n  6. a broken Ferris wheel\n  7. a deserted carousel\n  8. a broken carousel",
+   "topic": "a fairground ride in a faulty state",
+   "kind": "complex_qualified"
+  },
+  "ah-b3-cq08-evidence-bag-bloom": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a rose\n  2. a frozen tulip\n  3. a tulip\n  4. a pressed tulip\n  5. a wilted rose\n  6. a wilted tulip\n  7. a frozen rose\n  8. a pressed rose",
+   "topic": "a flower in a decayed state",
+   "kind": "complex_qualified"
+  },
+  "ah-b3-cq12-plaza-basin-coins": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a frozen fountain\n  2. a birdbath\n  3. a cracked birdbath\n  4. a dry birdbath\n  5. a cracked fountain\n  6. a fountain\n  7. a frozen birdbath\n  8. a dry fountain",
+   "topic": "a garden feature without its usual water",
+   "kind": "complex_qualified"
+  },
+  "ah-b3-cu03-lavoura-cacau-doce": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. um barco\n  2. um barco de chocolate\n  3. um barco de gelo\n  4. um trator\n  5. um trator de chocolate\n  6. um trator de gelo\n  7. um trator de papel\n  8. um barco de papel",
+   "topic": "a veículo de material impossível",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu05-geologist-swinging-granite": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a sofa\n  2. a sofa made of glass\n  3. a hammock made of glass\n  4. a hammock\n  5. a hammock made of ice\n  6. a sofa made of ice\n  7. a hammock made of stone\n  8. a sofa made of stone",
+   "topic": "a furniture of impossible material",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu06-cumple-volante-horneado": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un coche de galleta\n  2. un barco\n  3. un coche\n  4. un barco de chocolate\n  5. un coche de chocolate\n  6. un barco de queso\n  7. un barco de galleta\n  8. un coche de queso",
+   "topic": "a vehículo de material imposible",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu17-granja-humo-pliegos": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. una chimenea de papel\n  2. una chimenea de cristal\n  3. una escalera de lana\n  4. una escalera de papel\n  5. una escalera de cristal\n  6. una escalera\n  7. una chimenea de lana\n  8. una chimenea",
+   "topic": "an elemento de edificio de material imposible",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu20-teatro-seduta-fondente": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. una fontana\n  2. una panchina di cioccolato\n  3. una panchina di formaggio\n  4. una fontana di formaggio\n  5. una panchina\n  6. una fontana di cioccolato\n  7. una fontana di burro\n  8. una panchina di burro",
+   "topic": "an arredo urbano di materiale impossibile",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu21-chapel-entrance-beeswax": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a door made of wax\n  2. a window made of wax\n  3. a window made of ice\n  4. a window\n  5. a window made of paper\n  6. a door made of ice\n  7. a door made of paper\n  8. a door",
+   "topic": "an impossible-material building element",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu23-barbells-before-the-bench": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a courtroom\n  2. a library inside a courtroom\n  3. a church\n  4. a gym inside a courtroom\n  5. a nightclub inside a courtroom\n  6. a nightclub inside a church\n  7. a gym inside a church\n  8. a library inside a church",
+   "topic": "a venue inside unrelated structure",
+   "kind": "complex_unnatural"
+  },
+  "ah-b3-cu36-verdict-over-the-clouds": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a classroom on a ship\n  2. a courtroom on a ship\n  3. a courtroom on a train\n  4. a classroom\n  5. a courtroom on an airplane\n  6. a courtroom\n  7. a classroom on a train\n  8. a classroom on an airplane",
+   "topic": "a public institution inside a vehicle",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-ob07-spinning-tablet-rain-ritual": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a hulusi\n  2. an ocarina\n  3. a theremin whistle\n  4. a shawm\n  5. a duduk\n  6. a didgeridoo\n  7. a bullroarer\n  8. a crumhorn",
+   "topic": "an aerophone",
+   "kind": "obscure"
+  },
+  "ah-b4-ob10-werkstatt-pfeile-kneipe": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. Kubb\n  2. Darts\n  3. Shuffleboard\n  4. Boule\n  5. Boccia\n  6. Curling\n  7. Cornhole\n  8. Hufeisenwerfen",
+   "topic": "a Präzisionswurfspiel",
+   "kind": "obscure"
+  },
+  "ah-b4-ob17-maschere-carro-viareggio": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. il kirigami\n  2. la quilling\n  3. la filigrana\n  4. il découpage\n  5. la legatoria\n  6. la cartapesta\n  7. l'origami\n  8. la marmorizzazione della carta",
+   "topic": "a tecnica artigianale della carta",
+   "kind": "obscure"
+  },
+  "ah-b4-ob18-grandpa-lathe-bowls": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. veneering\n  2. wood carving\n  3. whittling\n  4. joinery\n  5. pyrography\n  6. steam bending\n  7. marquetry\n  8. woodturning",
+   "topic": "a woodworking technique",
+   "kind": "obscure"
+  },
+  "ah-b4-ob23-rogue-swell-trawler-deck": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a rogue wave\n  2. a maelstrom\n  3. a seiche\n  4. a meteotsunami\n  5. a sneaker wave\n  6. a rip current\n  7. a storm surge\n  8. a tidal bore",
+   "topic": "an ocean phenomenon",
+   "kind": "obscure"
+  },
+  "ah-b4-ob34-bauernhof-warme-holzkiste": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. ein Butterfass\n  2. eine Rübenschneidemaschine\n  3. ein Brutkasten\n  4. eine Milchzentrifuge\n  5. eine Kartoffelquetsche\n  6. eine Häckselmaschine\n  7. eine Schrotmühle\n  8. ein Strohschneider",
+   "topic": "a landwirtschaftliches Gerät",
+   "kind": "obscure"
+  },
+  "ah-b4-ob36-gull-pillar-off-cliff": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a barrier bar\n  2. a wave-cut notch\n  3. a cuspate foreland\n  4. a spit\n  5. a geo\n  6. a tombolo\n  7. a sea stack\n  8. a blowhole",
+   "topic": "a coastal landform",
+   "kind": "obscure"
+  },
+  "ah-b4-ob58-rolling-dry-plant-storm": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a tumbleweed\n  2. a thistle\n  3. a maple samara\n  4. a sycamore seed\n  5. a milkweed pod\n  6. a cottonwood seed\n  7. a dandelion clock\n  8. a cattail head",
+   "topic": "a wind-dispersed plant",
+   "kind": "obscure"
+  },
+  "ah-b4-ob72-reed-boat-lake-fisher": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a hide boat\n  2. a bamboo raft\n  3. a basket boat\n  4. a plank boat\n  5. a log raft\n  6. a dugout canoe\n  7. a bark canoe\n  8. a reed boat",
+   "topic": "a traditional watercraft",
+   "kind": "obscure"
+  },
+  "ah-b4-ob76-chinese-sail-battens-junk": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a brigantine\n  2. a caravel\n  3. a ketch\n  4. a dhow\n  5. a felucca\n  6. a galleon\n  7. a sloop\n  8. a junk",
+   "topic": "a sailing ship",
+   "kind": "obscure"
+  },
+  "ah-b4-ob78-fan-propelled-cushion-shore": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a swamp buggy\n  2. a hovercraft\n  3. an airboat\n  4. an amphicar\n  5. a ground-effect vehicle\n  6. a hydrofoil\n  7. an amphibious tank\n  8. a DUKW",
+   "topic": "an amphibious vehicle",
+   "kind": "obscure"
+  },
+  "ah-b4-ob91-convento-guiso-goteo": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": true,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": true,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. una clepsidra\n  2. un nocturlabio\n  3. una meridiana\n  4. un torquetum\n  5. un gnomon\n  6. un merkhet\n  7. una ampolleta\n  8. un astrolabio",
+   "topic": "an ancient timekeeping device",
+   "kind": "obscure"
+  },
+  "ah-b4-cq11-stove-dribbling-whistle-pot": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a kettle\n  2. a toaster\n  3. a leaking toaster\n  4. a smoking toaster\n  5. a whistling kettle\n  6. a leaking kettle\n  7. a smoking kettle\n  8. a whistling toaster",
+   "topic": "a kitchen appliance in a state",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cq14-quarry-core-bit-worn-smooth": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a drill\n  2. a jammed saw\n  3. a rusty drill\n  4. a blunt saw\n  5. a rusty saw\n  6. a saw\n  7. a blunt drill\n  8. a jammed drill",
+   "topic": "a machine in a state",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cq16-farmyard-empty-shaft": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a muddy pond\n  2. a pond\n  3. a frozen pond\n  4. a dry well\n  5. a well\n  6. a dry pond\n  7. a muddy well\n  8. a frozen well",
+   "topic": "a farm structure in an empty state",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cq22-weeds-and-hammock": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a lazy fisherman\n  2. a farmer\n  3. a greedy farmer\n  4. a greedy fisherman\n  5. a fisherman\n  6. a clumsy fisherman\n  7. a clumsy farmer\n  8. a lazy farmer",
+   "topic": "an agricultural worker with a work-shy trait",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cq29-divers-reef-hull": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a burning plane\n  2. a sunken ship\n  3. a ship\n  4. a burning ship\n  5. a stranded plane\n  6. a plane\n  7. a sunken plane\n  8. a stranded ship",
+   "topic": "a vehicle in a surprising state",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cq32-chef-warm-milk": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a broken kettle\n  2. a noisy kettle\n  3. a noisy fridge\n  4. a cracked fridge\n  5. a broken fridge\n  6. a cracked kettle\n  7. a fridge\n  8. a kettle",
+   "topic": "a machine in a surprising state",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cq33-driveway-white-mound": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a bicycle\n  2. a snow-covered bicycle\n  3. a mud-covered car\n  4. a leaf-covered bicycle\n  5. a snow-covered car\n  6. a leaf-covered car\n  7. a mud-covered bicycle\n  8. a car",
+   "topic": "a vehicle in a surprising state",
+   "kind": "complex_qualified"
+  },
+  "ah-b4-cu04-drummer-jelly-kit": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a drum made of smoke\n  2. a violin made of glass\n  3. a violin made of smoke\n  4. a drum made of glass\n  5. a violin\n  6. a drum\n  7. a drum made of jelly\n  8. a violin made of jelly",
+   "topic": "a musical instrument of impossible material",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu10-misa-en-ruta": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un autobús\n  2. una iglesia en un tren\n  3. una escuela en un tren\n  4. un hospital en un autobús\n  5. una iglesia en un autobús\n  6. un hospital en un tren\n  7. un tren\n  8. una escuela en un autobús",
+   "topic": "an institución dentro de un vehículo",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu13-orli-sui-binari": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. un traghetto\n  2. una sartoria su un tram\n  3. una sartoria su un traghetto\n  4. una calzoleria su un traghetto\n  5. una barberia su un tram\n  6. una barberia su un traghetto\n  7. un tram\n  8. una calzoleria su un tram",
+   "topic": "a bottega dentro un veicolo",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu18-granite-woodwind-recital": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a drum made of ice\n  2. a drum\n  3. a drum made of glass\n  4. a flute made of glass\n  5. a flute\n  6. a flute made of stone\n  7. a drum made of stone\n  8. a flute made of ice",
+   "topic": "an impossible-material instrument",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu21-choir-paper-cymbals": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a drum made of glass\n  2. a drum made of paper\n  3. cymbals made of glass\n  4. a drum made of ice\n  5. cymbals made of ice\n  6. cymbals made of paper\n  7. a drum\n  8. cymbals",
+   "topic": "an impossible-material instrument",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu22-pews-beside-the-millstones": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      7
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a library inside a lighthouse\n  2. a church inside a lighthouse\n  3. a church inside a windmill\n  4. a bakery inside a lighthouse\n  5. a lighthouse\n  6. a bakery inside a windmill\n  7. a library inside a windmill\n  8. a windmill",
+   "topic": "an institution inside a structure",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu23-tickets-below-the-lamp": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a library inside a lighthouse\n  2. a cinema inside a lighthouse\n  3. a bakery inside a windmill\n  4. a windmill\n  5. a bakery inside a lighthouse\n  6. a library inside a windmill\n  7. a cinema inside a windmill\n  8. a lighthouse",
+   "topic": "a venue inside a structure",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu29-wax-sledge-on-the-farm": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a sled made of wax\n  2. a raft made of paper\n  3. a raft\n  4. a sled\n  5. a sled made of glass\n  6. a raft made of wax\n  7. a sled made of paper\n  8. a raft made of glass",
+   "topic": "an impossible-material vehicle",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu36-pupils-among-the-nets": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a library on a fishing boat\n  2. a hospital on a fishing boat\n  3. a school on a fishing boat\n  4. a cargo ship\n  5. a school on a cargo ship\n  6. a hospital on a cargo ship\n  7. a fishing boat\n  8. a library on a cargo ship",
+   "topic": "an educational venue in a working vessel",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu39-lemurs-down-the-aisle": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a library\n  2. a library on a train\n  3. a zoo on a train\n  4. a zoo\n  5. a zoo on an airplane\n  6. a library on an airplane\n  7. a library on a ship\n  8. a zoo on a ship",
+   "topic": "an animal park inside an aircraft",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu47-feather-bridge-river": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    5
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a bridge made of glass\n  2. a tower made of glass\n  3. a bridge made of paper\n  4. a bridge\n  5. a bridge made of feathers\n  6. a tower made of feathers\n  7. a tower made of paper\n  8. a tower",
+   "topic": "an impossible-material structure",
+   "kind": "complex_unnatural"
+  },
+  "ah-b4-cu58-cocoa-plank-beach": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a surfboard\n  2. a surfboard made of ice\n  3. a skateboard made of ice\n  4. a skateboard made of cheese\n  5. a surfboard made of cheese\n  6. a skateboard\n  7. a skateboard made of chocolate\n  8. a surfboard made of chocolate",
+   "topic": "a sports equipment of impossible material",
+   "kind": "complex_unnatural"
+  },
+  "ah-b5-ob04-stadium-plastic-drone": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a dungchen\n  2. a didgeridoo\n  3. a conch trumpet\n  4. a shofar\n  5. a bugle\n  6. a lur\n  7. a vuvuzela\n  8. an alphorn",
+   "topic": "a lip-buzzed stadium instrument",
+   "kind": "obscure"
+  },
+  "ah-b5-ob05-loom-break-metal-tongues": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a dan moi\n  2. a morsing\n  3. a jaw harp\n  4. a kubing\n  5. a kouxian\n  6. a khomus\n  7. a kalimba\n  8. a marimbula",
+   "topic": "a lamellophone",
+   "kind": "obscure"
+  },
+  "ah-b5-ob07-courtyard-raga-gourd": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    6
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": true,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a balalaika\n  2. a mandolin\n  3. a ukulele\n  4. a harp\n  5. a zither\n  6. a sitar\n  7. a banjo\n  8. a lute",
+   "topic": "a plucked string instrument",
+   "kind": "obscure"
+  },
+  "ah-b5-ob12-linguist-netted-stick": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. camogie\n  2. polo\n  3. hurling\n  4. bandy\n  5. shinty\n  6. field hockey\n  7. lacrosse\n  8. floorball",
+   "topic": "a niche team stick sport",
+   "kind": "obscure"
+  },
+  "ah-b5-ob13-unibad-nasenklammern": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. das Wasserskispringen\n  2. das Klippenspringen\n  3. das Turmspringen\n  4. das Synchronspringen\n  5. das Kunstspringen\n  6. das Trickwasserskilaufen\n  7. das Synchronschwimmen\n  8. das Flossenschwimmen",
+   "topic": "a ästhetische Wassersportart",
+   "kind": "obscure"
+  },
+  "ah-b5-ob14-railway-depot-rope-teams": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      2
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. wheelbarrow race\n  2. caber toss\n  3. keg toss\n  4. stone lifting\n  5. sack race\n  6. log rolling\n  7. arm wrestling\n  8. tug of war",
+   "topic": "a team strength contest",
+   "kind": "obscure"
+  },
+  "ah-b5-ob19-depot-freight-wagon-numbers": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      6
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. rag rolling\n  2. stencilling\n  3. marbling\n  4. gilding\n  5. faux bois\n  6. trompe l'oeil\n  7. stippling\n  8. sponging",
+   "topic": "a decorative painting technique",
+   "kind": "obscure"
+  },
+  "ah-b5-ob26-marine-insurer-reviews-spiralling-strait": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    1
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a whirlpool\n  2. an undertow\n  3. a red tide\n  4. a riptide\n  5. a tsunami\n  6. a waterspout\n  7. a tidal bore\n  8. a rogue wave",
+   "topic": "an oceanic phenomenon",
+   "kind": "obscure"
+  },
+  "ah-b5-ob29-courtroom-breath-device": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    2
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a fingerprint scanner\n  2. a breathalyzer\n  3. a radar gun\n  4. a polygraph\n  5. a decibel meter\n  6. a spectrometer\n  7. a gunshot residue kit\n  8. a tint meter",
+   "topic": "a forensic measuring device",
+   "kind": "obscure"
+  },
+  "ah-b5-ob32-ship-bridge-swinging-needle": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. an astrolabe\n  2. a dip circle\n  3. an octant\n  4. a gyrocompass\n  5. a sextant\n  6. a chronometer\n  7. a pelorus\n  8. a magnetic compass",
+   "topic": "a navigation instrument",
+   "kind": "obscure"
+  },
+  "ah-b5-ob44-courtroom-sniffer-wrinkles": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a schnauzer\n  2. a whippet\n  3. a Dalmatian\n  4. a mastiff\n  5. a dachshund\n  6. a basset hound\n  7. a bloodhound\n  8. a greyhound",
+   "topic": "a dog breed",
+   "kind": "obscure"
+  },
+  "ah-b5-ob45-lab-regrowing-limb-amphibian": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a caecilian\n  2. a spadefoot\n  3. a salamander\n  4. a bullfrog\n  5. a tree frog\n  6. a natterjack\n  7. a spring peeper\n  8. a toad",
+   "topic": "an amphibian",
+   "kind": "obscure"
+  },
+  "ah-b5-ob50-insurance-claim-desert-armour": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    4
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      8
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a sloth\n  2. an opossum\n  3. an aardvark\n  4. an armadillo\n  5. a porcupine\n  6. an anteater\n  7. a hedgehog\n  8. a pangolin",
+   "topic": "a mammal",
+   "kind": "obscure"
+  },
+  "ah-b5-ob52-courtyard-chilean-conifer": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    7
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      3
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. a dawn redwood\n  2. a Norfolk Island pine\n  3. a bristlecone pine\n  4. a Leyland cypress\n  5. a deodar cedar\n  6. a Wollemi pine\n  7. a monkey puzzle tree\n  8. a Japanese umbrella pine",
+   "topic": "a conifer species",
+   "kind": "obscure"
+  },
+  "ah-b5-ob63-ministere-galette-pliee": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      1
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. une madeleine\n  2. une brioche\n  3. une crêpe\n  4. une tarte\n  5. une baguette\n  6. une gaufre\n  7. une quiche\n  8. une fougasse",
+   "topic": "a préparation de pâte cuite",
+   "kind": "obscure"
+  },
+  "ah-b5-ob64-clinic-rice-saffron-pan": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    8
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. pilaf\n  2. jambalaya\n  3. arancini\n  4. congee\n  5. risotto\n  6. biryani\n  7. bibimbap\n  8. paella",
+   "topic": "a rice dish",
+   "kind": "obscure"
+  },
+  "ah-b5-cu20-handschuhe-aus-honig": {
+   "n_lists": 1,
+   "multi": false,
+   "gold": [
+    3
+   ],
+   "n_options": [
+    8
+   ],
+   "draws": [
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      4
+     ],
+     "correct": false,
+     "n_invalid": 0
+    },
+    {
+     "picks": [
+      5
+     ],
+     "correct": false,
+     "n_invalid": 0
+    }
+   ],
+   "majority_correct": false,
+   "prompt": "List 1\n  1. Socken aus Honig\n  2. Socken\n  3. Handschuhe aus Honig\n  4. Handschuhe aus Wachs\n  5. Socken aus Wachs\n  6. Socken aus Sirup\n  7. Handschuhe aus Sirup\n  8. Handschuhe",
+   "topic": "a garment of impossible material",
+   "kind": "complex_unnatural"
+  }
+ }
+}

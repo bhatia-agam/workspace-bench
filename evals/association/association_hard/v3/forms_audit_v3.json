@@ -1,0 +1,274 @@
+{
+ "version": 1,
+ "built": "2026-11-23",
+ "model": "claude-opus-5-5",
+ "what": "per new item, the accepted forms of the gold that a scene-aware audit marks as not naming the gold in the scene's sense or as fitting another option of its list, each with the reason: candidates for the builder's FORM_DROPS_V3, read by hand",
+ "prompts": {
+  "SYSTEM": "You audit the accepted names of a benchmark answer. You get a short scene that implies one thing without naming it, the thing (the gold answer, in the scene's language), and a numbered list of names under which a reader's answer would be accepted. Mark a name WRONG when, read on its own, it would also be said of something that is NOT the gold as this scene means it: another sense of an ambiguous word (a bank that is a bench, a chimney that is a fireplace, \"offbeat\" meaning eccentric instead of out of time), an ordinary word or phrase for a different thing or activity, a broader or narrower thing, or a name that leaves out or changes a part of a compound gold (its qualifier, material or place), or a name that would equally be said of one of the OTHER OPTIONS listed with it (a generic name that covers the gold and a sibling, or the usual translation of another option). A faithful translation, synonym, spelling variant or rewording of the WHOLE gold in the scene's sense is RIGHT. Answer with one verdict per name, in order, and a few words of reason for each WRONG.",
+  "USER": "SCENE:\n{scene}\n\nGOLD: {gold}\n\nOTHER OPTIONS (wrong answers of this item):\n{others}\n\nACCEPTED NAMES:\n{listing}"
+ },
+ "audited_items": [
+  "ah-b4-ob07-spinning-tablet-rain-ritual",
+  "ah-b4-ob08-stone-slide-on-frozen-loch",
+  "ah-b4-ob10-werkstatt-pfeile-kneipe",
+  "ah-b4-ob17-maschere-carro-viareggio",
+  "ah-b4-ob18-grandpa-lathe-bowls",
+  "ah-b4-ob23-rogue-swell-trawler-deck",
+  "ah-b4-ob34-bauernhof-warme-holzkiste",
+  "ah-b4-ob36-gull-pillar-off-cliff",
+  "ah-b4-ob39-sunday-brass-in-the-park",
+  "ah-b4-ob49-monsoon-forest-hanging-pitchers",
+  "ah-b4-ob58-rolling-dry-plant-storm",
+  "ah-b4-ob72-reed-boat-lake-fisher",
+  "ah-b4-ob76-chinese-sail-battens-junk",
+  "ah-b4-ob78-fan-propelled-cushion-shore",
+  "ah-b4-ob84-atelier-bloc-hetre",
+  "ah-b4-ob91-convento-guiso-goteo",
+  "ah-b4-cq01-carpenter-dull-teeth",
+  "ah-b4-cq03-bouillon-fond-perce",
+  "ah-b4-cq08-camp-lake-overturned-hull",
+  "ah-b4-cq09-storm-parlour-soaked-keys",
+  "ah-b4-cq11-stove-dribbling-whistle-pot",
+  "ah-b4-cq14-quarry-core-bit-worn-smooth",
+  "ah-b4-cq16-farmyard-empty-shaft",
+  "ah-b4-cq22-weeds-and-hammock",
+  "ah-b4-cq29-divers-reef-hull",
+  "ah-b4-cq32-chef-warm-milk",
+  "ah-b4-cq33-driveway-white-mound",
+  "ah-b4-cq53-cabin-porch-terry-plank",
+  "ah-b4-cq60-bare-pink-layer",
+  "ah-b4-cu02-harbour-paper-anchor",
+  "ah-b4-cu04-drummer-jelly-kit",
+  "ah-b4-cu10-misa-en-ruta",
+  "ah-b4-cu13-orli-sui-binari",
+  "ah-b4-cu16-feather-forge-tool",
+  "ah-b4-cu18-granite-woodwind-recital",
+  "ah-b4-cu21-choir-paper-cymbals",
+  "ah-b4-cu22-pews-beside-the-millstones",
+  "ah-b4-cu23-tickets-below-the-lamp",
+  "ah-b4-cu29-wax-sledge-on-the-farm",
+  "ah-b4-cu36-pupils-among-the-nets",
+  "ah-b4-cu39-lemurs-down-the-aisle",
+  "ah-b4-cu47-feather-bridge-river",
+  "ah-b4-cu58-cocoa-plank-beach",
+  "ah-b5-ob04-stadium-plastic-drone",
+  "ah-b5-ob05-loom-break-metal-tongues",
+  "ah-b5-ob07-courtyard-raga-gourd",
+  "ah-b5-ob08-surgeon-courtyard-webbing",
+  "ah-b5-ob09-compliance-officer-jammer",
+  "ah-b5-ob12-linguist-netted-stick",
+  "ah-b5-ob13-unibad-nasenklammern",
+  "ah-b5-ob14-railway-depot-rope-teams",
+  "ah-b5-ob15-courthouse-archive-gridded-canvas",
+  "ah-b5-ob19-depot-freight-wagon-numbers",
+  "ah-b5-ob26-marine-insurer-reviews-spiralling-strait",
+  "ah-b5-ob29-courtroom-breath-device",
+  "ah-b5-ob32-ship-bridge-swinging-needle",
+  "ah-b5-ob34-labo-tourner-tubes",
+  "ah-b5-ob40-linguists-yew-corridors",
+  "ah-b5-ob44-courtroom-sniffer-wrinkles",
+  "ah-b5-ob45-lab-regrowing-limb-amphibian",
+  "ah-b5-ob50-insurance-claim-desert-armour",
+  "ah-b5-ob52-courtyard-chilean-conifer",
+  "ah-b5-ob63-ministere-galette-pliee",
+  "ah-b5-ob64-clinic-rice-saffron-pan",
+  "ah-b5-ob65-laboratory-roof-dome-slit",
+  "ah-b5-ob66-courthouse-skylight-turret",
+  "ah-b5-ob70-tejedoras-patio-columnas",
+  "ah-b5-ob73-island-dialect-strait-crossing",
+  "ah-b5-ob80-advocate-pleated-tartan",
+  "ah-b5-ob82-phonetics-handled-spectacles",
+  "ah-b5-ob88-gerichtssaal-haken-schleifen",
+  "ah-b5-ob89-ivory-rods-multiplication-lab",
+  "ah-b5-cq01-courtroom-gavel-split",
+  "ah-b5-cq15-divers-survey-passage",
+  "ah-b5-cq19-stakes-toppled-each-autumn",
+  "ah-b5-cq29-courtroom-evidence-car-dented",
+  "ah-b5-cq38-archivio-cactus-congelato",
+  "ah-b5-cq48-quirofano-con-maleza",
+  "ah-b5-cq57-gummy-tank-predator",
+  "ah-b5-cq66-theatre-dropped-scalpel",
+  "ah-b5-cu16-judge-hammer-of-ice",
+  "ah-b5-cu20-handschuhe-aus-honig",
+  "ah-b5-cu32-folded-sheet-express",
+  "ah-b5-cu44-curbside-water-outlet-inspection",
+  "ah-b5-cu47-coin-post-hourly-ticket",
+  "ah-b5-cu58-court-exhibit-throwing-toy",
+  "ah-b5-cu59-sala-espera-hexagonos"
+ ],
+ "wrong": {
+  "ah-b4-ob07-spinning-tablet-rain-ritual": {
+   "a rhombus": "ordinarily the geometric shape",
+   "rhombus": "ordinarily the geometric shape"
+  },
+  "ah-b4-ob10-werkstatt-pfeile-kneipe": {
+   "Dart": "Singular 'Dart' also names the single projectile, not only the game.",
+   "飞镖": "飞镖 also means a throwing dart or throwing weapon (e.g. a martial-arts dart), not only the game."
+  },
+  "ah-b4-ob17-maschere-carro-viareggio": {
+   "纸浆塑形": "'Pulp shaping' also covers industrial molded-pulp forming (egg cartons, packaging), not specifically papier-mâché."
+  },
+  "ah-b4-ob23-rogue-swell-trawler-deck": {
+   "a killer wave": "Also commonly used for sneaker waves, tsunamis and big surf waves.",
+   "killer wave": "Also commonly used for sneaker waves, tsunamis and big surf waves.",
+   "a monster wave": "Generic for any huge wave, such as big surf or a tsunami.",
+   "monster wave": "Generic for any huge wave, such as big surf or a tsunami."
+  },
+  "ah-b4-ob34-bauernhof-warme-holzkiste": {
+   "incubator": "Too broad: also covers lab, neonatal and business incubators.",
+   "保温箱": "Means an insulated box, cooler or neonatal incubator, not an egg hatcher."
+  },
+  "ah-b4-ob36-gull-pillar-off-cliff": {
+   "a stack": "'stack' alone usually means a pile or chimney stack",
+   "stack": "'stack' alone usually means a pile or chimney stack"
+  },
+  "ah-b4-ob39-sunday-brass-in-the-park": {
+   "演奏台": "Generic 'performance platform' for any stage, including indoor ones; not specifically a park bandstand."
+  },
+  "ah-b4-ob49-monsoon-forest-hanging-pitchers": {
+   "瓶子草": "瓶子草 means Sarracenia, the non-climbing North American pitcher plant. It also covers the siblings sun pitcher (太阳瓶子草) and cobra lily (眼镜蛇瓶子草)."
+  },
+  "ah-b4-ob72-reed-boat-lake-fisher": {
+   "草船": "'Grass/straw boat'; evokes the straw-laden boats of 草船借箭, not specifically reeds"
+  },
+  "ah-b4-ob76-chinese-sail-battens-junk": {
+   "junk": "Bare 'junk' most commonly means rubbish or trash, not the ship."
+  },
+  "ah-b4-ob78-fan-propelled-cushion-shore": {
+   "an ACV": "Bare acronym ACV also means Amphibious Combat Vehicle, close to the amphibious tank option.",
+   "ACV": "Bare acronym ACV also means Amphibious Combat Vehicle, close to the amphibious tank option."
+  },
+  "ah-b4-ob84-atelier-bloc-hetre": {
+   "木屐": "木屐 usually means geta-style wooden sandals, a different thing"
+  },
+  "ah-b4-cq03-bouillon-fond-perce": {
+   "a pot with a hole": "'pot' is broader (stockpot, flowerpot with a drainage hole)",
+   "pot with a hole": "'pot' is broader (stockpot, flowerpot with a drainage hole)",
+   "有洞的锅": "锅 covers frying pans too; fits 'poêle trouée'",
+   "破了洞的锅": "锅 covers frying pans too; fits 'poêle trouée'"
+  },
+  "ah-b4-cq09-storm-parlour-soaked-keys": {
+   "a water-damaged piano": "Broader: any past water damage, which could also mean the mouldy piano option.",
+   "water-damaged piano": "Broader: any past water damage, which could also mean the mouldy piano option."
+  },
+  "ah-b4-cq11-stove-dribbling-whistle-pot": {
+   "漏水的壶": "壶 alone is any pot, jug or teapot, which is broader than a kettle."
+  },
+  "ah-b4-cq22-weeds-and-hammock": {
+   "a sluggish farmer": "sluggish means slow-moving or lethargic, not unwilling to work",
+   "sluggish farmer": "sluggish means slow-moving or lethargic, not unwilling to work"
+  },
+  "ah-b4-cq29-divers-reef-hull": {
+   "a shipwreck": "Also said of a ship wrecked and stranded on rocks or shore, or the wrecking event itself",
+   "shipwreck": "Also said of a stranded wreck on the shore, or the event"
+  },
+  "ah-b4-cq32-chef-warm-milk": {
+   "损坏的冰箱": "损坏 stresses physical damage, so it would equally describe the cracked fridge."
+  },
+  "ah-b4-cq60-bare-pink-layer": {
+   "A plucked hen": "'plucked hen' usually means a dead bird dressed for cooking, not a live featherless one",
+   "plucked hen": "'plucked hen' usually means a dead bird dressed for cooking, not a live featherless one",
+   "Plucked hen": "'plucked hen' usually means a dead bird dressed for cooking, not a live featherless one"
+  },
+  "ah-b4-cu10-misa-en-ruta": {
+   "a church bus": "Commonly means a bus owned by a church to carry congregants",
+   "church bus": "Commonly means a bus owned by a church to carry congregants"
+  },
+  "ah-b4-cu13-orli-sui-binari": {
+   "电车上的裁缝店": "电车 is ambiguous: it also means a trolleybus, which is a different vehicle.",
+   "a tailor on a streetcar": "Names a person, not a shop; would also fit a tailor simply riding as a passenger.",
+   "tailor on a streetcar": "Names a person, not a shop; would also fit a tailor simply riding as a passenger.",
+   "tailor on a tram": "Names a person, not a shop; would also fit a tailor simply riding as a passenger.",
+   "tailor’s tram": "Vague: could mean a tram owned or used by a tailor, not a shop on board."
+  },
+  "ah-b4-cu18-granite-woodwind-recital": {
+   "a rock flute": "could mean a flute played in rock music",
+   "rock flute": "could mean a flute played in rock music"
+  },
+  "ah-b4-cu22-pews-beside-the-millstones": {
+   "a windmill converted into a church": "Implies the mill no longer works as a mill; here it still grinds and turns",
+   "windmill converted into a church": "Implies the mill no longer works as a mill; here it still grinds and turns"
+  },
+  "ah-b4-cu23-tickets-below-the-lamp": {
+   "Lighthouse cinema": "Reads as the name of an ordinary cinema called 'Lighthouse'.",
+   "a lighthouse cinema": "Could mean a lighthouse-named or lighthouse-themed cinema, not one inside a lighthouse.",
+   "lighthouse cinema": "Could mean a lighthouse-named or lighthouse-themed cinema, not one inside a lighthouse.",
+   "a lighthouse turned cinema": "Implies a converted lighthouse no longer working; here the lamp is still lit.",
+   "lighthouse turned cinema": "Implies a converted lighthouse no longer working; here the lamp is still lit.",
+   "lighthouse movie theater": "Could mean a movie theater named 'Lighthouse', not one inside a lighthouse.",
+   "灯塔电影院": "Reads as a cinema named 灯塔 (Lighthouse).",
+   "灯塔影院": "Reads as a cinema named 灯塔 (Lighthouse)."
+  },
+  "ah-b4-cu29-wax-sledge-on-the-farm": {
+   "a toboggan made of wax": "A toboggan is a flat-bottomed sled without runners, unlike this two-runner sled.",
+   "toboggan made of wax": "A toboggan is a flat-bottomed sled without runners, unlike this two-runner sled.",
+   "a sleigh made of wax": "A sleigh is a larger, often horse-drawn vehicle, not a child's sled.",
+   "sleigh made of wax": "A sleigh is a larger, often horse-drawn vehicle, not a child's sled."
+  },
+  "ah-b4-cu36-pupils-among-the-nets": {
+   "lessons held on a fishing boat": "names an activity, not a school; could also mean fishing lessons on a boat",
+   "trawler school": "reads as a school that trains trawlermen",
+   "fishing boat school": "reads as a school that teaches fishing-boat work",
+   "渔船学校": "reads as a fishing-boat training school"
+  },
+  "ah-b4-cu39-lemurs-down-the-aisle": {
+   "airplane zoo": "Could mean a collection or display of airplanes, not a zoo on board.",
+   "zoo flight": "Could mean a flight carrying zoo animals or a flight to a zoo."
+  },
+  "ah-b5-ob14-railway-depot-rope-teams": {
+   "rope pulling": "generic phrase for any act of pulling a rope (hauling, bell ringing), not specifically the contest"
+  },
+  "ah-b5-ob19-depot-freight-wagon-numbers": {
+   "模板印刷": "Broader: 'template printing' also covers document templates and industrial printing (e.g. solder paste), not specifically stencilling."
+  },
+  "ah-b5-ob29-courtroom-breath-device": {
+   "a breath analyzer": "Also covers medical breath analyzers (hydrogen, ketone tests), not only alcohol.",
+   "breath analyzer": "Also covers medical breath analyzers (hydrogen, ketone tests), not only alcohol."
+  },
+  "ah-b5-ob63-ministere-galette-pliee": {
+   "thin pancake": "Too broad: 'thin pancake' also covers other flatcakes, such as blini or Chinese thin pancakes, not specifically a crêpe."
+  },
+  "ah-b5-ob64-clinic-rice-saffron-pan": {
+   "西班牙海鲜饭": "Literally 'Spanish seafood rice'; narrower, and this paella has rabbit and snails, not seafood.",
+   "西班牙炒饭": "'Spanish fried rice' names a stirred fried-rice dish, not paella.",
+   "西班牙炖饭": "炖饭 is the usual term for risotto, another option."
+  },
+  "ah-b5-ob66-courthouse-skylight-turret": {
+   "圆屋顶": "圆屋顶 means a dome or domed roof in general, which is broader than the windowed rooftop lantern meant here."
+  },
+  "ah-b5-ob70-tejedoras-patio-columnas": {
+   "回廊": "Japanese 回廊 means any encircling corridor or gallery (e.g., at temples or shrines), which is broader than a cloister and could also cover an ambulatory."
+  },
+  "ah-b5-cq01-courtroom-gavel-split": {
+   "a damaged judge's gavel": "'damaged' is broader; it also fits a scratched or rusty gavel",
+   "damaged judge's gavel": "'damaged' is broader; it also fits a scratched or rusty gavel",
+   "a cracked gavel": "a crack does not mean the head came off",
+   "cracked gavel": "a crack does not mean the head came off",
+   "破损的法槌": "破损 means damaged or worn, which is broader and also fits a rusty gavel"
+  },
+  "ah-b5-cq29-courtroom-evidence-car-dented": {
+   "a car wreck": "'Car wreck' commonly means the crash event, not the damaged vehicle",
+   "car wreck": "'Car wreck' commonly means the crash event, not the damaged vehicle",
+   "报废的车": "Means a scrapped or decommissioned vehicle, often from age rather than a crash; 车 could also be a bicycle"
+  },
+  "ah-b5-cq57-gummy-tank-predator": {
+   "a gummy shark with no teeth": "'Gummy shark' is a specific small species, narrower than the scene's shark",
+   "gummy shark with no teeth": "'Gummy shark' is a specific small species, narrower than the scene's shark"
+  },
+  "ah-b5-cq66-theatre-dropped-scalpel": {
+   "an awkward surgeon": "'Awkward' often means socially awkward, not physically clumsy",
+   "awkward surgeon": "'Awkward' often means socially awkward, not physically clumsy"
+  },
+  "ah-b5-cu16-judge-hammer-of-ice": {
+   "an icy judge's mallet": "'icy' can mean merely frost-covered or cold, not made of ice",
+   "icy judge's mallet": "'icy' can mean merely frost-covered or cold, not made of ice",
+   "frozen gavel": "'frozen' could describe an ordinary gavel that is chilled or stuck, not one made of ice"
+  },
+  "ah-b5-cu59-sala-espera-hexagonos": {
+   "肥皂足球": "Also names the sport 'soap soccer' played on a soapy pitch.",
+   "a soapy soccer ball": "'Soapy' means covered in soap, so it fits an ordinary soccer ball, not one made of soap.",
+   "soapy soccer ball": "'Soapy' means covered in soap, so it fits an ordinary soccer ball, not one made of soap.",
+   "soap football": "Also names the game 'soap football' played on soapy surfaces."
+  }
+ }
+}

@@ -1,0 +1,10946 @@
+{
+ "version": 1,
+ "built": "2026-11-23",
+ "model": "claude-opus-5-5",
+ "what": "per option of the bank (gold and distractors alike, the proposer never told which is which and never shown a scene or a readout): the standard English and Chinese names that a second call audited as the same concept (`names`), and the proposed names the audit refused (`rejected`); a single CJK character is never proposed",
+ "prompts": {
+  "NAMES_SYSTEM": "You get a noun phrase in some language. It names one thing, sometimes with a qualifier, a material it is made of, or a place it is in. List the standard names of exactly that concept in English and in Chinese: the ordinary names a fluent writer would use for it, the whole concept with every part, at most three per language. No descriptions or definitions, no broader or narrower terms, no related things. Give noun phrases without a leading article.",
+  "NAMES_USER": "Phrase: {option}",
+  "AUDIT_SYSTEM": "You check names. You get a noun phrase and a numbered list of candidate names in English or Chinese. For each candidate say whether it names the SAME concept as the phrase: the same thing with every qualifier, material or place the phrase gives, no broader, narrower or merely related concept, and not a word whose ordinary meaning is something else. Answer with one boolean per candidate, in order.",
+  "AUDIT_USER": "Phrase: {option}\nCandidates:\n{listing}"
+ },
+ "options": {
+  "a theremin": {
+   "names": [
+    "theremin",
+    "特雷门琴",
+    "特雷门",
+    "泰勒明琴"
+   ],
+   "rejected": []
+  },
+  "an ondes Martenot": {
+   "names": [
+    "ondes Martenot",
+    "ondes martenot",
+    "马特诺琴",
+    "马特诺电子琴",
+    "马特诺音波琴"
+   ],
+   "rejected": [
+    "Martenot"
+   ]
+  },
+  "a Mellotron": {
+   "names": [
+    "Mellotron",
+    "美乐特朗",
+    "梅洛特朗电子琴"
+   ],
+   "rejected": [
+    "磁带采样键盘"
+   ]
+  },
+  "a vocoder": {
+   "names": [
+    "vocoder",
+    "voice coder",
+    "声码器",
+    "语音编码器"
+   ],
+   "rejected": []
+  },
+  "a Stylophone": {
+   "names": [
+    "Stylophone",
+    "触控笔电子琴",
+    "Stylophone电子琴"
+   ],
+   "rejected": []
+  },
+  "an Omnichord": {
+   "names": [
+    "Omnichord",
+    "欧姆尼和弦琴",
+    "Omnichord电子琴"
+   ],
+   "rejected": []
+  },
+  "a Trautonium": {
+   "names": [
+    "trautonium",
+    "特劳特琴",
+    "特劳托宁琴"
+   ],
+   "rejected": []
+  },
+  "a keytar": {
+   "names": [
+    "keytar",
+    "键盘吉他",
+    "肩背键盘",
+    "背带式键盘"
+   ],
+   "rejected": []
+  },
+  "a singing bowl": {
+   "names": [
+    "singing bowl",
+    "standing bell",
+    "颂钵",
+    "颂钵碗"
+   ],
+   "rejected": [
+    "Tibetan singing bowl",
+    "西藏颂钵"
+   ]
+  },
+  "a wind chime": {
+   "names": [
+    "wind chime",
+    "wind bell",
+    "风铃"
+   ],
+   "rejected": []
+  },
+  "a tongue drum": {
+   "names": [
+    "tongue drum",
+    "舌鼓"
+   ],
+   "rejected": [
+    "steel tongue drum",
+    "tank drum",
+    "空灵鼓",
+    "钢舌鼓"
+   ]
+  },
+  "a rain stick": {
+   "names": [
+    "rain stick",
+    "rainstick",
+    "雨棍",
+    "雨声棒"
+   ],
+   "rejected": [
+    "雨杖"
+   ]
+  },
+  "a tuning fork": {
+   "names": [
+    "tuning fork",
+    "音叉"
+   ],
+   "rejected": []
+  },
+  "a thumb piano": {
+   "names": [
+    "thumb piano",
+    "kalimba",
+    "mbira",
+    "拇指琴",
+    "卡林巴琴",
+    "姆比拉琴"
+   ],
+   "rejected": []
+  },
+  "a sleigh bell": {
+   "names": [
+    "sleigh bell",
+    "jingle bell",
+    "雪橇铃"
+   ],
+   "rejected": [
+    "铃铛"
+   ]
+  },
+  "a chime bar": {
+   "names": [
+    "chime bar",
+    "chime bars",
+    "音棒"
+   ],
+   "rejected": [
+    "音条琴",
+    "铝板琴"
+   ]
+  },
+  "a bullroarer": {
+   "names": [
+    "bullroarer",
+    "bull-roarer",
+    "turndun",
+    "牛吼器",
+    "吼板"
+   ],
+   "rejected": []
+  },
+  "a didgeridoo": {
+   "names": [
+    "didgeridoo",
+    "didjeridu",
+    "迪吉里杜管",
+    "迪吉里杜"
+   ],
+   "rejected": [
+    "澳洲土著长号"
+   ]
+  },
+  "an ocarina": {
+   "names": [
+    "ocarina",
+    "陶笛",
+    "奥卡利那笛"
+   ],
+   "rejected": []
+  },
+  "a shawm": {
+   "names": [
+    "shawm",
+    "肖姆管",
+    "萧姆管"
+   ],
+   "rejected": []
+  },
+  "a crumhorn": {
+   "names": [
+    "crumhorn",
+    "krummhorn",
+    "cromorne",
+    "克鲁姆管"
+   ],
+   "rejected": [
+    "弯管"
+   ]
+  },
+  "a theremin whistle": {
+   "names": [
+    "theremin whistle",
+    "特雷门哨子",
+    "特雷门琴哨"
+   ],
+   "rejected": []
+  },
+  "a hulusi": {
+   "names": [
+    "hulusi",
+    "cucurbit flute",
+    "gourd flute",
+    "葫芦丝",
+    "葫芦箫"
+   ],
+   "rejected": []
+  },
+  "a duduk": {
+   "names": [
+    "duduk",
+    "Armenian duduk",
+    "杜杜克",
+    "亚美尼亚管"
+   ],
+   "rejected": [
+    "都督管"
+   ]
+  },
+  "curling": {
+   "names": [
+    "curling",
+    "冰壶",
+    "冰壶运动",
+    "冰上溜石"
+   ],
+   "rejected": []
+  },
+  "ice hockey": {
+   "names": [
+    "ice hockey",
+    "冰球",
+    "冰上曲棍球"
+   ],
+   "rejected": [
+    "hockey"
+   ]
+  },
+  "bobsleigh": {
+   "names": [
+    "bobsleigh",
+    "bobsled",
+    "有舵雪橇"
+   ],
+   "rejected": [
+    "雪橇",
+    "长雪橇"
+   ]
+  },
+  "bandy": {
+   "names": [
+    "bandy",
+    "班迪球",
+    "冰上曲棍球"
+   ],
+   "rejected": []
+  },
+  "broomball": {
+   "names": [
+    "broomball",
+    "扫帚球"
+   ],
+   "rejected": []
+  },
+  "ringette": {
+   "names": [
+    "ringette",
+    "圈棍球"
+   ],
+   "rejected": [
+    "环网球"
+   ]
+  },
+  "snow polo": {
+   "names": [
+    "snow polo",
+    "雪地马球"
+   ],
+   "rejected": []
+  },
+  "sledge hockey": {
+   "names": [
+    "sledge hockey",
+    "para ice hockey",
+    "sled hockey",
+    "残奥冰球",
+    "冰橇冰球",
+    "雪橇冰球"
+   ],
+   "rejected": []
+  },
+  "Darts": {
+   "names": [
+    "darts",
+    "飞镖",
+    "飞镖游戏"
+   ],
+   "rejected": []
+  },
+  "Boccia": {
+   "names": [
+    "boccia",
+    "硬地滚球"
+   ],
+   "rejected": [
+    "地掷球"
+   ]
+  },
+  "Cornhole": {
+   "names": [
+    "cornhole",
+    "bean bag toss",
+    "bags",
+    "沙包投掷游戏",
+    "玉米洞游戏"
+   ],
+   "rejected": [
+    "投沙包"
+   ]
+  },
+  "Kubb": {
+   "names": [
+    "kubb",
+    "Viking chess",
+    "维京棋",
+    "库布"
+   ],
+   "rejected": []
+  },
+  "Shuffleboard": {
+   "names": [
+    "shuffleboard",
+    "沙狐球",
+    "推移板游戏"
+   ],
+   "rejected": []
+  },
+  "Boule": {
+   "names": [
+    "boules",
+    "法式滚球"
+   ],
+   "rejected": [
+    "pétanque",
+    "滚球"
+   ]
+  },
+  "Curling": {
+   "names": [
+    "curling",
+    "冰壶",
+    "冰上溜石",
+    "掷冰壶"
+   ],
+   "rejected": []
+  },
+  "Hufeisenwerfen": {
+   "names": [
+    "horseshoes",
+    "horseshoe pitching",
+    "horseshoe throwing",
+    "掷马蹄铁",
+    "套马蹄铁"
+   ],
+   "rejected": []
+  },
+  "windsurfing": {
+   "names": [
+    "windsurfing",
+    "sailboarding",
+    "boardsailing",
+    "帆板运动",
+    "风帆冲浪"
+   ],
+   "rejected": [
+    "帆板"
+   ]
+  },
+  "kitesurfing": {
+   "names": [
+    "kitesurfing",
+    "kiteboarding",
+    "风筝冲浪",
+    "风筝滑水"
+   ],
+   "rejected": []
+  },
+  "wakeboarding": {
+   "names": [
+    "wakeboarding",
+    "尾波滑水",
+    "滑水板运动",
+    "尾流滑水"
+   ],
+   "rejected": []
+  },
+  "bodyboarding": {
+   "names": [
+    "bodyboarding",
+    "boogie boarding",
+    "趴板冲浪",
+    "趴板运动"
+   ],
+   "rejected": []
+  },
+  "waterskiing": {
+   "names": [
+    "waterskiing",
+    "water skiing",
+    "滑水",
+    "滑水运动"
+   ],
+   "rejected": []
+  },
+  "paddleboarding": {
+   "names": [
+    "paddleboarding",
+    "桨板运动"
+   ],
+   "rejected": [
+    "stand-up paddleboarding",
+    "SUP",
+    "立式桨板",
+    "站立式划桨"
+   ]
+  },
+  "kayaking": {
+   "names": [
+    "kayaking",
+    "划皮艇",
+    "皮艇运动"
+   ],
+   "rejected": [
+    "皮划艇运动"
+   ]
+  },
+  "canoeing": {
+   "names": [
+    "canoeing",
+    "划独木舟",
+    "独木舟运动"
+   ],
+   "rejected": [
+    "皮划艇运动"
+   ]
+  },
+  "lost-wax casting": {
+   "names": [
+    "lost-wax casting",
+    "investment casting",
+    "cire perdue",
+    "失蜡铸造",
+    "失蜡法",
+    "熔模铸造"
+   ],
+   "rejected": []
+  },
+  "sand casting": {
+   "names": [
+    "sand casting",
+    "sand molding",
+    "砂型铸造",
+    "砂铸"
+   ],
+   "rejected": []
+  },
+  "die casting": {
+   "names": [
+    "die casting",
+    "pressure die casting",
+    "压铸",
+    "压力铸造"
+   ],
+   "rejected": []
+  },
+  "centrifugal casting": {
+   "names": [
+    "centrifugal casting",
+    "离心铸造",
+    "离心浇铸"
+   ],
+   "rejected": [
+    "rotocasting"
+   ]
+  },
+  "shell-mould casting": {
+   "names": [
+    "shell-mould casting",
+    "shell molding",
+    "shell-mold casting",
+    "壳型铸造",
+    "壳模铸造"
+   ],
+   "rejected": []
+  },
+  "piece-mould casting": {
+   "names": [
+    "piece-mould casting",
+    "section-mould casting",
+    "piece-mold casting",
+    "块范法",
+    "分范铸造法",
+    "块范铸造法"
+   ],
+   "rejected": []
+  },
+  "slush casting": {
+   "names": [
+    "slush casting",
+    "搪铸",
+    "空心铸造"
+   ],
+   "rejected": [
+    "slush molding",
+    "搪塑"
+   ]
+  },
+  "lost-foam casting": {
+   "names": [
+    "lost-foam casting",
+    "evaporative pattern casting",
+    "消失模铸造",
+    "气化模铸造"
+   ],
+   "rejected": [
+    "full-mold casting",
+    "实型铸造"
+   ]
+  },
+  "la cartapesta": {
+   "names": [
+    "papier-mâché",
+    "paper-mâché",
+    "混凝纸"
+   ],
+   "rejected": [
+    "纸浆",
+    "纸糊"
+   ]
+  },
+  "la legatoria": {
+   "names": [
+    "bookbindery",
+    "bookbinding workshop",
+    "bindery",
+    "装订厂",
+    "装订作坊",
+    "书籍装订厂"
+   ],
+   "rejected": []
+  },
+  "la marmorizzazione della carta": {
+   "names": [
+    "paper marbling",
+    "marbling of paper",
+    "marbled paper making",
+    "纸张大理石纹",
+    "大理石纹纸工艺"
+   ],
+   "rejected": [
+    "纸张大理石花纹装饰"
+   ]
+  },
+  "il découpage": {
+   "names": [
+    "decoupage",
+    "découpage",
+    "剪纸贴花",
+    "蝶古巴特"
+   ],
+   "rejected": [
+    "拼贴装饰"
+   ]
+  },
+  "la quilling": {
+   "names": [
+    "quilling",
+    "paper filigree",
+    "paper quilling",
+    "衍纸",
+    "卷纸艺术",
+    "衍纸艺术"
+   ],
+   "rejected": []
+  },
+  "l'origami": {
+   "names": [
+    "origami",
+    "paper folding",
+    "折纸",
+    "摺纸"
+   ],
+   "rejected": []
+  },
+  "il kirigami": {
+   "names": [
+    "kirigami",
+    "切纸艺术"
+   ],
+   "rejected": [
+    "剪纸"
+   ]
+  },
+  "la filigrana": {
+   "names": [
+    "filigree",
+    "花丝",
+    "金银丝细工",
+    "花丝工艺"
+   ],
+   "rejected": []
+  },
+  "woodturning": {
+   "names": [
+    "woodturning",
+    "wood turning",
+    "木工车削",
+    "木材车削",
+    "车木"
+   ],
+   "rejected": []
+  },
+  "marquetry": {
+   "names": [
+    "marquetry",
+    "inlaid woodwork",
+    "wood inlay",
+    "镶嵌细工",
+    "木材镶嵌",
+    "细木镶嵌"
+   ],
+   "rejected": []
+  },
+  "wood carving": {
+   "names": [
+    "wood carving",
+    "woodcarving",
+    "木雕"
+   ],
+   "rejected": [
+    "木刻"
+   ]
+  },
+  "steam bending": {
+   "names": [
+    "steam bending",
+    "蒸汽弯木",
+    "蒸汽弯曲",
+    "蒸汽弯木工艺"
+   ],
+   "rejected": []
+  },
+  "pyrography": {
+   "names": [
+    "pyrography",
+    "woodburning",
+    "pokerwork",
+    "烙画",
+    "火笔画"
+   ],
+   "rejected": [
+    "烫画"
+   ]
+  },
+  "whittling": {
+   "names": [
+    "whittling",
+    "wood whittling",
+    "削木",
+    "木头削刻",
+    "削木雕刻"
+   ],
+   "rejected": []
+  },
+  "veneering": {
+   "names": [
+    "veneering",
+    "veneer work",
+    "贴面",
+    "镶贴薄板"
+   ],
+   "rejected": [
+    "饰面"
+   ]
+  },
+  "joinery": {
+   "names": [
+    "joinery",
+    "细木工",
+    "木工接合"
+   ],
+   "rejected": [
+    "榫卯"
+   ]
+  },
+  "stained glass": {
+   "names": [
+    "stained glass",
+    "彩绘玻璃",
+    "花窗玻璃"
+   ],
+   "rejected": [
+    "彩色玻璃"
+   ]
+  },
+  "cut glass": {
+   "names": [
+    "cut glass",
+    "刻花玻璃",
+    "雕花玻璃"
+   ],
+   "rejected": []
+  },
+  "cameo glass": {
+   "names": [
+    "cameo glass",
+    "浮雕玻璃",
+    "套色雕刻玻璃"
+   ],
+   "rejected": []
+  },
+  "fused glass": {
+   "names": [
+    "fused glass",
+    "熔合玻璃",
+    "热熔玻璃"
+   ],
+   "rejected": [
+    "kiln-formed glass",
+    "窑制玻璃"
+   ]
+  },
+  "etched glass": {
+   "names": [
+    "etched glass",
+    "蚀刻玻璃"
+   ],
+   "rejected": [
+    "frosted glass",
+    "磨砂玻璃"
+   ]
+  },
+  "lampwork glass": {
+   "names": [
+    "lampwork glass",
+    "lampworked glass",
+    "flamework glass",
+    "灯工玻璃"
+   ],
+   "rejected": [
+    "火焰玻璃"
+   ]
+  },
+  "slumped glass": {
+   "names": [
+    "slumped glass",
+    "slump glass",
+    "热弯玻璃",
+    "熔弯玻璃"
+   ],
+   "rejected": []
+  },
+  "pressed glass": {
+   "names": [
+    "pressed glass",
+    "压制玻璃",
+    "模压玻璃"
+   ],
+   "rejected": []
+  },
+  "sgraffito": {
+   "names": [
+    "sgraffito",
+    "剔花",
+    "五彩拉毛粉饰"
+   ],
+   "rejected": [
+    "刮画"
+   ]
+  },
+  "mishima": {
+   "names": [
+    "mishima",
+    "mishima ware",
+    "三岛手"
+   ],
+   "rejected": [
+    "三岛"
+   ]
+  },
+  "cuerda seca": {
+   "names": [
+    "cuerda seca",
+    "dry cord technique",
+    "干绳法",
+    "干线法"
+   ],
+   "rejected": []
+  },
+  "pâte-sur-pâte": {
+   "names": [
+    "pâte-sur-pâte",
+    "paste-on-paste",
+    "泥上泥",
+    "浆上浆"
+   ],
+   "rejected": [
+    "堆泥装饰"
+   ]
+  },
+  "sprigging": {
+   "names": [
+    "sprigging",
+    "sprig planting",
+    "播茎法",
+    "草茎种植"
+   ],
+   "rejected": []
+  },
+  "chattering": {
+   "names": [
+    "chattering",
+    "chatter",
+    "喋喋不休"
+   ],
+   "rejected": [
+    "唠叨",
+    "闲聊"
+   ]
+  },
+  "tube-lining": {
+   "names": [
+    "tube-lining",
+    "tubelining",
+    "tube lining",
+    "管线装饰",
+    "挤线装饰"
+   ],
+   "rejected": [
+    "沥粉装饰"
+   ]
+  },
+  "burnishing": {
+   "names": [
+    "burnishing",
+    "磨光"
+   ],
+   "rejected": [
+    "抛光",
+    "滚压"
+   ]
+  },
+  "a rogue wave": {
+   "names": [
+    "rogue wave",
+    "freak wave",
+    "killer wave",
+    "疯狗浪",
+    "异常巨浪",
+    "怪浪"
+   ],
+   "rejected": []
+  },
+  "a tidal bore": {
+   "names": [
+    "tidal bore",
+    "涌潮"
+   ],
+   "rejected": [
+    "bore",
+    "aegir",
+    "潮涌",
+    "怒潮"
+   ]
+  },
+  "a seiche": {
+   "names": [
+    "seiche",
+    "假潮",
+    "静振",
+    "湖震"
+   ],
+   "rejected": [
+    "standing wave"
+   ]
+  },
+  "a storm surge": {
+   "names": [
+    "storm surge",
+    "风暴潮",
+    "风暴增水"
+   ],
+   "rejected": [
+    "storm tide"
+   ]
+  },
+  "a maelstrom": {
+   "names": [
+    "maelstrom",
+    "whirlpool",
+    "大漩涡",
+    "漩涡"
+   ],
+   "rejected": [
+    "vortex",
+    "涡流"
+   ]
+  },
+  "a rip current": {
+   "names": [
+    "rip current",
+    "riptide",
+    "离岸流",
+    "裂流",
+    "回卷流"
+   ],
+   "rejected": [
+    "rip"
+   ]
+  },
+  "a meteotsunami": {
+   "names": [
+    "meteotsunami",
+    "meteorological tsunami",
+    "气象海啸"
+   ],
+   "rejected": []
+  },
+  "a sneaker wave": {
+   "names": [
+    "sneaker wave",
+    "sleeper wave",
+    "瘋狗浪",
+    "疯狗浪",
+    "突发大浪"
+   ],
+   "rejected": []
+  },
+  "a diving bell": {
+   "names": [
+    "diving bell",
+    "潜水钟",
+    "潜水钟罩"
+   ],
+   "rejected": []
+  },
+  "a pneumatic caisson": {
+   "names": [
+    "pneumatic caisson",
+    "compressed-air caisson",
+    "气压沉箱",
+    "压气沉箱"
+   ],
+   "rejected": []
+  },
+  "a bathysphere": {
+   "names": [
+    "bathysphere",
+    "深海球形潜水器",
+    "深海潜水球",
+    "探海球"
+   ],
+   "rejected": []
+  },
+  "a bathyscaphe": {
+   "names": [
+    "bathyscaphe",
+    "bathyscaph",
+    "深海潜水器",
+    "探海艇"
+   ],
+   "rejected": [
+    "深潜器"
+   ]
+  },
+  "an underwater habitat": {
+   "names": [
+    "underwater habitat",
+    "undersea habitat",
+    "水下居住舱",
+    "水下栖息舱",
+    "海底居住站"
+   ],
+   "rejected": [
+    "underwater base"
+   ]
+  },
+  "a rescue chamber": {
+   "names": [
+    "rescue chamber",
+    "refuge chamber",
+    "救生舱",
+    "避难舱",
+    "避险舱"
+   ],
+   "rejected": [
+    "mine refuge chamber"
+   ]
+  },
+  "a cofferdam": {
+   "names": [
+    "cofferdam",
+    "围堰"
+   ],
+   "rejected": []
+  },
+  "a lockout chamber": {
+   "names": [
+    "lockout chamber",
+    "lock-out chamber",
+    "diver lockout chamber",
+    "潜水员出入舱"
+   ],
+   "rejected": [
+    "过渡舱",
+    "闸室"
+   ]
+  },
+  "ein Brutkasten": {
+   "names": [
+    "incubator",
+    "保温箱",
+    "孵化器"
+   ],
+   "rejected": [
+    "培养箱"
+   ]
+  },
+  "eine Rübenschneidemaschine": {
+   "names": [
+    "beet cutter",
+    "beet slicer",
+    "beet cutting machine",
+    "切甜菜机",
+    "甜菜切片机"
+   ],
+   "rejected": [
+    "切根机"
+   ]
+  },
+  "ein Butterfass": {
+   "names": [
+    "butter churn",
+    "churn",
+    "黄油搅拌器",
+    "搅乳器",
+    "奶油搅拌桶"
+   ],
+   "rejected": []
+  },
+  "eine Milchzentrifuge": {
+   "names": [
+    "cream separator",
+    "milk separator",
+    "milk centrifuge",
+    "牛奶分离机",
+    "奶油分离机",
+    "牛奶离心机"
+   ],
+   "rejected": []
+  },
+  "eine Häckselmaschine": {
+   "names": [
+    "chaff cutter",
+    "straw cutter",
+    "铡草机",
+    "切草机"
+   ],
+   "rejected": [
+    "chopper"
+   ]
+  },
+  "ein Strohschneider": {
+   "names": [
+    "chaff cutter",
+    "straw cutter",
+    "铡草机",
+    "切草机"
+   ],
+   "rejected": [
+    "铡刀"
+   ]
+  },
+  "eine Kartoffelquetsche": {
+   "names": [
+    "potato masher",
+    "土豆捣碎器",
+    "压薯器",
+    "土豆泥压泥器"
+   ],
+   "rejected": [
+    "masher"
+   ]
+  },
+  "eine Schrotmühle": {
+   "names": [
+    "grist mill",
+    "grain crusher"
+   ],
+   "rejected": [
+    "grinding mill",
+    "粉碎机",
+    "磨粉机",
+    "碾磨机"
+   ]
+  },
+  "a limelight": {
+   "names": [
+    "limelight",
+    "calcium light",
+    "Drummond light",
+    "石灰光灯",
+    "灰光灯",
+    "石灰灯"
+   ],
+   "rejected": []
+  },
+  "a gas border light": {
+   "names": [
+    "gas border light",
+    "gas borderlight",
+    "煤气顶排灯",
+    "煤气天排灯"
+   ],
+   "rejected": []
+  },
+  "a footlight float": {
+   "names": [
+    "footlight float",
+    "浮灯式脚灯"
+   ],
+   "rejected": [
+    "float",
+    "脚灯"
+   ]
+  },
+  "a carbon arc lamp": {
+   "names": [
+    "carbon arc lamp",
+    "carbon arc light",
+    "碳弧灯",
+    "炭弧灯"
+   ],
+   "rejected": [
+    "arc lamp",
+    "弧光灯"
+   ]
+  },
+  "an Argand lamp": {
+   "names": [
+    "Argand lamp",
+    "阿尔冈灯",
+    "阿甘灯"
+   ],
+   "rejected": []
+  },
+  "a magic lantern": {
+   "names": [
+    "magic lantern",
+    "laterna magica",
+    "幻灯机",
+    "魔术幻灯"
+   ],
+   "rejected": []
+  },
+  "a ghost lamp": {
+   "names": [
+    "ghost lamp",
+    "ghost light",
+    "幽灵灯"
+   ],
+   "rejected": [
+    "鬼灯"
+   ]
+  },
+  "a Fresnel lantern": {
+   "names": [
+    "Fresnel lantern",
+    "Fresnel spotlight",
+    "Fresnel",
+    "菲涅尔聚光灯",
+    "螺纹聚光灯",
+    "菲涅耳灯"
+   ],
+   "rejected": []
+  },
+  "a sea stack": {
+   "names": [
+    "sea stack",
+    "海蚀柱",
+    "海柱"
+   ],
+   "rejected": [
+    "stack"
+   ]
+  },
+  "a tombolo": {
+   "names": [
+    "tombolo",
+    "tied bar",
+    "连岛沙洲",
+    "陆连岛沙洲",
+    "连岛坝"
+   ],
+   "rejected": []
+  },
+  "a spit": {
+   "names": [
+    "spit",
+    "roasting spit",
+    "烤肉叉",
+    "烤叉"
+   ],
+   "rejected": []
+  },
+  "a geo": {
+   "names": [
+    "geo",
+    "gio",
+    "goe",
+    "海蚀沟"
+   ],
+   "rejected": [
+    "海蚀槽"
+   ]
+  },
+  "a blowhole": {
+   "names": [
+    "blowhole",
+    "spiracle",
+    "喷水孔"
+   ],
+   "rejected": [
+    "呼吸孔"
+   ]
+  },
+  "a wave-cut notch": {
+   "names": [
+    "wave-cut notch",
+    "浪蚀凹槽",
+    "海蚀凹槽",
+    "海蚀穴"
+   ],
+   "rejected": [
+    "notch"
+   ]
+  },
+  "a cuspate foreland": {
+   "names": [
+    "cuspate foreland",
+    "尖角岬",
+    "尖形前陆"
+   ],
+   "rejected": [
+    "cuspate barrier",
+    "尖角沙嘴"
+   ]
+  },
+  "a barrier bar": {
+   "names": [
+    "barrier bar",
+    "barrier arm",
+    "道闸杆",
+    "挡杆"
+   ],
+   "rejected": [
+    "boom barrier",
+    "栏杆"
+   ]
+  },
+  "un hórreo": {
+   "names": [
+    "hórreo",
+    "raised granary",
+    "elevated granary",
+    "高脚粮仓",
+    "架空粮仓"
+   ],
+   "rejected": []
+  },
+  "una palloza": {
+   "names": [
+    "palloza",
+    "帕洛萨圆屋",
+    "帕洛萨草顶石屋"
+   ],
+   "rejected": []
+  },
+  "un cabazo": {
+   "names": [
+    "hórreo"
+   ],
+   "rejected": [
+    "granary",
+    "corn crib",
+    "谷仓",
+    "粮仓"
+   ]
+  },
+  "una barraca": {
+   "names": [
+    "shack",
+    "hut",
+    "shanty",
+    "棚屋",
+    "窝棚"
+   ],
+   "rejected": [
+    "小屋"
+   ]
+  },
+  "un pajar": {
+   "names": [
+    "hayloft",
+    "hay barn",
+    "干草棚"
+   ],
+   "rejected": [
+    "haystack",
+    "草垛",
+    "干草堆"
+   ]
+  },
+  "una masía": {
+   "names": [
+    "masia",
+    "Catalan farmhouse",
+    "加泰罗尼亚农舍"
+   ],
+   "rejected": [
+    "farmhouse",
+    "农舍"
+   ]
+  },
+  "un palomar": {
+   "names": [
+    "dovecote",
+    "pigeon loft",
+    "dovecot",
+    "鸽舍",
+    "鸽子窝",
+    "鸽棚"
+   ],
+   "rejected": []
+  },
+  "un trujal": {
+   "names": [
+    "wine press",
+    "olive press",
+    "oil press",
+    "葡萄压榨机"
+   ],
+   "rejected": [
+    "压榨机",
+    "榨油机"
+   ]
+  },
+  "a bandstand": {
+   "names": [
+    "bandstand",
+    "音乐台",
+    "演奏台"
+   ],
+   "rejected": []
+  },
+  "a gazebo": {
+   "names": [
+    "gazebo",
+    "凉亭",
+    "亭子"
+   ],
+   "rejected": [
+    "pavilion"
+   ]
+  },
+  "a pergola": {
+   "names": [
+    "pergola",
+    "arbor",
+    "藤架"
+   ],
+   "rejected": [
+    "凉棚",
+    "花架"
+   ]
+  },
+  "a folly": {
+   "names": [
+    "folly",
+    "architectural folly",
+    "装饰性建筑",
+    "华而不实的建筑"
+   ],
+   "rejected": []
+  },
+  "a belvedere": {
+   "names": [
+    "belvedere",
+    "观景楼",
+    "观景亭"
+   ],
+   "rejected": [
+    "gazebo",
+    "望楼"
+   ]
+  },
+  "a rotunda": {
+   "names": [
+    "rotunda",
+    "圆形大厅",
+    "圆厅",
+    "圆形建筑"
+   ],
+   "rejected": []
+  },
+  "a grotto": {
+   "names": [
+    "grotto",
+    "岩洞",
+    "石窟"
+   ],
+   "rejected": [
+    "cave",
+    "cavern",
+    "洞穴"
+   ]
+  },
+  "a pavilion": {
+   "names": [
+    "pavilion",
+    "亭子",
+    "凉亭"
+   ],
+   "rejected": []
+  },
+  "an icehouse": {
+   "names": [
+    "icehouse",
+    "ice house",
+    "冰窖",
+    "冰库"
+   ],
+   "rejected": []
+  },
+  "a root cellar": {
+   "names": [
+    "root cellar",
+    "vegetable cellar",
+    "菜窖"
+   ],
+   "rejected": [
+    "地窖"
+   ]
+  },
+  "a granary": {
+   "names": [
+    "granary",
+    "grain store",
+    "grain storehouse",
+    "粮仓",
+    "谷仓",
+    "粮库"
+   ],
+   "rejected": []
+  },
+  "a smokehouse": {
+   "names": [
+    "smokehouse",
+    "熏制房",
+    "烟熏房",
+    "熏房"
+   ],
+   "rejected": []
+  },
+  "a springhouse": {
+   "names": [
+    "springhouse",
+    "spring house",
+    "泉水屋"
+   ],
+   "rejected": [
+    "泉屋"
+   ]
+  },
+  "a tithe barn": {
+   "names": [
+    "tithe barn",
+    "什一税谷仓",
+    "什一税仓"
+   ],
+   "rejected": []
+  },
+  "a dovecote": {
+   "names": [
+    "dovecote",
+    "pigeon house",
+    "鸽舍",
+    "鸽房",
+    "鸽棚"
+   ],
+   "rejected": [
+    "columbarium"
+   ]
+  },
+  "a corn crib": {
+   "names": [
+    "corn crib",
+    "corncrib",
+    "玉米仓",
+    "玉米囤"
+   ],
+   "rejected": []
+  },
+  "un trullo": {
+   "names": [
+    "trullo",
+    "特鲁洛",
+    "特鲁洛石屋"
+   ],
+   "rejected": [
+    "圆顶石屋"
+   ]
+  },
+  "una masseria": {
+   "names": [
+    "masseria",
+    "farmstead",
+    "农庄",
+    "马塞里亚农庄"
+   ],
+   "rejected": [
+    "fortified farmhouse"
+   ]
+  },
+  "un nuraghe": {
+   "names": [
+    "nuraghe",
+    "nuraghi tower",
+    "努拉吉",
+    "努拉格"
+   ],
+   "rejected": []
+  },
+  "un dammuso": {
+   "names": [
+    "dammuso",
+    "达穆索石屋",
+    "潘泰莱里亚石屋"
+   ],
+   "rejected": []
+  },
+  "un maso": {
+   "names": [
+    "farmstead",
+    "农庄"
+   ],
+   "rejected": [
+    "mountain farm",
+    "farm",
+    "山地农庄",
+    "农场"
+   ]
+  },
+  "una baita": {
+   "names": [
+    "mountain hut",
+    "alpine hut",
+    "chalet",
+    "山间小屋",
+    "高山小屋"
+   ],
+   "rejected": [
+    "木屋"
+   ]
+  },
+  "una cascina": {
+   "names": [
+    "farmhouse",
+    "farmstead",
+    "农舍",
+    "农庄"
+   ],
+   "rejected": [
+    "dairy farm"
+   ]
+  },
+  "un casone": {
+   "names": [
+    "big house",
+    "large house",
+    "大房子",
+    "大宅"
+   ],
+   "rejected": []
+  },
+  "a stonefish": {
+   "names": [
+    "stonefish",
+    "石头鱼",
+    "毒鲉"
+   ],
+   "rejected": [
+    "玫瑰毒鲉"
+   ]
+  },
+  "a lionfish": {
+   "names": [
+    "lionfish",
+    "firefish",
+    "turkeyfish",
+    "狮子鱼",
+    "蓑鲉",
+    "狮子鱼（蓑鲉）"
+   ],
+   "rejected": []
+  },
+  "a scorpionfish": {
+   "names": [
+    "scorpionfish",
+    "鲉鱼"
+   ],
+   "rejected": [
+    "rockfish",
+    "石狗公"
+   ]
+  },
+  "a weeverfish": {
+   "names": [
+    "weever",
+    "weeverfish",
+    "weever fish",
+    "龙䲢"
+   ],
+   "rejected": [
+    "龙腾鱼"
+   ]
+  },
+  "a toadfish": {
+   "names": [
+    "toadfish",
+    "蟾鱼",
+    "蟾鱼科鱼"
+   ],
+   "rejected": []
+  },
+  "a stingray": {
+   "names": [
+    "stingray",
+    "sting ray",
+    "魟鱼",
+    "黄貂鱼",
+    "刺鳐"
+   ],
+   "rejected": []
+  },
+  "a catfish": {
+   "names": [
+    "catfish",
+    "鲶鱼",
+    "鲇鱼"
+   ],
+   "rejected": []
+  },
+  "a dragonet": {
+   "names": [
+    "dragonet",
+    "small dragon",
+    "young dragon",
+    "小龙",
+    "幼龙"
+   ],
+   "rejected": []
+  },
+  "eggnog": {
+   "names": [
+    "eggnog",
+    "egg nog",
+    "蛋酒",
+    "蛋奶酒"
+   ],
+   "rejected": []
+  },
+  "mulled wine": {
+   "names": [
+    "mulled wine",
+    "glühwein",
+    "spiced wine",
+    "热红酒",
+    "香料热红酒",
+    "热葡萄酒"
+   ],
+   "rejected": []
+  },
+  "wassail": {
+   "names": [
+    "wassail",
+    "香料热酒",
+    "祝酒热饮"
+   ],
+   "rejected": []
+  },
+  "glögg": {
+   "names": [
+    "glögg"
+   ],
+   "rejected": [
+    "mulled wine",
+    "热红酒",
+    "香料热酒"
+   ]
+  },
+  "hot toddy": {
+   "names": [
+    "hot toddy",
+    "热托迪"
+   ],
+   "rejected": [
+    "toddy",
+    "热棕榈酒"
+   ]
+  },
+  "Tom and Jerry": {
+   "names": [
+    "Tom and Jerry",
+    "猫和老鼠",
+    "汤姆和杰瑞"
+   ],
+   "rejected": [
+    "猫鼠游戏"
+   ]
+  },
+  "coquito": {
+   "names": [
+    "coquito",
+    "Puerto Rican eggnog",
+    "coconut eggnog",
+    "波多黎各椰子蛋酒",
+    "椰子蛋奶酒"
+   ],
+   "rejected": []
+  },
+  "hot buttered rum": {
+   "names": [
+    "hot buttered rum",
+    "热黄油朗姆酒",
+    "热奶油朗姆酒"
+   ],
+   "rejected": []
+  },
+  "a feijoada": {
+   "names": [
+    "feijoada",
+    "巴西黑豆炖肉",
+    "黑豆炖肉",
+    "巴西豆子炖肉"
+   ],
+   "rejected": []
+  },
+  "a moqueca": {
+   "names": [
+    "moqueca",
+    "莫克卡"
+   ],
+   "rejected": [
+    "Brazilian fish stew",
+    "巴西炖鱼"
+   ]
+  },
+  "o vatapá": {
+   "names": [
+    "vatapá",
+    "瓦塔帕",
+    "巴西虾酱糊"
+   ],
+   "rejected": []
+  },
+  "o acarajé": {
+   "names": [
+    "acarajé",
+    "black-eyed pea fritter",
+    "阿卡拉热",
+    "黑眼豆炸饼"
+   ],
+   "rejected": []
+  },
+  "a buchada": {
+   "names": [
+    "buchada",
+    "布沙达",
+    "羊肚包杂碎"
+   ],
+   "rejected": [
+    "buchada de bode"
+   ]
+  },
+  "o tacacá": {
+   "names": [
+    "tacacá",
+    "塔卡卡汤"
+   ],
+   "rejected": []
+  },
+  "o sarapatel": {
+   "names": [
+    "sarapatel",
+    "萨拉帕特尔",
+    "萨拉帕特炖杂碎"
+   ],
+   "rejected": []
+  },
+  "o barreado": {
+   "names": [
+    "barreado",
+    "巴雷阿多",
+    "巴西瓦罐炖牛肉"
+   ],
+   "rejected": []
+  },
+  "a pitcher plant": {
+   "names": [
+    "pitcher plant",
+    "猪笼草"
+   ],
+   "rejected": [
+    "瓶子草"
+   ]
+  },
+  "a sundew": {
+   "names": [
+    "sundew",
+    "Drosera",
+    "茅膏菜",
+    "毛毡苔"
+   ],
+   "rejected": []
+  },
+  "a bladderwort": {
+   "names": [
+    "bladderwort",
+    "狸藻"
+   ],
+   "rejected": []
+  },
+  "a butterwort": {
+   "names": [
+    "butterwort",
+    "Pinguicula",
+    "捕虫堇",
+    "捕虫堇属植物"
+   ],
+   "rejected": []
+  },
+  "a cobra lily": {
+   "names": [
+    "cobra lily",
+    "California pitcher plant",
+    "Darlingtonia californica",
+    "眼镜蛇瓶子草",
+    "眼镜蛇草"
+   ],
+   "rejected": [
+    "达尔文瓶子草"
+   ]
+  },
+  "a waterwheel plant": {
+   "names": [
+    "waterwheel plant",
+    "Aldrovanda vesiculosa",
+    "貉藻"
+   ],
+   "rejected": []
+  },
+  "a rainbow plant": {
+   "names": [
+    "rainbow plant",
+    "彩虹植物"
+   ],
+   "rejected": []
+  },
+  "a sun pitcher": {
+   "names": [
+    "sun pitcher",
+    "marsh pitcher",
+    "heliamphora",
+    "太阳瓶子草",
+    "沼泽瓶子草"
+   ],
+   "rejected": []
+  },
+  "a narwhal": {
+   "names": [
+    "narwhal",
+    "narwhale",
+    "独角鲸",
+    "一角鲸"
+   ],
+   "rejected": []
+  },
+  "a beluga": {
+   "names": [
+    "beluga",
+    "beluga whale",
+    "white whale",
+    "白鲸"
+   ],
+   "rejected": []
+  },
+  "a sperm whale": {
+   "names": [
+    "sperm whale",
+    "cachalot",
+    "抹香鲸"
+   ],
+   "rejected": []
+  },
+  "an orca": {
+   "names": [
+    "orca",
+    "killer whale",
+    "虎鲸",
+    "逆戟鲸",
+    "杀人鲸"
+   ],
+   "rejected": []
+  },
+  "a pilot whale": {
+   "names": [
+    "pilot whale",
+    "blackfish",
+    "领航鲸",
+    "巨头鲸",
+    "圆头鲸"
+   ],
+   "rejected": []
+  },
+  "a bottlenose dolphin": {
+   "names": [
+    "bottlenose dolphin",
+    "bottle-nosed dolphin",
+    "宽吻海豚",
+    "瓶鼻海豚"
+   ],
+   "rejected": []
+  },
+  "a Cuvier's beaked whale": {
+   "names": [
+    "Cuvier's beaked whale",
+    "goose-beaked whale",
+    "柯氏喙鲸",
+    "鹅喙鲸",
+    "居维叶喙鲸"
+   ],
+   "rejected": []
+  },
+  "a pygmy sperm whale": {
+   "names": [
+    "pygmy sperm whale",
+    "小抹香鲸",
+    "侏儒抹香鲸"
+   ],
+   "rejected": []
+  },
+  "an archerfish": {
+   "names": [
+    "archerfish",
+    "archer fish",
+    "射水鱼",
+    "高射炮鱼"
+   ],
+   "rejected": []
+  },
+  "a gourami": {
+   "names": [
+    "gourami",
+    "丝足鱼"
+   ],
+   "rejected": [
+    "攀鲈",
+    "曼龙鱼"
+   ]
+  },
+  "a mudskipper": {
+   "names": [
+    "mudskipper",
+    "弹涂鱼",
+    "跳跳鱼"
+   ],
+   "rejected": []
+  },
+  "a mbuna cichlid": {
+   "names": [
+    "mbuna cichlid",
+    "mbuna",
+    "姆布纳慈鲷"
+   ],
+   "rejected": [
+    "岩栖慈鲷"
+   ]
+  },
+  "a four-eyed fish": {
+   "names": [
+    "four-eyed fish",
+    "four-eyes fish",
+    "anableps",
+    "四眼鱼"
+   ],
+   "rejected": []
+  },
+  "a halfbeak": {
+   "names": [
+    "halfbeak",
+    "鱵鱼",
+    "针鱼"
+   ],
+   "rejected": []
+  },
+  "a splash tetra": {
+   "names": [
+    "splash tetra",
+    "spraying characin",
+    "jumping characin",
+    "溅水鱼",
+    "喷水脂鲤"
+   ],
+   "rejected": [
+    "跳跳鱼"
+   ]
+  },
+  "a climbing perch": {
+   "names": [
+    "climbing perch",
+    "climbing gourami",
+    "攀鲈",
+    "龟壳攀鲈",
+    "过山鲫"
+   ],
+   "rejected": []
+  },
+  "an electric eel": {
+   "names": [
+    "electric eel",
+    "电鳗"
+   ],
+   "rejected": []
+  },
+  "an electric catfish": {
+   "names": [
+    "electric catfish",
+    "电鲶",
+    "电鲇"
+   ],
+   "rejected": []
+  },
+  "an elephantnose fish": {
+   "names": [
+    "elephantnose fish",
+    "elephant-nose fish",
+    "Peters's elephantnose fish",
+    "象鼻鱼",
+    "彼氏锥颌象鼻鱼"
+   ],
+   "rejected": []
+  },
+  "a black ghost knifefish": {
+   "names": [
+    "black ghost knifefish",
+    "black ghost",
+    "黑魔鬼刀鱼",
+    "黑鬼刀",
+    "黑魔鬼"
+   ],
+   "rejected": []
+  },
+  "an aba knifefish": {
+   "names": [
+    "aba knifefish",
+    "aba",
+    "aba aba",
+    "裸臀鱼",
+    "尼罗河魔鬼"
+   ],
+   "rejected": []
+  },
+  "a glass knifefish": {
+   "names": [
+    "glass knifefish",
+    "玻璃刀鱼",
+    "线鳍电鳗"
+   ],
+   "rejected": []
+  },
+  "a banded knifefish": {
+   "names": [
+    "banded knifefish",
+    "条纹裸背电鳗",
+    "带纹裸背电鳗"
+   ],
+   "rejected": []
+  },
+  "a brown ghost knifefish": {
+   "names": [
+    "brown ghost knifefish",
+    "brown ghost",
+    "线翎电鳗",
+    "褐色魔鬼刀"
+   ],
+   "rejected": []
+  },
+  "a mangrove": {
+   "names": [
+    "mangrove",
+    "mangrove tree",
+    "红树"
+   ],
+   "rejected": [
+    "红树林"
+   ]
+  },
+  "a tamarisk": {
+   "names": [
+    "tamarisk",
+    "salt cedar",
+    "柽柳",
+    "红柳"
+   ],
+   "rejected": []
+  },
+  "a casuarina": {
+   "names": [
+    "casuarina",
+    "she-oak",
+    "Australian pine",
+    "木麻黄"
+   ],
+   "rejected": []
+  },
+  "a sea grape": {
+   "names": [
+    "sea grape",
+    "seagrape",
+    "海葡萄"
+   ],
+   "rejected": [
+    "树葡萄"
+   ]
+  },
+  "a pandanus": {
+   "names": [
+    "pandanus",
+    "screw pine",
+    "露兜树",
+    "林投"
+   ],
+   "rejected": []
+  },
+  "a nipa palm": {
+   "names": [
+    "nipa palm",
+    "mangrove palm",
+    "nipa",
+    "水椰",
+    "亚答树",
+    "尼帕棕榈"
+   ],
+   "rejected": []
+  },
+  "a manchineel": {
+   "names": [
+    "manchineel",
+    "manchineel tree",
+    "beach apple",
+    "毒番石榴",
+    "马疯木",
+    "马瘋木"
+   ],
+   "rejected": []
+  },
+  "a seaside mahoe": {
+   "names": [
+    "seaside mahoe",
+    "Portia tree",
+    "Pacific rosewood",
+    "桐棉",
+    "杨叶肖槿"
+   ],
+   "rejected": [
+    "截萼黄槿"
+   ]
+  },
+  "a tumbleweed": {
+   "names": [
+    "tumbleweed",
+    "风滚草",
+    "滚草"
+   ],
+   "rejected": []
+  },
+  "a dandelion clock": {
+   "names": [
+    "dandelion clock",
+    "dandelion puffball",
+    "dandelion seed head",
+    "蒲公英绒球",
+    "蒲公英种子球",
+    "蒲公英冠毛球"
+   ],
+   "rejected": []
+  },
+  "a milkweed pod": {
+   "names": [
+    "milkweed pod",
+    "马利筋荚果",
+    "乳草荚"
+   ],
+   "rejected": []
+  },
+  "a cottonwood seed": {
+   "names": [
+    "cottonwood seed"
+   ],
+   "rejected": [
+    "杨树种子",
+    "白杨种子"
+   ]
+  },
+  "a maple samara": {
+   "names": [
+    "maple samara",
+    "maple key",
+    "槭树翅果",
+    "枫树翅果"
+   ],
+   "rejected": [
+    "maple seed",
+    "枫树种子"
+   ]
+  },
+  "a thistle": {
+   "names": [
+    "thistle"
+   ],
+   "rejected": [
+    "飞廉"
+   ]
+  },
+  "a cattail head": {
+   "names": [
+    "cattail head",
+    "cattail spike",
+    "bulrush head",
+    "香蒲穗",
+    "蒲棒",
+    "蒲棒儿"
+   ],
+   "rejected": []
+  },
+  "a sycamore seed": {
+   "names": [
+    "sycamore seed",
+    "sycamore key",
+    "悬铃木种子"
+   ],
+   "rejected": [
+    "helicopter seed",
+    "梧桐种子",
+    "槭树翅果"
+   ]
+  },
+  "a puffball": {
+   "names": [
+    "puffball",
+    "puffball mushroom",
+    "马勃",
+    "马勃菌",
+    "灰包"
+   ],
+   "rejected": []
+  },
+  "a stinkhorn": {
+   "names": [
+    "stinkhorn",
+    "stinkhorn fungus",
+    "鬼笔",
+    "鬼笔菌"
+   ],
+   "rejected": []
+  },
+  "an inkcap": {
+   "names": [
+    "inkcap",
+    "inky cap",
+    "ink cap",
+    "鬼伞"
+   ],
+   "rejected": [
+    "墨汁鬼伞"
+   ]
+  },
+  "a death cap": {
+   "names": [
+    "death cap",
+    "death cap mushroom",
+    "Amanita phalloides",
+    "毒鹅膏",
+    "死帽蕈",
+    "鬼笔鹅膏"
+   ],
+   "rejected": []
+  },
+  "a jelly ear": {
+   "names": [
+    "jelly ear",
+    "wood ear",
+    "Jew's ear",
+    "木耳",
+    "黑木耳"
+   ],
+   "rejected": []
+  },
+  "a bracket fungus": {
+   "names": [
+    "bracket fungus",
+    "shelf fungus",
+    "檐状菌"
+   ],
+   "rejected": [
+    "polypore",
+    "多孔菌",
+    "层孔菌"
+   ]
+  },
+  "a morel": {
+   "names": [
+    "morel",
+    "morel mushroom",
+    "羊肚菌"
+   ],
+   "rejected": []
+  },
+  "a chanterelle": {
+   "names": [
+    "chanterelle",
+    "golden chanterelle",
+    "girolle",
+    "鸡油菌",
+    "杏菌"
+   ],
+   "rejected": [
+    "鸡蛋菌"
+   ]
+  },
+  "a lotus": {
+   "names": [
+    "lotus",
+    "lotus flower",
+    "莲花",
+    "荷花"
+   ],
+   "rejected": []
+  },
+  "a water lily": {
+   "names": [
+    "water lily",
+    "waterlily",
+    "睡莲"
+   ],
+   "rejected": []
+  },
+  "a water hyacinth": {
+   "names": [
+    "water hyacinth",
+    "凤眼莲",
+    "水葫芦",
+    "凤眼蓝"
+   ],
+   "rejected": []
+  },
+  "a pickerelweed": {
+   "names": [
+    "pickerelweed",
+    "pickerel weed",
+    "Pontederia cordata",
+    "梭鱼草",
+    "海寿花"
+   ],
+   "rejected": []
+  },
+  "a water hawthorn": {
+   "names": [
+    "water hawthorn",
+    "Cape pondweed",
+    "Cape asparagus",
+    "水山楂",
+    "二穗水蕹"
+   ],
+   "rejected": []
+  },
+  "a floating heart": {
+   "names": [
+    "floating heart",
+    "floatingheart",
+    "荇菜",
+    "莕菜"
+   ],
+   "rejected": []
+  },
+  "a water poppy": {
+   "names": [
+    "water poppy",
+    "水罂粟"
+   ],
+   "rejected": []
+  },
+  "an arrowhead": {
+   "names": [
+    "arrowhead",
+    "arrow point",
+    "arrow tip",
+    "箭头",
+    "箭镞",
+    "箭尖"
+   ],
+   "rejected": []
+  },
+  "un liquen": {
+   "names": [
+    "lichen",
+    "地衣"
+   ],
+   "rejected": []
+  },
+  "una micorriza": {
+   "names": [
+    "mycorrhiza",
+    "mycorrhizal association",
+    "菌根"
+   ],
+   "rejected": []
+  },
+  "un rizobio": {
+   "names": [
+    "rhizobium",
+    "rhizobia bacterium",
+    "root nodule bacterium",
+    "根瘤菌"
+   ],
+   "rejected": []
+  },
+  "una zooxantela": {
+   "names": [
+    "zooxanthella",
+    "虫黄藻"
+   ],
+   "rejected": [
+    "共生藻"
+   ]
+  },
+  "un coral": {
+   "names": [
+    "coral",
+    "珊瑚"
+   ],
+   "rejected": []
+  },
+  "un endófito": {
+   "names": [
+    "endophyte",
+    "内生菌"
+   ],
+   "rejected": [
+    "内生植物"
+   ]
+  },
+  "una wolbachia": {
+   "names": [
+    "Wolbachia",
+    "沃尔巴克氏体",
+    "沃尔巴克体"
+   ],
+   "rejected": []
+  },
+  "un sifonóforo": {
+   "names": [
+    "siphonophore",
+    "管水母"
+   ],
+   "rejected": []
+  },
+  "a redwood": {
+   "names": [
+    "redwood",
+    "sequoia",
+    "红杉"
+   ],
+   "rejected": [
+    "红木杉"
+   ]
+  },
+  "a hemlock": {
+   "names": [
+    "hemlock",
+    "铁杉"
+   ],
+   "rejected": [
+    "毒芹"
+   ]
+  },
+  "a cypress": {
+   "names": [
+    "cypress",
+    "cypress tree",
+    "柏树"
+   ],
+   "rejected": [
+    "柏木"
+   ]
+  },
+  "a juniper": {
+   "names": [
+    "juniper",
+    "杜松",
+    "刺柏"
+   ],
+   "rejected": []
+  },
+  "a larch": {
+   "names": [
+    "larch",
+    "larch tree",
+    "落叶松"
+   ],
+   "rejected": []
+  },
+  "a yew": {
+   "names": [
+    "yew",
+    "yew tree",
+    "红豆杉",
+    "紫杉",
+    "紫杉树"
+   ],
+   "rejected": []
+  },
+  "a cedar": {
+   "names": [
+    "cedar",
+    "cedar tree",
+    "雪松",
+    "雪松树"
+   ],
+   "rejected": []
+  },
+  "a spruce": {
+   "names": [
+    "spruce",
+    "spruce tree",
+    "云杉",
+    "云杉树"
+   ],
+   "rejected": []
+  },
+  "a reed boat": {
+   "names": [
+    "reed boat",
+    "芦苇船",
+    "苇船"
+   ],
+   "rejected": []
+  },
+  "a hide boat": {
+   "names": [
+    "hide boat",
+    "skin boat",
+    "皮船"
+   ],
+   "rejected": [
+    "皮筏"
+   ]
+  },
+  "a bark canoe": {
+   "names": [
+    "bark canoe",
+    "树皮独木舟",
+    "树皮舟",
+    "树皮船"
+   ],
+   "rejected": [
+    "birchbark canoe"
+   ]
+  },
+  "a bamboo raft": {
+   "names": [
+    "bamboo raft",
+    "竹筏",
+    "竹排"
+   ],
+   "rejected": []
+  },
+  "a basket boat": {
+   "names": [
+    "basket boat",
+    "coracle",
+    "簸箕船"
+   ],
+   "rejected": [
+    "竹篮船"
+   ]
+  },
+  "a log raft": {
+   "names": [
+    "log raft",
+    "timber raft",
+    "木筏",
+    "原木筏"
+   ],
+   "rejected": []
+  },
+  "a dugout canoe": {
+   "names": [
+    "dugout canoe",
+    "log boat",
+    "独木舟",
+    "刳木舟"
+   ],
+   "rejected": [
+    "dugout"
+   ]
+  },
+  "a plank boat": {
+   "names": [
+    "plank boat",
+    "planked boat",
+    "wooden plank boat",
+    "木板船",
+    "板船"
+   ],
+   "rejected": []
+  },
+  "a coracle": {
+   "names": [
+    "coracle",
+    "科拉科尔小圆舟",
+    "柳条皮艇"
+   ],
+   "rejected": [
+    "圆形小舟"
+   ]
+  },
+  "a currach": {
+   "names": [
+    "currach",
+    "curragh",
+    "爱尔兰皮筏"
+   ],
+   "rejected": [
+    "柯拉克艇"
+   ]
+  },
+  "a kayak": {
+   "names": [
+    "kayak",
+    "皮划艇",
+    "皮艇"
+   ],
+   "rejected": [
+    "独木舟"
+   ]
+  },
+  "a pirogue": {
+   "names": [
+    "pirogue",
+    "dugout canoe",
+    "独木舟",
+    "刳木舟"
+   ],
+   "rejected": [
+    "dugout"
+   ]
+  },
+  "a umiak": {
+   "names": [
+    "umiak",
+    "umiaq",
+    "乌米亚克船",
+    "因纽特皮船"
+   ],
+   "rejected": []
+  },
+  "a sampan": {
+   "names": [
+    "sampan",
+    "舢板",
+    "舢舨"
+   ],
+   "rejected": []
+  },
+  "a dugout": {
+   "names": [
+    "dugout",
+    "掩蔽部"
+   ],
+   "rejected": [
+    "地下掩体"
+   ]
+  },
+  "a punt": {
+   "names": [
+    "punt",
+    "方头平底船"
+   ],
+   "rejected": [
+    "平底船"
+   ]
+  },
+  "a narrowboat": {
+   "names": [
+    "narrowboat",
+    "narrow boat",
+    "窄船",
+    "运河窄船"
+   ],
+   "rejected": []
+  },
+  "a gondola": {
+   "names": [
+    "gondola",
+    "贡多拉",
+    "威尼斯小船",
+    "刚朵拉"
+   ],
+   "rejected": []
+  },
+  "a vaporetto": {
+   "names": [
+    "vaporetto",
+    "威尼斯水上巴士"
+   ],
+   "rejected": [
+    "water bus",
+    "水上巴士"
+   ]
+  },
+  "a houseboat": {
+   "names": [
+    "houseboat",
+    "船屋",
+    "住家船"
+   ],
+   "rejected": []
+  },
+  "a péniche": {
+   "names": [
+    "canal barge",
+    "内河驳船",
+    "运河驳船"
+   ],
+   "rejected": [
+    "barge",
+    "houseboat",
+    "驳船"
+   ]
+  },
+  "a keelboat": {
+   "names": [
+    "keelboat",
+    "keel boat",
+    "龙骨船"
+   ],
+   "rejected": [
+    "龙骨帆船"
+   ]
+  },
+  "a tugboat": {
+   "names": [
+    "tugboat",
+    "tug",
+    "towboat",
+    "拖船",
+    "拖轮"
+   ],
+   "rejected": []
+  },
+  "a junk": {
+   "names": [
+    "junk",
+    "Chinese junk",
+    "中式帆船",
+    "戎克船"
+   ],
+   "rejected": [
+    "帆船"
+   ]
+  },
+  "a dhow": {
+   "names": [
+    "dhow",
+    "独桅帆船",
+    "阿拉伯三角帆船"
+   ],
+   "rejected": []
+  },
+  "a galleon": {
+   "names": [
+    "galleon",
+    "盖伦帆船",
+    "西班牙大帆船"
+   ],
+   "rejected": [
+    "大帆船"
+   ]
+  },
+  "a felucca": {
+   "names": [
+    "felucca",
+    "费卢卡帆船"
+   ],
+   "rejected": [
+    "三桅小帆船"
+   ]
+  },
+  "a caravel": {
+   "names": [
+    "caravel",
+    "carvel",
+    "卡拉维尔帆船",
+    "轻快帆船",
+    "卡拉维尔船"
+   ],
+   "rejected": []
+  },
+  "a brigantine": {
+   "names": [
+    "brigantine",
+    "双桅帆船"
+   ],
+   "rejected": [
+    "双桅横帆船"
+   ]
+  },
+  "a sloop": {
+   "names": [
+    "sloop",
+    "单桅帆船",
+    "单桅纵帆船"
+   ],
+   "rejected": []
+  },
+  "a ketch": {
+   "names": [
+    "ketch",
+    "双桅纵帆船",
+    "凯奇帆船"
+   ],
+   "rejected": []
+  },
+  "a hovercraft": {
+   "names": [
+    "hovercraft",
+    "air-cushion vehicle",
+    "气垫船"
+   ],
+   "rejected": []
+  },
+  "an airboat": {
+   "names": [
+    "airboat",
+    "fanboat",
+    "swamp boat",
+    "风扇船",
+    "沼泽船"
+   ],
+   "rejected": [
+    "气垫船"
+   ]
+  },
+  "an amphibious tank": {
+   "names": [
+    "amphibious tank",
+    "amphibian tank",
+    "两栖坦克",
+    "水陆坦克"
+   ],
+   "rejected": []
+  },
+  "a DUKW": {
+   "names": [
+    "DUKW",
+    "DUKW amphibious truck",
+    "DUKW两栖卡车",
+    "鸭子两栖车",
+    "DUKW水陆两用车"
+   ],
+   "rejected": [
+    "Duck"
+   ]
+  },
+  "an amphicar": {
+   "names": [
+    "amphicar",
+    "amphibious car",
+    "水陆两栖汽车",
+    "两栖汽车"
+   ],
+   "rejected": [
+    "水陆两用车"
+   ]
+  },
+  "a swamp buggy": {
+   "names": [
+    "swamp buggy",
+    "marsh buggy",
+    "沼泽车",
+    "沼泽越野车"
+   ],
+   "rejected": []
+  },
+  "a ground-effect vehicle": {
+   "names": [
+    "ground-effect vehicle",
+    "wing-in-ground-effect craft",
+    "ekranoplan",
+    "地效飞行器",
+    "地效翼船",
+    "地面效应飞行器"
+   ],
+   "rejected": []
+  },
+  "a hydrofoil": {
+   "names": [
+    "hydrofoil",
+    "hydrofoil boat",
+    "水翼船",
+    "水翼艇"
+   ],
+   "rejected": []
+  },
+  "a kippah": {
+   "names": [
+    "kippah",
+    "yarmulke",
+    "基帕",
+    "犹太小圆帽"
+   ],
+   "rejected": [
+    "skullcap",
+    "犹太帽"
+   ]
+  },
+  "a mitre": {
+   "names": [
+    "mitre",
+    "miter",
+    "主教冠",
+    "主教法冠"
+   ],
+   "rejected": []
+  },
+  "a biretta": {
+   "names": [
+    "biretta",
+    "神职人员方帽"
+   ],
+   "rejected": [
+    "四角帽"
+   ]
+  },
+  "a wimple": {
+   "names": [
+    "wimple",
+    "修女头巾"
+   ],
+   "rejected": [
+    "头巾",
+    "包头巾"
+   ]
+  },
+  "a zucchetto": {
+   "names": [
+    "zucchetto",
+    "pileolus"
+   ],
+   "rejected": [
+    "skullcap",
+    "无边便帽",
+    "圆顶小帽",
+    "祭披小圆帽"
+   ]
+  },
+  "a shtreimel": {
+   "names": [
+    "shtreimel",
+    "施特赖梅尔皮帽"
+   ],
+   "rejected": [
+    "哈西迪派毛皮帽"
+   ]
+  },
+  "a dastar": {
+   "names": [
+    "dastar",
+    "Sikh turban",
+    "锡克头巾",
+    "达斯塔尔头巾"
+   ],
+   "rejected": []
+  },
+  "a tichel": {
+   "names": [
+    "tichel"
+   ],
+   "rejected": [
+    "headscarf",
+    "头巾"
+   ]
+  },
+  "des sabots": {
+   "names": [
+    "clogs",
+    "wooden shoes",
+    "sabots",
+    "木鞋",
+    "木屐"
+   ],
+   "rejected": []
+  },
+  "des espadrilles": {
+   "names": [
+    "espadrilles",
+    "espadrille",
+    "草底帆布鞋",
+    "麻底鞋"
+   ],
+   "rejected": [
+    "草编鞋"
+   ]
+  },
+  "des galoches": {
+   "names": [
+    "clogs",
+    "wooden-soled shoes",
+    "木底鞋"
+   ],
+   "rejected": [
+    "木鞋"
+   ]
+  },
+  "des mocassins": {
+   "names": [
+    "moccasins",
+    "莫卡辛鞋",
+    "豆豆鞋"
+   ],
+   "rejected": [
+    "loafers",
+    "乐福鞋"
+   ]
+  },
+  "des babouches": {
+   "names": [
+    "babouches",
+    "Moroccan slippers",
+    "巴布什拖鞋",
+    "摩洛哥拖鞋"
+   ],
+   "rejected": []
+  },
+  "des spartiates": {
+   "names": [
+    "gladiator sandals",
+    "罗马凉鞋",
+    "角斗士凉鞋"
+   ],
+   "rejected": [
+    "strappy sandals"
+   ]
+  },
+  "des socques": {
+   "names": [
+    "clogs",
+    "木屐",
+    "木底鞋"
+   ],
+   "rejected": []
+  },
+  "des charentaises": {
+   "names": [
+    "Charentaise slippers",
+    "夏朗德拖鞋"
+   ],
+   "rejected": [
+    "slippers",
+    "carpet slippers",
+    "拖鞋",
+    "室内拖鞋"
+   ]
+  },
+  "a slide rule": {
+   "names": [
+    "slide rule",
+    "计算尺"
+   ],
+   "rejected": [
+    "滑尺"
+   ]
+  },
+  "a planimeter": {
+   "names": [
+    "planimeter",
+    "platometer",
+    "求积仪",
+    "面积仪",
+    "测面仪"
+   ],
+   "rejected": []
+  },
+  "a nomogram": {
+   "names": [
+    "nomogram",
+    "nomograph",
+    "alignment chart",
+    "列线图",
+    "诺模图",
+    "算图"
+   ],
+   "rejected": []
+  },
+  "a Curta calculator": {
+   "names": [
+    "Curta calculator",
+    "Curta",
+    "科塔计算器",
+    "Curta计算器"
+   ],
+   "rejected": []
+  },
+  "a sector compass": {
+   "names": [
+    "proportional compass",
+    "sector compass",
+    "比例规",
+    "扇形规"
+   ],
+   "rejected": [
+    "sector"
+   ]
+  },
+  "an astrolabe": {
+   "names": [
+    "astrolabe",
+    "星盘",
+    "星盤"
+   ],
+   "rejected": []
+  },
+  "Napier's bones": {
+   "names": [
+    "Napier's bones",
+    "Napier's rods",
+    "纳皮尔筹",
+    "纳皮尔算筹",
+    "纳皮尔骨筹"
+   ],
+   "rejected": []
+  },
+  "a circular planimeter": {
+   "names": [
+    "circular planimeter",
+    "disc planimeter",
+    "圆盘求积仪",
+    "圆形求积仪"
+   ],
+   "rejected": []
+  },
+  "um pombo-correio": {
+   "names": [
+    "carrier pigeon",
+    "homing pigeon",
+    "messenger pigeon",
+    "信鸽",
+    "传信鸽"
+   ],
+   "rejected": []
+  },
+  "um falcão-peregrino": {
+   "names": [
+    "peregrine falcon",
+    "peregrine",
+    "游隼",
+    "游隼鹰"
+   ],
+   "rejected": []
+  },
+  "um corvo-marinho": {
+   "names": [
+    "cormorant",
+    "鸬鹚",
+    "鱼鹰"
+   ],
+   "rejected": []
+  },
+  "um pombo-torcaz": {
+   "names": [
+    "wood pigeon",
+    "common wood pigeon",
+    "ringdove",
+    "斑尾林鸽",
+    "林鸽"
+   ],
+   "rejected": []
+  },
+  "um canário-belga": {
+   "names": [
+    "domestic canary",
+    "家养金丝雀"
+   ],
+   "rejected": [
+    "canary",
+    "Belgian canary",
+    "金丝雀",
+    "比利时金丝雀"
+   ]
+  },
+  "um papagaio-cinzento": {
+   "names": [
+    "grey parrot",
+    "African grey parrot",
+    "African grey",
+    "非洲灰鹦鹉",
+    "灰鹦鹉"
+   ],
+   "rejected": []
+  },
+  "um pica-pau-verde": {
+   "names": [
+    "green woodpecker",
+    "European green woodpecker",
+    "绿啄木鸟",
+    "欧洲绿啄木鸟"
+   ],
+   "rejected": []
+  },
+  "um melro-preto": {
+   "names": [
+    "common blackbird",
+    "Eurasian blackbird",
+    "blackbird",
+    "欧亚乌鸫",
+    "乌鸫"
+   ],
+   "rejected": [
+    "黑鸫"
+   ]
+  },
+  "a quill pen": {
+   "names": [
+    "quill pen",
+    "quill",
+    "羽毛笔",
+    "鹅毛笔"
+   ],
+   "rejected": []
+  },
+  "a reed pen": {
+   "names": [
+    "reed pen",
+    "芦苇笔",
+    "苇笔"
+   ],
+   "rejected": []
+  },
+  "a stylus": {
+   "names": [
+    "stylus",
+    "触控笔",
+    "手写笔",
+    "触笔"
+   ],
+   "rejected": []
+  },
+  "a dip pen": {
+   "names": [
+    "dip pen",
+    "nib pen",
+    "蘸水笔",
+    "蘸水钢笔"
+   ],
+   "rejected": []
+  },
+  "a slate pencil": {
+   "names": [
+    "slate pencil",
+    "石笔",
+    "石板笔"
+   ],
+   "rejected": []
+  },
+  "a fountain pen": {
+   "names": [
+    "fountain pen",
+    "钢笔",
+    "自来水笔"
+   ],
+   "rejected": []
+  },
+  "a wax tablet": {
+   "names": [
+    "wax tablet",
+    "蜡板",
+    "蜡写板"
+   ],
+   "rejected": [
+    "writing tablet",
+    "蜡版"
+   ]
+  },
+  "a brush pen": {
+   "names": [
+    "brush pen",
+    "秀丽笔"
+   ],
+   "rejected": [
+    "软笔",
+    "毛笔"
+   ]
+  },
+  "una clepsidra": {
+   "names": [
+    "water clock",
+    "clepsydra",
+    "漏刻",
+    "水钟",
+    "刻漏"
+   ],
+   "rejected": []
+  },
+  "un gnomon": {
+   "names": [
+    "gnomon",
+    "日晷指针",
+    "晷针"
+   ],
+   "rejected": [
+    "圭表"
+   ]
+  },
+  "un astrolabio": {
+   "names": [
+    "astrolabe",
+    "星盘",
+    "星盤"
+   ],
+   "rejected": []
+  },
+  "un nocturlabio": {
+   "names": [
+    "nocturnal",
+    "nocturlabe",
+    "nocturlabium",
+    "夜间计时仪"
+   ],
+   "rejected": [
+    "星时仪"
+   ]
+  },
+  "una meridiana": {
+   "names": [
+    "sundial",
+    "日晷"
+   ],
+   "rejected": []
+  },
+  "una ampolleta": {
+   "names": [
+    "light bulb",
+    "lightbulb",
+    "灯泡",
+    "电灯泡"
+   ],
+   "rejected": [
+    "bulb"
+   ]
+  },
+  "un merkhet": {
+   "names": [
+    "merkhet",
+    "麦尔赫特",
+    "梅尔凯特"
+   ],
+   "rejected": []
+  },
+  "un torquetum": {
+   "names": [
+    "torquetum",
+    "turquet",
+    "赤基黄道仪",
+    "托克特姆仪"
+   ],
+   "rejected": []
+  },
+  "a wax seal": {
+   "names": [
+    "wax seal",
+    "sealing wax seal",
+    "火漆印",
+    "蜡封",
+    "火漆封印"
+   ],
+   "rejected": []
+  },
+  "a lead bulla": {
+   "names": [
+    "lead bulla",
+    "lead seal",
+    "铅封印",
+    "铅质封印"
+   ],
+   "rejected": [
+    "铅印章"
+   ]
+  },
+  "a notarial stamp": {
+   "names": [
+    "notarial stamp",
+    "notary stamp",
+    "notary seal",
+    "公证印章",
+    "公证章"
+   ],
+   "rejected": []
+  },
+  "a ribbon tie": {
+   "names": [
+    "ribbon tie"
+   ],
+   "rejected": [
+    "ribbon bow tie",
+    "丝带领结",
+    "缎带领结"
+   ]
+  },
+  "a signet impression": {
+   "names": [
+    "signet impression",
+    "seal impression",
+    "印章印记",
+    "钤印"
+   ],
+   "rejected": [
+    "印痕"
+   ]
+  },
+  "an embossed seal": {
+   "names": [
+    "embossed seal",
+    "embossing seal",
+    "钢印",
+    "压印印章"
+   ],
+   "rejected": []
+  },
+  "a clay bulla": {
+   "names": [
+    "clay bulla",
+    "陶土封球",
+    "黏土封球"
+   ],
+   "rejected": [
+    "clay envelope",
+    "泥封"
+   ]
+  },
+  "a gummed flap": {
+   "names": [
+    "gummed flap",
+    "adhesive flap",
+    "带胶封口",
+    "背胶封舌",
+    "涂胶封盖"
+   ],
+   "rejected": []
+  },
+  "a blunt saw": {
+   "names": [
+    "blunt saw",
+    "dull saw",
+    "钝锯",
+    "钝锯子"
+   ],
+   "rejected": []
+  },
+  "a blunt chisel": {
+   "names": [
+    "blunt chisel",
+    "dull chisel",
+    "钝凿子",
+    "钝凿"
+   ],
+   "rejected": []
+  },
+  "a rusty saw": {
+   "names": [
+    "rusty saw",
+    "生锈的锯子",
+    "生锈的锯",
+    "锈锯"
+   ],
+   "rejected": []
+  },
+  "a rusty chisel": {
+   "names": [
+    "rusty chisel",
+    "生锈的凿子",
+    "生锈凿子"
+   ],
+   "rejected": []
+  },
+  "a saw": {
+   "names": [
+    "saw",
+    "锯子"
+   ],
+   "rejected": []
+  },
+  "a chisel": {
+   "names": [
+    "chisel",
+    "凿子"
+   ],
+   "rejected": []
+  },
+  "a bent chisel": {
+   "names": [
+    "bent chisel",
+    "crooked chisel",
+    "弯凿",
+    "曲凿"
+   ],
+   "rejected": []
+  },
+  "a bent saw": {
+   "names": [
+    "bent saw",
+    "curved saw",
+    "弯锯",
+    "弯曲的锯"
+   ],
+   "rejected": []
+  },
+  "une casserole trouée": {
+   "names": [
+    "saucepan with a hole",
+    "holey saucepan",
+    "有洞的锅",
+    "破了洞的锅"
+   ],
+   "rejected": [
+    "leaky saucepan",
+    "漏底的锅"
+   ]
+  },
+  "une poêle trouée": {
+   "names": [
+    "perforated frying pan",
+    "perforated pan",
+    "pan with holes",
+    "带孔煎锅",
+    "有孔平底锅",
+    "打孔煎锅"
+   ],
+   "rejected": []
+  },
+  "une casserole fêlée": {
+   "names": [
+    "cracked saucepan",
+    "cracked pot",
+    "有裂纹的锅",
+    "裂了的锅"
+   ],
+   "rejected": [
+    "破锅"
+   ]
+  },
+  "une poêle fêlée": {
+   "names": [
+    "cracked frying pan",
+    "cracked pan",
+    "cracked skillet",
+    "裂开的平底锅",
+    "有裂缝的煎锅",
+    "破裂的平底锅"
+   ],
+   "rejected": []
+  },
+  "une casserole": {
+   "names": [
+    "saucepan"
+   ],
+   "rejected": [
+    "pot",
+    "平底锅",
+    "炖锅"
+   ]
+  },
+  "une poêle": {
+   "names": [
+    "frying pan",
+    "skillet",
+    "frypan",
+    "平底锅",
+    "煎锅"
+   ],
+   "rejected": []
+  },
+  "une poêle rayée": {
+   "names": [
+    "scratched frying pan",
+    "scratched pan",
+    "scratched skillet",
+    "有划痕的平底锅",
+    "划伤的煎锅",
+    "刮花的平底锅"
+   ],
+   "rejected": []
+  },
+  "une casserole rayée": {
+   "names": [
+    "scratched saucepan",
+    "scratched pot",
+    "有划痕的锅",
+    "划伤的锅"
+   ],
+   "rejected": []
+  },
+  "a deflated balloon": {
+   "names": [
+    "deflated balloon",
+    "瘪气球",
+    "泄了气的气球"
+   ],
+   "rejected": [
+    "漏气的气球"
+   ]
+  },
+  "a deflated tire": {
+   "names": [
+    "flat tire",
+    "deflated tire",
+    "flat tyre",
+    "瘪胎",
+    "没气的轮胎"
+   ],
+   "rejected": [
+    "漏气的轮胎"
+   ]
+  },
+  "an overinflated balloon": {
+   "names": [
+    "overinflated balloon",
+    "over-inflated balloon",
+    "充气过度的气球",
+    "过度充气的气球",
+    "吹得过大的气球"
+   ],
+   "rejected": []
+  },
+  "an overinflated tire": {
+   "names": [
+    "overinflated tire",
+    "overinflated tyre",
+    "充气过足的轮胎",
+    "气压过高的轮胎",
+    "胎压过高的轮胎"
+   ],
+   "rejected": []
+  },
+  "a balloon": {
+   "names": [
+    "balloon",
+    "气球"
+   ],
+   "rejected": []
+  },
+  "a tire": {
+   "names": [
+    "tire",
+    "tyre",
+    "轮胎",
+    "车胎"
+   ],
+   "rejected": []
+  },
+  "a bald tire": {
+   "names": [
+    "bald tire",
+    "bald tyre",
+    "光头轮胎",
+    "磨平的轮胎",
+    "秃胎"
+   ],
+   "rejected": [
+    "worn-out tire"
+   ]
+  },
+  "a bald balloon": {
+   "names": [
+    "bald balloon",
+    "秃气球"
+   ],
+   "rejected": []
+  },
+  "a capsized canoe": {
+   "names": [
+    "capsized canoe",
+    "overturned canoe",
+    "翻覆的独木舟",
+    "倾覆的独木舟",
+    "翻了的独木舟"
+   ],
+   "rejected": []
+  },
+  "a capsized rowboat": {
+   "names": [
+    "capsized rowboat",
+    "overturned rowboat",
+    "upturned rowboat",
+    "翻覆的划艇",
+    "倾覆的小划船",
+    "翻了的划艇"
+   ],
+   "rejected": []
+  },
+  "a drifting canoe": {
+   "names": [
+    "drifting canoe",
+    "漂流的独木舟",
+    "漂浮的独木舟"
+   ],
+   "rejected": []
+  },
+  "a drifting rowboat": {
+   "names": [
+    "drifting rowboat",
+    "漂流的划艇"
+   ],
+   "rejected": [
+    "漂浮的小船"
+   ]
+  },
+  "a canoe": {
+   "names": [
+    "canoe",
+    "独木舟",
+    "划艇"
+   ],
+   "rejected": [
+    "皮划艇"
+   ]
+  },
+  "a rowboat": {
+   "names": [
+    "rowboat",
+    "rowing boat",
+    "划艇",
+    "小划船"
+   ],
+   "rejected": [
+    "划船"
+   ]
+  },
+  "a sunken rowboat": {
+   "names": [
+    "sunken rowboat",
+    "sunken rowing boat",
+    "沉没的划艇"
+   ],
+   "rejected": [
+    "沉船划艇"
+   ]
+  },
+  "a sunken canoe": {
+   "names": [
+    "sunken canoe",
+    "沉没的独木舟"
+   ],
+   "rejected": [
+    "沉没的皮划艇"
+   ]
+  },
+  "a waterlogged piano": {
+   "names": [
+    "waterlogged piano",
+    "泡水的钢琴",
+    "浸水钢琴",
+    "被水泡过的钢琴"
+   ],
+   "rejected": [
+    "water-damaged piano"
+   ]
+  },
+  "a waterlogged violin": {
+   "names": [
+    "waterlogged violin",
+    "泡水的小提琴",
+    "浸水的小提琴"
+   ],
+   "rejected": []
+  },
+  "a burnt piano": {
+   "names": [
+    "burnt piano",
+    "burned piano",
+    "烧焦的钢琴",
+    "烧毁的钢琴"
+   ],
+   "rejected": []
+  },
+  "a burnt violin": {
+   "names": [
+    "burnt violin",
+    "burned violin",
+    "烧焦的小提琴",
+    "烧毁的小提琴"
+   ],
+   "rejected": []
+  },
+  "a piano": {
+   "names": [
+    "piano",
+    "pianoforte",
+    "钢琴"
+   ],
+   "rejected": []
+  },
+  "a violin": {
+   "names": [
+    "violin",
+    "fiddle",
+    "小提琴"
+   ],
+   "rejected": []
+  },
+  "a mouldy violin": {
+   "names": [
+    "mouldy violin",
+    "moldy violin",
+    "发霉的小提琴"
+   ],
+   "rejected": []
+  },
+  "a mouldy piano": {
+   "names": [
+    "mouldy piano",
+    "moldy piano",
+    "发霉的钢琴",
+    "发霉钢琴"
+   ],
+   "rejected": []
+  },
+  "a leaking kettle": {
+   "names": [
+    "leaking kettle",
+    "leaky kettle",
+    "漏水的水壶",
+    "漏水的壶"
+   ],
+   "rejected": []
+  },
+  "a leaking toaster": {
+   "names": [
+    "leaking toaster",
+    "leaky toaster",
+    "漏水的烤面包机"
+   ],
+   "rejected": [
+    "漏电的烤面包机"
+   ]
+  },
+  "a whistling kettle": {
+   "names": [
+    "whistling kettle",
+    "whistle kettle",
+    "鸣笛水壶",
+    "响水壶",
+    "鸣笛壶"
+   ],
+   "rejected": []
+  },
+  "a whistling toaster": {
+   "names": [
+    "whistling toaster",
+    "鸣笛烤面包机",
+    "会鸣叫的烤面包机"
+   ],
+   "rejected": []
+  },
+  "a kettle": {
+   "names": [
+    "kettle",
+    "水壶",
+    "烧水壶"
+   ],
+   "rejected": []
+  },
+  "a toaster": {
+   "names": [
+    "toaster",
+    "烤面包机",
+    "吐司机",
+    "多士炉"
+   ],
+   "rejected": []
+  },
+  "a smoking toaster": {
+   "names": [
+    "smoking toaster",
+    "冒烟的烤面包机",
+    "冒烟的多士炉"
+   ],
+   "rejected": []
+  },
+  "a smoking kettle": {
+   "names": [
+    "smoking kettle",
+    "冒烟的水壶",
+    "冒着烟的水壶"
+   ],
+   "rejected": [
+    "steaming kettle",
+    "冒气的水壶"
+   ]
+  },
+  "a blunt drill": {
+   "names": [
+    "blunt drill",
+    "dull drill",
+    "blunt drill bit",
+    "钝钻头",
+    "钝的钻头"
+   ],
+   "rejected": []
+  },
+  "a jammed drill": {
+   "names": [
+    "jammed drill",
+    "stuck drill",
+    "卡住的钻头",
+    "卡钻的钻头"
+   ],
+   "rejected": []
+  },
+  "a jammed saw": {
+   "names": [
+    "jammed saw",
+    "stuck saw",
+    "卡住的锯子",
+    "卡死的锯"
+   ],
+   "rejected": []
+  },
+  "a drill": {
+   "names": [
+    "drill"
+   ],
+   "rejected": [
+    "power drill",
+    "电钻",
+    "钻头"
+   ]
+  },
+  "a rusty drill": {
+   "names": [
+    "rusty drill",
+    "生锈的钻头",
+    "生锈的钻"
+   ],
+   "rejected": [
+    "生锈的电钻"
+   ]
+  },
+  "a dry well": {
+   "names": [
+    "dry well",
+    "dried-up well",
+    "枯井",
+    "干井"
+   ],
+   "rejected": []
+  },
+  "a dry pond": {
+   "names": [
+    "dry pond",
+    "dried-up pond",
+    "干涸的池塘",
+    "干池塘",
+    "枯塘"
+   ],
+   "rejected": []
+  },
+  "a frozen well": {
+   "names": [
+    "frozen well",
+    "冰封的井",
+    "结冰的井",
+    "冻井"
+   ],
+   "rejected": []
+  },
+  "a frozen pond": {
+   "names": [
+    "frozen pond",
+    "iced-over pond",
+    "结冰的池塘",
+    "冰冻的池塘",
+    "冰封的池塘"
+   ],
+   "rejected": []
+  },
+  "a well": {
+   "names": [
+    "well",
+    "水井"
+   ],
+   "rejected": []
+  },
+  "a pond": {
+   "names": [
+    "pond",
+    "池塘",
+    "水塘"
+   ],
+   "rejected": []
+  },
+  "a muddy pond": {
+   "names": [
+    "muddy pond",
+    "泥塘",
+    "泥水塘",
+    "烂泥塘"
+   ],
+   "rejected": []
+  },
+  "a muddy well": {
+   "names": [
+    "muddy well",
+    "泥井",
+    "浑水井"
+   ],
+   "rejected": []
+  },
+  "a lazy farmer": {
+   "names": [
+    "lazy farmer",
+    "懒农夫",
+    "懒惰的农民",
+    "懒汉农夫"
+   ],
+   "rejected": []
+  },
+  "a lazy fisherman": {
+   "names": [
+    "lazy fisherman",
+    "懒惰的渔夫",
+    "懒渔夫"
+   ],
+   "rejected": []
+  },
+  "a greedy farmer": {
+   "names": [
+    "greedy farmer",
+    "贪婪的农夫",
+    "贪心的农民",
+    "贪婪的农民"
+   ],
+   "rejected": []
+  },
+  "a greedy fisherman": {
+   "names": [
+    "greedy fisherman",
+    "贪婪的渔夫",
+    "贪心的渔夫"
+   ],
+   "rejected": []
+  },
+  "a farmer": {
+   "names": [
+    "farmer",
+    "农民",
+    "农夫"
+   ],
+   "rejected": []
+  },
+  "a fisherman": {
+   "names": [
+    "fisherman",
+    "fisher",
+    "渔民",
+    "渔夫",
+    "渔人"
+   ],
+   "rejected": []
+  },
+  "a clumsy fisherman": {
+   "names": [
+    "clumsy fisherman",
+    "笨拙的渔夫",
+    "笨手笨脚的渔夫",
+    "笨拙的渔民"
+   ],
+   "rejected": []
+  },
+  "a clumsy farmer": {
+   "names": [
+    "clumsy farmer",
+    "笨拙的农民",
+    "笨手笨脚的农夫"
+   ],
+   "rejected": []
+  },
+  "a sunken ship": {
+   "names": [
+    "sunken ship",
+    "shipwreck",
+    "沉船"
+   ],
+   "rejected": [
+    "wreck"
+   ]
+  },
+  "a sunken plane": {
+   "names": [
+    "sunken plane",
+    "sunken aircraft",
+    "submerged plane",
+    "沉没的飞机",
+    "沉入水中的飞机"
+   ],
+   "rejected": [
+    "水下飞机残骸"
+   ]
+  },
+  "a stranded ship": {
+   "names": [
+    "stranded ship",
+    "grounded ship",
+    "beached ship",
+    "搁浅的船",
+    "搁浅船只",
+    "搁浅船"
+   ],
+   "rejected": []
+  },
+  "a stranded plane": {
+   "names": [
+    "stranded plane",
+    "stranded aircraft",
+    "滞留的飞机",
+    "被困的飞机"
+   ],
+   "rejected": [
+    "grounded plane",
+    "搁浅的飞机"
+   ]
+  },
+  "a ship": {
+   "names": [
+    "ship",
+    "vessel",
+    "船只",
+    "船舶"
+   ],
+   "rejected": []
+  },
+  "a plane": {
+   "names": [
+    "plane",
+    "airplane",
+    "飞机"
+   ],
+   "rejected": [
+    "aircraft"
+   ]
+  },
+  "a burning plane": {
+   "names": [
+    "burning plane",
+    "burning aircraft",
+    "plane on fire",
+    "燃烧的飞机",
+    "着火的飞机"
+   ],
+   "rejected": []
+  },
+  "a burning ship": {
+   "names": [
+    "burning ship",
+    "ship on fire",
+    "燃烧的船",
+    "着火的船",
+    "燃烧的船只"
+   ],
+   "rejected": []
+  },
+  "a broken fridge": {
+   "names": [
+    "broken fridge",
+    "broken refrigerator",
+    "坏冰箱",
+    "坏了的冰箱",
+    "损坏的冰箱"
+   ],
+   "rejected": []
+  },
+  "a broken kettle": {
+   "names": [
+    "broken kettle",
+    "坏水壶",
+    "破水壶",
+    "坏了的水壶"
+   ],
+   "rejected": []
+  },
+  "a noisy fridge": {
+   "names": [
+    "noisy fridge",
+    "noisy refrigerator",
+    "loud fridge",
+    "噪音大的冰箱",
+    "吵闹的冰箱",
+    "噪声大的冰箱"
+   ],
+   "rejected": []
+  },
+  "a noisy kettle": {
+   "names": [
+    "noisy kettle",
+    "loud kettle",
+    "吵闹的水壶",
+    "响声大的水壶"
+   ],
+   "rejected": []
+  },
+  "a fridge": {
+   "names": [
+    "fridge",
+    "refrigerator",
+    "冰箱",
+    "电冰箱"
+   ],
+   "rejected": []
+  },
+  "a cracked kettle": {
+   "names": [
+    "cracked kettle",
+    "裂开的水壶",
+    "有裂缝的水壶"
+   ],
+   "rejected": [
+    "破水壶"
+   ]
+  },
+  "a cracked fridge": {
+   "names": [
+    "cracked fridge",
+    "cracked refrigerator",
+    "破裂的冰箱",
+    "有裂缝的冰箱",
+    "开裂的冰箱"
+   ],
+   "rejected": []
+  },
+  "a snow-covered car": {
+   "names": [
+    "snow-covered car",
+    "car covered in snow",
+    "被雪覆盖的汽车",
+    "积雪覆盖的汽车",
+    "落满雪的汽车"
+   ],
+   "rejected": []
+  },
+  "a snow-covered bicycle": {
+   "names": [
+    "snow-covered bicycle",
+    "snow-covered bike",
+    "被雪覆盖的自行车",
+    "积雪的自行车",
+    "覆雪的自行车"
+   ],
+   "rejected": []
+  },
+  "a mud-covered car": {
+   "names": [
+    "mud-covered car",
+    "muddy car",
+    "沾满泥的汽车",
+    "满是泥巴的车",
+    "泥污的汽车"
+   ],
+   "rejected": [
+    "mud-splattered car"
+   ]
+  },
+  "a mud-covered bicycle": {
+   "names": [
+    "mud-covered bicycle",
+    "muddy bicycle",
+    "muddy bike",
+    "沾满泥的自行车",
+    "满是泥巴的自行车",
+    "沾满泥的单车"
+   ],
+   "rejected": []
+  },
+  "a car": {
+   "names": [
+    "car",
+    "automobile",
+    "motor car",
+    "汽车",
+    "轿车",
+    "小汽车"
+   ],
+   "rejected": []
+  },
+  "a bicycle": {
+   "names": [
+    "bicycle",
+    "bike",
+    "自行车",
+    "脚踏车",
+    "单车"
+   ],
+   "rejected": []
+  },
+  "a leaf-covered bicycle": {
+   "names": [
+    "leaf-covered bicycle",
+    "leaf-covered bike",
+    "bicycle covered in leaves",
+    "落满树叶的自行车",
+    "被树叶覆盖的自行车",
+    "盖满落叶的单车"
+   ],
+   "rejected": []
+  },
+  "a leaf-covered car": {
+   "names": [
+    "leaf-covered car",
+    "car covered in leaves",
+    "car covered with leaves",
+    "落满树叶的汽车",
+    "被树叶覆盖的汽车",
+    "盖满落叶的车"
+   ],
+   "rejected": []
+  },
+  "a frozen towel": {
+   "names": [
+    "frozen towel",
+    "冻毛巾",
+    "冰冻毛巾",
+    "结冰的毛巾"
+   ],
+   "rejected": []
+  },
+  "a frozen blanket": {
+   "names": [
+    "frozen blanket",
+    "冻住的毯子",
+    "结冰的毯子",
+    "冻硬的毯子"
+   ],
+   "rejected": []
+  },
+  "a soaked towel": {
+   "names": [
+    "soaked towel",
+    "soaking wet towel",
+    "湿透的毛巾"
+   ],
+   "rejected": [
+    "wet towel",
+    "湿毛巾"
+   ]
+  },
+  "a soaked blanket": {
+   "names": [
+    "soaked blanket",
+    "drenched blanket",
+    "湿透的毯子",
+    "浸湿的毯子"
+   ],
+   "rejected": [
+    "wet blanket",
+    "湿毯子"
+   ]
+  },
+  "a towel": {
+   "names": [
+    "towel",
+    "毛巾"
+   ],
+   "rejected": [
+    "浴巾"
+   ]
+  },
+  "a blanket": {
+   "names": [
+    "blanket",
+    "毯子",
+    "毛毯"
+   ],
+   "rejected": []
+  },
+  "a scorched blanket": {
+   "names": [
+    "scorched blanket",
+    "burnt blanket",
+    "烧焦的毯子",
+    "烧焦的毛毯"
+   ],
+   "rejected": []
+  },
+  "a scorched towel": {
+   "names": [
+    "scorched towel",
+    "burnt towel",
+    "烧焦的毛巾",
+    "烫焦的毛巾"
+   ],
+   "rejected": []
+  },
+  "um chapéu amassado": {
+   "names": [
+    "crumpled hat",
+    "dented hat",
+    "皱巴巴的帽子",
+    "压扁的帽子",
+    "压皱的帽子"
+   ],
+   "rejected": [
+    "battered hat"
+   ]
+  },
+  "um sapato amassado": {
+   "names": [
+    "crumpled shoe",
+    "crushed shoe",
+    "squashed shoe",
+    "压扁的鞋",
+    "皱巴巴的鞋",
+    "被压坏的鞋"
+   ],
+   "rejected": []
+  },
+  "um chapéu molhado": {
+   "names": [
+    "wet hat",
+    "湿帽子",
+    "湿的帽子"
+   ],
+   "rejected": []
+  },
+  "um sapato molhado": {
+   "names": [
+    "wet shoe",
+    "湿鞋",
+    "湿鞋子"
+   ],
+   "rejected": []
+  },
+  "um chapéu": {
+   "names": [
+    "hat",
+    "帽子"
+   ],
+   "rejected": []
+  },
+  "um sapato": {
+   "names": [
+    "shoe",
+    "鞋子"
+   ],
+   "rejected": []
+  },
+  "um sapato rasgado": {
+   "names": [
+    "torn shoe",
+    "ripped shoe",
+    "破了的鞋",
+    "撕破的鞋"
+   ],
+   "rejected": [
+    "破鞋"
+   ]
+  },
+  "um chapéu rasgado": {
+   "names": [
+    "torn hat",
+    "ripped hat",
+    "破帽子",
+    "撕破的帽子"
+   ],
+   "rejected": []
+  },
+  "a featherless chicken": {
+   "names": [
+    "featherless chicken",
+    "naked chicken",
+    "无毛鸡",
+    "裸鸡"
+   ],
+   "rejected": []
+  },
+  "a featherless duck": {
+   "names": [
+    "featherless duck",
+    "plucked duck",
+    "无毛鸭",
+    "光鸭",
+    "褪毛鸭"
+   ],
+   "rejected": []
+  },
+  "a one-legged chicken": {
+   "names": [
+    "one-legged chicken",
+    "独腿鸡",
+    "单腿鸡"
+   ],
+   "rejected": []
+  },
+  "a one-legged duck": {
+   "names": [
+    "one-legged duck",
+    "独腿鸭",
+    "单腿鸭",
+    "一条腿的鸭子"
+   ],
+   "rejected": []
+  },
+  "a chicken": {
+   "names": [
+    "chicken"
+   ],
+   "rejected": [
+    "小鸡"
+   ]
+  },
+  "a duck": {
+   "names": [
+    "duck",
+    "鸭子"
+   ],
+   "rejected": []
+  },
+  "a blind duck": {
+   "names": [
+    "blind duck",
+    "瞎鸭子",
+    "盲鸭"
+   ],
+   "rejected": []
+  },
+  "a blind chicken": {
+   "names": [
+    "blind chicken",
+    "瞎眼鸡",
+    "瞎鸡"
+   ],
+   "rejected": []
+  },
+  "an anchor made of paper": {
+   "names": [
+    "paper anchor",
+    "纸锚",
+    "纸做的锚"
+   ],
+   "rejected": []
+  },
+  "an anchor made of glass": {
+   "names": [
+    "glass anchor",
+    "玻璃锚"
+   ],
+   "rejected": []
+  },
+  "a compass made of paper": {
+   "names": [
+    "paper compass",
+    "纸罗盘",
+    "纸指南针"
+   ],
+   "rejected": []
+  },
+  "a compass made of glass": {
+   "names": [
+    "glass compass",
+    "玻璃指南针",
+    "玻璃罗盘"
+   ],
+   "rejected": []
+  },
+  "an anchor": {
+   "names": [
+    "anchor",
+    "船锚"
+   ],
+   "rejected": []
+  },
+  "a compass": {
+   "names": [
+    "compass",
+    "指南针",
+    "罗盘",
+    "指北针"
+   ],
+   "rejected": [
+    "magnetic compass"
+   ]
+  },
+  "a compass made of ice": {
+   "names": [
+    "ice compass",
+    "冰罗盘",
+    "冰制指南针"
+   ],
+   "rejected": []
+  },
+  "an anchor made of ice": {
+   "names": [],
+   "rejected": [
+    "ice anchor",
+    "冰锚"
+   ]
+  },
+  "a drum made of jelly": {
+   "names": [
+    "jelly drum",
+    "果冻鼓"
+   ],
+   "rejected": []
+  },
+  "a drum made of glass": {
+   "names": [
+    "glass drum",
+    "玻璃鼓"
+   ],
+   "rejected": []
+  },
+  "a violin made of jelly": {
+   "names": [
+    "jelly violin",
+    "果冻小提琴"
+   ],
+   "rejected": []
+  },
+  "a violin made of glass": {
+   "names": [
+    "glass violin",
+    "玻璃小提琴"
+   ],
+   "rejected": []
+  },
+  "a drum": {
+   "names": [
+    "drum"
+   ],
+   "rejected": []
+  },
+  "a violin made of smoke": {
+   "names": [
+    "smoke violin",
+    "violin made of smoke",
+    "烟雾小提琴",
+    "烟做的小提琴"
+   ],
+   "rejected": []
+  },
+  "a drum made of smoke": {
+   "names": [
+    "smoke drum",
+    "烟鼓",
+    "烟雾鼓",
+    "由烟构成的鼓"
+   ],
+   "rejected": [
+    "drum of smoke"
+   ]
+  },
+  "una iglesia en un autobús": {
+   "names": [
+    "church in a bus",
+    "church on a bus",
+    "公交车上的教堂",
+    "巴士上的教堂",
+    "公共汽车里的教堂"
+   ],
+   "rejected": [
+    "bus church"
+   ]
+  },
+  "una iglesia en un tren": {
+   "names": [
+    "church on a train",
+    "train church",
+    "火车上的教堂",
+    "列车上的教堂"
+   ],
+   "rejected": []
+  },
+  "una escuela en un autobús": {
+   "names": [
+    "school on a bus",
+    "bus school",
+    "巴士上的学校",
+    "公交车上的学校"
+   ],
+   "rejected": [
+    "school bus classroom",
+    "校车教室"
+   ]
+  },
+  "una escuela en un tren": {
+   "names": [
+    "school on a train",
+    "火车上的学校",
+    "列车上的学校"
+   ],
+   "rejected": [
+    "train school"
+   ]
+  },
+  "un autobús": {
+   "names": [
+    "bus",
+    "autobus",
+    "公共汽车",
+    "公交车",
+    "巴士"
+   ],
+   "rejected": []
+  },
+  "un tren": {
+   "names": [
+    "train",
+    "火车",
+    "列车"
+   ],
+   "rejected": []
+  },
+  "un hospital en un tren": {
+   "names": [
+    "hospital train",
+    "train hospital",
+    "医疗列车",
+    "列车医院",
+    "火车医院"
+   ],
+   "rejected": []
+  },
+  "un hospital en un autobús": {
+   "names": [
+    "hospital on a bus",
+    "bus hospital",
+    "公交车上的医院",
+    "巴士医院",
+    "大巴上的医院"
+   ],
+   "rejected": [
+    "mobile hospital bus"
+   ]
+  },
+  "una sartoria su un tram": {
+   "names": [
+    "tailor's shop on a tram",
+    "tailoring shop on a tram",
+    "电车上的裁缝店",
+    "有轨电车上的裁缝铺"
+   ],
+   "rejected": []
+  },
+  "una sartoria su un traghetto": {
+   "names": [
+    "tailor shop on a ferry",
+    "tailor's shop on a ferry",
+    "渡轮上的裁缝店",
+    "渡船上的裁缝铺"
+   ],
+   "rejected": []
+  },
+  "una calzoleria su un tram": {
+   "names": [
+    "shoe shop on a tram",
+    "shoemaker's shop on a tram",
+    "cobbler's shop on a tram",
+    "电车上的鞋店",
+    "电车上的修鞋铺"
+   ],
+   "rejected": []
+  },
+  "una calzoleria su un traghetto": {
+   "names": [
+    "shoe shop on a ferry",
+    "shoemaker's shop on a ferry",
+    "cobbler's shop on a ferry",
+    "渡轮上的鞋店",
+    "渡船上的鞋店"
+   ],
+   "rejected": [
+    "渡轮上的修鞋店"
+   ]
+  },
+  "un tram": {
+   "names": [
+    "tram",
+    "streetcar",
+    "有轨电车"
+   ],
+   "rejected": [
+    "trolley",
+    "电车"
+   ]
+  },
+  "un traghetto": {
+   "names": [
+    "ferry",
+    "ferryboat",
+    "渡轮",
+    "渡船"
+   ],
+   "rejected": []
+  },
+  "una barberia su un traghetto": {
+   "names": [
+    "barbershop on a ferry",
+    "ferry barbershop",
+    "渡轮上的理发店",
+    "渡船上的理发店"
+   ],
+   "rejected": []
+  },
+  "una barberia su un tram": {
+   "names": [
+    "barbershop on a tram",
+    "tram barbershop",
+    "电车上的理发店",
+    "有轨电车理发店"
+   ],
+   "rejected": []
+  },
+  "a hammer made of feathers": {
+   "names": [
+    "feather hammer",
+    "羽毛锤",
+    "羽毛做的锤子"
+   ],
+   "rejected": []
+  },
+  "a hammer made of glass": {
+   "names": [
+    "glass hammer",
+    "玻璃锤",
+    "玻璃锤子"
+   ],
+   "rejected": []
+  },
+  "a broom made of feathers": {
+   "names": [
+    "feather duster",
+    "鸡毛掸子",
+    "羽毛掸子"
+   ],
+   "rejected": [
+    "掸子"
+   ]
+  },
+  "a broom made of glass": {
+   "names": [
+    "glass broom",
+    "玻璃扫帚",
+    "玻璃扫把"
+   ],
+   "rejected": []
+  },
+  "a hammer": {
+   "names": [
+    "hammer",
+    "锤子",
+    "榔头"
+   ],
+   "rejected": []
+  },
+  "a broom": {
+   "names": [
+    "broom",
+    "扫帚",
+    "扫把",
+    "笤帚"
+   ],
+   "rejected": []
+  },
+  "a broom made of ice": {
+   "names": [
+    "ice broom",
+    "冰扫帚",
+    "冰做的扫帚"
+   ],
+   "rejected": []
+  },
+  "a hammer made of ice": {
+   "names": [
+    "冰做的锤子"
+   ],
+   "rejected": [
+    "ice hammer",
+    "冰锤",
+    "冰锤子"
+   ]
+  },
+  "a flute made of stone": {
+   "names": [
+    "stone flute",
+    "石笛"
+   ],
+   "rejected": []
+  },
+  "a flute made of glass": {
+   "names": [
+    "glass flute",
+    "玻璃长笛",
+    "玻璃笛"
+   ],
+   "rejected": []
+  },
+  "a drum made of stone": {
+   "names": [
+    "stone drum",
+    "石鼓"
+   ],
+   "rejected": []
+  },
+  "a flute": {
+   "names": [
+    "flute",
+    "长笛",
+    "笛子"
+   ],
+   "rejected": []
+  },
+  "a drum made of ice": {
+   "names": [
+    "ice drum",
+    "冰鼓"
+   ],
+   "rejected": []
+  },
+  "a flute made of ice": {
+   "names": [
+    "ice flute",
+    "冰笛",
+    "冰制长笛"
+   ],
+   "rejected": []
+  },
+  "cymbals made of paper": {
+   "names": [
+    "paper cymbals",
+    "纸钹",
+    "纸镲"
+   ],
+   "rejected": []
+  },
+  "cymbals made of glass": {
+   "names": [
+    "glass cymbals",
+    "玻璃镲",
+    "玻璃钹"
+   ],
+   "rejected": []
+  },
+  "a drum made of paper": {
+   "names": [
+    "paper drum",
+    "纸鼓"
+   ],
+   "rejected": []
+  },
+  "cymbals": {
+   "names": [
+    "cymbals",
+    "铙钹"
+   ],
+   "rejected": []
+  },
+  "cymbals made of ice": {
+   "names": [
+    "ice cymbals",
+    "冰镲",
+    "冰钹"
+   ],
+   "rejected": []
+  },
+  "a church inside a windmill": {
+   "names": [
+    "windmill church",
+    "church in a windmill",
+    "风车教堂",
+    "风车里的教堂"
+   ],
+   "rejected": []
+  },
+  "a church inside a lighthouse": {
+   "names": [
+    "lighthouse church",
+    "church in a lighthouse",
+    "灯塔教堂",
+    "灯塔内的教堂"
+   ],
+   "rejected": []
+  },
+  "a library inside a windmill": {
+   "names": [
+    "windmill library",
+    "library in a windmill",
+    "风车图书馆",
+    "风车里的图书馆"
+   ],
+   "rejected": []
+  },
+  "a library inside a lighthouse": {
+   "names": [
+    "lighthouse library",
+    "灯塔图书馆",
+    "灯塔里的图书馆"
+   ],
+   "rejected": []
+  },
+  "a windmill": {
+   "names": [
+    "windmill",
+    "风车",
+    "风车磨坊"
+   ],
+   "rejected": []
+  },
+  "a lighthouse": {
+   "names": [
+    "lighthouse",
+    "灯塔"
+   ],
+   "rejected": []
+  },
+  "a bakery inside a lighthouse": {
+   "names": [
+    "lighthouse bakery",
+    "bakery in a lighthouse",
+    "灯塔面包店",
+    "灯塔里的面包店",
+    "灯塔内的面包房"
+   ],
+   "rejected": []
+  },
+  "a bakery inside a windmill": {
+   "names": [
+    "windmill bakery",
+    "bakery in a windmill",
+    "风车面包店",
+    "风车里的面包店",
+    "风车磨坊面包店"
+   ],
+   "rejected": []
+  },
+  "a cinema inside a lighthouse": {
+   "names": [
+    "lighthouse cinema",
+    "lighthouse movie theater",
+    "灯塔电影院",
+    "灯塔影院"
+   ],
+   "rejected": []
+  },
+  "a cinema inside a windmill": {
+   "names": [
+    "windmill cinema",
+    "cinema in a windmill",
+    "风车电影院",
+    "风车里的电影院"
+   ],
+   "rejected": []
+  },
+  "a sled made of wax": {
+   "names": [
+    "wax sled",
+    "wax sledge",
+    "蜡制雪橇",
+    "蜡雪橇"
+   ],
+   "rejected": []
+  },
+  "a sled made of glass": {
+   "names": [
+    "glass sled",
+    "glass sledge",
+    "glass sleigh",
+    "玻璃雪橇"
+   ],
+   "rejected": []
+  },
+  "a raft made of wax": {
+   "names": [
+    "wax raft",
+    "蜡筏",
+    "蜡制木筏"
+   ],
+   "rejected": []
+  },
+  "a raft made of glass": {
+   "names": [
+    "glass raft",
+    "玻璃筏"
+   ],
+   "rejected": [
+    "玻璃木筏"
+   ]
+  },
+  "a sled": {
+   "names": [
+    "sled",
+    "sledge",
+    "sleigh",
+    "雪橇"
+   ],
+   "rejected": []
+  },
+  "a raft": {
+   "names": [
+    "raft",
+    "木筏",
+    "筏子"
+   ],
+   "rejected": []
+  },
+  "a raft made of paper": {
+   "names": [
+    "paper raft",
+    "纸筏"
+   ],
+   "rejected": [
+    "纸木筏"
+   ]
+  },
+  "a sled made of paper": {
+   "names": [
+    "paper sled",
+    "paper sledge",
+    "纸雪橇"
+   ],
+   "rejected": []
+  },
+  "a school on a fishing boat": {
+   "names": [
+    "school on a fishing boat",
+    "fishing boat school",
+    "渔船上的学校",
+    "渔船学校"
+   ],
+   "rejected": []
+  },
+  "a school on a cargo ship": {
+   "names": [
+    "school on a cargo ship",
+    "cargo ship school",
+    "货船上的学校",
+    "货轮上的学校"
+   ],
+   "rejected": []
+  },
+  "a library on a fishing boat": {
+   "names": [
+    "fishing boat library",
+    "library on a fishing boat",
+    "渔船图书馆",
+    "渔船上的图书馆"
+   ],
+   "rejected": []
+  },
+  "a library on a cargo ship": {
+   "names": [
+    "cargo ship library",
+    "library on a cargo ship",
+    "freighter library",
+    "货船图书馆",
+    "货轮图书馆",
+    "货船上的图书馆"
+   ],
+   "rejected": []
+  },
+  "a fishing boat": {
+   "names": [
+    "fishing boat",
+    "fishing vessel",
+    "渔船"
+   ],
+   "rejected": []
+  },
+  "a cargo ship": {
+   "names": [
+    "cargo ship",
+    "freighter",
+    "cargo vessel",
+    "货船",
+    "货轮"
+   ],
+   "rejected": [
+    "运输船"
+   ]
+  },
+  "a hospital on a cargo ship": {
+   "names": [
+    "cargo ship hospital",
+    "hospital on a cargo ship",
+    "freighter sick bay",
+    "货船医院",
+    "货船上的医院",
+    "货轮医务室"
+   ],
+   "rejected": []
+  },
+  "a hospital on a fishing boat": {
+   "names": [
+    "fishing boat hospital",
+    "hospital on a fishing boat",
+    "渔船医院",
+    "渔船上的医院"
+   ],
+   "rejected": []
+  },
+  "a zoo on an airplane": {
+   "names": [
+    "airplane zoo",
+    "zoo on an airplane",
+    "飞机上的动物园"
+   ],
+   "rejected": [
+    "flying zoo",
+    "空中动物园"
+   ]
+  },
+  "a zoo on a ship": {
+   "names": [
+    "ship zoo",
+    "zoo ship",
+    "船上动物园"
+   ],
+   "rejected": [
+    "floating zoo",
+    "海上动物园"
+   ]
+  },
+  "a library on an airplane": {
+   "names": [
+    "airplane library",
+    "in-flight library",
+    "飞机上的图书馆",
+    "机上图书馆"
+   ],
+   "rejected": [
+    "onboard library",
+    "机上图书角"
+   ]
+  },
+  "a library on a ship": {
+   "names": [
+    "ship's library",
+    "shipboard library",
+    "ship library",
+    "船上图书馆",
+    "船舶图书馆",
+    "船上图书室"
+   ],
+   "rejected": []
+  },
+  "a zoo": {
+   "names": [
+    "zoo",
+    "zoological garden",
+    "zoological park",
+    "动物园"
+   ],
+   "rejected": []
+  },
+  "a library": {
+   "names": [
+    "library",
+    "图书馆",
+    "圖書館"
+   ],
+   "rejected": []
+  },
+  "a library on a train": {
+   "names": [
+    "train library",
+    "library car",
+    "library on a train",
+    "火车图书馆",
+    "列车图书馆",
+    "火车上的图书馆"
+   ],
+   "rejected": []
+  },
+  "a zoo on a train": {
+   "names": [
+    "zoo on a train",
+    "train zoo",
+    "火车上的动物园",
+    "列车动物园"
+   ],
+   "rejected": []
+  },
+  "a bridge made of feathers": {
+   "names": [
+    "feather bridge",
+    "bridge of feathers",
+    "羽毛桥",
+    "羽毛做的桥"
+   ],
+   "rejected": []
+  },
+  "a bridge made of glass": {
+   "names": [
+    "glass bridge",
+    "玻璃桥"
+   ],
+   "rejected": [
+    "glass-bottomed bridge",
+    "玻璃栈桥"
+   ]
+  },
+  "a tower made of feathers": {
+   "names": [
+    "feather tower",
+    "tower of feathers",
+    "羽毛塔",
+    "羽毛做的塔"
+   ],
+   "rejected": []
+  },
+  "a tower made of glass": {
+   "names": [
+    "glass tower",
+    "玻璃塔"
+   ],
+   "rejected": [
+    "玻璃大楼"
+   ]
+  },
+  "a bridge": {
+   "names": [
+    "bridge",
+    "桥梁"
+   ],
+   "rejected": []
+  },
+  "a tower": {
+   "names": [
+    "tower",
+    "塔楼"
+   ],
+   "rejected": []
+  },
+  "a tower made of paper": {
+   "names": [
+    "paper tower",
+    "纸塔"
+   ],
+   "rejected": []
+  },
+  "a bridge made of paper": {
+   "names": [
+    "paper bridge",
+    "纸桥"
+   ],
+   "rejected": []
+  },
+  "a surfboard made of chocolate": {
+   "names": [
+    "chocolate surfboard",
+    "巧克力冲浪板"
+   ],
+   "rejected": []
+  },
+  "a surfboard made of ice": {
+   "names": [
+    "ice surfboard",
+    "冰冲浪板",
+    "冰制冲浪板"
+   ],
+   "rejected": []
+  },
+  "a skateboard made of chocolate": {
+   "names": [
+    "chocolate skateboard",
+    "巧克力滑板"
+   ],
+   "rejected": []
+  },
+  "a skateboard made of ice": {
+   "names": [
+    "ice skateboard",
+    "冰滑板",
+    "冰制滑板"
+   ],
+   "rejected": []
+  },
+  "a surfboard": {
+   "names": [
+    "surfboard",
+    "冲浪板"
+   ],
+   "rejected": []
+  },
+  "a skateboard": {
+   "names": [
+    "skateboard",
+    "滑板"
+   ],
+   "rejected": []
+  },
+  "a skateboard made of cheese": {
+   "names": [
+    "cheese skateboard",
+    "奶酪滑板",
+    "芝士滑板"
+   ],
+   "rejected": []
+  },
+  "a surfboard made of cheese": {
+   "names": [
+    "cheese surfboard",
+    "奶酪冲浪板",
+    "芝士冲浪板"
+   ],
+   "rejected": []
+  },
+  "una pizza di legno": {
+   "names": [
+    "wooden pizza",
+    "wood pizza",
+    "木制披萨",
+    "木头披萨",
+    "木质比萨"
+   ],
+   "rejected": []
+  },
+  "una pizza di vetro": {
+   "names": [
+    "glass pizza",
+    "玻璃披萨",
+    "玻璃比萨"
+   ],
+   "rejected": []
+  },
+  "una torta di legno": {
+   "names": [
+    "wooden cake",
+    "wood cake",
+    "木制蛋糕",
+    "木头蛋糕"
+   ],
+   "rejected": []
+  },
+  "una torta di vetro": {
+   "names": [
+    "glass cake",
+    "玻璃蛋糕"
+   ],
+   "rejected": []
+  },
+  "una pizza": {
+   "names": [
+    "pizza",
+    "披萨",
+    "比萨饼",
+    "比萨"
+   ],
+   "rejected": []
+  },
+  "una torta": {
+   "names": [
+    "cake",
+    "蛋糕"
+   ],
+   "rejected": []
+  },
+  "una torta di gomma": {
+   "names": [
+    "rubber cake",
+    "橡胶蛋糕",
+    "橡皮蛋糕"
+   ],
+   "rejected": []
+  },
+  "una pizza di gomma": {
+   "names": [
+    "rubber pizza",
+    "橡胶披萨",
+    "橡胶比萨"
+   ],
+   "rejected": []
+  },
+  "a pitch pipe": {
+   "names": [
+    "pitch pipe",
+    "定音笛",
+    "律管"
+   ],
+   "rejected": []
+  },
+  "a Chladni plate": {
+   "names": [
+    "Chladni plate",
+    "克拉德尼板",
+    "克拉尼板"
+   ],
+   "rejected": []
+  },
+  "a resonance tube": {
+   "names": [
+    "resonance tube",
+    "resonance column",
+    "共鸣管",
+    "共振管"
+   ],
+   "rejected": []
+  },
+  "a Helmholtz resonator": {
+   "names": [
+    "Helmholtz resonator",
+    "亥姆霍兹共鸣器",
+    "亥姆霍兹共振器"
+   ],
+   "rejected": []
+  },
+  "a sounding board": {
+   "names": [
+    "sounding board",
+    "soundboard",
+    "共鸣板",
+    "反响板"
+   ],
+   "rejected": []
+  },
+  "a Kundt's tube": {
+   "names": [
+    "Kundt's tube",
+    "孔特管",
+    "昆特管"
+   ],
+   "rejected": []
+  },
+  "a tin whistle": {
+   "names": [
+    "tin whistle",
+    "penny whistle",
+    "Irish whistle",
+    "锡哨",
+    "爱尔兰哨笛",
+    "锡笛"
+   ],
+   "rejected": []
+  },
+  "a pan flute": {
+   "names": [
+    "pan flute",
+    "panpipes",
+    "syrinx",
+    "排箫",
+    "潘笛"
+   ],
+   "rejected": []
+  },
+  "a shakuhachi": {
+   "names": [
+    "shakuhachi",
+    "尺八"
+   ],
+   "rejected": []
+  },
+  "a fife": {
+   "names": [
+    "fife",
+    "横笛"
+   ],
+   "rejected": [
+    "短笛"
+   ]
+  },
+  "a piccolo": {
+   "names": [
+    "piccolo",
+    "短笛"
+   ],
+   "rejected": []
+  },
+  "a melodica": {
+   "names": [
+    "melodica",
+    "blow-organ",
+    "keyboard harmonica",
+    "口风琴"
+   ],
+   "rejected": [
+    "口琴风琴"
+   ]
+  },
+  "a harmonica": {
+   "names": [
+    "harmonica",
+    "mouth organ",
+    "口琴"
+   ],
+   "rejected": []
+  },
+  "a vuvuzela": {
+   "names": [
+    "vuvuzela",
+    "呜呜祖拉",
+    "巫巫兹拉"
+   ],
+   "rejected": []
+  },
+  "an alphorn": {
+   "names": [
+    "alphorn",
+    "alpenhorn",
+    "alpine horn",
+    "阿尔卑斯长号",
+    "阿尔卑斯号角"
+   ],
+   "rejected": [
+    "山笛"
+   ]
+  },
+  "a shofar": {
+   "names": [
+    "shofar",
+    "羊角号",
+    "肖法尔"
+   ],
+   "rejected": [
+    "ram's horn"
+   ]
+  },
+  "a conch trumpet": {
+   "names": [
+    "conch trumpet",
+    "conch shell trumpet",
+    "shell trumpet",
+    "法螺",
+    "海螺号",
+    "螺号"
+   ],
+   "rejected": []
+  },
+  "a lur": {
+   "names": [
+    "lur",
+    "卢尔号"
+   ],
+   "rejected": [
+    "lure",
+    "青铜号角"
+   ]
+  },
+  "a dungchen": {
+   "names": [
+    "dungchen",
+    "Tibetan long horn",
+    "筒钦",
+    "藏族长号",
+    "西藏长号"
+   ],
+   "rejected": [
+    "Tibetan horn"
+   ]
+  },
+  "a bugle": {
+   "names": [
+    "bugle",
+    "军号",
+    "号角",
+    "军用号"
+   ],
+   "rejected": []
+  },
+  "a kalimba": {
+   "names": [
+    "kalimba",
+    "thumb piano",
+    "卡林巴琴",
+    "拇指琴",
+    "卡林巴"
+   ],
+   "rejected": [
+    "mbira"
+   ]
+  },
+  "a marimbula": {
+   "names": [
+    "marimbula",
+    "马林布拉琴",
+    "马林布拉"
+   ],
+   "rejected": []
+  },
+  "a jaw harp": {
+   "names": [
+    "jaw harp",
+    "Jew's harp",
+    "mouth harp",
+    "口弦",
+    "口簧琴"
+   ],
+   "rejected": [
+    "口琴弦"
+   ]
+  },
+  "a morsing": {
+   "names": [
+    "morsing",
+    "morching",
+    "莫尔辛",
+    "印度口簧琴"
+   ],
+   "rejected": []
+  },
+  "a khomus": {
+   "names": [
+    "khomus",
+    "Yakut jaw harp",
+    "雅库特口弦琴"
+   ],
+   "rejected": [
+    "jaw harp",
+    "口弦琴"
+   ]
+  },
+  "a kubing": {
+   "names": [
+    "kubing"
+   ],
+   "rejected": [
+    "bamboo jaw harp",
+    "竹口簧"
+   ]
+  },
+  "a dan moi": {
+   "names": [
+    "dan moi",
+    "Vietnamese jaw harp",
+    "Vietnamese mouth harp",
+    "越南口簧琴"
+   ],
+   "rejected": [
+    "口簧琴"
+   ]
+  },
+  "a kouxian": {
+   "names": [
+    "kouxian",
+    "口弦",
+    "口弦琴"
+   ],
+   "rejected": [
+    "mouth harp",
+    "jaw harp"
+   ]
+  },
+  "a sitar": {
+   "names": [
+    "sitar",
+    "西塔琴",
+    "锡塔尔琴"
+   ],
+   "rejected": []
+  },
+  "a lute": {
+   "names": [
+    "lute",
+    "鲁特琴",
+    "琉特琴"
+   ],
+   "rejected": []
+  },
+  "a mandolin": {
+   "names": [
+    "mandolin",
+    "曼陀林",
+    "曼陀铃"
+   ],
+   "rejected": [
+    "mandoline"
+   ]
+  },
+  "a harp": {
+   "names": [
+    "harp",
+    "竖琴"
+   ],
+   "rejected": []
+  },
+  "a balalaika": {
+   "names": [
+    "balalaika",
+    "巴拉莱卡琴",
+    "三角琴",
+    "俄罗斯三角琴"
+   ],
+   "rejected": []
+  },
+  "a banjo": {
+   "names": [
+    "banjo",
+    "班卓琴",
+    "五弦琴"
+   ],
+   "rejected": []
+  },
+  "a zither": {
+   "names": [
+    "zither",
+    "齐特琴",
+    "齐特尔琴"
+   ],
+   "rejected": []
+  },
+  "a ukulele": {
+   "names": [
+    "ukulele",
+    "uke",
+    "尤克里里",
+    "夏威夷小吉他"
+   ],
+   "rejected": [
+    "四弦琴"
+   ]
+  },
+  "slacklining": {
+   "names": [
+    "slacklining",
+    "slackline walking",
+    "走扁带",
+    "扁带运动",
+    "扁带行走"
+   ],
+   "rejected": []
+  },
+  "parkour": {
+   "names": [
+    "parkour",
+    "跑酷"
+   ],
+   "rejected": [
+    "freerunning",
+    "自由奔跑"
+   ]
+  },
+  "skimboarding": {
+   "names": [
+    "skimboarding",
+    "浅滩冲浪"
+   ],
+   "rejected": [
+    "skimming",
+    "滑水板运动",
+    "沙滩滑板"
+   ]
+  },
+  "freerunning": {
+   "names": [
+    "freerunning",
+    "free running"
+   ],
+   "rejected": [
+    "parkour",
+    "自由奔跑",
+    "跑酷"
+   ]
+  },
+  "bouldering": {
+   "names": [
+    "bouldering",
+    "抱石",
+    "攀石"
+   ],
+   "rejected": []
+  },
+  "unicycling": {
+   "names": [
+    "unicycling",
+    "独轮车运动",
+    "骑独轮车"
+   ],
+   "rejected": []
+  },
+  "kiteboarding": {
+   "names": [
+    "kiteboarding",
+    "kitesurfing",
+    "风筝冲浪",
+    "风筝滑板"
+   ],
+   "rejected": []
+  },
+  "snowskating": {
+   "names": [
+    "snowskating",
+    "雪地滑板"
+   ],
+   "rejected": [
+    "snowskate",
+    "雪板滑行"
+   ]
+  },
+  "roller derby": {
+   "names": [
+    "roller derby",
+    "轮滑德比",
+    "轮滑阻拦赛",
+    "滚轴德比"
+   ],
+   "rejected": []
+  },
+  "roller hockey": {
+   "names": [
+    "roller hockey",
+    "rink hockey",
+    "quad hockey",
+    "轮滑球",
+    "旱冰球"
+   ],
+   "rejected": [
+    "轮式曲棍球"
+   ]
+  },
+  "quad hockey": {
+   "names": [
+    "quad hockey",
+    "rink hockey",
+    "轮滑球",
+    "四轮曲棍球",
+    "旱冰球"
+   ],
+   "rejected": [
+    "roller hockey"
+   ]
+  },
+  "rink hockey": {
+   "names": [
+    "rink hockey",
+    "roller hockey",
+    "quad hockey",
+    "轮滑球",
+    "旱冰球",
+    "滚轴曲棍球"
+   ],
+   "rejected": []
+  },
+  "skater cross": {
+   "names": [],
+   "rejected": [
+    "skier cross",
+    "ski cross",
+    "U型场地技巧"
+   ]
+  },
+  "la pétanque": {
+   "names": [
+    "pétanque",
+    "petanque",
+    "法式滚球"
+   ],
+   "rejected": [
+    "boules",
+    "滚球"
+   ]
+  },
+  "la boule lyonnaise": {
+   "names": [
+    "boule lyonnaise",
+    "Lyonnaise bowls",
+    "sport-boules",
+    "里昂滚球",
+    "里昂式滚球"
+   ],
+   "rejected": []
+  },
+  "le palet breton": {
+   "names": [
+    "Breton butter biscuit",
+    "palet breton",
+    "Breton shortbread",
+    "布列塔尼黄油饼干",
+    "布列塔尼酥饼"
+   ],
+   "rejected": []
+  },
+  "le mölkky": {
+   "names": [
+    "mölkky",
+    "Finnish skittles",
+    "芬兰木柱",
+    "莫尔基"
+   ],
+   "rejected": []
+  },
+  "le jeu de quilles": {
+   "names": [
+    "skittles",
+    "ninepins",
+    "game of skittles",
+    "九柱戏",
+    "撞柱游戏"
+   ],
+   "rejected": []
+  },
+  "le curling": {
+   "names": [
+    "curling",
+    "冰壶",
+    "冰上溜石"
+   ],
+   "rejected": []
+  },
+  "le croquet": {
+   "names": [
+    "croquet",
+    "槌球"
+   ],
+   "rejected": [
+    "门球"
+   ]
+  },
+  "le jeu de fléchettes": {
+   "names": [
+    "darts",
+    "game of darts",
+    "飞镖",
+    "飞镖游戏",
+    "掷飞镖"
+   ],
+   "rejected": []
+  },
+  "kendo": {
+   "names": [
+    "kendo",
+    "剑道"
+   ],
+   "rejected": []
+  },
+  "kyudo": {
+   "names": [
+    "kyudo",
+    "Japanese archery",
+    "弓道",
+    "日本弓道"
+   ],
+   "rejected": []
+  },
+  "aikido": {
+   "names": [
+    "aikido",
+    "合气道"
+   ],
+   "rejected": []
+  },
+  "iaido": {
+   "names": [
+    "iaido",
+    "居合道"
+   ],
+   "rejected": [
+    "iaijutsu",
+    "拔刀术"
+   ]
+  },
+  "naginatajutsu": {
+   "names": [
+    "naginatajutsu",
+    "naginata fighting",
+    "art of the naginata",
+    "薙刀术"
+   ],
+   "rejected": [
+    "长刀术"
+   ]
+  },
+  "jujutsu": {
+   "names": [
+    "jujutsu",
+    "jiu-jitsu",
+    "jujitsu",
+    "柔术",
+    "柔術"
+   ],
+   "rejected": []
+  },
+  "sumo": {
+   "names": [
+    "sumo",
+    "sumo wrestling",
+    "相扑"
+   ],
+   "rejected": []
+  },
+  "kobudo": {
+   "names": [
+    "kobudo",
+    "Okinawan kobudo",
+    "古武道",
+    "琉球古武道",
+    "冲绳古武道"
+   ],
+   "rejected": []
+  },
+  "lacrosse": {
+   "names": [
+    "lacrosse",
+    "长曲棍球",
+    "袋棍球"
+   ],
+   "rejected": []
+  },
+  "hurling": {
+   "names": [
+    "hurling",
+    "爱尔兰曲棍球",
+    "板棍球"
+   ],
+   "rejected": []
+  },
+  "shinty": {
+   "names": [
+    "shinty",
+    "camanachd",
+    "板棍球",
+    "苏格兰曲棍球"
+   ],
+   "rejected": []
+  },
+  "floorball": {
+   "names": [
+    "floorball",
+    "福乐球",
+    "地板球"
+   ],
+   "rejected": []
+  },
+  "camogie": {
+   "names": [
+    "camogie",
+    "女子爱尔兰曲棍球",
+    "卡莫吉球"
+   ],
+   "rejected": []
+  },
+  "polo": {
+   "names": [
+    "polo",
+    "马球"
+   ],
+   "rejected": []
+  },
+  "field hockey": {
+   "names": [
+    "field hockey",
+    "曲棍球",
+    "草地曲棍球"
+   ],
+   "rejected": [
+    "hockey"
+   ]
+  },
+  "das Synchronschwimmen": {
+   "names": [
+    "synchronized swimming",
+    "artistic swimming",
+    "synchronised swimming",
+    "花样游泳",
+    "艺术游泳"
+   ],
+   "rejected": []
+  },
+  "das Synchronspringen": {
+   "names": [
+    "synchronized diving",
+    "synchronised diving",
+    "synchro diving",
+    "双人跳水",
+    "同步跳水"
+   ],
+   "rejected": []
+  },
+  "das Kunstspringen": {
+   "names": [
+    "springboard diving",
+    "跳板跳水"
+   ],
+   "rejected": [
+    "diving",
+    "跳水"
+   ]
+  },
+  "das Turmspringen": {
+   "names": [
+    "platform diving",
+    "tower diving",
+    "跳台跳水",
+    "高台跳水"
+   ],
+   "rejected": [
+    "high diving"
+   ]
+  },
+  "das Klippenspringen": {
+   "names": [
+    "cliff diving",
+    "cliff jumping",
+    "悬崖跳水"
+   ],
+   "rejected": []
+  },
+  "das Flossenschwimmen": {
+   "names": [
+    "fin swimming",
+    "finswimming",
+    "蹼泳"
+   ],
+   "rejected": []
+  },
+  "das Trickwasserskilaufen": {
+   "names": [
+    "trick water skiing",
+    "trick skiing",
+    "花样滑水",
+    "特技滑水"
+   ],
+   "rejected": []
+  },
+  "das Wasserskispringen": {
+   "names": [
+    "water ski jumping",
+    "ski jumping (water skiing)",
+    "滑水跳跃",
+    "水橇跳跃"
+   ],
+   "rejected": []
+  },
+  "tug of war": {
+   "names": [
+    "tug of war",
+    "tug-of-war",
+    "rope pulling",
+    "拔河"
+   ],
+   "rejected": []
+  },
+  "caber toss": {
+   "names": [
+    "caber toss",
+    "tossing the caber",
+    "掷木柱",
+    "抛木柱",
+    "掷树干"
+   ],
+   "rejected": []
+  },
+  "stone lifting": {
+   "names": [
+    "stone lifting",
+    "stone-lifting",
+    "举石",
+    "举石头",
+    "举石运动"
+   ],
+   "rejected": []
+  },
+  "sack race": {
+   "names": [
+    "sack race",
+    "potato sack race",
+    "袋鼠跳",
+    "套袋跑",
+    "麻袋赛跑"
+   ],
+   "rejected": []
+  },
+  "arm wrestling": {
+   "names": [
+    "arm wrestling",
+    "armwrestling",
+    "掰手腕",
+    "扳手腕",
+    "腕力比赛"
+   ],
+   "rejected": []
+  },
+  "log rolling": {
+   "names": [
+    "log rolling",
+    "logrolling",
+    "birling",
+    "滚原木",
+    "踩滚木"
+   ],
+   "rejected": [
+    "滚木"
+   ]
+  },
+  "wheelbarrow race": {
+   "names": [
+    "wheelbarrow race",
+    "推小车比赛",
+    "推车赛跑",
+    "手推车赛跑"
+   ],
+   "rejected": []
+  },
+  "keg toss": {
+   "names": [
+    "keg toss",
+    "keg throw",
+    "掷酒桶",
+    "抛酒桶"
+   ],
+   "rejected": []
+  },
+  "cross-stitch": {
+   "names": [
+    "cross-stitch",
+    "cross stitch",
+    "十字绣",
+    "十字繡"
+   ],
+   "rejected": []
+  },
+  "petit-point": {
+   "names": [
+    "petit point",
+    "tent stitch",
+    "小针脚刺绣"
+   ],
+   "rejected": [
+    "斜针绣"
+   ]
+  },
+  "crewel-work": {
+   "names": [
+    "crewelwork",
+    "crewel embroidery",
+    "crewel work",
+    "绒线刺绣",
+    "毛线刺绣",
+    "克鲁绣"
+   ],
+   "rejected": []
+  },
+  "black-work": {
+   "names": [
+    "blackwork",
+    "blackwork embroidery",
+    "Spanish work",
+    "黑线刺绣",
+    "黑绣"
+   ],
+   "rejected": []
+  },
+  "drawn-thread": {
+   "names": [
+    "drawn-thread work",
+    "drawn thread embroidery",
+    "drawnwork",
+    "抽纱",
+    "抽丝刺绣",
+    "抽纱绣"
+   ],
+   "rejected": []
+  },
+  "cut-work": {
+   "names": [
+    "cutwork",
+    "cutwork embroidery",
+    "镂空绣",
+    "雕绣"
+   ],
+   "rejected": [
+    "抽纱绣"
+   ]
+  },
+  "gros-point": {
+   "names": [
+    "gros point",
+    "gros-point embroidery",
+    "粗针绣",
+    "粗针刺绣"
+   ],
+   "rejected": []
+  },
+  "pulled-thread": {
+   "names": [
+    "pulled thread",
+    "pulled-thread work",
+    "pulled thread embroidery"
+   ],
+   "rejected": [
+    "抽纱",
+    "抽纱刺绣",
+    "抽丝绣"
+   ]
+  },
+  "stencilling": {
+   "names": [
+    "stencilling",
+    "stenciling",
+    "模板印刷",
+    "镂花涂装",
+    "型版印花"
+   ],
+   "rejected": []
+  },
+  "marbling": {
+   "names": [
+    "marbling",
+    "大理石纹",
+    "大理石花纹"
+   ],
+   "rejected": []
+  },
+  "sponging": {
+   "names": [
+    "sponging",
+    "sponge bath",
+    "擦身",
+    "海绵擦洗"
+   ],
+   "rejected": []
+  },
+  "stippling": {
+   "names": [
+    "stippling",
+    "stipple",
+    "点画法"
+   ],
+   "rejected": [
+    "点刻法",
+    "点彩"
+   ]
+  },
+  "rag rolling": {
+   "names": [
+    "rag rolling",
+    "ragrolling",
+    "滚布纹饰面",
+    "布团滚涂"
+   ],
+   "rejected": []
+  },
+  "faux bois": {
+   "names": [
+    "faux bois",
+    "imitation wood",
+    "faux wood",
+    "仿木",
+    "仿木纹"
+   ],
+   "rejected": [
+    "仿木装饰"
+   ]
+  },
+  "trompe l'oeil": {
+   "names": [
+    "trompe l'oeil",
+    "trompe-l'oeil",
+    "错视画",
+    "视错觉画",
+    "欺眼画"
+   ],
+   "rejected": []
+  },
+  "gilding": {
+   "names": [
+    "gilding",
+    "gilt",
+    "镀金",
+    "贴金"
+   ],
+   "rejected": [
+    "描金"
+   ]
+  },
+  "il mosaico": {
+   "names": [
+    "mosaic",
+    "马赛克",
+    "镶嵌画"
+   ],
+   "rejected": []
+  },
+  "la vetrata": {
+   "names": [
+    "glass window",
+    "玻璃窗"
+   ],
+   "rejected": [
+    "stained glass window",
+    "glazed partition",
+    "彩色玻璃窗",
+    "玻璃隔墙"
+   ]
+  },
+  "il commesso": {
+   "names": [
+    "shop assistant",
+    "sales clerk",
+    "salesclerk",
+    "店员",
+    "售货员"
+   ],
+   "rejected": []
+  },
+  "l'intarsio": {
+   "names": [
+    "intarsia",
+    "marquetry",
+    "镶嵌细工",
+    "细木镶嵌"
+   ],
+   "rejected": [
+    "inlay",
+    "镶嵌"
+   ]
+  },
+  "la tarsia marmorea": {
+   "names": [
+    "marble inlay",
+    "marble intarsia",
+    "marble marquetry",
+    "大理石镶嵌",
+    "大理石镶嵌画",
+    "大理石嵌花"
+   ],
+   "rejected": []
+  },
+  "il cosmatesco": {
+   "names": [
+    "Cosmatesque",
+    "Cosmati work",
+    "Cosmatesque style",
+    "科斯马蒂风格",
+    "科斯马蒂镶嵌"
+   ],
+   "rejected": []
+  },
+  "la smaltatura": {
+   "names": [
+    "enameling",
+    "glazing",
+    "上釉",
+    "施釉"
+   ],
+   "rejected": [
+    "搪瓷"
+   ]
+  },
+  "l'opus sectile": {
+   "names": [
+    "opus sectile",
+    "切石镶嵌",
+    "切片镶嵌"
+   ],
+   "rejected": []
+  },
+  "crochet": {
+   "names": [
+    "crochet",
+    "钩针编织",
+    "钩编"
+   ],
+   "rejected": []
+  },
+  "tatting": {
+   "names": [
+    "tatting",
+    "tatted lace",
+    "梭编蕾丝",
+    "梭编"
+   ],
+   "rejected": [
+    "梭织蕾丝"
+   ]
+  },
+  "macramé": {
+   "names": [
+    "macramé",
+    "macrame",
+    "流苏花边",
+    "麦克拉梅编织"
+   ],
+   "rejected": [
+    "编结艺术"
+   ]
+  },
+  "bobbin lace": {
+   "names": [
+    "bobbin lace",
+    "pillow lace",
+    "bone lace",
+    "梭结花边",
+    "枕结花边",
+    "线轴花边"
+   ],
+   "rejected": []
+  },
+  "nalbinding": {
+   "names": [
+    "nalbinding",
+    "needle binding",
+    "knotless netting",
+    "针结编织",
+    "单针编织"
+   ],
+   "rejected": []
+  },
+  "tunisian knitting": {
+   "names": [
+    "Tunisian knitting",
+    "Tunisian crochet",
+    "afghan crochet",
+    "突尼斯编织",
+    "突尼斯钩针",
+    "阿富汗针"
+   ],
+   "rejected": []
+  },
+  "sprang": {
+   "names": [
+    "sprang",
+    "斯普朗编织"
+   ],
+   "rejected": [
+    "绞经编织"
+   ]
+  },
+  "lucet cording": {
+   "names": [
+    "lucet cord",
+    "lucet cording",
+    "lucet braid",
+    "卢塞特编绳",
+    "叉形编绳器编绳"
+   ],
+   "rejected": []
+  },
+  "a lenticular cloud": {
+   "names": [
+    "lenticular cloud",
+    "荚状云",
+    "透镜云",
+    "莢狀雲"
+   ],
+   "rejected": [
+    "lenticular",
+    "altocumulus lenticularis"
+   ]
+  },
+  "a mammatus cloud": {
+   "names": [
+    "mammatus cloud",
+    "mammatus",
+    "mammatocumulus",
+    "乳状云",
+    "乳房状云"
+   ],
+   "rejected": []
+  },
+  "a shelf cloud": {
+   "names": [
+    "shelf cloud",
+    "陆架云"
+   ],
+   "rejected": [
+    "arcus cloud",
+    "弧状云",
+    "滚轴云"
+   ]
+  },
+  "a noctilucent cloud": {
+   "names": [
+    "noctilucent cloud",
+    "polar mesospheric cloud",
+    "night-shining cloud",
+    "夜光云",
+    "极地中间层云"
+   ],
+   "rejected": []
+  },
+  "a pileus cloud": {
+   "names": [
+    "pileus cloud",
+    "pileus",
+    "cap cloud",
+    "幞状云",
+    "帽状云",
+    "头巾云"
+   ],
+   "rejected": []
+  },
+  "a nacreous cloud": {
+   "names": [
+    "nacreous cloud",
+    "mother-of-pearl cloud",
+    "珠母云",
+    "贝母云"
+   ],
+   "rejected": [
+    "polar stratospheric cloud",
+    "极地平流层云"
+   ]
+  },
+  "a roll cloud": {
+   "names": [
+    "roll cloud",
+    "volutus",
+    "滚轴云",
+    "滚卷云",
+    "卷轴云"
+   ],
+   "rejected": []
+  },
+  "a fallstreak hole": {
+   "names": [
+    "fallstreak hole",
+    "hole punch cloud",
+    "punch hole cloud",
+    "雨幡洞云",
+    "穿洞云",
+    "雨旛洞"
+   ],
+   "rejected": []
+  },
+  "a sinkhole": {
+   "names": [
+    "sinkhole",
+    "doline",
+    "swallow hole",
+    "天坑",
+    "落水洞",
+    "塌陷坑"
+   ],
+   "rejected": []
+  },
+  "a landslide": {
+   "names": [
+    "landslide",
+    "landslip",
+    "山体滑坡",
+    "滑坡",
+    "山崩"
+   ],
+   "rejected": []
+  },
+  "a mudslide": {
+   "names": [
+    "mudslide",
+    "mudflow",
+    "泥石流",
+    "泥流"
+   ],
+   "rejected": []
+  },
+  "a rockfall": {
+   "names": [
+    "rockfall",
+    "rock fall",
+    "落石",
+    "岩崩",
+    "崩石"
+   ],
+   "rejected": []
+  },
+  "a geyser": {
+   "names": [
+    "geyser",
+    "间歇泉",
+    "间歇喷泉"
+   ],
+   "rejected": []
+  },
+  "a fissure": {
+   "names": [
+    "fissure",
+    "crack",
+    "cleft",
+    "裂缝",
+    "裂隙"
+   ],
+   "rejected": [
+    "裂口"
+   ]
+  },
+  "a mud volcano": {
+   "names": [
+    "mud volcano",
+    "泥火山"
+   ],
+   "rejected": [
+    "mud dome"
+   ]
+  },
+  "a lava tube": {
+   "names": [
+    "lava tube",
+    "lava tunnel",
+    "pyroduct",
+    "熔岩管",
+    "熔岩隧道",
+    "熔岩洞"
+   ],
+   "rejected": []
+  },
+  "a whirlpool": {
+   "names": [
+    "whirlpool",
+    "漩涡",
+    "旋涡"
+   ],
+   "rejected": [
+    "vortex",
+    "eddy"
+   ]
+  },
+  "a riptide": {
+   "names": [
+    "riptide",
+    "rip current",
+    "离岸流",
+    "裂流",
+    "回卷流"
+   ],
+   "rejected": [
+    "undertow"
+   ]
+  },
+  "a waterspout": {
+   "names": [
+    "waterspout",
+    "水龙卷",
+    "海龙卷",
+    "龙吸水"
+   ],
+   "rejected": []
+  },
+  "a red tide": {
+   "names": [
+    "red tide",
+    "赤潮"
+   ],
+   "rejected": [
+    "harmful algal bloom",
+    "红潮"
+   ]
+  },
+  "a tsunami": {
+   "names": [
+    "tsunami",
+    "tidal wave",
+    "海啸"
+   ],
+   "rejected": []
+  },
+  "an undertow": {
+   "names": [
+    "undertow",
+    "underset",
+    "底流"
+   ],
+   "rejected": [
+    "rip current",
+    "回流",
+    "离岸流"
+   ]
+  },
+  "a breathalyzer": {
+   "names": [
+    "breathalyzer",
+    "breath alcohol tester",
+    "breathalyser",
+    "酒精测试仪",
+    "呼气酒精检测仪",
+    "酒测仪"
+   ],
+   "rejected": []
+  },
+  "a radar gun": {
+   "names": [
+    "radar gun",
+    "speed gun",
+    "radar speed gun",
+    "雷达测速枪",
+    "测速枪",
+    "雷达枪"
+   ],
+   "rejected": []
+  },
+  "a polygraph": {
+   "names": [
+    "polygraph",
+    "lie detector",
+    "测谎仪",
+    "多导生理记录仪"
+   ],
+   "rejected": []
+  },
+  "a spectrometer": {
+   "names": [
+    "spectrometer",
+    "光谱仪",
+    "分光计"
+   ],
+   "rejected": []
+  },
+  "a fingerprint scanner": {
+   "names": [
+    "fingerprint scanner",
+    "fingerprint reader",
+    "fingerprint sensor",
+    "指纹扫描仪",
+    "指纹识别器",
+    "指纹传感器"
+   ],
+   "rejected": []
+  },
+  "a decibel meter": {
+   "names": [
+    "decibel meter",
+    "sound level meter",
+    "noise meter",
+    "分贝仪",
+    "声级计",
+    "噪音计"
+   ],
+   "rejected": []
+  },
+  "a gunshot residue kit": {
+   "names": [
+    "gunshot residue kit",
+    "GSR kit",
+    "gunshot residue test kit",
+    "射击残留物检测试剂盒",
+    "枪击残留物提取工具包",
+    "射击残留物采集套件"
+   ],
+   "rejected": []
+  },
+  "a tint meter": {
+   "names": [
+    "tint meter",
+    "window tint meter",
+    "light transmission meter",
+    "透光率计",
+    "玻璃透光率测试仪",
+    "贴膜透光率仪"
+   ],
+   "rejected": []
+  },
+  "a magnetic compass": {
+   "names": [
+    "magnetic compass",
+    "磁罗盘",
+    "指南针"
+   ],
+   "rejected": [
+    "compass",
+    "罗盘"
+   ]
+  },
+  "a sextant": {
+   "names": [
+    "sextant",
+    "六分仪"
+   ],
+   "rejected": []
+  },
+  "a gyrocompass": {
+   "names": [
+    "gyrocompass",
+    "gyroscopic compass",
+    "陀螺罗盘",
+    "电罗经",
+    "陀螺罗经"
+   ],
+   "rejected": []
+  },
+  "a chronometer": {
+   "names": [
+    "chronometer",
+    "精密计时器"
+   ],
+   "rejected": [
+    "marine chronometer",
+    "天文钟",
+    "航海天文钟"
+   ]
+  },
+  "a dip circle": {
+   "names": [
+    "dip circle",
+    "dip needle",
+    "磁倾仪",
+    "磁倾针"
+   ],
+   "rejected": [
+    "inclinometer",
+    "倾角仪"
+   ]
+  },
+  "a pelorus": {
+   "names": [
+    "pelorus",
+    "dumb compass",
+    "哑罗经",
+    "方位仪"
+   ],
+   "rejected": []
+  },
+  "an octant": {
+   "names": [
+    "octant",
+    "八分仪"
+   ],
+   "rejected": []
+  },
+  "a time lock": {
+   "names": [
+    "time lock",
+    "定时锁",
+    "时间锁"
+   ],
+   "rejected": []
+  },
+  "a deadbolt latch": {
+   "names": [
+    "deadbolt",
+    "deadbolt lock",
+    "呆舌锁",
+    "死锁舌",
+    "方舌锁"
+   ],
+   "rejected": [
+    "deadlock"
+   ]
+  },
+  "a mortise lock": {
+   "names": [
+    "mortise lock",
+    "mortice lock",
+    "插芯锁",
+    "榫眼锁"
+   ],
+   "rejected": []
+  },
+  "a tumbler lock": {
+   "names": [
+    "tumbler lock",
+    "弹子锁",
+    "制栓锁"
+   ],
+   "rejected": [
+    "pin tumbler lock"
+   ]
+  },
+  "a cylinder lock": {
+   "names": [
+    "cylinder lock",
+    "圆筒锁"
+   ],
+   "rejected": [
+    "pin tumbler lock",
+    "弹子锁",
+    "锁芯锁"
+   ]
+  },
+  "a lever lock": {
+   "names": [
+    "lever lock",
+    "lever tumbler lock",
+    "杠杆锁",
+    "叶片锁"
+   ],
+   "rejected": []
+  },
+  "a dead man's switch": {
+   "names": [
+    "dead man's switch",
+    "dead-man switch",
+    "deadman switch",
+    "死人开关"
+   ],
+   "rejected": [
+    "失能开关",
+    "安全失效开关"
+   ]
+  },
+  "a tamper seal": {
+   "names": [
+    "tamper seal",
+    "tamper-evident seal",
+    "防拆封条",
+    "防篡改封条"
+   ],
+   "rejected": [
+    "security seal",
+    "防伪封条"
+   ]
+  },
+  "une centrifugeuse": {
+   "names": [
+    "centrifuge",
+    "离心机"
+   ],
+   "rejected": []
+  },
+  "un autoclave": {
+   "names": [
+    "autoclave",
+    "高压灭菌器",
+    "高压釜",
+    "高压蒸汽灭菌器"
+   ],
+   "rejected": []
+  },
+  "un vortex": {
+   "names": [
+    "vortex",
+    "漩涡",
+    "涡旋",
+    "旋涡"
+   ],
+   "rejected": [
+    "whirlpool",
+    "eddy"
+   ]
+  },
+  "une étuve": {
+   "names": [
+    "drying oven",
+    "烘箱",
+    "干燥箱"
+   ],
+   "rejected": [
+    "oven",
+    "incubator",
+    "恒温箱"
+   ]
+  },
+  "un incubateur": {
+   "names": [
+    "incubator",
+    "培养箱",
+    "孵化器"
+   ],
+   "rejected": [
+    "保温箱"
+   ]
+  },
+  "un thermocycleur": {
+   "names": [
+    "thermal cycler",
+    "thermocycler",
+    "PCR machine",
+    "热循环仪",
+    "PCR仪",
+    "基因扩增仪"
+   ],
+   "rejected": []
+  },
+  "un lyophilisateur": {
+   "names": [
+    "freeze dryer",
+    "lyophilizer",
+    "freeze-drying machine",
+    "冻干机",
+    "冷冻干燥机"
+   ],
+   "rejected": []
+  },
+  "un sonicateur": {
+   "names": [
+    "sonicator",
+    "ultrasonic homogenizer",
+    "ultrasonic processor",
+    "超声波破碎仪",
+    "超声波细胞破碎仪",
+    "超声波处理器"
+   ],
+   "rejected": []
+  },
+  "a starting pistol": {
+   "names": [
+    "starting pistol",
+    "starter pistol",
+    "starting gun",
+    "发令枪"
+   ],
+   "rejected": []
+  },
+  "a lap bell": {
+   "names": [
+    "lap bell",
+    "膝上铃"
+   ],
+   "rejected": [
+    "膝铃"
+   ]
+  },
+  "a chequered flag": {
+   "names": [
+    "chequered flag",
+    "checkered flag",
+    "方格旗",
+    "黑白方格旗"
+   ],
+   "rejected": []
+  },
+  "a goal horn": {
+   "names": [
+    "goal horn",
+    "进球号角",
+    "进球喇叭"
+   ],
+   "rejected": []
+  },
+  "a penalty flag": {
+   "names": [
+    "penalty flag",
+    "犯规旗",
+    "判罚旗"
+   ],
+   "rejected": [
+    "flag",
+    "黄旗"
+   ]
+  },
+  "a shot clock": {
+   "names": [
+    "shot clock",
+    "进攻计时器",
+    "投篮计时器"
+   ],
+   "rejected": [
+    "24秒计时器"
+   ]
+  },
+  "a whistle": {
+   "names": [
+    "whistle",
+    "哨子"
+   ],
+   "rejected": [
+    "口哨"
+   ]
+  },
+  "a boxing bell": {
+   "names": [
+    "boxing bell",
+    "ring bell",
+    "拳击铃",
+    "拳击比赛铃",
+    "拳台铃"
+   ],
+   "rejected": []
+  },
+  "a cattle grid": {
+   "names": [
+    "cattle grid",
+    "cattle guard",
+    "防畜栅",
+    "拦畜沟栅"
+   ],
+   "rejected": [
+    "牲畜栅栏"
+   ]
+  },
+  "a cattle creep": {
+   "names": [
+    "cattle creep",
+    "cattle underpass",
+    "stock underpass",
+    "牛只地下通道",
+    "牲畜涵洞"
+   ],
+   "rejected": [
+    "牲畜通道"
+   ]
+  },
+  "a passing place": {
+   "names": [
+    "passing place",
+    "passing bay",
+    "错车道",
+    "会车点"
+   ],
+   "rejected": [
+    "lay-by",
+    "避让处"
+   ]
+  },
+  "a ford": {
+   "names": [
+    "ford",
+    "涉水处"
+   ],
+   "rejected": [
+    "浅滩",
+    "津渡"
+   ]
+  },
+  "a hump-backed bridge": {
+   "names": [
+    "humpback bridge",
+    "hump-backed bridge",
+    "camelback bridge",
+    "驼峰桥",
+    "罗锅桥"
+   ],
+   "rejected": [
+    "拱桥"
+   ]
+  },
+  "a toll gate": {
+   "names": [
+    "toll gate",
+    "tollgate",
+    "toll booth",
+    "收费站",
+    "收费口"
+   ],
+   "rejected": []
+  },
+  "a field gateway": {
+   "names": [
+    "field gateway",
+    "田间大门"
+   ],
+   "rejected": [
+    "farm gate",
+    "田门"
+   ]
+  },
+  "a milestone": {
+   "names": [
+    "milestone",
+    "里程碑",
+    "里程标"
+   ],
+   "rejected": []
+  },
+  "a hedge maze": {
+   "names": [
+    "hedge maze",
+    "树篱迷宫",
+    "绿篱迷宫"
+   ],
+   "rejected": [
+    "garden maze",
+    "花园迷宫"
+   ]
+  },
+  "a sunken garden": {
+   "names": [
+    "sunken garden",
+    "下沉式花园",
+    "下沉花园"
+   ],
+   "rejected": []
+  },
+  "a knot garden": {
+   "names": [
+    "knot garden",
+    "结纹园",
+    "花结园"
+   ],
+   "rejected": [
+    "绳结花园"
+   ]
+  },
+  "a ha-ha": {
+   "names": [
+    "ha-ha",
+    "ha-ha wall",
+    "sunk fence",
+    "隐垣",
+    "哈哈墙",
+    "暗沟墙"
+   ],
+   "rejected": []
+  },
+  "a walled garden": {
+   "names": [
+    "walled garden",
+    "围墙花园",
+    "有围墙的花园"
+   ],
+   "rejected": []
+  },
+  "a pergola walk": {
+   "names": [
+    "pergola walk",
+    "pergola walkway",
+    "花架廊",
+    "藤架步道",
+    "花廊"
+   ],
+   "rejected": [
+    "covered walk"
+   ]
+  },
+  "a rockery": {
+   "names": [
+    "rockery",
+    "rock garden",
+    "假山",
+    "岩石园"
+   ],
+   "rejected": [
+    "石景园"
+   ]
+  },
+  "un puente colgante": {
+   "names": [
+    "suspension bridge",
+    "悬索桥",
+    "吊桥"
+   ],
+   "rejected": []
+  },
+  "un puente levadizo": {
+   "names": [
+    "drawbridge",
+    "吊桥"
+   ],
+   "rejected": [
+    "lift bridge",
+    "bascule bridge",
+    "开合桥",
+    "升降桥"
+   ]
+  },
+  "un viaducto": {
+   "names": [
+    "viaduct",
+    "高架桥"
+   ],
+   "rejected": [
+    "高架道路"
+   ]
+  },
+  "un acueducto": {
+   "names": [
+    "aqueduct",
+    "渡槽",
+    "高架水道"
+   ],
+   "rejected": [
+    "引水渠"
+   ]
+  },
+  "un funicular": {
+   "names": [
+    "funicular",
+    "funicular railway",
+    "cliff railway",
+    "缆索铁路",
+    "地面缆车"
+   ],
+   "rejected": [
+    "索道缆车"
+   ]
+  },
+  "un teleférico": {
+   "names": [
+    "cable car",
+    "aerial tramway",
+    "aerial cableway",
+    "缆车",
+    "空中缆车",
+    "索道"
+   ],
+   "rejected": []
+  },
+  "un puente atirantado": {
+   "names": [
+    "cable-stayed bridge",
+    "斜拉桥",
+    "斜张桥"
+   ],
+   "rejected": []
+  },
+  "una pasarela flotante": {
+   "names": [
+    "floating walkway",
+    "floating footbridge",
+    "pontoon walkway",
+    "浮动栈桥",
+    "浮动步道"
+   ],
+   "rejected": [
+    "浮桥"
+   ]
+  },
+  "a rose window": {
+   "names": [
+    "rose window",
+    "wheel window",
+    "Catherine window",
+    "玫瑰窗",
+    "圆花窗",
+    "轮窗"
+   ],
+   "rejected": []
+  },
+  "a flying buttress": {
+   "names": [
+    "flying buttress",
+    "飞扶壁",
+    "飞拱",
+    "扶拱垛"
+   ],
+   "rejected": [
+    "flyer"
+   ]
+  },
+  "a lancet arch": {
+   "names": [
+    "lancet arch",
+    "尖顶拱",
+    "柳叶尖拱",
+    "尖矢拱"
+   ],
+   "rejected": [
+    "lancet"
+   ]
+  },
+  "a rib vault": {
+   "names": [
+    "rib vault",
+    "ribbed vault",
+    "肋拱顶",
+    "肋架拱顶",
+    "肋骨拱顶"
+   ],
+   "rejected": []
+  },
+  "a pinnacle": {
+   "names": [
+    "pinnacle",
+    "尖顶",
+    "小尖塔",
+    "顶峰"
+   ],
+   "rejected": []
+  },
+  "a tracery screen": {
+   "names": [
+    "tracery screen",
+    "花格屏风",
+    "窗花格屏"
+   ],
+   "rejected": []
+  },
+  "a clerestory": {
+   "names": [
+    "clerestory",
+    "clearstory",
+    "高侧窗",
+    "天窗层"
+   ],
+   "rejected": [
+    "高窗"
+   ]
+  },
+  "a triforium": {
+   "names": [
+    "triforium",
+    "三拱式拱廊"
+   ],
+   "rejected": [
+    "拱廊楼层",
+    "教堂楼廊"
+   ]
+  },
+  "a bloodhound": {
+   "names": [
+    "bloodhound",
+    "寻血猎犬",
+    "寻血犬",
+    "圣休伯特猎犬"
+   ],
+   "rejected": []
+  },
+  "a mastiff": {
+   "names": [
+    "mastiff",
+    "獒犬"
+   ],
+   "rejected": []
+  },
+  "a whippet": {
+   "names": [
+    "whippet",
+    "惠比特犬",
+    "惠比特猎犬",
+    "小灵狗"
+   ],
+   "rejected": []
+  },
+  "a dachshund": {
+   "names": [
+    "dachshund",
+    "wiener dog",
+    "sausage dog",
+    "腊肠犬",
+    "达克斯猎犬",
+    "腊肠狗"
+   ],
+   "rejected": []
+  },
+  "a greyhound": {
+   "names": [
+    "greyhound",
+    "灵缇",
+    "格力犬",
+    "灰狗"
+   ],
+   "rejected": []
+  },
+  "a Dalmatian": {
+   "names": [
+    "Dalmatian",
+    "Dalmatian dog",
+    "斑点狗",
+    "大麦町犬",
+    "达尔马提亚犬"
+   ],
+   "rejected": []
+  },
+  "a schnauzer": {
+   "names": [
+    "schnauzer",
+    "雪纳瑞",
+    "雪纳瑞犬",
+    "史纳莎犬"
+   ],
+   "rejected": []
+  },
+  "a basset hound": {
+   "names": [
+    "basset hound",
+    "basset",
+    "巴吉度猎犬",
+    "巴塞特猎犬",
+    "巴吉度"
+   ],
+   "rejected": []
+  },
+  "a salamander": {
+   "names": [
+    "salamander",
+    "蝾螈"
+   ],
+   "rejected": [
+    "火蜥蜴"
+   ]
+  },
+  "a caecilian": {
+   "names": [
+    "caecilian",
+    "蚓螈",
+    "无足目动物"
+   ],
+   "rejected": []
+  },
+  "a toad": {
+   "names": [
+    "toad",
+    "蟾蜍",
+    "癞蛤蟆"
+   ],
+   "rejected": [
+    "蛤蟆"
+   ]
+  },
+  "a bullfrog": {
+   "names": [
+    "bullfrog",
+    "American bullfrog",
+    "牛蛙"
+   ],
+   "rejected": []
+  },
+  "a natterjack": {
+   "names": [
+    "natterjack",
+    "natterjack toad",
+    "黄条背蟾蜍",
+    "黄条蟾蜍"
+   ],
+   "rejected": []
+  },
+  "a spadefoot": {
+   "names": [
+    "spadefoot",
+    "spadefoot toad",
+    "锄足蟾"
+   ],
+   "rejected": []
+  },
+  "a tree frog": {
+   "names": [
+    "tree frog",
+    "treefrog",
+    "树蛙"
+   ],
+   "rejected": [
+    "雨蛙"
+   ]
+  },
+  "a spring peeper": {
+   "names": [
+    "spring peeper",
+    "春雨蛙",
+    "十字雨蛙"
+   ],
+   "rejected": []
+  },
+  "a hummingbird": {
+   "names": [
+    "hummingbird",
+    "蜂鸟"
+   ],
+   "rejected": []
+  },
+  "a sunbird": {
+   "names": [
+    "sunbird",
+    "太阳鸟",
+    "花蜜鸟"
+   ],
+   "rejected": []
+  },
+  "a kingfisher": {
+   "names": [
+    "kingfisher",
+    "翠鸟",
+    "鱼狗"
+   ],
+   "rejected": []
+  },
+  "a woodpecker": {
+   "names": [
+    "woodpecker",
+    "啄木鸟"
+   ],
+   "rejected": []
+  },
+  "a nightingale": {
+   "names": [
+    "nightingale",
+    "夜莺"
+   ],
+   "rejected": []
+  },
+  "a swallow": {
+   "names": [
+    "swallow",
+    "燕子"
+   ],
+   "rejected": [
+    "家燕"
+   ]
+  },
+  "a wren": {
+   "names": [
+    "wren",
+    "鹪鹩"
+   ],
+   "rejected": []
+  },
+  "a magpie": {
+   "names": [
+    "magpie",
+    "喜鹊"
+   ],
+   "rejected": []
+  },
+  "an armadillo": {
+   "names": [
+    "armadillo",
+    "犰狳"
+   ],
+   "rejected": []
+  },
+  "a pangolin": {
+   "names": [
+    "pangolin",
+    "scaly anteater",
+    "穿山甲",
+    "鲮鲤"
+   ],
+   "rejected": []
+  },
+  "an anteater": {
+   "names": [
+    "anteater",
+    "食蚁兽"
+   ],
+   "rejected": []
+  },
+  "a sloth": {
+   "names": [
+    "sloth",
+    "树懒"
+   ],
+   "rejected": []
+  },
+  "an aardvark": {
+   "names": [
+    "aardvark",
+    "antbear",
+    "土豚",
+    "非洲食蚁兽"
+   ],
+   "rejected": []
+  },
+  "a hedgehog": {
+   "names": [
+    "hedgehog",
+    "刺猬"
+   ],
+   "rejected": []
+  },
+  "a porcupine": {
+   "names": [
+    "porcupine",
+    "豪猪",
+    "箭猪"
+   ],
+   "rejected": []
+  },
+  "an opossum": {
+   "names": [
+    "opossum",
+    "possum",
+    "负鼠"
+   ],
+   "rejected": []
+  },
+  "a monkey puzzle tree": {
+   "names": [
+    "monkey puzzle tree",
+    "monkey puzzle",
+    "Chilean pine",
+    "智利南洋杉",
+    "猴谜树"
+   ],
+   "rejected": []
+  },
+  "a Wollemi pine": {
+   "names": [
+    "Wollemi pine",
+    "Wollemia nobilis",
+    "瓦勒迈杉",
+    "瓦勒迈松",
+    "恐龙杉"
+   ],
+   "rejected": []
+  },
+  "a dawn redwood": {
+   "names": [
+    "dawn redwood",
+    "Metasequoia",
+    "水杉"
+   ],
+   "rejected": []
+  },
+  "a bristlecone pine": {
+   "names": [
+    "bristlecone pine",
+    "狐尾松",
+    "刺果松"
+   ],
+   "rejected": []
+  },
+  "a Norfolk Island pine": {
+   "names": [
+    "Norfolk Island pine",
+    "Araucaria heterophylla",
+    "star pine",
+    "异叶南洋杉",
+    "诺福克南洋杉"
+   ],
+   "rejected": [
+    "南洋杉"
+   ]
+  },
+  "a deodar cedar": {
+   "names": [
+    "deodar cedar",
+    "deodar",
+    "Himalayan cedar",
+    "雪松",
+    "喜马拉雅雪松"
+   ],
+   "rejected": []
+  },
+  "a Leyland cypress": {
+   "names": [
+    "Leyland cypress",
+    "leylandii",
+    "Leyland cypress tree",
+    "莱兰柏"
+   ],
+   "rejected": [
+    "杂交柏",
+    "雷蓝柏"
+   ]
+  },
+  "a Japanese umbrella pine": {
+   "names": [
+    "Japanese umbrella pine",
+    "koyamaki",
+    "日本金松",
+    "金松"
+   ],
+   "rejected": [
+    "umbrella pine"
+   ]
+  },
+  "a Monterey cypress": {
+   "names": [
+    "Monterey cypress",
+    "macrocarpa",
+    "大果柏木",
+    "蒙特雷柏",
+    "大果柏"
+   ],
+   "rejected": []
+  },
+  "a western hemlock": {
+   "names": [
+    "western hemlock",
+    "Pacific hemlock",
+    "异叶铁杉",
+    "西部铁杉"
+   ],
+   "rejected": []
+  },
+  "a coast redwood": {
+   "names": [
+    "coast redwood",
+    "California redwood",
+    "北美红杉",
+    "海岸红杉"
+   ],
+   "rejected": [
+    "redwood",
+    "红杉"
+   ]
+  },
+  "a Douglas fir": {
+   "names": [
+    "Douglas fir",
+    "Douglas-fir",
+    "Oregon pine",
+    "花旗松",
+    "北美黄杉",
+    "道格拉斯冷杉"
+   ],
+   "rejected": []
+  },
+  "cordyceps": {
+   "names": [
+    "cordyceps",
+    "caterpillar fungus",
+    "冬虫夏草",
+    "虫草"
+   ],
+   "rejected": []
+  },
+  "ergot": {
+   "names": [
+    "ergot",
+    "麦角"
+   ],
+   "rejected": []
+  },
+  "chytrid": {
+   "names": [
+    "chytrid",
+    "chytrid fungus",
+    "壶菌"
+   ],
+   "rejected": []
+  },
+  "corn smut": {
+   "names": [
+    "corn smut",
+    "huitlacoche",
+    "maize smut",
+    "玉米黑粉病",
+    "玉米瘤黑粉病"
+   ],
+   "rejected": [
+    "玉米黑穗病"
+   ]
+  },
+  "honey fungus": {
+   "names": [
+    "honey fungus",
+    "honey mushroom",
+    "Armillaria",
+    "蜜环菌",
+    "榛蘑"
+   ],
+   "rejected": []
+  },
+  "entomophthora": {
+   "names": [
+    "Entomophthora",
+    "虫霉属",
+    "虫霉"
+   ],
+   "rejected": []
+  },
+  "laboulbenia": {
+   "names": [
+    "Laboulbenia",
+    "虫囊菌属"
+   ],
+   "rejected": []
+  },
+  "armillaria root rot": {
+   "names": [
+    "armillaria root rot",
+    "shoestring root rot",
+    "oak root fungus disease",
+    "蜜环菌根腐病",
+    "根朽病"
+   ],
+   "rejected": []
+  },
+  "a vitória-régia": {
+   "names": [
+    "Victoria amazonica",
+    "giant water lily",
+    "Amazon water lily",
+    "亚马逊王莲",
+    "王莲"
+   ],
+   "rejected": []
+  },
+  "o aguapé": {
+   "names": [
+    "water hyacinth",
+    "水葫芦",
+    "凤眼蓝",
+    "凤眼莲"
+   ],
+   "rejected": []
+  },
+  "a alface-d'água": {
+   "names": [
+    "water lettuce",
+    "water cabbage",
+    "Nile cabbage",
+    "大薸",
+    "水浮莲",
+    "水白菜"
+   ],
+   "rejected": []
+  },
+  "a elódea": {
+   "names": [
+    "elodea",
+    "waterweed",
+    "伊乐藻"
+   ],
+   "rejected": [
+    "pondweed",
+    "水蕴草",
+    "水蕴藻"
+   ]
+  },
+  "o junco": {
+   "names": [
+    "rush",
+    "灯心草",
+    "灯芯草"
+   ],
+   "rejected": [
+    "bulrush"
+   ]
+  },
+  "a taboa": {
+   "names": [
+    "cattail",
+    "bulrush",
+    "reedmace",
+    "香蒲",
+    "蒲草"
+   ],
+   "rejected": [
+    "水烛"
+   ]
+  },
+  "o papiro": {
+   "names": [
+    "papyrus",
+    "纸莎草纸",
+    "莎草纸"
+   ],
+   "rejected": []
+  },
+  "a lentilha-d'água": {
+   "names": [
+    "duckweed",
+    "water lentil",
+    "浮萍",
+    "青萍"
+   ],
+   "rejected": []
+  },
+  "a Welwitschia": {
+   "names": [
+    "welwitschia",
+    "tree tumbo",
+    "Welwitschia mirabilis",
+    "百岁兰",
+    "千岁兰",
+    "百岁叶"
+   ],
+   "rejected": []
+  },
+  "a boojum tree": {
+   "names": [
+    "boojum tree",
+    "cirio",
+    "观峰玉"
+   ],
+   "rejected": [
+    "福桂花树"
+   ]
+  },
+  "a quiver tree": {
+   "names": [
+    "quiver tree",
+    "kokerboom",
+    "Aloidendron dichotomum",
+    "箭袋树",
+    "二歧芦荟"
+   ],
+   "rejected": []
+  },
+  "an ocotillo": {
+   "names": [
+    "ocotillo",
+    "Fouquieria splendens",
+    "coachwhip",
+    "墨西哥刺木"
+   ],
+   "rejected": [
+    "福桂树",
+    "蜡烛木"
+   ]
+  },
+  "a creosote bush": {
+   "names": [
+    "creosote bush",
+    "Larrea tridentata",
+    "石炭酸灌木",
+    "三齿拉瑞阿"
+   ],
+   "rejected": [
+    "greasewood"
+   ]
+  },
+  "a jumping cholla": {
+   "names": [
+    "jumping cholla",
+    "chain-fruit cholla",
+    "hanging chain cholla",
+    "跳跳仙人掌",
+    "链果圆柱仙人掌"
+   ],
+   "rejected": []
+  },
+  "a halfmens": {
+   "names": [
+    "halfmens",
+    "elephant's trunk",
+    "Pachypodium namaquanum",
+    "光堂",
+    "半人树"
+   ],
+   "rejected": []
+  },
+  "a desert rose (Adenium)": {
+   "names": [
+    "desert rose",
+    "adenium",
+    "沙漠玫瑰",
+    "天宝花"
+   ],
+   "rejected": [
+    "impala lily"
+   ]
+  },
+  "il tiramisù": {
+   "names": [
+    "tiramisu",
+    "提拉米苏"
+   ],
+   "rejected": []
+  },
+  "la zuppa inglese": {
+   "names": [
+    "zuppa inglese",
+    "Italian trifle",
+    "意式乳脂松糕"
+   ],
+   "rejected": [
+    "英式甜汤"
+   ]
+  },
+  "la panna cotta": {
+   "names": [
+    "panna cotta",
+    "意式奶冻",
+    "意大利奶冻"
+   ],
+   "rejected": [
+    "奶酪布丁"
+   ]
+  },
+  "il bonet": {
+   "names": [
+    "bonet",
+    "bunet",
+    "博内布丁",
+    "皮埃蒙特巧克力布丁"
+   ],
+   "rejected": []
+  },
+  "la crema catalana": {
+   "names": [
+    "crema catalana",
+    "Catalan cream",
+    "加泰罗尼亚焦糖奶油",
+    "加泰罗尼亚奶油"
+   ],
+   "rejected": []
+  },
+  "il budino di riso": {
+   "names": [
+    "rice pudding",
+    "米布丁",
+    "大米布丁"
+   ],
+   "rejected": []
+  },
+  "lo zabaione": {
+   "names": [
+    "zabaglione",
+    "zabaione",
+    "sabayon",
+    "沙巴翁",
+    "萨巴雍"
+   ],
+   "rejected": []
+  },
+  "la charlotte": {
+   "names": [
+    "charlotte",
+    "夏洛特蛋糕"
+   ],
+   "rejected": [
+    "夏洛特"
+   ]
+  },
+  "moussaka": {
+   "names": [
+    "moussaka",
+    "穆萨卡",
+    "木莎卡",
+    "希腊茄子千层派"
+   ],
+   "rejected": []
+  },
+  "lasagna": {
+   "names": [
+    "lasagna",
+    "lasagne",
+    "千层面",
+    "意大利千层面"
+   ],
+   "rejected": []
+  },
+  "cassoulet": {
+   "names": [
+    "cassoulet",
+    "卡酥来砂锅",
+    "法式砂锅炖豆",
+    "卡苏莱"
+   ],
+   "rejected": []
+  },
+  "tartiflette": {
+   "names": [
+    "tartiflette",
+    "萨瓦芝士焗土豆"
+   ],
+   "rejected": [
+    "焗土豆芝士",
+    "法式芝士焗土豆"
+   ]
+  },
+  "bobotie": {
+   "names": [
+    "bobotie",
+    "南非咖喱肉末烤饼",
+    "博博蒂"
+   ],
+   "rejected": []
+  },
+  "shepherd's pie": {
+   "names": [
+    "shepherd's pie",
+    "牧羊人派"
+   ],
+   "rejected": [
+    "cottage pie",
+    "农舍派",
+    "肉馅土豆泥派"
+   ]
+  },
+  "parmigiana": {
+   "names": [
+    "parmigiana",
+    "eggplant parmesan",
+    "aubergine parmigiana",
+    "帕尔马干酪焗茄子",
+    "帕玛森焗茄子"
+   ],
+   "rejected": [
+    "焗茄子"
+   ]
+  },
+  "gratin dauphinois": {
+   "names": [
+    "gratin dauphinois",
+    "potatoes dauphinoise",
+    "dauphinoise potatoes",
+    "多菲内焗土豆"
+   ],
+   "rejected": [
+    "法式焗土豆",
+    "焗烤马铃薯"
+   ]
+  },
+  "une crêpe": {
+   "names": [
+    "crêpe",
+    "crepe",
+    "thin pancake",
+    "可丽饼",
+    "法式薄饼"
+   ],
+   "rejected": [
+    "薄饼"
+   ]
+  },
+  "une gaufre": {
+   "names": [
+    "waffle",
+    "华夫饼",
+    "格子饼",
+    "窝夫"
+   ],
+   "rejected": []
+  },
+  "une brioche": {
+   "names": [
+    "brioche",
+    "布里欧修",
+    "布里奥斯面包"
+   ],
+   "rejected": [
+    "奶油面包"
+   ]
+  },
+  "une fougasse": {
+   "names": [
+    "fougasse",
+    "普罗旺斯扁面包"
+   ],
+   "rejected": [
+    "佛卡夏面包"
+   ]
+  },
+  "une madeleine": {
+   "names": [
+    "madeleine",
+    "玛德琳蛋糕",
+    "玛德莲蛋糕",
+    "贝壳蛋糕"
+   ],
+   "rejected": []
+  },
+  "une baguette": {
+   "names": [
+    "baguette",
+    "French stick",
+    "法棍",
+    "法式长棍面包",
+    "长棍面包"
+   ],
+   "rejected": [
+    "French bread"
+   ]
+  },
+  "une tarte": {
+   "names": [
+    "tart"
+   ],
+   "rejected": [
+    "pie",
+    "馅饼"
+   ]
+  },
+  "une quiche": {
+   "names": [
+    "quiche",
+    "法式咸派",
+    "乳蛋饼",
+    "法式蛋派"
+   ],
+   "rejected": []
+  },
+  "paella": {
+   "names": [
+    "paella",
+    "西班牙海鲜饭",
+    "西班牙大锅饭",
+    "西班牙炖饭"
+   ],
+   "rejected": []
+  },
+  "risotto": {
+   "names": [
+    "risotto",
+    "意大利烩饭",
+    "意式烩饭",
+    "意大利炖饭"
+   ],
+   "rejected": []
+  },
+  "biryani": {
+   "names": [
+    "biryani",
+    "biriyani",
+    "印度香饭",
+    "比尔亚尼饭"
+   ],
+   "rejected": [
+    "印度炒饭"
+   ]
+  },
+  "jambalaya": {
+   "names": [
+    "jambalaya",
+    "什锦饭",
+    "杂烩饭"
+   ],
+   "rejected": [
+    "炖什锦饭"
+   ]
+  },
+  "pilaf": {
+   "names": [
+    "pilaf",
+    "pilau",
+    "pilaff",
+    "抓饭",
+    "手抓饭"
+   ],
+   "rejected": []
+  },
+  "arancini": {
+   "names": [
+    "arancini",
+    "arancini balls",
+    "Sicilian rice balls",
+    "西西里炸饭团",
+    "意式炸饭团"
+   ],
+   "rejected": [
+    "炸饭团"
+   ]
+  },
+  "bibimbap": {
+   "names": [
+    "bibimbap",
+    "韩式拌饭"
+   ],
+   "rejected": [
+    "石锅拌饭",
+    "拌饭"
+   ]
+  },
+  "congee": {
+   "names": [
+    "congee",
+    "rice porridge",
+    "稀饭"
+   ],
+   "rejected": [
+    "白粥"
+   ]
+  },
+  "an observatory dome": {
+   "names": [
+    "observatory dome",
+    "天文台圆顶",
+    "天文台穹顶"
+   ],
+   "rejected": [
+    "观测室圆顶"
+   ]
+  },
+  "a lighthouse lantern room": {
+   "names": [
+    "lantern room",
+    "lighthouse lantern room",
+    "灯室",
+    "灯塔灯室"
+   ],
+   "rejected": [
+    "lantern",
+    "灯笼室"
+   ]
+  },
+  "a radar radome": {
+   "names": [
+    "radome",
+    "radar dome",
+    "radar radome",
+    "雷达罩",
+    "天线罩",
+    "雷达天线罩"
+   ],
+   "rejected": []
+  },
+  "a fire lookout tower": {
+   "names": [
+    "fire lookout tower",
+    "fire tower",
+    "防火瞭望塔",
+    "火情瞭望塔",
+    "森林防火瞭望塔"
+   ],
+   "rejected": [
+    "lookout tower"
+   ]
+  },
+  "a church belfry": {
+   "names": [
+    "church belfry",
+    "church bell tower",
+    "教堂钟楼",
+    "教堂钟塔"
+   ],
+   "rejected": [
+    "church steeple"
+   ]
+  },
+  "a ship's crow's nest": {
+   "names": [
+    "crow's nest",
+    "桅楼"
+   ],
+   "rejected": [
+    "lookout platform",
+    "瞭望台",
+    "瞭望哨"
+   ]
+  },
+  "a minaret gallery": {
+   "names": [
+    "minaret gallery",
+    "minaret balcony",
+    "宣礼塔阳台",
+    "宣礼塔回廊"
+   ],
+   "rejected": []
+  },
+  "an air traffic control tower": {
+   "names": [
+    "air traffic control tower",
+    "control tower",
+    "ATC tower",
+    "空中交通管制塔",
+    "塔台",
+    "控制塔"
+   ],
+   "rejected": []
+  },
+  "a cupola": {
+   "names": [
+    "cupola",
+    "圆屋顶"
+   ],
+   "rejected": [
+    "dome",
+    "圆顶",
+    "穹顶"
+   ]
+  },
+  "a cornice": {
+   "names": [
+    "cornice",
+    "檐口"
+   ],
+   "rejected": [
+    "飞檐",
+    "挑檐"
+   ]
+  },
+  "a finial": {
+   "names": [
+    "finial",
+    "尖顶饰",
+    "顶饰"
+   ],
+   "rejected": []
+  },
+  "a pediment": {
+   "names": [
+    "pediment",
+    "山花",
+    "三角楣饰"
+   ],
+   "rejected": [
+    "山墙饰"
+   ]
+  },
+  "a buttress": {
+   "names": [
+    "buttress",
+    "扶壁",
+    "扶垛"
+   ],
+   "rejected": [
+    "支墩"
+   ]
+  },
+  "a corbel": {
+   "names": [
+    "corbel",
+    "梁托",
+    "托臂",
+    "牛腿"
+   ],
+   "rejected": [
+    "bracket"
+   ]
+  },
+  "a lintel": {
+   "names": [
+    "lintel",
+    "过梁"
+   ],
+   "rejected": [
+    "门楣"
+   ]
+  },
+  "a gargoyle": {
+   "names": [
+    "gargoyle",
+    "滴水嘴兽",
+    "石像鬼",
+    "怪兽状滴水嘴"
+   ],
+   "rejected": []
+  },
+  "un claustro": {
+   "names": [
+    "cloister",
+    "回廊",
+    "修道院回廊"
+   ],
+   "rejected": []
+  },
+  "un ábside": {
+   "names": [
+    "apse",
+    "半圆室",
+    "后殿",
+    "半圆形后堂"
+   ],
+   "rejected": []
+  },
+  "un nártex": {
+   "names": [
+    "narthex",
+    "前廊"
+   ],
+   "rejected": [
+    "门廊",
+    "前厅"
+   ]
+  },
+  "un triforio": {
+   "names": [
+    "triforium",
+    "教堂拱廊"
+   ],
+   "rejected": [
+    "拱廊楼层"
+   ]
+  },
+  "una cripta": {
+   "names": [
+    "crypt",
+    "地下墓室",
+    "地窖墓穴"
+   ],
+   "rejected": []
+  },
+  "un deambulatorio": {
+   "names": [
+    "ambulatory",
+    "环形回廊"
+   ],
+   "rejected": [
+    "回廊"
+   ]
+  },
+  "un transepto": {
+   "names": [
+    "transept",
+    "耳堂",
+    "袖廊"
+   ],
+   "rejected": [
+    "翼部"
+   ]
+  },
+  "una galilea": {
+   "names": [
+    "galilee",
+    "galilee porch",
+    "加利利门廊"
+   ],
+   "rejected": [
+    "教堂前廊"
+   ]
+  },
+  "a penny-farthing": {
+   "names": [
+    "penny-farthing",
+    "high wheeler",
+    "ordinary bicycle",
+    "大小轮自行车",
+    "高轮自行车",
+    "前大轮自行车"
+   ],
+   "rejected": []
+  },
+  "a velocipede": {
+   "names": [
+    "velocipede",
+    "早期自行车"
+   ],
+   "rejected": [
+    "脚踏车"
+   ]
+  },
+  "a boneshaker": {
+   "names": [
+    "boneshaker",
+    "震骨车"
+   ],
+   "rejected": [
+    "velocipede",
+    "早期自行车"
+   ]
+  },
+  "a hobby horse": {
+   "names": [
+    "hobby horse",
+    "hobbyhorse",
+    "stick horse",
+    "竹马",
+    "棍子马"
+   ],
+   "rejected": [
+    "木马玩具"
+   ]
+  },
+  "a tricycle": {
+   "names": [
+    "tricycle",
+    "trike",
+    "三轮车",
+    "三轮自行车"
+   ],
+   "rejected": []
+  },
+  "a draisine": {
+   "names": [
+    "draisine",
+    "rail draisine",
+    "轨道车",
+    "德莱斯车"
+   ],
+   "rejected": [
+    "handcar",
+    "手摇轨道车"
+   ]
+  },
+  "a quadricycle": {
+   "names": [
+    "quadricycle",
+    "四轮自行车"
+   ],
+   "rejected": [
+    "四轮车"
+   ]
+  },
+  "a sociable tandem": {
+   "names": [
+    "sociable tandem",
+    "side-by-side tandem",
+    "sociable bicycle",
+    "并排双人自行车",
+    "并座双人自行车"
+   ],
+   "rejected": []
+  },
+  "a catamaran": {
+   "names": [
+    "catamaran",
+    "双体船"
+   ],
+   "rejected": [
+    "双体帆船"
+   ]
+  },
+  "a trimaran": {
+   "names": [
+    "trimaran",
+    "三体船"
+   ],
+   "rejected": [
+    "三体帆船"
+   ]
+  },
+  "a pedalo": {
+   "names": [
+    "pedalo",
+    "pedal boat",
+    "脚踏船",
+    "脚踏游船"
+   ],
+   "rejected": [
+    "paddle boat"
+   ]
+  },
+  "un bathyscaphe": {
+   "names": [
+    "bathyscaphe",
+    "bathyscaph",
+    "深海潜水器",
+    "深潜器"
+   ],
+   "rejected": [
+    "深海探测艇"
+   ]
+  },
+  "une bathysphère": {
+   "names": [
+    "bathysphere",
+    "深海球形潜水器",
+    "潜水球",
+    "深海潜水球"
+   ],
+   "rejected": []
+  },
+  "un sous-marin de poche": {
+   "names": [
+    "midget submarine",
+    "pocket submarine",
+    "mini submarine",
+    "袖珍潜艇",
+    "微型潜艇"
+   ],
+   "rejected": [
+    "小型潜艇"
+   ]
+  },
+  "un batiscaphe à chenilles": {
+   "names": [
+    "tracked bathyscaphe",
+    "crawler bathyscaphe",
+    "履带式深潜器",
+    "履带式探海艇"
+   ],
+   "rejected": []
+  },
+  "un submersible habité": {
+   "names": [
+    "crewed submersible",
+    "manned submersible",
+    "human-occupied vehicle",
+    "载人潜水器",
+    "载人潜器"
+   ],
+   "rejected": []
+  },
+  "un robot sous-marin téléguidé": {
+   "names": [
+    "remotely operated underwater vehicle",
+    "ROV",
+    "remote-controlled underwater robot",
+    "遥控水下机器人",
+    "遥控潜水器",
+    "水下遥控机器人"
+   ],
+   "rejected": []
+  },
+  "une cloche de plongée": {
+   "names": [
+    "diving bell",
+    "潜水钟"
+   ],
+   "rejected": []
+  },
+  "un scaphandre atmosphérique": {
+   "names": [
+    "atmospheric diving suit",
+    "ADS",
+    "hardsuit",
+    "常压潜水服",
+    "硬式潜水服",
+    "大气压潜水服"
+   ],
+   "rejected": []
+  },
+  "an autogyro": {
+   "names": [
+    "autogyro",
+    "gyroplane",
+    "gyrocopter",
+    "自转旋翼机"
+   ],
+   "rejected": [
+    "旋翼机"
+   ]
+  },
+  "a gyrodyne": {
+   "names": [
+    "gyrodyne"
+   ],
+   "rejected": [
+    "旋翼式飞行器",
+    "复合式直升机"
+   ]
+  },
+  "a tiltrotor": {
+   "names": [
+    "tiltrotor",
+    "tiltrotor aircraft",
+    "倾转旋翼机",
+    "倾转旋翼飞机"
+   ],
+   "rejected": []
+  },
+  "a synchropter": {
+   "names": [
+    "synchropter",
+    "intermeshing-rotor helicopter",
+    "交叉双旋翼直升机",
+    "交叉旋翼直升机"
+   ],
+   "rejected": []
+  },
+  "a quadcopter": {
+   "names": [
+    "quadcopter",
+    "quadrotor",
+    "quadrocopter",
+    "四旋翼飞行器",
+    "四轴飞行器"
+   ],
+   "rejected": [
+    "四旋翼无人机"
+   ]
+  },
+  "a convertiplane": {
+   "names": [
+    "convertiplane",
+    "convertaplane",
+    "可转换式飞机",
+    "转换式飞机"
+   ],
+   "rejected": [
+    "旋翼机"
+   ]
+  },
+  "a multicopter": {
+   "names": [
+    "multicopter",
+    "multirotor",
+    "多旋翼飞行器",
+    "多旋翼"
+   ],
+   "rejected": [
+    "multirotor drone",
+    "多旋翼无人机"
+   ]
+  },
+  "an octocopter": {
+   "names": [
+    "octocopter",
+    "octorotor",
+    "八旋翼飞行器",
+    "八轴飞行器"
+   ],
+   "rejected": [
+    "八旋翼无人机"
+   ]
+  },
+  "an icebreaker": {
+   "names": [
+    "icebreaker",
+    "icebreaker ship",
+    "破冰船"
+   ],
+   "rejected": []
+  },
+  "a fireboat": {
+   "names": [
+    "fireboat",
+    "fire boat",
+    "消防船",
+    "消防艇"
+   ],
+   "rejected": []
+  },
+  "a lightship": {
+   "names": [
+    "lightship",
+    "light vessel",
+    "灯船",
+    "灯塔船"
+   ],
+   "rejected": []
+  },
+  "an ironclad": {
+   "names": [
+    "ironclad",
+    "ironclad warship",
+    "铁甲舰",
+    "铁甲船"
+   ],
+   "rejected": []
+  },
+  "a minesweeper": {
+   "names": [
+    "minesweeper",
+    "扫雷舰",
+    "扫雷艇"
+   ],
+   "rejected": [
+    "mine countermeasures vessel"
+   ]
+  },
+  "a whaler": {
+   "names": [
+    "whaler",
+    "whaling ship",
+    "捕鲸船",
+    "捕鲸者"
+   ],
+   "rejected": [
+    "whaleboat"
+   ]
+  },
+  "a lifeboat": {
+   "names": [
+    "lifeboat",
+    "救生艇",
+    "救生船"
+   ],
+   "rejected": []
+  },
+  "a kilt": {
+   "names": [
+    "kilt",
+    "苏格兰短裙",
+    "苏格兰裙"
+   ],
+   "rejected": [
+    "格子裙"
+   ]
+  },
+  "a sarong": {
+   "names": [
+    "sarong",
+    "纱笼",
+    "沙龙裙"
+   ],
+   "rejected": [
+    "围裙布"
+   ]
+  },
+  "a kimono": {
+   "names": [
+    "kimono",
+    "和服"
+   ],
+   "rejected": []
+  },
+  "a poncho": {
+   "names": [
+    "poncho"
+   ],
+   "rejected": [
+    "斗篷",
+    "披风",
+    "雨披"
+   ]
+  },
+  "a dirndl": {
+   "names": [
+    "dirndl",
+    "dirndl dress",
+    "德恩德尔裙",
+    "阿尔卑斯村姑裙"
+   ],
+   "rejected": [
+    "巴伐利亚传统女装"
+   ]
+  },
+  "a sari": {
+   "names": [
+    "sari",
+    "saree",
+    "纱丽",
+    "莎丽"
+   ],
+   "rejected": []
+  },
+  "a caftan": {
+   "names": [
+    "caftan",
+    "kaftan",
+    "卡夫坦长袍"
+   ],
+   "rejected": [
+    "长袍"
+   ]
+  },
+  "a toga": {
+   "names": [
+    "toga",
+    "托加袍"
+   ],
+   "rejected": [
+    "长袍"
+   ]
+  },
+  "a lorgnette": {
+   "names": [
+    "lorgnette",
+    "长柄眼镜",
+    "带柄眼镜"
+   ],
+   "rejected": []
+  },
+  "a monocle": {
+   "names": [
+    "monocle",
+    "eyeglass",
+    "单片眼镜",
+    "单边眼镜"
+   ],
+   "rejected": []
+  },
+  "a pince-nez": {
+   "names": [
+    "pince-nez",
+    "夹鼻眼镜"
+   ],
+   "rejected": []
+  },
+  "a croakie": {
+   "names": [
+    "croakies",
+    "eyewear retainer",
+    "glasses strap",
+    "眼镜绳",
+    "眼镜带",
+    "眼镜固定带"
+   ],
+   "rejected": []
+  },
+  "an eyeshade": {
+   "names": [
+    "eyeshade",
+    "visor",
+    "遮阳帽檐",
+    "帽舌式遮阳帽",
+    "眼罩檐帽"
+   ],
+   "rejected": [
+    "green eyeshade"
+   ]
+  },
+  "an eyepatch": {
+   "names": [
+    "eyepatch",
+    "eye patch",
+    "眼罩"
+   ],
+   "rejected": [
+    "眼贴"
+   ]
+  },
+  "a sun goggle": {
+   "names": [
+    "sunglasses",
+    "sun goggles",
+    "shades",
+    "太阳镜",
+    "墨镜",
+    "遮阳镜"
+   ],
+   "rejected": []
+  },
+  "a clip-on": {
+   "names": [
+    "clip-on",
+    "夹式配件",
+    "夹扣式物件"
+   ],
+   "rejected": []
+  },
+  "a muff": {
+   "names": [
+    "muff",
+    "hand muff",
+    "手笼",
+    "暖手筒"
+   ],
+   "rejected": []
+  },
+  "a tippet": {
+   "names": [
+    "tippet",
+    "披肩"
+   ],
+   "rejected": [
+    "圣带"
+   ]
+  },
+  "a balaclava": {
+   "names": [
+    "balaclava",
+    "ski mask",
+    "巴拉克拉法帽",
+    "面罩帽"
+   ],
+   "rejected": [
+    "头套"
+   ]
+  },
+  "a snood": {
+   "names": [
+    "snood",
+    "发网",
+    "束发网"
+   ],
+   "rejected": []
+  },
+  "a pair of gaiters": {
+   "names": [
+    "pair of gaiters",
+    "一副绑腿",
+    "一副护腿"
+   ],
+   "rejected": []
+  },
+  "a stole": {
+   "names": [
+    "stole",
+    "披肩",
+    "圣带"
+   ],
+   "rejected": []
+  },
+  "a tam-o'-shanter": {
+   "names": [
+    "tam-o'-shanter",
+    "tam",
+    "tammy",
+    "苏格兰便帽",
+    "苏格兰圆扁帽"
+   ],
+   "rejected": []
+  },
+  "a pair of earmuffs": {
+   "names": [
+    "pair of earmuffs",
+    "earmuffs",
+    "一副耳罩",
+    "耳罩",
+    "一副护耳"
+   ],
+   "rejected": []
+  },
+  "a palimpsest": {
+   "names": [
+    "palimpsest",
+    "重写本",
+    "羊皮重写本",
+    "再生羊皮纸"
+   ],
+   "rejected": []
+  },
+  "a codex": {
+   "names": [
+    "codex",
+    "册子本",
+    "古抄本"
+   ],
+   "rejected": [
+    "抄本"
+   ]
+  },
+  "a cartulary": {
+   "names": [
+    "cartulary",
+    "chartulary",
+    "契据册",
+    "特许状集",
+    "文契汇编"
+   ],
+   "rejected": []
+  },
+  "a florilegium": {
+   "names": [
+    "florilegium",
+    "anthology",
+    "collection of extracts",
+    "文选"
+   ],
+   "rejected": [
+    "选集",
+    "名言集"
+   ]
+  },
+  "a breviary": {
+   "names": [
+    "breviary",
+    "日课经",
+    "每日祈祷书"
+   ],
+   "rejected": [
+    "祈祷书"
+   ]
+  },
+  "a psalter": {
+   "names": [
+    "psalter",
+    "book of psalms",
+    "诗篇集",
+    "圣咏集",
+    "诗篇经"
+   ],
+   "rejected": []
+  },
+  "a lectionary": {
+   "names": [
+    "lectionary",
+    "经课集",
+    "读经集"
+   ],
+   "rejected": [
+    "经文选读"
+   ]
+  },
+  "a scroll": {
+   "names": [
+    "scroll",
+    "卷轴"
+   ],
+   "rejected": [
+    "卷轴书"
+   ]
+  },
+  "die Stenografie": {
+   "names": [
+    "stenography",
+    "shorthand",
+    "速记",
+    "速记法"
+   ],
+   "rejected": []
+  },
+  "die Kalligrafie": {
+   "names": [
+    "calligraphy",
+    "书法"
+   ],
+   "rejected": []
+  },
+  "die Typografie": {
+   "names": [
+    "typography",
+    "字体排印"
+   ],
+   "rejected": [
+    "排版",
+    "印刷术"
+   ]
+  },
+  "die Daktylografie": {
+   "names": [
+    "typewriting",
+    "typing",
+    "打字",
+    "打字术"
+   ],
+   "rejected": [
+    "dactylography"
+   ]
+  },
+  "die Paläografie": {
+   "names": [
+    "palaeography",
+    "paleography",
+    "古文字学"
+   ],
+   "rejected": [
+    "古文书学"
+   ]
+  },
+  "die Epigrafie": {
+   "names": [
+    "epigraphy",
+    "铭文学",
+    "碑铭学"
+   ],
+   "rejected": [
+    "金石学"
+   ]
+  },
+  "die Kryptografie": {
+   "names": [
+    "cryptography",
+    "密码学",
+    "密码术"
+   ],
+   "rejected": []
+  },
+  "die Lithografie": {
+   "names": [
+    "lithography",
+    "lithograph",
+    "石版印刷",
+    "石版画"
+   ],
+   "rejected": [
+    "平版印刷"
+   ]
+  },
+  "Genaille-Lucas rulers": {
+   "names": [
+    "Genaille-Lucas rulers",
+    "Genaille–Lucas rulers",
+    "Genaille's rods",
+    "热奈-卢卡斯算尺",
+    "吉奈尔-卢卡斯算筹"
+   ],
+   "rejected": []
+  },
+  "Pascal's calculator": {
+   "names": [
+    "Pascal's calculator",
+    "Pascaline",
+    "帕斯卡计算器",
+    "帕斯卡加法器"
+   ],
+   "rejected": [
+    "arithmetic machine",
+    "加法器"
+   ]
+  },
+  "Leibniz's stepped reckoner": {
+   "names": [
+    "Leibniz's stepped reckoner",
+    "stepped reckoner",
+    "Leibniz calculator",
+    "莱布尼茨步进计算器",
+    "莱布尼茨计算器"
+   ],
+   "rejected": [
+    "步进计算器"
+   ]
+  },
+  "Schickard's calculating clock": {
+   "names": [
+    "Schickard's calculating clock",
+    "Schickard calculator",
+    "契克卡德计算钟",
+    "席卡德计算钟",
+    "施卡德计算钟"
+   ],
+   "rejected": [
+    "calculating clock"
+   ]
+  },
+  "Oughtred's circles": {
+   "names": [
+    "Oughtred's circles",
+    "circles of proportion",
+    "奥特雷德圆形计算尺",
+    "比例圆"
+   ],
+   "rejected": []
+  },
+  "the Curta calculator": {
+   "names": [
+    "Curta calculator",
+    "Curta",
+    "库尔塔计算器",
+    "Curta计算器"
+   ],
+   "rejected": []
+  },
+  "the Arithmometer": {
+   "names": [
+    "Arithmometer",
+    "四则运算器",
+    "托马斯计算器"
+   ],
+   "rejected": []
+  },
+  "a pneumatic tube system": {
+   "names": [
+    "pneumatic tube system",
+    "pneumatic tube",
+    "气动管道输送系统",
+    "气动物流传输系统"
+   ],
+   "rejected": [
+    "pneumatic post",
+    "气动管道系统"
+   ]
+  },
+  "a dumbwaiter": {
+   "names": [
+    "dumbwaiter",
+    "food lift",
+    "送菜升降机",
+    "传菜电梯",
+    "食梯"
+   ],
+   "rejected": [
+    "service lift"
+   ]
+  },
+  "a paternoster lift": {
+   "names": [
+    "paternoster lift",
+    "paternoster elevator",
+    "循环电梯",
+    "帕特诺斯特电梯"
+   ],
+   "rejected": [
+    "paternoster",
+    "链斗式电梯"
+   ]
+  },
+  "a speaking tube system": {
+   "names": [
+    "speaking tube system",
+    "传声管系统"
+   ],
+   "rejected": [
+    "speaking tube",
+    "voice pipe",
+    "传声管",
+    "通话管"
+   ]
+  },
+  "a cash railway": {
+   "names": [
+    "cash railway",
+    "cash railway system",
+    "现金传送轨道",
+    "钱款传送轨道"
+   ],
+   "rejected": [
+    "cash carrier",
+    "收银轨道"
+   ]
+  },
+  "a telautograph network": {
+   "names": [
+    "telautograph network",
+    "电传书写网络"
+   ],
+   "rejected": [
+    "传真电报网络"
+   ]
+  },
+  "a semaphore telegraph line": {
+   "names": [
+    "semaphore telegraph line",
+    "semaphore line",
+    "optical telegraph line",
+    "臂板信号电报线路",
+    "光学电报线路"
+   ],
+   "rejected": [
+    "信号塔电报线路"
+   ]
+  },
+  "a book conveyor system": {
+   "names": [
+    "book conveyor system",
+    "book conveyor",
+    "图书输送系统",
+    "图书传送系统",
+    "书籍输送系统"
+   ],
+   "rejected": []
+  },
+  "o código Morse": {
+   "names": [
+    "Morse code",
+    "摩尔斯电码",
+    "摩斯密码",
+    "莫尔斯电码"
+   ],
+   "rejected": []
+  },
+  "o código Baudot": {
+   "names": [
+    "Baudot code",
+    "博多码",
+    "博多电码"
+   ],
+   "rejected": []
+  },
+  "o telégrafo de Chappe": {
+   "names": [
+    "Chappe telegraph",
+    "沙普电报机",
+    "沙普式视觉电报"
+   ],
+   "rejected": [
+    "semaphore telegraph",
+    "optical telegraph",
+    "沙普信号塔"
+   ]
+  },
+  "o código Q": {
+   "names": [
+    "Q code",
+    "Q-code",
+    "Q简语",
+    "Q代码",
+    "Q码"
+   ],
+   "rejected": []
+  },
+  "o heliógrafo": {
+   "names": [
+    "heliograph",
+    "日光信号器",
+    "日光反射信号器",
+    "回光信号机"
+   ],
+   "rejected": []
+  },
+  "o código de Murray": {
+   "names": [
+    "Murray code",
+    "默里码",
+    "默里电码"
+   ],
+   "rejected": []
+  },
+  "o alfabeto semafórico": {
+   "names": [
+    "semaphore alphabet",
+    "flag semaphore alphabet",
+    "旗语字母"
+   ],
+   "rejected": [
+    "旗语"
+   ]
+  },
+  "o código de Cooke e Wheatstone": {
+   "names": [
+    "Cooke and Wheatstone code",
+    "Cooke–Wheatstone telegraph code",
+    "库克和惠斯通电码",
+    "库克-惠斯通电码"
+   ],
+   "rejected": []
+  },
+  "a cuneiform tablet": {
+   "names": [
+    "cuneiform tablet",
+    "clay tablet with cuneiform",
+    "楔形文字泥板",
+    "楔形文字泥版",
+    "楔形文字板"
+   ],
+   "rejected": []
+  },
+  "a Linear B tablet": {
+   "names": [
+    "Linear B tablet",
+    "线形文字B泥板",
+    "线性文字B泥板",
+    "线形文字B泥版"
+   ],
+   "rejected": []
+  },
+  "a rongorongo tablet": {
+   "names": [
+    "rongorongo tablet",
+    "朗格朗格木板",
+    "朗戈朗戈木板",
+    "朗格朗格书板"
+   ],
+   "rejected": []
+  },
+  "an ogham stone": {
+   "names": [
+    "ogham stone",
+    "欧甘石",
+    "欧甘文石碑",
+    "欧甘碑"
+   ],
+   "rejected": []
+  },
+  "a demotic ostracon": {
+   "names": [
+    "demotic ostracon",
+    "世俗体陶片",
+    "世俗体陶片文书",
+    "世俗体文字陶片"
+   ],
+   "rejected": []
+  },
+  "a hieratic papyrus": {
+   "names": [
+    "hieratic papyrus",
+    "僧侣体纸草文书",
+    "僧侣体莎草纸"
+   ],
+   "rejected": []
+  },
+  "a runic stave": {
+   "names": [
+    "runic stave",
+    "rune stave",
+    "runestave",
+    "卢恩符文",
+    "如尼符文",
+    "卢恩字符"
+   ],
+   "rejected": []
+  },
+  "a hieroglyphic inscription": {
+   "names": [
+    "hieroglyphic inscription",
+    "hieroglyphic text",
+    "象形文字铭文",
+    "象形文字碑文"
+   ],
+   "rejected": []
+  },
+  "a broken gavel": {
+   "names": [
+    "broken gavel",
+    "坏了的法槌",
+    "破损的法槌",
+    "断裂的法槌"
+   ],
+   "rejected": []
+  },
+  "a broken hammer": {
+   "names": [
+    "broken hammer",
+    "坏锤子",
+    "坏了的锤子",
+    "破锤子"
+   ],
+   "rejected": []
+  },
+  "a polished gavel": {
+   "names": [
+    "polished gavel",
+    "抛光的法槌",
+    "锃亮的法槌"
+   ],
+   "rejected": [
+    "抛光木槌"
+   ]
+  },
+  "a polished hammer": {
+   "names": [
+    "polished hammer",
+    "抛光的锤子"
+   ],
+   "rejected": [
+    "抛光锤"
+   ]
+  },
+  "a gavel": {
+   "names": [
+    "gavel",
+    "法槌",
+    "议事槌"
+   ],
+   "rejected": [
+    "木槌"
+   ]
+  },
+  "a rusty hammer": {
+   "names": [
+    "rusty hammer",
+    "生锈的锤子",
+    "生锈的榔头",
+    "锈锤"
+   ],
+   "rejected": []
+  },
+  "a rusty gavel": {
+   "names": [
+    "rusty gavel",
+    "生锈的法槌"
+   ],
+   "rejected": [
+    "生锈的木槌"
+   ]
+  },
+  "a flooded cave": {
+   "names": [
+    "flooded cave",
+    "underwater cave",
+    "submerged cave",
+    "水下洞穴",
+    "淹没的洞穴",
+    "水淹洞穴"
+   ],
+   "rejected": []
+  },
+  "a flooded mine": {
+   "names": [
+    "flooded mine",
+    "被淹矿井",
+    "淹水矿井",
+    "水淹矿井"
+   ],
+   "rejected": []
+  },
+  "a frozen cave": {
+   "names": [
+    "ice cave",
+    "frozen cave",
+    "冰洞",
+    "冰穴",
+    "冰窟"
+   ],
+   "rejected": []
+  },
+  "a frozen mine": {
+   "names": [
+    "frozen mine",
+    "冰冻的矿井",
+    "冻结的矿井",
+    "冰封矿井"
+   ],
+   "rejected": []
+  },
+  "a cave": {
+   "names": [
+    "cave",
+    "cavern",
+    "山洞",
+    "洞穴",
+    "岩洞"
+   ],
+   "rejected": []
+  },
+  "a mine": {
+   "names": [
+    "mine",
+    "矿井",
+    "矿山"
+   ],
+   "rejected": []
+  },
+  "a collapsed mine": {
+   "names": [
+    "collapsed mine",
+    "坍塌的矿井",
+    "塌方矿井",
+    "坍塌矿井"
+   ],
+   "rejected": [
+    "mine collapse"
+   ]
+  },
+  "a collapsed cave": {
+   "names": [
+    "collapsed cave",
+    "坍塌的洞穴",
+    "塌陷的洞穴",
+    "坍塌洞穴"
+   ],
+   "rejected": [
+    "cave-in"
+   ]
+  },
+  "a melting glacier": {
+   "names": [
+    "melting glacier",
+    "融化的冰川",
+    "消融的冰川",
+    "融化冰川"
+   ],
+   "rejected": []
+  },
+  "a melting snowman": {
+   "names": [
+    "melting snowman",
+    "融化的雪人",
+    "正在融化的雪人"
+   ],
+   "rejected": []
+  },
+  "a frozen glacier": {
+   "names": [
+    "frozen glacier",
+    "glacier",
+    "冰冻的冰川",
+    "冰川",
+    "冰河"
+   ],
+   "rejected": []
+  },
+  "a frozen snowman": {
+   "names": [
+    "frozen snowman",
+    "冰冻的雪人",
+    "冻住的雪人"
+   ],
+   "rejected": []
+  },
+  "a glacier": {
+   "names": [
+    "glacier",
+    "冰川",
+    "冰河"
+   ],
+   "rejected": []
+  },
+  "a snowman": {
+   "names": [
+    "snowman",
+    "雪人"
+   ],
+   "rejected": []
+  },
+  "a toppling snowman": {
+   "names": [
+    "toppling snowman",
+    "falling snowman",
+    "快要倒的雪人",
+    "摇摇欲坠的雪人"
+   ],
+   "rejected": [
+    "倒下的雪人"
+   ]
+  },
+  "a toppling glacier": {
+   "names": [
+    "toppling glacier",
+    "collapsing glacier",
+    "崩塌的冰川",
+    "倾覆的冰川"
+   ],
+   "rejected": []
+  },
+  "a wrecked car": {
+   "names": [
+    "wrecked car",
+    "失事汽车",
+    "撞毁的汽车"
+   ],
+   "rejected": [
+    "car wreck",
+    "wreck",
+    "报废车"
+   ]
+  },
+  "a wrecked bicycle": {
+   "names": [
+    "wrecked bicycle",
+    "wrecked bike",
+    "撞坏的自行车",
+    "损毁的自行车"
+   ],
+   "rejected": [
+    "crashed bicycle",
+    "报废的自行车"
+   ]
+  },
+  "a polished car": {
+   "names": [
+    "polished car",
+    "shiny car",
+    "抛光的汽车",
+    "锃亮的汽车"
+   ],
+   "rejected": [
+    "打过蜡的汽车"
+   ]
+  },
+  "a polished bicycle": {
+   "names": [
+    "polished bicycle",
+    "polished bike",
+    "擦亮的自行车",
+    "锃亮的自行车",
+    "擦亮的单车"
+   ],
+   "rejected": []
+  },
+  "a rusty bicycle": {
+   "names": [
+    "rusty bicycle",
+    "rusty bike",
+    "生锈的自行车",
+    "生锈的单车",
+    "锈迹斑斑的自行车"
+   ],
+   "rejected": []
+  },
+  "a rusty car": {
+   "names": [
+    "rusty car",
+    "rusted car",
+    "生锈的汽车",
+    "生锈的车",
+    "锈迹斑斑的汽车"
+   ],
+   "rejected": []
+  },
+  "un cactus congelato": {
+   "names": [
+    "frozen cactus",
+    "冰冻的仙人掌",
+    "冻仙人掌"
+   ],
+   "rejected": []
+  },
+  "un girasole congelato": {
+   "names": [
+    "frozen sunflower",
+    "冰冻的向日葵",
+    "冻向日葵"
+   ],
+   "rejected": []
+  },
+  "un cactus bruciato": {
+   "names": [
+    "burnt cactus",
+    "burned cactus",
+    "scorched cactus",
+    "烧焦的仙人掌",
+    "被烧的仙人掌"
+   ],
+   "rejected": []
+  },
+  "un girasole bruciato": {
+   "names": [
+    "burnt sunflower",
+    "burned sunflower",
+    "scorched sunflower",
+    "烧焦的向日葵"
+   ],
+   "rejected": [
+    "枯焦的向日葵"
+   ]
+  },
+  "un cactus": {
+   "names": [
+    "cactus",
+    "仙人掌"
+   ],
+   "rejected": []
+  },
+  "un girasole": {
+   "names": [
+    "sunflower",
+    "向日葵",
+    "葵花"
+   ],
+   "rejected": []
+  },
+  "un girasole allagato": {
+   "names": [
+    "flooded sunflower",
+    "waterlogged sunflower",
+    "被淹的向日葵",
+    "被水淹的向日葵"
+   ],
+   "rejected": []
+  },
+  "un cactus allagato": {
+   "names": [
+    "flooded cactus",
+    "waterlogged cactus",
+    "被淹的仙人掌",
+    "水淹的仙人掌"
+   ],
+   "rejected": []
+  },
+  "un hospital abandonado": {
+   "names": [
+    "abandoned hospital",
+    "derelict hospital",
+    "废弃医院",
+    "废弃的医院"
+   ],
+   "rejected": []
+  },
+  "un hotel abandonado": {
+   "names": [
+    "abandoned hotel",
+    "derelict hotel",
+    "废弃酒店",
+    "废弃的酒店",
+    "废弃旅馆"
+   ],
+   "rejected": []
+  },
+  "un hospital incendiado": {
+   "names": [
+    "burned hospital",
+    "burned-down hospital",
+    "被烧毁的医院",
+    "失火的医院"
+   ],
+   "rejected": [
+    "burning hospital",
+    "着火的医院"
+   ]
+  },
+  "un hotel incendiado": {
+   "names": [
+    "burned hotel",
+    "burnt hotel",
+    "burned-out hotel",
+    "被烧毁的酒店",
+    "烧毁的旅馆",
+    "失火的酒店"
+   ],
+   "rejected": []
+  },
+  "un hospital": {
+   "names": [
+    "hospital",
+    "医院"
+   ],
+   "rejected": []
+  },
+  "un hotel": {
+   "names": [
+    "hotel",
+    "酒店",
+    "旅馆"
+   ],
+   "rejected": [
+    "饭店"
+   ]
+  },
+  "un hotel embrujado": {
+   "names": [
+    "haunted hotel",
+    "鬼屋酒店",
+    "闹鬼的酒店",
+    "闹鬼旅馆"
+   ],
+   "rejected": []
+  },
+  "un hospital embrujado": {
+   "names": [
+    "haunted hospital",
+    "鬼医院",
+    "闹鬼的医院"
+   ],
+   "rejected": [
+    "凶宅医院"
+   ]
+  },
+  "a toothless shark": {
+   "names": [
+    "toothless shark",
+    "无牙鲨鱼",
+    "没有牙齿的鲨鱼"
+   ],
+   "rejected": []
+  },
+  "a toothless crocodile": {
+   "names": [
+    "toothless crocodile",
+    "没牙的鳄鱼",
+    "无牙鳄鱼"
+   ],
+   "rejected": []
+  },
+  "a blind shark": {
+   "names": [
+    "blind shark",
+    "盲鲨"
+   ],
+   "rejected": []
+  },
+  "a blind crocodile": {
+   "names": [
+    "blind crocodile",
+    "盲鳄鱼",
+    "瞎眼鳄鱼"
+   ],
+   "rejected": []
+  },
+  "a shark": {
+   "names": [
+    "shark",
+    "鲨鱼"
+   ],
+   "rejected": []
+  },
+  "a crocodile": {
+   "names": [
+    "crocodile",
+    "鳄鱼"
+   ],
+   "rejected": []
+  },
+  "a tailless crocodile": {
+   "names": [
+    "tailless crocodile",
+    "无尾鳄鱼",
+    "无尾鳄"
+   ],
+   "rejected": []
+  },
+  "a tailless shark": {
+   "names": [
+    "tailless shark",
+    "无尾鲨鱼",
+    "无尾鲨"
+   ],
+   "rejected": []
+  },
+  "a cowardly lion": {
+   "names": [
+    "cowardly lion",
+    "胆小的狮子",
+    "胆怯的狮子"
+   ],
+   "rejected": []
+  },
+  "a cowardly wolf": {
+   "names": [
+    "cowardly wolf",
+    "胆小的狼",
+    "懦弱的狼"
+   ],
+   "rejected": []
+  },
+  "a greedy lion": {
+   "names": [
+    "greedy lion",
+    "贪婪的狮子",
+    "贪心的狮子"
+   ],
+   "rejected": []
+  },
+  "a greedy wolf": {
+   "names": [
+    "greedy wolf",
+    "ravenous wolf",
+    "贪婪的狼"
+   ],
+   "rejected": [
+    "贪狼",
+    "饿狼"
+   ]
+  },
+  "a lion": {
+   "names": [
+    "lion",
+    "狮子"
+   ],
+   "rejected": []
+  },
+  "a wolf": {
+   "names": [
+    "wolf"
+   ],
+   "rejected": []
+  },
+  "a lazy wolf": {
+   "names": [
+    "lazy wolf",
+    "懒狼",
+    "懒惰的狼"
+   ],
+   "rejected": []
+  },
+  "a lazy lion": {
+   "names": [
+    "lazy lion",
+    "懒狮子",
+    "懒惰的狮子"
+   ],
+   "rejected": []
+  },
+  "a clumsy surgeon": {
+   "names": [
+    "clumsy surgeon",
+    "笨拙的外科医生",
+    "笨手笨脚的外科医生"
+   ],
+   "rejected": []
+  },
+  "a clumsy dentist": {
+   "names": [
+    "clumsy dentist",
+    "笨手笨脚的牙医",
+    "笨拙的牙医"
+   ],
+   "rejected": []
+  },
+  "a forgetful surgeon": {
+   "names": [
+    "forgetful surgeon",
+    "absent-minded surgeon",
+    "健忘的外科医生",
+    "健忘的外科医师"
+   ],
+   "rejected": []
+  },
+  "a forgetful dentist": {
+   "names": [
+    "forgetful dentist",
+    "健忘的牙医",
+    "健忘的牙科医生"
+   ],
+   "rejected": []
+  },
+  "a surgeon": {
+   "names": [
+    "surgeon",
+    "外科医生",
+    "外科医师"
+   ],
+   "rejected": []
+  },
+  "a dentist": {
+   "names": [
+    "dentist",
+    "dental surgeon",
+    "牙医",
+    "牙科医生"
+   ],
+   "rejected": []
+  },
+  "a nervous dentist": {
+   "names": [
+    "nervous dentist",
+    "紧张的牙医"
+   ],
+   "rejected": []
+  },
+  "a nervous surgeon": {
+   "names": [
+    "nervous surgeon",
+    "紧张的外科医生",
+    "紧张的外科医师"
+   ],
+   "rejected": []
+  },
+  "a gavel made of ice": {
+   "names": [
+    "ice gavel",
+    "冰制法槌"
+   ],
+   "rejected": [
+    "冰槌"
+   ]
+  },
+  "a gavel made of glass": {
+   "names": [
+    "glass gavel",
+    "玻璃法槌"
+   ],
+   "rejected": [
+    "玻璃木槌"
+   ]
+  },
+  "a hammer made of wax": {
+   "names": [
+    "wax hammer",
+    "蜡锤",
+    "蜡制锤子",
+    "蜡做的锤子"
+   ],
+   "rejected": []
+  },
+  "a gavel made of wax": {
+   "names": [
+    "wax gavel",
+    "蜡制法槌"
+   ],
+   "rejected": [
+    "蜡槌"
+   ]
+  },
+  "Handschuhe aus Honig": {
+   "names": [
+    "honey gloves",
+    "gloves made of honey",
+    "蜂蜜手套",
+    "蜂蜜做的手套"
+   ],
+   "rejected": []
+  },
+  "Handschuhe aus Wachs": {
+   "names": [
+    "wax gloves",
+    "蜡手套"
+   ],
+   "rejected": []
+  },
+  "Socken aus Honig": {
+   "names": [
+    "honey socks",
+    "socks made of honey",
+    "蜂蜜袜子",
+    "蜂蜜做的袜子"
+   ],
+   "rejected": []
+  },
+  "Socken aus Wachs": {
+   "names": [
+    "wax socks",
+    "socks made of wax",
+    "蜡袜子",
+    "蜡制袜子"
+   ],
+   "rejected": []
+  },
+  "Handschuhe": {
+   "names": [
+    "gloves",
+    "手套"
+   ],
+   "rejected": []
+  },
+  "Socken": {
+   "names": [
+    "socks",
+    "sock",
+    "袜子",
+    "短袜"
+   ],
+   "rejected": []
+  },
+  "Socken aus Sirup": {
+   "names": [
+    "syrup socks",
+    "socks made of syrup",
+    "糖浆袜子",
+    "糖浆做的袜子"
+   ],
+   "rejected": []
+  },
+  "Handschuhe aus Sirup": {
+   "names": [
+    "syrup gloves",
+    "gloves made of syrup",
+    "糖浆手套",
+    "糖浆做的手套"
+   ],
+   "rejected": []
+  },
+  "a train made of paper": {
+   "names": [
+    "paper train",
+    "纸火车",
+    "纸做的火车"
+   ],
+   "rejected": []
+  },
+  "a train made of glass": {
+   "names": [
+    "glass train",
+    "玻璃火车",
+    "玻璃列车"
+   ],
+   "rejected": []
+  },
+  "a boat made of paper": {
+   "names": [
+    "paper boat",
+    "纸船"
+   ],
+   "rejected": []
+  },
+  "a boat made of glass": {
+   "names": [
+    "glass boat",
+    "玻璃船"
+   ],
+   "rejected": []
+  },
+  "a train": {
+   "names": [
+    "train",
+    "火车",
+    "列车"
+   ],
+   "rejected": []
+  },
+  "a boat": {
+   "names": [
+    "boat",
+    "小船"
+   ],
+   "rejected": []
+  },
+  "a boat made of wood": {
+   "names": [
+    "wooden boat",
+    "wood boat",
+    "木船",
+    "木舟"
+   ],
+   "rejected": []
+  },
+  "a train made of wood": {
+   "names": [
+    "wooden train",
+    "wood train",
+    "木制火车",
+    "木头火车",
+    "木火车"
+   ],
+   "rejected": []
+  },
+  "a fire hydrant made of glass": {
+   "names": [
+    "glass fire hydrant",
+    "玻璃消防栓"
+   ],
+   "rejected": []
+  },
+  "a fire hydrant made of paper": {
+   "names": [
+    "paper fire hydrant",
+    "纸消防栓",
+    "纸质消防栓",
+    "纸做的消防栓"
+   ],
+   "rejected": []
+  },
+  "a mailbox made of glass": {
+   "names": [
+    "glass mailbox",
+    "glass letterbox",
+    "玻璃信箱",
+    "玻璃邮箱"
+   ],
+   "rejected": []
+  },
+  "a mailbox made of paper": {
+   "names": [
+    "paper mailbox",
+    "纸邮箱",
+    "纸质邮箱"
+   ],
+   "rejected": []
+  },
+  "a fire hydrant": {
+   "names": [
+    "fire hydrant",
+    "hydrant",
+    "fireplug",
+    "消防栓",
+    "消火栓"
+   ],
+   "rejected": []
+  },
+  "a mailbox": {
+   "names": [
+    "mailbox",
+    "letterbox",
+    "信箱",
+    "邮箱"
+   ],
+   "rejected": [
+    "postbox",
+    "邮筒"
+   ]
+  },
+  "a mailbox made of ice": {
+   "names": [
+    "ice mailbox",
+    "mailbox made of ice",
+    "冰邮箱",
+    "冰做的邮箱",
+    "冰制信箱"
+   ],
+   "rejected": []
+  },
+  "a fire hydrant made of ice": {
+   "names": [
+    "ice fire hydrant",
+    "fire hydrant made of ice",
+    "冰制消防栓",
+    "冰做的消防栓",
+    "冰消防栓"
+   ],
+   "rejected": []
+  },
+  "a parking meter made of chocolate": {
+   "names": [
+    "chocolate parking meter",
+    "巧克力停车计时器",
+    "巧克力咪表",
+    "巧克力停车收费表"
+   ],
+   "rejected": []
+  },
+  "a parking meter made of ice": {
+   "names": [
+    "ice parking meter",
+    "parking meter made of ice",
+    "冰制停车计时器",
+    "冰做的停车咪表",
+    "冰制咪表"
+   ],
+   "rejected": []
+  },
+  "a fire hydrant made of chocolate": {
+   "names": [
+    "chocolate fire hydrant",
+    "巧克力消防栓"
+   ],
+   "rejected": []
+  },
+  "a parking meter": {
+   "names": [
+    "parking meter",
+    "停车计时器",
+    "停车咪表",
+    "咪表"
+   ],
+   "rejected": []
+  },
+  "a parking meter made of glass": {
+   "names": [
+    "glass parking meter",
+    "玻璃停车计时器",
+    "玻璃停车咪表"
+   ],
+   "rejected": []
+  },
+  "a pretzel made of glass": {
+   "names": [
+    "glass pretzel",
+    "玻璃椒盐卷饼",
+    "玻璃扭结饼"
+   ],
+   "rejected": []
+  },
+  "a pretzel made of rubber": {
+   "names": [
+    "rubber pretzel",
+    "橡胶椒盐卷饼",
+    "橡胶扭结饼"
+   ],
+   "rejected": [
+    "橡胶脆饼"
+   ]
+  },
+  "a bagel made of glass": {
+   "names": [
+    "glass bagel",
+    "玻璃贝果",
+    "玻璃百吉饼"
+   ],
+   "rejected": []
+  },
+  "a bagel made of rubber": {
+   "names": [
+    "rubber bagel",
+    "橡胶贝果",
+    "橡胶百吉饼"
+   ],
+   "rejected": []
+  },
+  "a pretzel": {
+   "names": [
+    "pretzel",
+    "椒盐卷饼",
+    "扭结饼"
+   ],
+   "rejected": [
+    "碱水面包"
+   ]
+  },
+  "a bagel": {
+   "names": [
+    "bagel",
+    "贝果",
+    "百吉饼"
+   ],
+   "rejected": []
+  },
+  "a bagel made of stone": {
+   "names": [
+    "stone bagel",
+    "石头贝果",
+    "石制贝果"
+   ],
+   "rejected": []
+  },
+  "a pretzel made of stone": {
+   "names": [
+    "stone pretzel",
+    "石头椒盐卷饼",
+    "石制椒盐脆饼"
+   ],
+   "rejected": []
+  },
+  "a frisbee made of concrete": {
+   "names": [
+    "concrete frisbee",
+    "concrete flying disc",
+    "混凝土飞盘",
+    "水泥飞盘"
+   ],
+   "rejected": []
+  },
+  "a frisbee made of glass": {
+   "names": [
+    "glass frisbee",
+    "glass flying disc",
+    "玻璃飞盘"
+   ],
+   "rejected": []
+  },
+  "a boomerang made of concrete": {
+   "names": [
+    "concrete boomerang",
+    "混凝土回旋镖",
+    "混凝土飞去来器"
+   ],
+   "rejected": [
+    "水泥回旋镖"
+   ]
+  },
+  "a boomerang made of glass": {
+   "names": [
+    "glass boomerang",
+    "玻璃回旋镖",
+    "玻璃飞去来器"
+   ],
+   "rejected": []
+  },
+  "a frisbee": {
+   "names": [
+    "frisbee",
+    "flying disc",
+    "飞盘"
+   ],
+   "rejected": []
+  },
+  "a boomerang": {
+   "names": [
+    "boomerang",
+    "回旋镖",
+    "飞去来器",
+    "回力镖"
+   ],
+   "rejected": []
+  },
+  "a boomerang made of chocolate": {
+   "names": [
+    "chocolate boomerang",
+    "巧克力回旋镖",
+    "巧克力飞去来器"
+   ],
+   "rejected": []
+  },
+  "a frisbee made of chocolate": {
+   "names": [
+    "chocolate frisbee",
+    "chocolate flying disc",
+    "巧克力飞盘"
+   ],
+   "rejected": []
+  },
+  "un balón de fútbol de jabón": {
+   "names": [
+    "soap soccer ball",
+    "soap football",
+    "soccer ball made of soap",
+    "足球香皂",
+    "足球形肥皂",
+    "肥皂足球"
+   ],
+   "rejected": []
+  },
+  "un balón de fútbol de queso": {
+   "names": [
+    "cheese soccer ball",
+    "cheese football",
+    "奶酪足球",
+    "芝士足球"
+   ],
+   "rejected": []
+  },
+  "un balón de baloncesto de jabón": {
+   "names": [
+    "soap basketball",
+    "basketball made of soap",
+    "肥皂篮球"
+   ],
+   "rejected": [
+    "basketball-shaped soap",
+    "篮球形肥皂",
+    "篮球造型肥皂"
+   ]
+  },
+  "un balón de baloncesto de queso": {
+   "names": [
+    "cheese basketball",
+    "奶酪篮球",
+    "芝士篮球"
+   ],
+   "rejected": []
+  },
+  "un balón de fútbol": {
+   "names": [
+    "soccer ball",
+    "football",
+    "足球"
+   ],
+   "rejected": []
+  },
+  "un balón de baloncesto": {
+   "names": [
+    "basketball",
+    "篮球"
+   ],
+   "rejected": []
+  },
+  "un balón de baloncesto de cristal": {
+   "names": [
+    "glass basketball",
+    "玻璃篮球"
+   ],
+   "rejected": []
+  },
+  "un balón de fútbol de cristal": {
+   "names": [
+    "glass soccer ball",
+    "glass football",
+    "玻璃足球"
+   ],
+   "rejected": []
+  }
+ }
+}

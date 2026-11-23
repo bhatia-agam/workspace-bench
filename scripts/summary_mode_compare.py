@@ -117,6 +117,7 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     # plan 0108: summary mode takes the majority of 3 draws' verdicts (+maj3v)
     "association_hard": {
         "assoc-hard-v1+gate-h2+bank-v2": "assoc-hard-v1+gate-h2+bank-v2+maj3v",
+        "assoc-hard-v1+gate-h2+bank-v3": "assoc-hard-v1+gate-h2+bank-v3+maj3v",
     },
     # moral_rationale's summary mode takes the majority of 3 draws' verdicts (+maj3v); the
     # single-pick ec-v9 instruments also verify near-verbatim quotes (+nq1)

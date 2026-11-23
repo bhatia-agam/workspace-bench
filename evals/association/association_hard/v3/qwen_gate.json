@@ -1,0 +1,9448 @@
+{
+ "what": "plan 0116: the graded record of the ONE subject-gate run (Qwen3.6-27B, thinking off, greedy + 10 samples at T 0.7, 96 tokens) for every screened candidate of sub-waves b4 / b5; strict grader claude-opus-5-5, 3 draws, unanimous \"whole\"; pass = greedy correct and at least 8 of 10. Requests: qwen_requests.jsonl; raw replies: qwen_samples.jsonl.gz",
+ "run": {
+  "modal_app": "ap-UqIrA1iyRGO1v5oN2n6hei",
+  "date": "2026-11-23",
+  "shards": 3,
+  "wall_seconds": 384,
+  "runs": 1
+ },
+ "n": 358,
+ "n_pass": 185,
+ "items": {
+  "ah-b4-ob02-hand-wave-antenna-theatre": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a theremin",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Theremin",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob03-caja-nieve-alpina": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "el cuerno alpino",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Zampoña",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Zampoña",
+     3
+    ],
+    [
+     "zampoña",
+     2
+    ],
+    [
+     "Gaita de embolo",
+     1
+    ],
+    [
+     "Pujol",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob04-waterproof-bowl-tibet-temple": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a singing bowl",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Singing bowl",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Tingsha",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob05-keyed-fiddle-workshop": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a nyckelharpa",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Hardanger fiddle",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Hardanger fiddle",
+     8
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob06-zucca-corde-cucina": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "il berimbau",
+   "question": "ref",
+   "pass": false,
+   "greedy": "berimbau",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "marimba",
+     1
+    ],
+    [
+     "violino",
+     1
+    ],
+    [
+     "Violino",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob07-spinning-tablet-rain-ritual": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a bullroarer",
+   "question": "ref",
+   "pass": true,
+   "greedy": "bullroarer",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "whirlybird",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob08-stone-slide-on-frozen-loch": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "curling",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Curling",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob09-sheepdog-boys-hurling-sticks": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "hurling",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Hurling",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "shinty",
+     1
+    ],
+    [
+     "Hockey",
+     1
+    ],
+    [
+     "Jogging",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob10-werkstatt-pfeile-kneipe": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "Darts",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Darts",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob11-harbour-masted-pole-climb": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "windsurfing",
+   "question": "ref",
+   "pass": true,
+   "greedy": "windsurfing",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob15-copper-wire-cells-icon": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "cloisonné",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Cloisonné",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Enamel",
+     2
+    ],
+    [
+     "Stained glass",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob16-hive-model-bronze-goat": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "lost-wax casting",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Lost-wax casting",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob17-maschere-carro-viareggio": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "la cartapesta",
+   "question": "ref",
+   "pass": true,
+   "greedy": "cartapesta",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob18-grandpa-lathe-bowls": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "woodturning",
+   "question": "ref",
+   "pass": true,
+   "greedy": "woodturning",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "woodworking",
+     1
+    ],
+    [
+     "turning",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob19-keeper-cottage-colour-window": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "stained glass",
+   "question": "ref",
+   "pass": true,
+   "greedy": "stained glass",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob21-scratched-slip-serving-dish": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "sgraffito",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Sgraffito",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob22-fog-bow-harbour-net-mender": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a fogbow",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Rainbow",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Rainbow",
+     4
+    ],
+    [
+     "rainbow",
+     2
+    ],
+    [
+     "a rainbow",
+     1
+    ],
+    [
+     "sunrise",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob23-rogue-swell-trawler-deck": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a rogue wave",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Rogue wave",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob29-rooftop-gale-cups": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an anemometer",
+   "question": "ref",
+   "pass": false,
+   "greedy": "anemometer",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "wind speed",
+     3
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob32-geology-club-garage-barrel": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a rock tumbler",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Tumbler",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "whole"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Tumbler",
+     6
+    ],
+    [
+     "tumbler",
+     1
+    ],
+    [
+     "Tumbling",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob33-salvage-crew-bronze-chamber": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a diving bell",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Diving bell",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Bell Diver",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob34-bauernhof-warme-holzkiste": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "ein Brutkasten",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Brüter",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "brute",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob35-victorian-playhouse-white-glare": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a limelight",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Limelight",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob36-gull-pillar-off-cliff": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a sea stack",
+   "question": "ref",
+   "pass": true,
+   "greedy": "sea stack",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob37-grandfathers-hill-tower": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a folly",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Follies",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Gothic Revival",
+     5
+    ],
+    [
+     "Fake ruin",
+     1
+    ],
+    [
+     "Ruins",
+     1
+    ],
+    [
+     "Ruinenlust",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob38-mazorcas-de-la-abuela": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "un hórreo",
+   "question": "ref",
+   "pass": true,
+   "greedy": "hórreo",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob39-sunday-brass-in-the-park": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a bandstand",
+   "question": "ref",
+   "pass": true,
+   "greedy": "bandstand",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob40-january-blocks-in-straw": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an icehouse",
+   "question": "ref",
+   "pass": true,
+   "greedy": "ice house",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob41-muratore-pugliese": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "un trullo",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Trullo",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob42-bones-beneath-the-monastery": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an ossuary",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Capuchin Crypt",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Capuchin Crypt",
+     3
+    ],
+    [
+     "Capuchin Catacombs",
+     2
+    ],
+    [
+     "Capuchin Catacombs of Palermo",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob43-sea-cliff-ink-cloud-hunter": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a nautilus",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Portuguese man o' war",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Portuguese man o' war",
+     9
+    ],
+    [
+     "paper nautilus",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob45-almhuette-kaese-faeden": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "die Kässpätzle",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Käsespätzle",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Spätzle",
+     2
+    ],
+    [
+     "Spätzleauflauf",
+     1
+    ],
+    [
+     "Spätzlepfanne",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob46-reef-dive-poison-spines": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a stonefish",
+   "question": "ref",
+   "pass": true,
+   "greedy": "stonefish",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob47-winter-pub-drink-egg": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "eggnog",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Eggnog",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob48-feijao-preto-panela-domingo": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "a feijoada",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Feijoada",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Feijão preto",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob49-monsoon-forest-hanging-pitchers": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a pitcher plant",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Nepenthes",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob50-arctic-pod-spiral-tusk": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a narwhal",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Narwhal",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob51-aquarium-water-jet-insect": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an archerfish",
+   "question": "ref",
+   "pass": true,
+   "greedy": "archerfish",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "arowana",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob53-weaver-garden-blue-threads": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a bowerbird",
+   "question": "ref",
+   "pass": false,
+   "greedy": "bowerbird",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "bower",
+     2
+    ],
+    [
+     "Bower",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob54-amazon-net-stunning-shock": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an electric eel",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Electric eel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob55-chapelle-costa-rica-pendu": {
+   "kind": "obscure",
+   "lang": "fr",
+   "gold": "le paresseux",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Paresseux",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "L'hirondelle",
+     1
+    ],
+    [
+     "Tapisseries de l'évêque",
+     1
+    ],
+    [
+     "L'ourisson",
+     1
+    ],
+    [
+     "L'animal",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob56-geologist-tidal-flats-fins": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a mudskipper",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Fiddler crabs",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Fiddler crabs",
+     5
+    ],
+    [
+     "fiddler crabs",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob57-stilt-rooted-coast-trees": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a mangrove",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Mangrove forest",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob58-rolling-dry-plant-storm": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a tumbleweed",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Tumbleweed",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob59-arvore-casca-alentejo": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "um sobreiro",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Sobreiro",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Cortiça",
+     2
+    ],
+    [
+     "azevinho",
+     1
+    ],
+    [
+     "Marcete",
+     1
+    ],
+    [
+     "Azinho",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob60-meadow-smoke-stomp": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a puffball",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Puffball",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob61-temple-pond-flower": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a lotus",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Lotus",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob62-costra-naranja-granito": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "un liquen",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Liquen",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Lic",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob63-rimmed-forest-giant": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a redwood",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Redwood",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob65-stone-seat-grins-under-choir": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a misericord",
+   "question": "ref",
+   "pass": false,
+   "greedy": "kneeler",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "kneeler",
+     5
+    ],
+    [
+     "osselet",
+     1
+    ],
+    [
+     "Jacob's stool",
+     1
+    ],
+    [
+     "cathedra",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob71-potter-hill-white-figure": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a hill figure",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Uffington White Horse",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "whole"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Uffington White Horse",
+     9
+    ],
+    [
+     "The White Horse of Uffington",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob72-reed-boat-lake-fisher": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a reed boat",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Totora reed boat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob73-hide-bowl-river-crossing": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a coracle",
+   "question": "ref",
+   "pass": true,
+   "greedy": "coracle",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob74-seilgezogene-flussquerung": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "eine Gierseilfähre",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Seilfähre",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Seilfähre",
+     7
+    ],
+    [
+     "Schwimmbrücke",
+     1
+    ],
+    [
+     "Schwimmfähige Brücke",
+     1
+    ],
+    [
+     "Seilbahn",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob75-canal-horse-towpath-cargo": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a narrowboat",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Narrowboat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob76-chinese-sail-battens-junk": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a junk",
+   "question": "ref",
+   "pass": true,
+   "greedy": "junk",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob77-carro-de-bois-gemendo": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "o carro de boi",
+   "question": "ref",
+   "pass": false,
+   "greedy": "carreta",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "other"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Carreta",
+     3
+    ],
+    [
+     "carreta",
+     2
+    ],
+    [
+     "Arado",
+     1
+    ],
+    [
+     "carroça",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob78-fan-propelled-cushion-shore": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a hovercraft",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Hovercraft",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob79-oilskin-brim-spray": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a sou'wester",
+   "question": "ref",
+   "pass": false,
+   "greedy": "raincoat",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Raincoat",
+     2
+    ],
+    [
+     "raincoat",
+     1
+    ],
+    [
+     "Bib",
+     1
+    ],
+    [
+     "apron",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob81-nonno-trattore-sicilia": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "la coppola",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Borsalino",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Borsalino",
+     4
+    ],
+    [
+     "Caschetto",
+     1
+    ],
+    [
+     "borsalino",
+     1
+    ],
+    [
+     "berretto",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob82-synagogue-velvet-crown": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a kippah",
+   "question": "ref",
+   "pass": true,
+   "greedy": "yarmulke",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob83-pleated-cylinder-stove": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a toque",
+   "question": "ref",
+   "pass": false,
+   "greedy": "chef's hat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "chef's coat",
+     2
+    ],
+    [
+     "Chef's coat",
+     1
+    ],
+    [
+     "chef's whites",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob84-atelier-bloc-hetre": {
+   "kind": "obscure",
+   "lang": "fr",
+   "gold": "des sabots",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Sabots",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob85-grandfather-slush-covers": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "galoshes",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Shoe covers",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Shoe covers",
+     7
+    ],
+    [
+     "shoe covers",
+     4
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob87-field-camp-logarithms": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a slide rule",
+   "question": "ref",
+   "pass": true,
+   "greedy": "slide rule",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob88-quinta-do-avo-mensagem": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "um pombo-correio",
+   "question": "ref",
+   "pass": true,
+   "greedy": "pombo-correio",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "pombal correio",
+     1
+    ],
+    [
+     "pombal",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob89-backstage-goose-feather": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a quill pen",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Quill",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob90-frigate-arm-signals": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "flag semaphore",
+   "question": "ref",
+   "pass": false,
+   "greedy": "flag semaphore",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Semaphore",
+     3
+    ],
+    [
+     "Signal flags",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-ob91-convento-guiso-goteo": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "una clepsidra",
+   "question": "ref",
+   "pass": true,
+   "greedy": "clepsidra",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-ob92-bishop-letter-signet": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a wax seal",
+   "question": "ref",
+   "pass": true,
+   "greedy": "wax seal",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Seal",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq01-carpenter-dull-teeth": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a blunt saw",
+   "question": "cx",
+   "pass": true,
+   "greedy": "dull saw",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq02-bay-rower-stump": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a broken oar",
+   "question": "cx",
+   "pass": false,
+   "greedy": "broken oar",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "unilateral rowing",
+     2
+    ],
+    [
+     "One-handed rowing",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq03-bouillon-fond-perce": {
+   "kind": "complex_qualified",
+   "lang": "fr",
+   "gold": "une casserole trouée",
+   "question": "cx",
+   "pass": true,
+   "greedy": "une casserole percée",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a frying pan with a hole in the bottom",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq04-january-yard-handle": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a frozen pump",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A frozen water pump",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a frozen well",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq05-dressing-table-reflection": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a cracked mirror",
+   "question": "cx",
+   "pass": true,
+   "greedy": "cracked mirror",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "broken mirror",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq06-ostern-schiefe-akkorde": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "eine verstimmte Orgel",
+   "question": "cx",
+   "pass": false,
+   "greedy": "kaputte Orgel",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "kaputte Orgel",
+     4
+    ],
+    [
+     "kaputte Kirchenorgel",
+     3
+    ],
+    [
+     "Defekte Orgel",
+     1
+    ],
+    [
+     "Defekte Kirchenorgel",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq07-birthday-red-sphere": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a deflated balloon",
+   "question": "cx",
+   "pass": true,
+   "greedy": "deflated balloon",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq08-camp-lake-overturned-hull": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a capsized canoe",
+   "question": "cx",
+   "pass": true,
+   "greedy": "an overturned canoe",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq09-storm-parlour-soaked-keys": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a waterlogged piano",
+   "question": "cx",
+   "pass": true,
+   "greedy": "a waterlogged piano",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq10-granja-maquina-roja-parda": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un tractor oxidado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "tractor oxidado",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Aradora oxidada",
+     1
+    ],
+    [
+     "una vieja máquina de arar",
+     1
+    ],
+    [
+     "old plowing machine",
+     1
+    ],
+    [
+     "old plow machine",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq11-stove-dribbling-whistle-pot": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a leaking kettle",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A leaking kettle",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Leaky water",
+     1
+    ],
+    [
+     "leaky pot",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq12-stage-lamp-stuttering-beam": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a flickering spotlight",
+   "question": "cx",
+   "pass": false,
+   "greedy": "flickering stage light",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "flickering stage light",
+     5
+    ],
+    [
+     "A flickering stage light",
+     2
+    ],
+    [
+     "Strobe light",
+     1
+    ],
+    [
+     "Flickering stage light",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq13-chiesa-canne-note-storte": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un organo scordato",
+   "question": "cx",
+   "pass": false,
+   "greedy": "un organo fuori accord",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "un organo difettoso",
+     2
+    ],
+    [
+     "The broken Christmas Mass",
+     1
+    ],
+    [
+     "Un organo rovinato",
+     1
+    ],
+    [
+     "organo",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq14-quarry-core-bit-worn-smooth": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a blunt drill",
+   "question": "cx",
+   "pass": true,
+   "greedy": "dull drill bit",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "useless motorized boring tool",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq15-seafront-white-fronds": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a snow-covered palm",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Snow-covered palm tree",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq16-farmyard-empty-shaft": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a dry well",
+   "question": "cx",
+   "pass": true,
+   "greedy": "dry well",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "empty bucket",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq17-dorf-verstummte-glocken": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "eine verlassene Kirche",
+   "question": "cx",
+   "pass": false,
+   "greedy": "verfallene Kirche",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "verfallene Kirche",
+     6
+    ],
+    [
+     "verfallene Dorfkirche",
+     2
+    ],
+    [
+     "eine verfallene Kirche",
+     1
+    ],
+    [
+     "a ruined church",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq18-desert-hum-crescent": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a singing dune",
+   "question": "cx",
+   "pass": true,
+   "greedy": "singing sand dune",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "singing sand",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq19-stage-wobbling-oak": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a cardboard tree",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a fake tree",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a fake tree",
+     3
+    ],
+    [
+     "A fake tree",
+     2
+    ],
+    [
+     "fake tree",
+     1
+    ],
+    [
+     "A theatrical set",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq20-promontorio-torre-escura": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um farol apagado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "lighthouse",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "lighthouse",
+     4
+    ],
+    [
+     "desaparecido farol",
+     1
+    ],
+    [
+     "failing lighthouse",
+     1
+    ],
+    [
+     "lighthouse failure",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq21-geologist-ringing-trunk": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a petrified tree",
+   "question": "cx",
+   "pass": true,
+   "greedy": "petrified wood",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq22-weeds-and-hammock": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a lazy farmer",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A lazy farmer",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Lazy Neighbor",
+     1
+    ],
+    [
+     "A lazy man",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq23-croaking-encore": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a hoarse singer",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a failed opera performance",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a failed opera performance",
+     3
+    ],
+    [
+     "failed opera debut",
+     1
+    ],
+    [
+     "failed aria",
+     1
+    ],
+    [
+     "a singer losing her voice",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq24-tremante-sull-albero": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un marinaio pauroso",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A sailor hiding from a storm",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A sailor hiding from a storm",
+     3
+    ],
+    [
+     "Paura del mare",
+     2
+    ],
+    [
+     "panico marittimo",
+     1
+    ],
+    [
+     "Un marinaio che si nasconde durante una tempesta",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq25-unsalted-banquet": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a forgetful chef",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a disastrous dinner service",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a disastrous dinner service",
+     3
+    ],
+    [
+     "a kitchen disaster",
+     2
+    ],
+    [
+     "A kitchen fire",
+     1
+    ],
+    [
+     "a botched meal",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq26-whispered-sermon": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a shy priest",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a mumbling Sunday preacher",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a mumbling Sunday preacher",
+     2
+    ],
+    [
+     "A stuttering preacher",
+     2
+    ],
+    [
+     "a mumbling pastor",
+     1
+    ],
+    [
+     "A quiet Sunday preacher",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq27-coince-dans-le-conduit": {
+   "kind": "complex_qualified",
+   "lang": "fr",
+   "gold": "un gros ramoneur",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a soot-covered chimney sweep",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a soot-covered chimney sweep",
+     2
+    ],
+    [
+     "a chimney sweep",
+     1
+    ],
+    [
+     "Gros bonhomme",
+     1
+    ],
+    [
+     "Un bouchon de cheminée",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq28-scowling-red-nose": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a grumpy clown",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Grumpy clown",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq29-divers-reef-hull": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a sunken ship",
+   "question": "cx",
+   "pass": true,
+   "greedy": "sunken ship",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a wrecked ship",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq30-pilgrims-roadside-hood": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a broken-down bus",
+   "question": "cx",
+   "pass": false,
+   "greedy": "broken-down pilgrims' coach",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "broken-down steam coach",
+     2
+    ],
+    [
+     "A pilgrims' coach",
+     1
+    ],
+    [
+     "Breakdown",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq31-pasto-depois-ressaca": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um barco encalhado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A traineira",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a traineira",
+     4
+    ],
+    [
+     "A traineira",
+     2
+    ],
+    [
+     "A traineira no pasto",
+     2
+    ],
+    [
+     "uma traineira no pasto",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq32-chef-warm-milk": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a broken fridge",
+   "question": "cx",
+   "pass": true,
+   "greedy": "broken refrigerator",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq33-driveway-white-mound": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a snow-covered car",
+   "question": "cx",
+   "pass": true,
+   "greedy": "snow-covered car",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq34-geologos-desprendimiento-vagones": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un tren descarrilado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "derrocamiento de tren",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "derrocamiento de tren",
+     3
+    ],
+    [
+     "accidente ferroviario",
+     1
+    ],
+    [
+     "derailment",
+     1
+    ],
+    [
+     "desastre ferroviario",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq35-fiddler-bailing-oars": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a leaking boat",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A fiddler rowing to a wedding",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A wet fiddle",
+     3
+    ],
+    [
+     "fiddle",
+     3
+    ],
+    [
+     "A fiddler rowing to a wedding",
+     2
+    ],
+    [
+     "fiddler",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq36-headland-sideways-landmark": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a bent tree",
+   "question": "cx",
+   "pass": false,
+   "greedy": "windblown tree",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "windblown tree",
+     4
+    ],
+    [
+     "wind-swept tree",
+     2
+    ],
+    [
+     "Windswept tree",
+     1
+    ],
+    [
+     "A windswept tree",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq37-cattle-watering-dawn-axe": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a frozen pond",
+   "question": "cx",
+   "pass": false,
+   "greedy": "ice",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "ice",
+     4
+    ],
+    [
+     "Ice",
+     2
+    ],
+    [
+     "Frozen water",
+     1
+    ],
+    [
+     "thick ice",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq39-seed-packet-project-ladder": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a giant sunflower",
+   "question": "cx",
+   "pass": false,
+   "greedy": "sunflower",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "sunflower",
+     7
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq40-manor-quartet-sinking-chairs": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a muddy lawn",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A garden concert in the mud",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A garden concert in the mud",
+     5
+    ],
+    [
+     "Garden concert",
+     2
+    ],
+    [
+     "Garden concert in heavy rain",
+     1
+    ],
+    [
+     "garden concert in the mud",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq41-dorfkirche-januar-nadeln": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "ein vertrockneter Christbaum",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Weihnachtsbaum",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Weihnachtsbaum",
+     3
+    ],
+    [
+     "Nadelabfall von Tannenbäumen",
+     1
+    ],
+    [
+     "Nadelbaumnadeln als Kirchengarnitur im Januar",
+     1
+    ],
+    [
+     "Nadeln von Weihnachtsbäumen",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq42-florist-prize-sky-colour": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a blue rose",
+   "question": "cx",
+   "pass": true,
+   "greedy": "blue rose",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq43-chef-ankle-deep-soup": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a flooded kitchen",
+   "question": "cx",
+   "pass": true,
+   "greedy": "flooded kitchen",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Flooding",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq44-dusty-desks-times-table": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "an abandoned classroom",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Abandoned village school",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Abandoned village school",
+     4
+    ],
+    [
+     "An abandoned village school",
+     3
+    ],
+    [
+     "an abandoned village school",
+     1
+    ],
+    [
+     "abandoned village school",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq45-torre-del-cabo-a-oscuras": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un faro apagado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "un naufragio",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "un naufragio",
+     5
+    ],
+    [
+     "shipwreck",
+     2
+    ],
+    [
+     "naufragio",
+     1
+    ],
+    [
+     "tragedia marítima",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq46-stars-through-rafters": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a roofless house",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A house with a missing roof",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "collapsed roof",
+     1
+    ],
+    [
+     "a house with a collapsed roof",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq47-three-pilgrims-mountain-pass": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a tiny chapel",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A crowded church",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A small church",
+     3
+    ],
+    [
+     "A crowded church",
+     2
+    ],
+    [
+     "A crowded chapel",
+     2
+    ],
+    [
+     "A crowded stone hut",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq48-pale-immobili-sulla-collina": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un mulino fermo",
+   "question": "cx",
+   "pass": false,
+   "greedy": "mulinello a vento fermo",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "mulinello a vento fermo",
+     4
+    ],
+    [
+     "windmill",
+     2
+    ],
+    [
+     "Broken windmill",
+     1
+    ],
+    [
+     "mulinello fermo",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq49-smith-at-the-curb": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a bent lamppost",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a crooked streetlamp",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "street corner",
+     1
+    ],
+    [
+     "crooked lantern",
+     1
+    ],
+    [
+     "street",
+     1
+    ],
+    [
+     "slanted street lamp",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq50-line-cook-grill-garment": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a scorched apron",
+   "question": "cx",
+   "pass": false,
+   "greedy": "burnt apron",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "stained apron",
+     2
+    ],
+    [
+     "a grilled-cheese-stained apron",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq51-tideline-striped-sleeping-pad": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a waterlogged mattress",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a waterlogged sofa",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a waterlogged sofa",
+     5
+    ],
+    [
+     "a waterlogged striped sofa",
+     2
+    ],
+    [
+     "a waterlogged striped futon",
+     1
+    ],
+    [
+     "waterlogged sofa",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq52-premiere-samt-spalt": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "ein zerrissener Vorhang",
+   "question": "cx",
+   "pass": false,
+   "greedy": "ein Riss im Bühnenvorhang",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Reklame",
+     1
+    ],
+    [
+     "Bühnenkatastrophe",
+     1
+    ],
+    [
+     "defective theater curtain",
+     1
+    ],
+    [
+     "Defekte Theatervorhang",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq53-cabin-porch-terry-plank": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a frozen towel",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Frozen towel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq54-easter-sermon-bench-split": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a broken pew",
+   "question": "cx",
+   "pass": false,
+   "greedy": "fallen church pews",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "fallen pews",
+     2
+    ],
+    [
+     "fallen parishioners",
+     2
+    ],
+    [
+     "fallen church pews",
+     1
+    ],
+    [
+     "falling bench",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq55-lavrador-trator-palha": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um chapéu amassado",
+   "question": "cx",
+   "pass": true,
+   "greedy": "chapéu de palha achatado",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "chapéu de palha achachado",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq56-first-school-day-label": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "an inside-out shirt",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a new shirt",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "new school shirt",
+     3
+    ],
+    [
+     "A new shirt",
+     2
+    ],
+    [
+     "a new shirt",
+     1
+    ],
+    [
+     "A new school shirt",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq57-stranded-giant-on-the-sand": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a beached whale",
+   "question": "cx",
+   "pass": true,
+   "greedy": "beached whale",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cq58-three-paws-in-the-schoolyard": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a three-legged dog",
+   "question": "cx",
+   "pass": false,
+   "greedy": "one-legged dog",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "One-legged dog",
+     3
+    ],
+    [
+     "one-legged dog",
+     2
+    ],
+    [
+     "One-legged mongrel",
+     2
+    ],
+    [
+     "A one-legged dog",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq59-bastardino-del-cuoco": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un cane sdentato",
+   "question": "cx",
+   "pass": false,
+   "greedy": "senza denti",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "senza denti",
+     3
+    ],
+    [
+     "denti",
+     1
+    ],
+    [
+     "un cane muto",
+     1
+    ],
+    [
+     "invecchiato cane da cucina",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq60-bare-pink-layer": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a featherless chicken",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A plucked hen",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "plucking a hen",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq61-monastery-garden-display": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a tailless peacock",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A plucked peacock",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A plucked peacock",
+     4
+    ],
+    [
+     "a plucked peacock",
+     1
+    ],
+    [
+     "A peacock with a damaged tail",
+     1
+    ],
+    [
+     "Peacock",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq62-matou-sous-l-averse": {
+   "kind": "complex_qualified",
+   "lang": "fr",
+   "gold": "un chat trempé",
+   "question": "cx",
+   "pass": true,
+   "greedy": "un chat mouillé",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "un chat de ferme",
+     1
+    ],
+    [
+     "une flaque",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq64-opening-night-blank-stare": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a forgetful actor",
+   "question": "cx",
+   "pass": false,
+   "greedy": "prompter",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "prompter",
+     5
+    ],
+    [
+     "a forgotten line",
+     2
+    ],
+    [
+     "A missed cue",
+     1
+    ],
+    [
+     "flagging",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq65-same-island-twice": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a lost navigator",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a ship in a circle",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a ship in a circle",
+     2
+    ],
+    [
+     "Being lost at sea",
+     1
+    ],
+    [
+     "Being lost in a circle",
+     1
+    ],
+    [
+     "a compass error",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq66-bandejas-vazias": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um confeiteiro guloso",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Um homem comendo bolos",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Um homem comendo bolos",
+     2
+    ],
+    [
+     "A festa do homem de avental",
+     1
+    ],
+    [
+     "sonho do confeiteiro",
+     1
+    ],
+    [
+     "Roubo de sobremesas",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq67-graveside-whistling": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a cheerful undertaker",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Grave robber",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Grave robber",
+     3
+    ],
+    [
+     "Undertaker",
+     2
+    ],
+    [
+     "Gravedigger",
+     2
+    ],
+    [
+     "undertaker",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq68-hillside-oak-nap": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a lazy shepherd",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Negligent shepherding",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Negligent shepherding",
+     2
+    ],
+    [
+     "A negligent shepherd",
+     2
+    ],
+    [
+     "Sheep-stealing",
+     1
+    ],
+    [
+     "The parable of the Good Samaritan",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq69-concierto-en-la-plaza": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un cantante desafinado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "un hombre desafinado",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Canto desafinado",
+     3
+    ],
+    [
+     "un hombre desafinado",
+     2
+    ],
+    [
+     "una voz desafinada",
+     2
+    ],
+    [
+     "una nota desafinada",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cq70-birthday-garden-shrieks": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a scary clown",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A clown",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A clown",
+     3
+    ],
+    [
+     "Clown",
+     2
+    ],
+    [
+     "a clown",
+     2
+    ],
+    [
+     "circus clown",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu02-harbour-paper-anchor": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "an anchor made of paper",
+   "question": "cx",
+   "pass": true,
+   "greedy": "newspaper mooring hook",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "newspaper hook",
+     1
+    ],
+    [
+     "newspaper paperweight",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu03-etable-seau-glace": {
+   "kind": "complex_unnatural",
+   "lang": "fr",
+   "gold": "un seau en glace",
+   "question": "cx",
+   "pass": true,
+   "greedy": "un seau de glace",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "sea bag",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu04-drummer-jelly-kit": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a drum made of jelly",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Jello snare drum",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu08-trawler-trims": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a barbershop on a fishing boat",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a shipboard barber",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a shipboard barber",
+     3
+    ],
+    [
+     "A shipboard barbershop",
+     1
+    ],
+    [
+     "barbershop",
+     1
+    ],
+    [
+     "sea barber",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu09-furrow-lending": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a library on a tractor",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Mobile library tractor",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Mobile library",
+     4
+    ],
+    [
+     "mobile library",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu10-misa-en-ruta": {
+   "kind": "complex_unnatural",
+   "lang": "es",
+   "gold": "una iglesia en un autobús",
+   "question": "cx",
+   "pass": true,
+   "greedy": "autobús iglesia",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Catedral móvil",
+     1
+    ],
+    [
+     "Misión en autobús",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu11-loaves-aloft": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a bakery in a hot-air balloon",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A hot air balloon bakery",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Hot air balloon",
+     2
+    ],
+    [
+     "Pretend hot air balloon",
+     1
+    ],
+    [
+     "a hot air balloon",
+     1
+    ],
+    [
+     "A hot air balloon",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu12-strait-crayons": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a kindergarten on a ferry",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Preschool on a ferry",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "children on a ferry",
+     2
+    ],
+    [
+     "Children on a ferry",
+     1
+    ],
+    [
+     "Family ferry cruise",
+     1
+    ],
+    [
+     "children on a cruise ship",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu13-orli-sui-binari": {
+   "kind": "complex_unnatural",
+   "lang": "it",
+   "gold": "una sartoria su un tram",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Sartoria su un tram",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "sartoria mobile",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu14-anvil-between-stations": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a blacksmith's forge on a train",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A blacksmith on a train",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A blacksmith on a train",
+     2
+    ],
+    [
+     "A blacksmith's shop",
+     1
+    ],
+    [
+     "blacksmith on a train",
+     1
+    ],
+    [
+     "blacksmith",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu15-wax-blade-cutler": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a knife made of wax",
+   "question": "cx",
+   "pass": false,
+   "greedy": "wax",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "wax",
+     4
+    ],
+    [
+     "A wax candle",
+     2
+    ],
+    [
+     "soft steel",
+     1
+    ],
+    [
+     "wax sword",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu16-feather-forge-tool": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a hammer made of feathers",
+   "question": "cx",
+   "pass": true,
+   "greedy": "feather hammer",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu17-schneider-sand-mantel": {
+   "kind": "complex_unnatural",
+   "lang": "de",
+   "gold": "ein Mantel aus Sand",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Sandmantel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Ein Kleid aus Sand",
+     1
+    ],
+    [
+     "Sandanorak",
+     1
+    ],
+    [
+     "Ein aus Sand bestehendes Kleid",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu18-granite-woodwind-recital": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a flute made of stone",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Granite flute",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "flute",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu19-cloud-gardener-rake": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a rake made of clouds",
+   "question": "cx",
+   "pass": false,
+   "greedy": "mist rake",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A mist rake",
+     3
+    ],
+    [
+     "mist rake",
+     1
+    ],
+    [
+     "Frost",
+     1
+    ],
+    [
+     "a mist rake",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu21-choir-paper-cymbals": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "cymbals made of paper",
+   "question": "cx",
+   "pass": true,
+   "greedy": "paper cymbals",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu22-pews-beside-the-millstones": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a church inside a windmill",
+   "question": "cx",
+   "pass": true,
+   "greedy": "a windmill church",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a mill church",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu23-tickets-below-the-lamp": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a cinema inside a lighthouse",
+   "question": "cx",
+   "pass": true,
+   "greedy": "lighthouse cinema",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "film screening at a lighthouse",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu26-arias-in-the-gallery": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "an opera house inside a mine",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Opera in a mine",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Opera in a coal mine",
+     3
+    ],
+    [
+     "Opera in a mine",
+     2
+    ],
+    [
+     "Opera",
+     2
+    ],
+    [
+     "An underground opera performance",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu27-guichet-sous-les-cloches": {
+   "kind": "complex_unnatural",
+   "lang": "fr",
+   "gold": "un bureau de poste dans une église",
+   "question": "cx",
+   "pass": false,
+   "greedy": "bureau de poste dans une église",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Mont-de-piété paroissial",
+     1
+    ],
+    [
+     "la poste",
+     1
+    ],
+    [
+     "Salle de poste",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu29-wax-sledge-on-the-farm": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a sled made of wax",
+   "question": "cx",
+   "pass": true,
+   "greedy": "beeswax sled",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "sleigh",
+     1
+    ],
+    [
+     "Beehive sled",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu30-potter-clay-overcoat": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a coat made of clay",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A clay coat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu31-cadeira-de-sal-na-salina": {
+   "kind": "complex_unnatural",
+   "lang": "pt",
+   "gold": "uma cadeira feita de sal",
+   "question": "cx",
+   "pass": false,
+   "greedy": "banco de sal",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "banco de sal",
+     6
+    ],
+    [
+     "Escultura de sal",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu32-choir-robe-of-feathers-hats": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a hat made of bread",
+   "question": "cx",
+   "pass": true,
+   "greedy": "rye bread hat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu34-cama-de-caramelo-en-la-cocina": {
+   "kind": "complex_unnatural",
+   "lang": "es",
+   "gold": "una cama de caramelo",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a sugar bed",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a sugar bed",
+     3
+    ],
+    [
+     "Sugar bed",
+     2
+    ],
+    [
+     "bed made of sugar",
+     1
+    ],
+    [
+     "concoction of candied sugar",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu36-pupils-among-the-nets": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a school on a fishing boat",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A classroom on a trawler",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a trawler",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu37-barley-field-screening": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a cinema on a tractor",
+   "question": "cx",
+   "pass": false,
+   "greedy": "mobile cinema",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "mobile cinema",
+     2
+    ],
+    [
+     "mobile cinema on a harvester",
+     1
+    ],
+    [
+     "drive-in movie in a barley field",
+     1
+    ],
+    [
+     "Barley field cinema",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu38-carte-des-vins-en-profondeur": {
+   "kind": "complex_unnatural",
+   "lang": "fr",
+   "gold": "un restaurant dans un sous-marin",
+   "question": "cx",
+   "pass": false,
+   "greedy": "dîner sur un sous-marin",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "dîner sur un sous-marin",
+     2
+    ],
+    [
+     "banquet on a submarine",
+     1
+    ],
+    [
+     "dîner dans un sous-marin",
+     1
+    ],
+    [
+     "repas de luxe sur un sous-marin",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu39-lemurs-down-the-aisle": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a zoo on an airplane",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A zoo on an airplane",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A flight with live animals",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu40-pews-behind-the-driver": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a church on a bus",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a mobile church",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a mobile church",
+     3
+    ],
+    [
+     "Mobile church",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu44-sponge-stairs-harbour": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a staircase made of sponge",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Yellow sponge steps",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "pouffe",
+     1
+    ],
+    [
+     "Polished concrete stairs",
+     1
+    ],
+    [
+     "porous yellow stone steps",
+     1
+    ],
+    [
+     "Pumice stone steps",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu45-pozo-de-gelatina-granja": {
+   "kind": "complex_unnatural",
+   "lang": "es",
+   "gold": "un pozo de gelatina",
+   "question": "cx",
+   "pass": false,
+   "greedy": "pozo de fresa",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "pozo de fresa",
+     3
+    ],
+    [
+     "un pozo de helado de fresa",
+     2
+    ],
+    [
+     "Pozo de fresa",
+     2
+    ],
+    [
+     "Jellystone",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu46-wool-chimney-shepherd": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a chimney made of wool",
+   "question": "cx",
+   "pass": false,
+   "greedy": "knitted chimney",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "knitted chimney",
+     1
+    ],
+    [
+     "knitted knitted chimney",
+     1
+    ],
+    [
+     "Knitted chimney",
+     1
+    ],
+    [
+     "A knitted chimney",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu47-feather-bridge-river": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a bridge made of feathers",
+   "question": "cx",
+   "pass": true,
+   "greedy": "bridge made of feathers",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu48-fontana-di-formaggio-piazza": {
+   "kind": "complex_unnatural",
+   "lang": "it",
+   "gold": "una fontana di formaggio",
+   "question": "cx",
+   "pass": false,
+   "greedy": "fontana a forma di pecorino",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "fontana a forma di pecorino",
+     2
+    ],
+    [
+     "Fontana a forma di formaggio",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu50-blooms-below-the-seams": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a flower shop inside a mine",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Underground flower shop",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "An underground flower shop",
+     4
+    ],
+    [
+     "Underground flower shop",
+     2
+    ],
+    [
+     "underground flower shop",
+     2
+    ],
+    [
+     "an underground flower shop",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu51-fringe-among-the-hay": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a hair salon inside a barn",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A farm haircut",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A farm haircut",
+     3
+    ],
+    [
+     "farmhouse hair salon",
+     1
+    ],
+    [
+     "farm haircut",
+     1
+    ],
+    [
+     "Farm hairdressing",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu53-cough-syrup-among-herring": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a pharmacy inside a fishing boat",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Ship's infirmary",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Ship's infirmary",
+     7
+    ],
+    [
+     "ship's surgeon",
+     1
+    ],
+    [
+     "trawler's onboard clinic",
+     1
+    ],
+    [
+     "Ship's sickbay",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu54-ink-in-the-cloister": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a tattoo parlour inside a monastery",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Tattoo parlor in a monastery",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Tattoo artist",
+     2
+    ],
+    [
+     "A tattoo artist in a monastery",
+     1
+    ],
+    [
+     "a tattoo artist",
+     1
+    ],
+    [
+     "Tattoo parlor",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu55-esteiras-entre-fornos": {
+   "kind": "complex_unnatural",
+   "lang": "pt",
+   "gold": "uma academia dentro de uma padaria",
+   "question": "cx",
+   "pass": false,
+   "greedy": "pantry gym",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "pantry gym",
+     1
+    ],
+    [
+     "pads",
+     1
+    ],
+    [
+     "padró",
+     1
+    ],
+    [
+     "pad-gym",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu57-quarry-string-toy": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a yo-yo made of stone",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a granite yo-yo",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "slingshot",
+     3
+    ],
+    [
+     "a yo-yo",
+     1
+    ],
+    [
+     "slung stone",
+     1
+    ],
+    [
+     "yoyo",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu58-cocoa-plank-beach": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a surfboard made of chocolate",
+   "question": "cx",
+   "pass": true,
+   "greedy": "chocolate surfboard",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu59-falegname-disco-rovere": {
+   "kind": "complex_unnatural",
+   "lang": "it",
+   "gold": "una pizza di legno",
+   "question": "cx",
+   "pass": true,
+   "greedy": "pizza di legno",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b4-cu61-nursery-crust-girl": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a doll made of bread",
+   "question": "cx",
+   "pass": false,
+   "greedy": "gingerbread doll",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "plaited doll",
+     1
+    ],
+    [
+     "gingerbread man",
+     1
+    ],
+    [
+     "plait doll",
+     1
+    ],
+    [
+     "Dumpty dumpling",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu62-ferme-pointe-affutee": {
+   "kind": "complex_unnatural",
+   "lang": "fr",
+   "gold": "une toupie en fromage",
+   "question": "cx",
+   "pass": false,
+   "greedy": "spinning cheese",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "spinning cheese",
+     4
+    ],
+    [
+     "un jeu de birot",
+     1
+    ],
+    [
+     "un gyroscope fait de fromage",
+     1
+    ],
+    [
+     "Jeu de bàil",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu63-blizzard-tiered-flakes": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a birthday cake made of snow",
+   "question": "cx",
+   "pass": false,
+   "greedy": "snow birthday cake",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "birthday cake",
+     1
+    ],
+    [
+     "snow candles",
+     1
+    ],
+    [
+     "birthday snowman",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b4-cu64-pews-below-deck": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a church on a fishing boat",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a shipboard church service",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a shipboard chapel",
+     2
+    ],
+    [
+     "a shipboard church service",
+     1
+    ],
+    [
+     "sea shanty",
+     1
+    ],
+    [
+     "a chapel",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob01-ankle-vibration-check": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a tuning fork",
+   "question": "ref",
+   "pass": true,
+   "greedy": "tuning fork",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob02-archive-clay-egg": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an ocarina",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Ocarina",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob03-bolsa-samba-ronco": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "a cuíca",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Berimbau",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Berimbau",
+     3
+    ],
+    [
+     "berimbau",
+     3
+    ],
+    [
+     "Reco-reco",
+     2
+    ],
+    [
+     "Rebabeca",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob04-stadium-plastic-drone": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a vuvuzela",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Vuvuzela",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob05-loom-break-metal-tongues": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a kalimba",
+   "question": "ref",
+   "pass": true,
+   "greedy": "kalimba",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "musical box",
+     1
+    ],
+    [
+     "Musical box",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob06-registro-civil-tango": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "el bandoneón",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Acordeón",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Acordeón",
+     9
+    ],
+    [
+     "acordeón",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob07-courtyard-raga-gourd": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a sitar",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Sitar",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Sarod",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob08-surgeon-courtyard-webbing": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "slacklining",
+   "question": "ref",
+   "pass": true,
+   "greedy": "slacklining",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob09-compliance-officer-jammer": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "roller derby",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Roller derby",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob10-mairie-gravier-cochonnet": {
+   "kind": "obscure",
+   "lang": "fr",
+   "gold": "la pétanque",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Pétanque",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "boules",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob11-courthouse-basement-bamboo": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "kendo",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Kendo",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "judokas",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob12-linguist-netted-stick": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "lacrosse",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Lacrosse",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob13-unibad-nasenklammern": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "das Synchronschwimmen",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Synchronschwimmen",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Kunsttauchen",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob14-railway-depot-rope-teams": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "tug of war",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Tug of war",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob15-courthouse-archive-gridded-canvas": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "cross-stitch",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Cross-stitch",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob16-ward-nurse-soapy-wool": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "felting",
+   "question": "ref",
+   "pass": false,
+   "greedy": "felting",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "felt",
+     2
+    ],
+    [
+     "Felt",
+     1
+    ],
+    [
+     "Hand knitting",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob18-boathouse-willow-rods": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "basket weaving",
+   "question": "ref",
+   "pass": false,
+   "greedy": "basket",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "basket",
+     6
+    ],
+    [
+     "wicker basket",
+     2
+    ],
+    [
+     "Willow basket",
+     1
+    ],
+    [
+     "willow basket",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob19-depot-freight-wagon-numbers": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "stencilling",
+   "question": "ref",
+   "pass": true,
+   "greedy": "stencil",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob20-atrio-banca-cubetti-malta": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "il mosaico",
+   "question": "ref",
+   "pass": true,
+   "greedy": "mosaico",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob21-passport-office-hooked-needle": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "crochet",
+   "question": "ref",
+   "pass": true,
+   "greedy": "crochet",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob23-glider-pilots-watch-stacked-lens-shapes": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a lenticular cloud",
+   "question": "ref",
+   "pass": true,
+   "greedy": "lenticular cloud",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob24-archivarin-sieht-stummes-leuchten": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "das Wetterleuchten",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Blitz",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Blitz",
+     2
+    ],
+    [
+     "Fernblitz",
+     2
+    ],
+    [
+     "Entferntes Gewitter",
+     1
+    ],
+    [
+     "fernes Gewitter",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob25-permit-office-street-swallowed": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a sinkhole",
+   "question": "ref",
+   "pass": true,
+   "greedy": "sinkhole",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob26-marine-insurer-reviews-spiralling-strait": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a whirlpool",
+   "question": "ref",
+   "pass": true,
+   "greedy": "whirlpool",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob27-linguista-registra-lenda-do-pantano": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "o fogo-fátuo",
+   "question": "ref",
+   "pass": false,
+   "greedy": "fogo-fátuo",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Luzes fantasma",
+     2
+    ],
+    [
+     "luzes fantasma",
+     1
+    ],
+    [
+     "fogueira fantasma",
+     1
+    ],
+    [
+     "Luz fantasma",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob29-courtroom-breath-device": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a breathalyzer",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Breathalyzer",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob32-ship-bridge-swinging-needle": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a magnetic compass",
+   "question": "ref",
+   "pass": true,
+   "greedy": "compass",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob33-bank-vault-timed-lock": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a time lock",
+   "question": "ref",
+   "pass": true,
+   "greedy": "time lock",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob34-labo-tourner-tubes": {
+   "kind": "obscure",
+   "lang": "fr",
+   "gold": "une centrifugeuse",
+   "question": "ref",
+   "pass": true,
+   "greedy": "centrifugeuse",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "centrifugation",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob35-stadium-race-timing-gun": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a starting pistol",
+   "question": "ref",
+   "pass": true,
+   "greedy": "starting pistol",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob36-gatehouse-charter-boxes": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a portcullis",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Rain",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Rain",
+     3
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob37-assessor-captains-rooftop": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a widow's walk",
+   "question": "ref",
+   "pass": false,
+   "greedy": "balcony",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "balcony",
+     2
+    ],
+    [
+     "cupola",
+     2
+    ],
+    [
+     "attic",
+     2
+    ],
+    [
+     "the roof",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob38-cirurgia-luz-do-teto": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "uma claraboia",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Vitral",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Vitral",
+     1
+    ],
+    [
+     "átrio",
+     1
+    ],
+    [
+     "Ampulheta de vidro",
+     1
+    ],
+    [
+     "Lanterna de céu",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob39-moorland-road-rental-car": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a cattle grid",
+   "question": "ref",
+   "pass": true,
+   "greedy": "cattle grid",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Stiles",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob40-linguists-yew-corridors": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a hedge maze",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Hedge maze",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "maze",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob41-carrera-desfiladero-cables": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "un puente colgante",
+   "question": "ref",
+   "pass": true,
+   "greedy": "puente colgante",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob42-physicist-cathedral-west-front": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a rose window",
+   "question": "ref",
+   "pass": true,
+   "greedy": "rose window",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob43-lab-glowing-cavern-larvae": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a glowworm",
+   "question": "ref",
+   "pass": false,
+   "greedy": "glowworms",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Fairy cave",
+     1
+    ],
+    [
+     "Fungi",
+     1
+    ],
+    [
+     "Fungal net",
+     1
+    ],
+    [
+     "fungus gnats",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob44-courtroom-sniffer-wrinkles": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a bloodhound",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Bloodhound",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob45-lab-regrowing-limb-amphibian": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a salamander",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Ambystoma",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob47-archive-bird-arrow-tongue": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a hummingbird",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Hummingbird",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob50-insurance-claim-desert-armour": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an armadillo",
+   "question": "ref",
+   "pass": true,
+   "greedy": "armadillo",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob51-socotra-crimson-resin": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a dragon's blood tree",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Dragon's blood",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Dragon's blood",
+     11
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob52-courtyard-chilean-conifer": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a monkey puzzle tree",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Monkey puzzle tree",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob53-alpen-kletter-siegerin": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "das Edelweiß",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Edelweiss",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Silberdistel",
+     4
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob54-ring-core-catalogue": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a bristlecone pine",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Bristlecone pine",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Methuselah",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob55-clinic-caterpillar-stalk": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "cordyceps",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Cordyceps",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob56-travessia-folhas-gigantes": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "a vitória-régia",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Victoria amazonica",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Viriato",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob57-namib-permit-office": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a Welwitschia",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Welwitschia",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob60-archivio-dolce-mascarpone": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "il tiramisù",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Tiramisù",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob62-textile-mill-layered-pasta": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "moussaka",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Moussaka",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob63-ministere-galette-pliee": {
+   "kind": "obscure",
+   "lang": "fr",
+   "gold": "une crêpe",
+   "question": "ref",
+   "pass": true,
+   "greedy": "crêpe",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "gaufre",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob64-clinic-rice-saffron-pan": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "paella",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Paella",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob65-laboratory-roof-dome-slit": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an observatory dome",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Observatory dome",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "dome",
+     1
+    ],
+    [
+     "Dome",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob66-courthouse-skylight-turret": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a cupola",
+   "question": "ref",
+   "pass": true,
+   "greedy": "cupola",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob69-rail-viaduct-stone-arches": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a railway viaduct",
+   "question": "ref",
+   "pass": false,
+   "greedy": "viaduct",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "viaduct",
+     10
+    ],
+    [
+     "Viaduct",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob70-tejedoras-patio-columnas": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "un claustro",
+   "question": "ref",
+   "pass": true,
+   "greedy": "claustro",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Monjas",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob72-veterans-velodrome-high-rider": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a penny-farthing",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Penny-farthing",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob73-island-dialect-strait-crossing": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a hydrofoil",
+   "question": "ref",
+   "pass": true,
+   "greedy": "hydrofoil",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob74-fosse-abyssale-flotteur": {
+   "kind": "obscure",
+   "lang": "fr",
+   "gold": "un bathyscaphe",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Bathyscaphe",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob75-assize-court-curtained-cabin": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a sedan chair",
+   "question": "ref",
+   "pass": false,
+   "greedy": "sedan chair",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "palanquin",
+     2
+    ],
+    [
+     "Palanquin",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob76-country-doctor-flooded-farm": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an autogyro",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Autogyro",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Helicycle",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob77-altes-finanzamt-endlose-kette": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "ein Paternoster",
+   "question": "ref",
+   "pass": false,
+   "greedy": "Rattenfalle",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Rattenfalle",
+     4
+    ],
+    [
+     "Der Prozess",
+     3
+    ],
+    [
+     "Rollende Landstraße",
+     1
+    ],
+    [
+     "Rolltreppen",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob78-northern-port-winter-channel": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "an icebreaker",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Icebreaker",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob79-archivist-flapped-tweed": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a deerstalker",
+   "question": "ref",
+   "pass": false,
+   "greedy": "ushanka",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "ushanka",
+     8
+    ],
+    [
+     "Trilby",
+     1
+    ],
+    [
+     "Garrison cap",
+     1
+    ],
+    [
+     "Balmoral bonnet",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob80-advocate-pleated-tartan": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a kilt",
+   "question": "ref",
+   "pass": true,
+   "greedy": "kilt",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob81-revisor-suelas-yute": {
+   "kind": "obscure",
+   "lang": "es",
+   "gold": "las alpargatas",
+   "question": "ref",
+   "pass": false,
+   "greedy": "mocasines",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "mocasines",
+     7
+    ],
+    [
+     "Mocasines",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob82-phonetics-handled-spectacles": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a lorgnette",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Lorgnette",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob83-surgeon-braided-cord-clasp": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a bolo tie",
+   "question": "ref",
+   "pass": false,
+   "greedy": "lariat",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "lariat",
+     4
+    ],
+    [
+     "Lariat",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob84-banchiere-feltro-rigido": {
+   "kind": "obscure",
+   "lang": "it",
+   "gold": "la bombetta",
+   "question": "ref",
+   "pass": false,
+   "greedy": "bombetta",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "top hat",
+     3
+    ],
+    [
+     "Top hat",
+     2
+    ],
+    [
+     "Borsalino",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob85-inspector-fur-tube": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a muff",
+   "question": "ref",
+   "pass": true,
+   "greedy": "muff",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob86-scraped-parchment-ultraviolet": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a palimpsest",
+   "question": "ref",
+   "pass": true,
+   "greedy": "palimpsest",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob87-brokerage-glass-dome-ribbon": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a stock ticker",
+   "question": "ref",
+   "pass": false,
+   "greedy": "ticker tape",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "whole",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "ticker tape",
+     5
+    ],
+    [
+     "Ticker tape",
+     3
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob88-gerichtssaal-haken-schleifen": {
+   "kind": "obscure",
+   "lang": "de",
+   "gold": "die Stenografie",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Stenografie",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Kurzschreibweise",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-ob89-ivory-rods-multiplication-lab": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "Napier's bones",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Napier's bones",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob90-hospital-brass-canisters-whoosh": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a pneumatic tube system",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Pneumatic tube",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob91-estacao-pontos-tracos": {
+   "kind": "obscure",
+   "lang": "pt",
+   "gold": "o código Morse",
+   "question": "ref",
+   "pass": true,
+   "greedy": "Código Morse",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-ob92-linguist-wedge-marks-clay": {
+   "kind": "obscure",
+   "lang": "en",
+   "gold": "a cuneiform tablet",
+   "question": "ref",
+   "pass": true,
+   "greedy": "cuneiform tablet",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Cuneiform",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq01-courtroom-gavel-split": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a broken gavel",
+   "question": "cx",
+   "pass": true,
+   "greedy": "broken gavel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq03-archivio-timbro-asciutto": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un timbro secco",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A dry ink pad",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A dry ink pad",
+     3
+    ],
+    [
+     "Un timbro d'ufficio",
+     1
+    ],
+    [
+     "a dry ink pad",
+     1
+    ],
+    [
+     "A failed official stamp",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq05-chess-clock-melted-pieces": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "melted chess pieces",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Melted chess pieces",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq07-textile-mill-scissors": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "blunt scissors",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Dull shears",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq08-passport-office-paper-stuck": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a jammed photocopier",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a jammed duplicating machine",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A paper jam",
+     1
+    ],
+    [
+     "Paper jam",
+     1
+    ],
+    [
+     "Malfunctioning duplicating machine",
+     1
+    ],
+    [
+     "a paper jam",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq09-barrister-roaring-fan": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "an overheating laptop",
+   "question": "cx",
+   "pass": false,
+   "greedy": "overheating laptop",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "laptop",
+     2
+    ],
+    [
+     "Frozen laptop",
+     2
+    ],
+    [
+     "A frozen laptop",
+     2
+    ],
+    [
+     "laptop on a briefcase",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq10-cruzamento-guarda-apito": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um semáforo quebrado",
+   "question": "cx",
+   "pass": true,
+   "greedy": "semáforo avariado",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq11-ward-silver-beads": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a broken thermometer",
+   "question": "cx",
+   "pass": true,
+   "greedy": "broken mercury thermometer",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Mercury thermometer",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq12-building-site-jib-street": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a toppled crane",
+   "question": "cx",
+   "pass": true,
+   "greedy": "collapsed tower crane",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq13-cajera-sucursal-teclas": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "una calculadora rota",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A broken calculator",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "una calculadora",
+     1
+    ],
+    [
+     "teclado roto",
+     1
+    ],
+    [
+     "A broken cash register",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq14-marsh-rotor-camera": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a crashed drone",
+   "question": "cx",
+   "pass": false,
+   "greedy": "broken drone",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "broken drone",
+     8
+    ],
+    [
+     "a damaged drone",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq15-divers-survey-passage": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a flooded cave",
+   "question": "cx",
+   "pass": true,
+   "greedy": "underwater cave diving",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "cave diving",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq16-echoing-kickoff-seats": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "an empty stadium",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A ghost game",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A ghost game",
+     4
+    ],
+    [
+     "Ghost game",
+     2
+    ],
+    [
+     "A stadium with cardboard fans",
+     1
+    ],
+    [
+     "ghost game",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq17-camions-bord-du-fleuve": {
+   "kind": "complex_qualified",
+   "lang": "fr",
+   "gold": "un pont effondré",
+   "question": "cx",
+   "pass": false,
+   "greedy": "pont effondré",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "pont détruit par une crue",
+     2
+    ],
+    [
+     "pont détruit",
+     1
+    ],
+    [
+     "Une route inondée",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq18-buckets-between-shelves": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a leaking library",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a leak",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a leak",
+     6
+    ],
+    [
+     "a book flood",
+     1
+    ],
+    [
+     "A leaky roof",
+     1
+    ],
+    [
+     "flood",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq19-stakes-toppled-each-autumn": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a melting glacier",
+   "question": "cx",
+   "pass": true,
+   "greedy": "retreating glacier",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq20-gutachter-fotos-gericht": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "ein baufälliges Haus",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Wohnungsunzulässigkeit",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Wohnungsunzulässigkeit",
+     2
+    ],
+    [
+     "unbewohnbares Haus",
+     2
+    ],
+    [
+     "Wohnungsraumung",
+     1
+    ],
+    [
+     "Die gerichtlich angeordnete Räumung",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq21-card-table-past-reeds": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a frozen lake",
+   "question": "cx",
+   "pass": false,
+   "greedy": "ice fishing",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "ice fishing",
+     8
+    ],
+    [
+     "Ice fishing",
+     3
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq22-chattering-conference-performer": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a talkative mime",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Mime",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Mime",
+     2
+    ],
+    [
+     "mime",
+     2
+    ],
+    [
+     "mimed mime",
+     1
+    ],
+    [
+     "Mime monologue",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq23-gummy-clinic-smile": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a toothless dentist",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Toothless dentist",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Dentist",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq24-registro-civil-retraso": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un relojero impuntual",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Un relojero",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "relojero",
+     2
+    ],
+    [
+     "Un relojero",
+     1
+    ],
+    [
+     "Reloj",
+     1
+    ],
+    [
+     "A watchmaker",
+     1
+    ]
+   ],
+   "truncated": 1
+  },
+  "ah-b5-cq25-ledger-man-repossessed": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a bankrupt accountant",
+   "question": "cx",
+   "pass": false,
+   "greedy": "bankrupt accountant",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Irredeemable accountant",
+     1
+    ],
+    [
+     "ironic accountant",
+     1
+    ],
+    [
+     "Banker's ironic irony",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq26-heavyweight-no-punches": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a pacifist boxer",
+   "question": "cx",
+   "pass": false,
+   "greedy": "passive boxer",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "passive boxer",
+     3
+    ],
+    [
+     "Gentleman Jim Corbett",
+     2
+    ],
+    [
+     "passive heavyweight boxer",
+     1
+    ],
+    [
+     "a passive heavyweight boxer",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq27-cavo-tra-torri": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un funambolo grasso",
+   "question": "cx",
+   "pass": false,
+   "greedy": "tightrope walker",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "tightrope walker",
+     2
+    ],
+    [
+     "High-wire walker",
+     2
+    ],
+    [
+     "un tightrope walker",
+     1
+    ],
+    [
+     "Walking on a tightrope",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq28-courthouse-steps-resoler": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a barefoot cobbler",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Barefoot cobbler",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq29-courtroom-evidence-car-dented": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a wrecked car",
+   "question": "cx",
+   "pass": true,
+   "greedy": "crashed car",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "damaged car",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq30-museum-hangar-grounded-wings": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a crashed airplane",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Crashed airplane",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "broken airplane",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq31-stadion-rasenmaeher-defekt": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "ein kaputter Rasenmäher",
+   "question": "cx",
+   "pass": false,
+   "greedy": "kaputte Rasenmäher",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "kaputte Mähmaschine",
+     4
+    ],
+    [
+     "kaputteelmähe",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq34-arquivo-barco-motor-afogado": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um barco inundado",
+   "question": "cx",
+   "pass": false,
+   "greedy": "inundação",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "inundação",
+     5
+    ],
+    [
+     "Inundação",
+     3
+    ],
+    [
+     "enchente",
+     1
+    ],
+    [
+     "Flooding of a notary office",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq38-archivio-cactus-congelato": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "un cactus congelato",
+   "question": "cx",
+   "pass": true,
+   "greedy": "cactus ghiacciato",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq43-archivists-wading-shelves": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a flooded library",
+   "question": "cx",
+   "pass": true,
+   "greedy": "flooded library",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Flooding in an archive",
+     1
+    ],
+    [
+     "flooded archives",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq44-judge-knees-jury": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a tiny courtroom",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A cramped courtroom",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a cramped courtroom",
+     5
+    ],
+    [
+     "overcrowded courtroom",
+     2
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq47-tower-cranes-bare-floors": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "an unfinished skyscraper",
+   "question": "cx",
+   "pass": false,
+   "greedy": "An unfinished skyscraper",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Construction site",
+     1
+    ],
+    [
+     "A view from the trading floor",
+     1
+    ],
+    [
+     "Bank clerks",
+     1
+    ],
+    [
+     "The bank's trading floor",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq48-quirofano-con-maleza": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un hospital abandonado",
+   "question": "cx",
+   "pass": true,
+   "greedy": "an abandoned hospital",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq50-lab-latex-split-thumb": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a torn glove",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Torn latex glove",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A cut latex glove",
+     1
+    ],
+    [
+     "latex glove",
+     1
+    ],
+    [
+     "Left latex glove",
+     1
+    ],
+    [
+     "cut latex glove",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq51-bank-director-coffee-splash": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a stained tie",
+   "question": "cx",
+   "pass": true,
+   "greedy": "coffee-stained silk tie",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq52-archives-gutted-seat": {
+   "kind": "complex_qualified",
+   "lang": "fr",
+   "gold": "un fauteuil éventré",
+   "question": "cx",
+   "pass": false,
+   "greedy": "un vieux siège rembourré à accoudoirs déchiré",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "un siège rembourré déchiré",
+     2
+    ],
+    [
+     "a greffier sitting on a torn chair",
+     1
+    ],
+    [
+     "un siège déchiré",
+     1
+    ],
+    [
+     "Un vieux siège à crin déchiré",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq53-rugby-winger-clay-studs": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a muddy boot",
+   "question": "cx",
+   "pass": true,
+   "greedy": "muddy rugby boot",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq55-architekturbuero-rutschende-modelle": {
+   "kind": "complex_qualified",
+   "lang": "de",
+   "gold": "ein schiefes Regal",
+   "question": "cx",
+   "pass": false,
+   "greedy": "schief hängendes Brett",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "schief hängendes Brett",
+     4
+    ],
+    [
+     "schräg hängendes Brett",
+     3
+    ],
+    [
+     "Schief hängendes Brett",
+     1
+    ],
+    [
+     "ein schief hängendes Brett",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq56-passport-office-ragged-banner": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a tattered flag",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A tattered flag",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a weathered flag",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq57-gummy-tank-predator": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a toothless shark",
+   "question": "cx",
+   "pass": true,
+   "greedy": "toothless shark",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq58-stuck-in-starting-gate": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a fat horse",
+   "question": "cx",
+   "pass": true,
+   "greedy": "an obese racehorse",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq59-ave-sin-palabras": {
+   "kind": "complex_qualified",
+   "lang": "es",
+   "gold": "un loro mudo",
+   "question": "cx",
+   "pass": false,
+   "greedy": "loro sordo",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "loro sordo",
+     3
+    ],
+    [
+     "Perro",
+     1
+    ],
+    [
+     "pájaro mudo",
+     1
+    ],
+    [
+     "Ave verde de pico curvo",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq60-treadmill-spotted-cat": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a slow cheetah",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A cheetah",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A cheetah",
+     6
+    ],
+    [
+     "spotted savannah cat",
+     1
+    ],
+    [
+     "A slow savannah cat",
+     1
+    ],
+    [
+     "Cheetah",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq61-trembling-maned-cargo": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a cowardly lion",
+   "question": "cx",
+   "pass": true,
+   "greedy": "A lion afraid of a mouse",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cq62-recinto-ribassato": {
+   "kind": "complex_qualified",
+   "lang": "it",
+   "gold": "una giraffa nana",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Giraffa nana",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Giraffino",
+     1
+    ],
+    [
+     "an undernourished giraffe",
+     1
+    ],
+    [
+     "Young giraffe",
+     1
+    ],
+    [
+     "Leva di giraffa",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq63-courtyard-walker-bird": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a flightless pigeon",
+   "question": "cx",
+   "pass": false,
+   "greedy": "pigeon",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "pigeon",
+     3
+    ],
+    [
+     "a pigeon with broken wings",
+     1
+    ],
+    [
+     "a pigeon with clipped wings",
+     1
+    ],
+    [
+     "A pigeon with clipped wings",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq65-blushing-defender-courtroom": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "ein schüchterner Anwalt",
+   "question": "cx",
+   "pass": false,
+   "greedy": "ein ängstlicher Verteidiger",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "whole",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "ein ängstlicher Verteidiger",
+     2
+    ],
+    [
+     "schüchterne Verteidigung",
+     1
+    ],
+    [
+     "a stuttering lawyer",
+     1
+    ],
+    [
+     "eine schüchterne Verteidigung",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq66-theatre-dropped-scalpel": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a clumsy surgeon",
+   "question": "cx",
+   "pass": true,
+   "greedy": "a clumsy surgeon",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "incompetent surgeon",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq67-conference-booth-one-tongue": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a monolingual interpreter",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A fraudulent interpreter",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A fraudulent interpreter",
+     2
+    ],
+    [
+     "Imposter syndrome",
+     2
+    ],
+    [
+     "fake interpreter",
+     1
+    ],
+    [
+     "Babelfish",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq68-pequeno-guarda-redes-final": {
+   "kind": "complex_qualified",
+   "lang": "pt",
+   "gold": "um goleiro baixo",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Goleiro anão",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Mão de santo",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq69-permit-office-napping": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a lazy clerk",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Bureaucratic apathy",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Bureaucratic apathy",
+     7
+    ],
+    [
+     "bureaucratic apathy",
+     1
+    ],
+    [
+     "Government bureaucracy",
+     1
+    ],
+    [
+     "A corrupt town hall permit official",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cq70-parcels-arrive-weeks-late": {
+   "kind": "complex_qualified",
+   "lang": "en",
+   "gold": "a slow courier",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A lazy courier",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A lazy courier",
+     4
+    ],
+    [
+     "a negligent courier",
+     1
+    ],
+    [
+     "a lazy courier",
+     1
+    ],
+    [
+     "failed courier",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu01-lab-scale-sugar": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a scale made of sugar",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Sugar on a scale",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Sugar on a scale",
+     8
+    ],
+    [
+     "Sugar on a balance",
+     2
+    ],
+    [
+     "sugar",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu02-court-gavel-jelly": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a gavel made of jelly",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A gavel made of a kiwi",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A gavel made of a kiwi",
+     2
+    ],
+    [
+     "Kiwi gavel",
+     2
+    ],
+    [
+     "A kiwi fruit",
+     2
+    ],
+    [
+     "a gavel made of kiwi",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu03-ospedale-stetoscopio-pane": {
+   "kind": "complex_unnatural",
+   "lang": "it",
+   "gold": "uno stetoscopio di pane",
+   "question": "cx",
+   "pass": false,
+   "greedy": "stethoscope made of croissant",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "whole"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "stethoscope made of croissant",
+     2
+    ],
+    [
+     "stethoscope made of cake",
+     1
+    ],
+    [
+     "Cornetto auscultatorio",
+     1
+    ],
+    [
+     "cornetto",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu05-chess-board-cheese": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a chessboard made of cheese",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Chess played on a cheese board",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Chess played on a cheese board",
+     2
+    ],
+    [
+     "Lego chess",
+     1
+    ],
+    [
+     "Smelly chess",
+     1
+    ],
+    [
+     "Chess played with brie",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu06-archives-classeur-sable": {
+   "kind": "complex_unnatural",
+   "lang": "fr",
+   "gold": "un classeur en sable",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a sand-covered binder",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a sand-covered binder",
+     2
+    ],
+    [
+     "A paper-covered ring binder",
+     1
+    ],
+    [
+     "A binder with a sand-covered cover",
+     1
+    ],
+    [
+     "A sand-covered binder",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu07-tram-ticket-wool": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a ticket made of wool",
+   "question": "cx",
+   "pass": false,
+   "greedy": "knitted tram ticket",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "knitted tram ticket",
+     4
+    ],
+    [
+     "Knitted tram ticket",
+     2
+    ],
+    [
+     "knitted tram fare stub",
+     1
+    ],
+    [
+     "a knitted tram ticket",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu08-verdict-between-stations": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a courtroom on a train",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A courtroom on a train",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A circus train",
+     1
+    ],
+    [
+     "A train carriage",
+     1
+    ],
+    [
+     "a mock trial on a train",
+     1
+    ],
+    [
+     "A trolley car",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu09-tellers-under-rotors": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a bank in a helicopter",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A bank on an aircraft carrier",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A bank on an aircraft carrier",
+     1
+    ],
+    [
+     "A bank on an airplane",
+     1
+    ],
+    [
+     "An airplane bank branch",
+     1
+    ],
+    [
+     "An airline vault",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu10-partidas-sobre-trilhos": {
+   "kind": "complex_unnatural",
+   "lang": "pt",
+   "gold": "um torneio de xadrez num trem",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Xadrez de trem",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Xadrez de trem",
+     3
+    ],
+    [
+     "Xadrez no trem",
+     3
+    ],
+    [
+     "xadrez de trem",
+     2
+    ],
+    [
+     "Partida de xadrez em um trem",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu12-stitches-at-altitude": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "an operating room on an airplane",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A dream",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A dream",
+     4
+    ],
+    [
+     "a play",
+     1
+    ],
+    [
+     "A medical drama",
+     1
+    ],
+    [
+     "an airplane surgery",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu13-tr-mites-entre-paradas": {
+   "kind": "complex_unnatural",
+   "lang": "es",
+   "gold": "una oficina de inmigración en un autobús",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Oficina de inmigración en autobús",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 4,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "bureaucratic monotony",
+     2
+    ],
+    [
+     "bureaucracy",
+     1
+    ],
+    [
+     "paseo turístico",
+     1
+    ],
+    [
+     "Embassy and bus",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu14-looms-on-deck": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a textile mill on a ship",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A textile factory on a cargo vessel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 6,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Industrial Revolution",
+     2
+    ],
+    [
+     "A ship",
+     1
+    ],
+    [
+     "A textile mill and a cargo vessel",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu16-judge-hammer-of-ice": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a gavel made of ice",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Ice gavel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Frosted gavel",
+     1
+    ],
+    [
+     "Ice mallet",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu17-stetho-chocolat": {
+   "kind": "complex_unnatural",
+   "lang": "fr",
+   "gold": "un stéthoscope en chocolat",
+   "question": "cx",
+   "pass": true,
+   "greedy": "stéthoscope en chocolat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu18-abacus-of-butter": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "an abacus made of butter",
+   "question": "cx",
+   "pass": false,
+   "greedy": "greasy abacus",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "greasy abacus",
+     7
+    ],
+    [
+     "grease-stained abacus",
+     1
+    ],
+    [
+     "abacus made of human fat",
+     1
+    ],
+    [
+     "Greasy ivory abacus",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu20-handschuhe-aus-honig": {
+   "kind": "complex_unnatural",
+   "lang": "de",
+   "gold": "Handschuhe aus Honig",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Honighandschuhe",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu22-hymnals-and-roulette": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a casino inside a cathedral",
+   "question": "cx",
+   "pass": false,
+   "greedy": "a casino church",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "a casino in a church",
+     3
+    ],
+    [
+     "a church casino",
+     3
+    ],
+    [
+     "a casino church",
+     2
+    ],
+    [
+     "A casino church",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu23-verdicts-under-the-dome": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a courtroom inside a planetarium",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A courtroom in a planetarium",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "courtroom",
+     1
+    ],
+    [
+     "space-themed courtroom",
+     1
+    ],
+    [
+     "Lawyer: The Court",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu29-frozen-bench-of-justice": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a desk made of ice",
+   "question": "cx",
+   "pass": true,
+   "greedy": "ice desk",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "glass desk",
+     1
+    ],
+    [
+     "Frosted glass desk",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu30-banker-transparent-knot": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a necktie made of glass",
+   "question": "cx",
+   "pass": true,
+   "greedy": "glass tie",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu31-krankenstation-kakao-liege": {
+   "kind": "complex_unnatural",
+   "lang": "de",
+   "gold": "ein Bett aus Schokolade",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Schokoladenbett",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Kakaobett",
+     3
+    ],
+    [
+     "Kakao-Krankenbett",
+     1
+    ],
+    [
+     "Cocoa bed frame",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu32-folded-sheet-express": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a train made of paper",
+   "question": "cx",
+   "pass": true,
+   "greedy": "paper train",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu33-granite-fringe-exhibit": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a scarf made of stone",
+   "question": "cx",
+   "pass": true,
+   "greedy": "granite scarf",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "sculpted scarf",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu34-arquivo-assento-de-praia": {
+   "kind": "complex_unnatural",
+   "lang": "pt",
+   "gold": "uma poltrona de areia",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Cadeira de areia",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Cadeira de areia",
+     3
+    ],
+    [
+     "assento de areia",
+     3
+    ],
+    [
+     "cadeira de areia",
+     2
+    ],
+    [
+     "A cadeira de areia",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu35-chemist-cheddar-garment": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a lab coat made of cheese",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Cheese lab coat",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu43-wobbling-crossroads-signal": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a traffic light made of jelly",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Jelly traffic light",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu44-curbside-water-outlet-inspection": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a fire hydrant made of glass",
+   "question": "cx",
+   "pass": true,
+   "greedy": "glass fire hydrant",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "hydrant",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu45-degraus-moveis-tribunal": {
+   "kind": "complex_unnatural",
+   "lang": "pt",
+   "gold": "uma escada rolante de gelo",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Escada gelada",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Escada gelada",
+     3
+    ],
+    [
+     "Escada mágica",
+     2
+    ],
+    [
+     "escada congelada",
+     1
+    ],
+    [
+     "Escadas congeladas",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu46-dialect-recording-kiosk": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a phone booth made of cheese",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Swiss cheese",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 3,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Swiss cheese",
+     5
+    ],
+    [
+     "a payphone made of cheese",
+     1
+    ],
+    [
+     "Cheese",
+     1
+    ],
+    [
+     "cheese",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu47-coin-post-hourly-ticket": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a parking meter made of chocolate",
+   "question": "cx",
+   "pass": true,
+   "greedy": "chocolate parking meter",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu48-torre-sesenta-pisos-cajas": {
+   "kind": "complex_unnatural",
+   "lang": "es",
+   "gold": "un rascacielos de cartón",
+   "question": "cx",
+   "pass": false,
+   "greedy": "torre de cartón",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "torre de cartón",
+     4
+    ],
+    [
+     "maqueta de cartón",
+     1
+    ],
+    [
+     "casa de cartón",
+     1
+    ],
+    [
+     "Maqueta de torre de cartón",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu50-teller-windows-among-hay-bales": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a bank inside a stable",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A bank",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "other",
+    "other",
+    "other"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "A bank",
+     2
+    ],
+    [
+     "A barn bank",
+     2
+    ],
+    [
+     "bank",
+     1
+    ],
+    [
+     "A bank with a barn",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu57-lab-twisted-snack-clear": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a pretzel made of glass",
+   "question": "cx",
+   "pass": true,
+   "greedy": "Glass pretzel",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu58-court-exhibit-throwing-toy": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a frisbee made of concrete",
+   "question": "cx",
+   "pass": true,
+   "greedy": "concrete frisbee",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 10,
+   "n_samples": 10,
+   "wrong_answers": [],
+   "truncated": 0
+  },
+  "ah-b5-cu59-sala-espera-hexagonos": {
+   "kind": "complex_unnatural",
+   "lang": "es",
+   "gold": "un balón de fútbol de jabón",
+   "question": "cx",
+   "pass": true,
+   "greedy": "pelota de fútbol jabonosa",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 8,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Fútbol de jabón",
+     1
+    ],
+    [
+     "bubble soccer ball",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu60-vault-bathtub-toy-heavy": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a rubber duck made of granite",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A granite rubber duck",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 7,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "heavy rubber duck",
+     1
+    ],
+    [
+     "A stone rubber ducky",
+     1
+    ],
+    [
+     "Heavy rubber ducky",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu61-archive-crescent-breakfast": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a croissant made of paper",
+   "question": "cx",
+   "pass": false,
+   "greedy": "A croissant made of tax ledgers",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 5,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Rolled letter",
+     2
+    ],
+    [
+     "croissant made of stationery",
+     1
+    ],
+    [
+     "croissant-shaped folded letter",
+     1
+    ],
+    [
+     "croissant made of letter",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu62-stazione-oggetti-smarriti": {
+   "kind": "complex_unnatural",
+   "lang": "it",
+   "gold": "un monopattino di cioccolato",
+   "question": "cx",
+   "pass": false,
+   "greedy": "bici di cioccolato",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 2,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "bici di cioccolato",
+     2
+    ],
+    [
+     "dark chocolate balance bike",
+     2
+    ],
+    [
+     "una bicicletta in cioccolato",
+     1
+    ],
+    [
+     "dark chocolate push bike",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu63-mill-swirled-candy-stick": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a lollipop made of wool",
+   "question": "cx",
+   "pass": true,
+   "greedy": "wool lollipop",
+   "greedy_correct": true,
+   "greedy_verdicts": [
+    "whole",
+    "whole",
+    "whole"
+   ],
+   "n_correct": 9,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "yarn cotton candy",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu64-customs-desk-wagon": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a customs office on a train",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Customs inspection on a train",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 1,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Customs checkpoint",
+     2
+    ],
+    [
+     "Customs inspection on a train",
+     1
+    ],
+    [
+     "Train customs inspection",
+     1
+    ],
+    [
+     "customs checkpoint",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu65-orbiting-ledger-room": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a tax office on a space station",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Space tax preparation",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "other",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Space tax preparation",
+     5
+    ],
+    [
+     "tax preparation",
+     2
+    ],
+    [
+     "tax preparation in space",
+     1
+    ],
+    [
+     "tax filing in space",
+     1
+    ]
+   ],
+   "truncated": 0
+  },
+  "ah-b5-cu68-deep-hull-vote": {
+   "kind": "complex_unnatural",
+   "lang": "en",
+   "gold": "a polling station in a submarine",
+   "question": "cx",
+   "pass": false,
+   "greedy": "Submarine voting",
+   "greedy_correct": false,
+   "greedy_verdicts": [
+    "part",
+    "part",
+    "part"
+   ],
+   "n_correct": 0,
+   "n_samples": 10,
+   "wrong_answers": [
+    [
+     "Submarine voting",
+     6
+    ],
+    [
+     "Submarine election",
+     3
+    ],
+    [
+     "submarine election",
+     1
+    ],
+    [
+     "submarine voting",
+     1
+    ]
+   ],
+   "truncated": 0
+  }
+ }
+}

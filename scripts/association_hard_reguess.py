@@ -10,6 +10,9 @@ own order it picks them 0.21 of the time. This pass runs the family's blind and 
 guessers (`wsbench.baselines.lucky_guessing`) in two replicate measurements (5 draws each of
 the same prompt) on every obscure item as the bank shows it; the builder drops an item
 guessable in both.
+
+Bank v3 (plan 0116) ran it ONCE with `--waves b4,b5` on its provisional bank: only the new
+obscure items are measured, and its builder drops an item guessable in EITHER measurement.
 """
 
 import argparse
@@ -33,6 +36,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--bank", type=Path, required=True, help="the bank built WITHOUT this pass")
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--waves", help="measure only the obscure items of these authoring waves")
     a = ap.parse_args(argv)
     if a.out.exists():
         raise SystemExit(f"{a.out} exists; write to a fresh path")
@@ -49,6 +53,12 @@ def main(argv: list[str] | None = None) -> int:
         for it in bank
     ]
     kind = {it["name"]: it["kind"] for it in bank}
+    if a.waves:  # bank v3 (plan 0116): bank v2's kept items are examples only, never re-measured
+        waves = set(a.waves.split(","))
+        kind = {
+            it["name"]: it["kind"] if it["authoring"]["wave"] in waves else "not measured"
+            for it in bank
+        }
     reqs = []
     for i, item in enumerate(items):
         if kind[item.id] != "obscure":

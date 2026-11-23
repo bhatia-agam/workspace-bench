@@ -1,0 +1,199 @@
+{
+ "version": 1,
+ "built": "2026-11-23",
+ "model": "claude-opus-5-5",
+ "what": "plan 0116: the option-list audit of every new candidate past the gates (87; scene, gold and the seven wrong options): the wrong options the auditor does not find cleanly wrong, with its reason. Candidates for the builder's CAND_DROP table, read by hand: the builder drops only what CAND_DROP names",
+ "prompt": {
+  "SYSTEM": "You audit one multiple-choice item. A short scene implies one thing (the GOLD) without naming it; seven WRONG options are listed. Flag a wrong option only when it is NOT cleanly wrong: (a) it is a kind / subtype of the gold, (b) it is a broader class that contains the gold, (c) it is another name for the gold, or (d) the scene as written fits it as well as the gold. For compound golds (a thing with a qualifier, material or place) the bare thing and the same thing with another qualifier are wrong BY DESIGN: never flag those. Return the flagged options, each with a few words of reason; an empty list when all seven are cleanly wrong.",
+  "USER": "SCENE:\n{scene}\n\nGOLD: {gold}\n\nWRONG OPTIONS:\n{options}"
+ },
+ "audited_items": [
+  "ah-b4-ob07-spinning-tablet-rain-ritual",
+  "ah-b4-ob08-stone-slide-on-frozen-loch",
+  "ah-b4-ob10-werkstatt-pfeile-kneipe",
+  "ah-b4-ob17-maschere-carro-viareggio",
+  "ah-b4-ob18-grandpa-lathe-bowls",
+  "ah-b4-ob23-rogue-swell-trawler-deck",
+  "ah-b4-ob34-bauernhof-warme-holzkiste",
+  "ah-b4-ob36-gull-pillar-off-cliff",
+  "ah-b4-ob39-sunday-brass-in-the-park",
+  "ah-b4-ob49-monsoon-forest-hanging-pitchers",
+  "ah-b4-ob58-rolling-dry-plant-storm",
+  "ah-b4-ob72-reed-boat-lake-fisher",
+  "ah-b4-ob76-chinese-sail-battens-junk",
+  "ah-b4-ob78-fan-propelled-cushion-shore",
+  "ah-b4-ob84-atelier-bloc-hetre",
+  "ah-b4-ob91-convento-guiso-goteo",
+  "ah-b4-cq01-carpenter-dull-teeth",
+  "ah-b4-cq03-bouillon-fond-perce",
+  "ah-b4-cq08-camp-lake-overturned-hull",
+  "ah-b4-cq09-storm-parlour-soaked-keys",
+  "ah-b4-cq11-stove-dribbling-whistle-pot",
+  "ah-b4-cq14-quarry-core-bit-worn-smooth",
+  "ah-b4-cq16-farmyard-empty-shaft",
+  "ah-b4-cq22-weeds-and-hammock",
+  "ah-b4-cq29-divers-reef-hull",
+  "ah-b4-cq32-chef-warm-milk",
+  "ah-b4-cq33-driveway-white-mound",
+  "ah-b4-cq53-cabin-porch-terry-plank",
+  "ah-b4-cq60-bare-pink-layer",
+  "ah-b4-cu02-harbour-paper-anchor",
+  "ah-b4-cu04-drummer-jelly-kit",
+  "ah-b4-cu10-misa-en-ruta",
+  "ah-b4-cu13-orli-sui-binari",
+  "ah-b4-cu16-feather-forge-tool",
+  "ah-b4-cu18-granite-woodwind-recital",
+  "ah-b4-cu21-choir-paper-cymbals",
+  "ah-b4-cu22-pews-beside-the-millstones",
+  "ah-b4-cu23-tickets-below-the-lamp",
+  "ah-b4-cu29-wax-sledge-on-the-farm",
+  "ah-b4-cu36-pupils-among-the-nets",
+  "ah-b4-cu39-lemurs-down-the-aisle",
+  "ah-b4-cu47-feather-bridge-river",
+  "ah-b4-cu58-cocoa-plank-beach",
+  "ah-b5-ob04-stadium-plastic-drone",
+  "ah-b5-ob05-loom-break-metal-tongues",
+  "ah-b5-ob07-courtyard-raga-gourd",
+  "ah-b5-ob08-surgeon-courtyard-webbing",
+  "ah-b5-ob09-compliance-officer-jammer",
+  "ah-b5-ob12-linguist-netted-stick",
+  "ah-b5-ob13-unibad-nasenklammern",
+  "ah-b5-ob14-railway-depot-rope-teams",
+  "ah-b5-ob15-courthouse-archive-gridded-canvas",
+  "ah-b5-ob19-depot-freight-wagon-numbers",
+  "ah-b5-ob26-marine-insurer-reviews-spiralling-strait",
+  "ah-b5-ob29-courtroom-breath-device",
+  "ah-b5-ob32-ship-bridge-swinging-needle",
+  "ah-b5-ob34-labo-tourner-tubes",
+  "ah-b5-ob40-linguists-yew-corridors",
+  "ah-b5-ob44-courtroom-sniffer-wrinkles",
+  "ah-b5-ob45-lab-regrowing-limb-amphibian",
+  "ah-b5-ob50-insurance-claim-desert-armour",
+  "ah-b5-ob52-courtyard-chilean-conifer",
+  "ah-b5-ob63-ministere-galette-pliee",
+  "ah-b5-ob64-clinic-rice-saffron-pan",
+  "ah-b5-ob65-laboratory-roof-dome-slit",
+  "ah-b5-ob66-courthouse-skylight-turret",
+  "ah-b5-ob70-tejedoras-patio-columnas",
+  "ah-b5-ob73-island-dialect-strait-crossing",
+  "ah-b5-ob80-advocate-pleated-tartan",
+  "ah-b5-ob82-phonetics-handled-spectacles",
+  "ah-b5-ob88-gerichtssaal-haken-schleifen",
+  "ah-b5-ob89-ivory-rods-multiplication-lab",
+  "ah-b5-cq01-courtroom-gavel-split",
+  "ah-b5-cq15-divers-survey-passage",
+  "ah-b5-cq19-stakes-toppled-each-autumn",
+  "ah-b5-cq29-courtroom-evidence-car-dented",
+  "ah-b5-cq38-archivio-cactus-congelato",
+  "ah-b5-cq48-quirofano-con-maleza",
+  "ah-b5-cq57-gummy-tank-predator",
+  "ah-b5-cq66-theatre-dropped-scalpel",
+  "ah-b5-cu16-judge-hammer-of-ice",
+  "ah-b5-cu20-handschuhe-aus-honig",
+  "ah-b5-cu32-folded-sheet-express",
+  "ah-b5-cu44-curbside-water-outlet-inspection",
+  "ah-b5-cu47-coin-post-hourly-ticket",
+  "ah-b5-cu58-court-exhibit-throwing-toy",
+  "ah-b5-cu59-sala-espera-hexagonos"
+ ],
+ "flagged": {
+  "ah-b4-ob23-rogue-swell-trawler-deck": {
+   "gold": "a rogue wave",
+   "flags": [
+    {
+     "option": "a sneaker wave",
+     "why": "Often described as a coastal kind of rogue wave: a sudden, disproportionately large wave."
+    }
+   ]
+  },
+  "ah-b4-ob39-sunday-brass-in-the-park": {
+   "gold": "a bandstand",
+   "flags": [
+    {
+     "option": "a gazebo",
+     "why": "Octagonal open-sided roofed park structure; a bandstand is essentially a gazebo used for music, so the scene fits it closely."
+    },
+    {
+     "option": "a pavilion",
+     "why": "Broader class; bandstands are often called band pavilions."
+    }
+   ]
+  },
+  "ah-b4-ob49-monsoon-forest-hanging-pitchers": {
+   "gold": "a pitcher plant",
+   "flags": [
+    {
+     "option": "a cobra lily",
+     "why": "Darlingtonia is a kind of pitcher plant"
+    },
+    {
+     "option": "a sun pitcher",
+     "why": "Heliamphora is a kind of pitcher plant"
+    }
+   ]
+  },
+  "ah-b4-ob78-fan-propelled-cushion-shore": {
+   "gold": "a hovercraft",
+   "flags": [
+    {
+     "option": "a ground-effect vehicle",
+     "why": "Broader class; hovercraft are often classed as ground-effect vehicles."
+    }
+   ]
+  },
+  "ah-b4-ob84-atelier-bloc-hetre": {
+   "gold": "des sabots",
+   "flags": [
+    {
+     "option": "des socques",
+     "why": "Wooden-soled shoe, sometimes used as a synonym for sabot"
+    }
+   ]
+  },
+  "ah-b5-ob07-courtyard-raga-gourd": {
+   "gold": "a sitar",
+   "flags": [
+    {
+     "option": "a lute",
+     "why": "Broader class: in instrument classification the sitar is a long-necked lute."
+    }
+   ]
+  },
+  "ah-b5-ob15-courthouse-archive-gridded-canvas": {
+   "gold": "cross-stitch",
+   "flags": [
+    {
+     "option": "gros-point",
+     "why": "Often defined as large cross-stitch on canvas, so the scene fits it too"
+    }
+   ]
+  },
+  "ah-b5-ob44-courtroom-sniffer-wrinkles": {
+   "gold": "a bloodhound",
+   "flags": [
+    {
+     "option": "a basset hound",
+     "why": "Drooping ears, loose skin and scent tracking also fit a basset"
+    }
+   ]
+  },
+  "ah-b5-cq01-courtroom-gavel-split": {
+   "gold": "a broken gavel",
+   "flags": [
+    {
+     "option": "a broken hammer",
+     "why": "A gavel is a kind of hammer, and this one is broken, so the option is a broader class that contains the gold."
+    }
+   ]
+  },
+  "ah-b5-cu16-judge-hammer-of-ice": {
+   "gold": "a gavel made of ice",
+   "flags": [
+    {
+     "option": "a hammer made of ice",
+     "why": "A gavel is a type of hammer, so this is a broader class that contains the gold."
+    }
+   ]
+  }
+ }
+}

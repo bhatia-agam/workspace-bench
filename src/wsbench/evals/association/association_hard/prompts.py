@@ -11,8 +11,9 @@ from wsbench.llm import schema_block
 from .gate import GATE_VERSION
 
 CALL_VERSION = "assoc-hard-v1"  # every judge call's fingerprint (prompts + options)
-# bank v2 is the registered bank (v1, 74 items, was judged in validation and never merged)
-BANK_TAG = "bank-v2"
+# bank v3 is the registered bank (plan 0116; v2 = items.json, 56 items; v1, 74 items, was
+# judged in validation and never merged)
+BANK_TAG = "bank-v3"
 # the result stamp adds the code-side gate and the bank
 PROMPT_VERSION = f"{CALL_VERSION}+{GATE_VERSION}+{BANK_TAG}"
 CHANCE = 1 / 8  # a forced guess among the 8 substantive options

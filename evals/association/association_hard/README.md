@@ -1,9 +1,10 @@
 # association_hard: an uncommon or compound thing a scene implies but never names
 
-In-house items (no external source). Plan: `plans/0108-association-hard.md`.
+In-house items (no external source). Plans: `plans/0108-association-hard.md` (the family),
+`plans/0116-association-hard-v3.md` (bank v3, the registered bank).
 
 A short scene (1 to 3 sentences, sometimes not in English) evokes one thing without naming it,
-and the model is asked to summarize the story in one sentence. The thing is either uncommon (an
+and the model is asked to summarize the story in one sentence. The thing is either uncommon (a
 didgeridoo, a red tide, a quipu: kind `obscure`) or an ordinary thing in an unusual state (`a
 dead tree`: kind `complex_qualified`), made of an unusual material or set in an unusual place
 (`a violin made of ice`, `a gym inside a courtroom`: kind `complex_unnatural`). The question is
@@ -14,12 +15,248 @@ It is the hard sibling of [`association`](../association/README.md), whose files
 floors and read plan it leaves untouched: a separate package with its own prompts, judge, gate
 and bank.
 
-**Status.** Registered in the `full` tier only: not in core, no fast cut, no ATI entry, no
-adapted set. The prompt-only reader solves nearly every item, so the family separates lenses
+**Status.** Bank v3 (99 items, plan 0116) is registered, in the `full` tier only: not in core,
+no fast cut, no ATI entry, no adapted set. The prompt-only reader solves nearly every item, so the family separates lenses
 from each other (and prose lenses from token lenses); it does not separate a lens from a reader
 of the text.
 
-## Bank v2 (`items.json`, 56 items)
+## Bank v3 (`items_v3.json`, 99 items)
+
+Plan: `plans/0116-association-hard-v3.md`. Bank v2 (`items.json`, 56 items, below) stays in the repo as a
+file and is no longer registered.
+
+| kind | items | kept from bank v2 | new |
+|---|---|---|---|
+| `obscure` | 53 | 26 | 27 |
+| `complex_qualified` | 16 | 9 | 7 |
+| `complex_unnatural` | 30 | 17 | 13 |
+| all | 99 | 52 | 47 |
+
+Scene language: en 75, es 7, de 6, pt 5, it 4, fr 2.
+
+### The four items of bank v2 that are dropped (`V3_DROP`, header `edits.v3.dropped_from_v2`)
+
+| item | why |
+|---|---|
+| `ah-b1-ob32-farm-milk-sugar-prism` | a refractometer: blind-guessable from its options (the blind guesser picks it 14 times of 20 over the four measurements that exist: 5 and 2 of 5 in reguess_v1.json, 3 and 4 of 5 on the two floor runs); it was in bank v2 because one gating measurement was under 3 of 5 |
+| `ah-b2-ob06-zampogna-presepe-montano` | una zampogna: its accepted forms `Italian bagpipe` / `意大利风笛` also fit the distractor `una piva` |
+| `ah-b2-ob18-festival-shirt-spirals` | tie-dye: its accepted forms `扎染` / `绞缬` also fit the distractor `shibori` |
+| `ah-b2-ob26-railway-sky-white-ring` | a solar halo: its accepted form `a ring around the sun` also fits the distractor `a corona` |
+
+The other 52 items are carried byte-identical per item (scene, options, order, forms, gate and guess
+records). They were not gated again and their forms were not derived again.
+
+### The new items: the v2 recipe, each gate run ONCE
+
+| stage | obscure | complex_qualified | complex_unnatural | all |
+|---|---|---|---|---|
+| authored (two sub-waves, b4 then b5; Opus 5.5 at low effort with the v2 authoring prompts) | 184 | 140 | 140 | 464 |
+| lint-clean | 151 | 121 | 89 | 361 |
+| option list built, scene screen 5 of 5 | 148 | 121 | 89 | 358 |
+| **subject gate passed** (one Modal run, Qwen3.6-27B; greedy and at least 8 of 10) | 103 | 49 | 33 | 185 |
+| options-only gate passed (one grid pass, one bank-order pass; under 3 of 5 in BOTH measurements) | 46 | 21 | 21 | 88 |
+| bank rules and the hand read of the option lists passed | 41 | 20 | 20 | 81 |
+| in the 100-item draft (selection in authoring order to the per-kind target) | 28 | 7 | 13 | 48 |
+| **in the bank** (after the described-guesser gate: 11 dropped, 11 backfilled, 1 dropped) | 27 | 7 | 13 | 47 |
+
+Recipe, unchanged from bank v2's authoring run (its scripts and prompts: the authoring brief with the
+lessons of waves b2 / b3, the lint, the `samecat` / balanced-grid option recipes with their own
+blind-leak loop, the alias audit, the 5-draw scene screen, the strict Opus grader of the subject's
+answers), then this repo's three passes. Each gate was run ONCE, and its raw output is committed
+under `v3/`:
+
+1. **Subject gate** (`v3/qwen_requests.jsonl`, `v3/qwen_samples.jsonl.gz`, `v3/qwen_gate.json`): one
+   Modal run over all 358 screened candidates, the gate question of record only (obscure:
+   name-the-referent; complex: the compound-aware question), greedy + 10 samples at T 0.7. 185
+   pass (greedy correct and at least 8 of 10); 173 fail and are out. No candidate was sampled
+   twice; every request has its 11 replies (none empty).
+2. **Options-only gate, in bank order, strict.** Complex kinds: `v3/grid_v3.json`
+   (`scripts/association_hard_grid.py --no-tables --context <the 52 kept items>`), one run: 1 list
+   does not fit the 3 x 2 grid, 34 lists are guessable in both measurements, and 5 more in one
+   measurement only (the strict rule: v2 would have kept them). Obscure: `v3/reguess_v3.json`
+   (`scripts/association_hard_reguess.py --waves b4,b5` on the provisional bank), one run: 57 of
+   103 are guessable (56 in both measurements, 1 in one only). **A new item is in only when both
+   guessers are under 3 of 5 in BOTH measurements of that one run**; no list was rebuilt and
+   nothing was measured a second time. The described guesser's examples came from the
+   provisional bank (kept items included; kept items were not measured).
+3. **Bank rules and a hand read of the option lists** (`v3/options_audit_v3.json`, an Opus audit of
+   scene + gold + wrong options, 10 flagged, read by hand; 88 candidates pass step 2, and the
+   audit read the 87 left after the bank-rule drop): 1 candidate breaks V5 (near-duplicate options) and 6 are dropped by the table `CAND_DROP`:
+
+
+| candidate | why |
+|---|---|
+| `ah-b4-ob08-stone-slide-on-frozen-loch` | curling: the authoring brief names it as an example its batch must not reuse |
+| `ah-b4-ob49-monsoon-forest-hanging-pitchers` | a pitcher plant: two distractors are kinds of the gold (`a cobra lily`, `a sun pitcher`) |
+| `ah-b4-ob39-sunday-brass-in-the-park` | a bandstand: the scene fits the distractor `a gazebo` as well (an octagonal open-sided roofed structure in a park), and `a pavilion` is a class that holds the gold |
+| `ah-b5-ob15-courthouse-archive-gridded-canvas` | cross-stitch: the distractor `gros-point` is commonly defined as cross-stitch on canvas, which is what the scene shows |
+| `ah-b5-cq01-courtroom-gavel-split` | a broken gavel: the grid's other head is `a hammer`, a class that holds a gavel, so `a broken hammer` is not cleanly wrong |
+| `ah-b5-cu16-judge-hammer-of-ice` | a gavel made of ice: the grid's other head is `a hammer`, a class that holds a gavel, so `a hammer made of ice` is not cleanly wrong |
+
+   Flagged and kept: `a sneaker wave` beside a rogue wave (a coastal wave, the scene is open sea),
+   `a ground-effect vehicle` beside a hovercraft, `des socques` beside des sabots, `a lute` beside
+   a sitar, `a basset hound` beside a bloodhound (the scene's forty-mile scent trail).
+4. **Selection** (plan 0116 §2.5): of the 81 left, the first in authoring order up to the per-kind
+   target (28 / 7 / 13, bank v2's proportions on 100) made a 100-item draft; the other 33 were the
+   reserve.
+5. **Forms** (`v3/forms_v3.json`, one forms pass as for v2; then `v3/forms_audit_v3.json`, a
+   scene- and option-aware audit of every accepted form of the same 87 candidates, 93 forms
+   marked on 40 candidates, read by hand). Dropped by table (`FORM_DROPS_V3`: 46 forms; 6 of the
+   rows belong to three items that later left on floor run 1, `des sabots`, `une casserole
+   trouée` and `a waterlogged piano`):
+
+
+| item | form | why |
+|---|---|---|
+| `ah-b4-ob07-spinning-tablet-rain-ritual` (a bullroarer) | `a rhombus` | ordinarily the geometric shape |
+| `ah-b4-ob07-spinning-tablet-rain-ritual` (a bullroarer) | `rhombus` | ordinarily the geometric shape |
+| `ah-b4-ob17-maschere-carro-viareggio` (la cartapesta) | `纸浆塑形` | pulp moulding in general (also industrial moulded pulp), not papier-mâché |
+| `ah-b4-ob23-rogue-swell-trawler-deck` (a rogue wave) | `a killer wave` | any deadly wave; also said of the distractor `a sneaker wave` |
+| `ah-b4-ob23-rogue-swell-trawler-deck` (a rogue wave) | `killer wave` | any deadly wave; also said of the distractor `a sneaker wave` |
+| `ah-b4-ob23-rogue-swell-trawler-deck` (a rogue wave) | `a monster wave` | any huge wave (big surf, a tsunami) |
+| `ah-b4-ob23-rogue-swell-trawler-deck` (a rogue wave) | `monster wave` | any huge wave (big surf, a tsunami) |
+| `ah-b4-ob34-bauernhof-warme-holzkiste` (ein Brutkasten) | `保温箱` | an insulated box or a neonatal incubator, not an egg hatcher |
+| `ah-b4-ob36-gull-pillar-off-cliff` (a sea stack) | `a stack` | alone, a pile or a chimney stack |
+| `ah-b4-ob36-gull-pillar-off-cliff` (a sea stack) | `stack` | alone, a pile or a chimney stack |
+| `ah-b4-ob72-reed-boat-lake-fisher` (a reed boat) | `草船` | a straw or grass boat, not one of reeds |
+| `ah-b4-ob76-chinese-sail-battens-junk` (a junk) | `junk` | alone, rubbish (`a junk` stays) |
+| `ah-b4-ob78-fan-propelled-cushion-shore` (a hovercraft) | `an ACV` | also the Amphibious Combat Vehicle, near the distractor `an amphibious tank` |
+| `ah-b4-ob78-fan-propelled-cushion-shore` (a hovercraft) | `ACV` | also the Amphibious Combat Vehicle, near the distractor `an amphibious tank` |
+| `ah-b4-ob84-atelier-bloc-hetre` (des sabots) | `木屐` | usually geta-style wooden sandals |
+| `ah-b4-ob84-atelier-bloc-hetre` (des sabots) | `wooden clogs` | also said of the wooden-soled distractors `des socques` / `des galoches` |
+| `ah-b4-cq03-bouillon-fond-perce` (une casserole trouée) | `有洞的锅` | 锅 also covers a frying pan: fits the distractor `une poêle trouée` |
+| `ah-b4-cq03-bouillon-fond-perce` (une casserole trouée) | `破了洞的锅` | 锅 also covers a frying pan: fits the distractor `une poêle trouée` |
+| `ah-b4-cq09-storm-parlour-soaked-keys` (a waterlogged piano) | `a water-damaged piano` | any water damage: also fits the distractor `a mouldy piano` |
+| `ah-b4-cq09-storm-parlour-soaked-keys` (a waterlogged piano) | `water-damaged piano` | any water damage: also fits the distractor `a mouldy piano` |
+| `ah-b4-cq11-stove-dribbling-whistle-pot` (a leaking kettle) | `漏水的壶` | 壶 alone is any pot, jug or teapot |
+| `ah-b4-cu10-misa-en-ruta` (una iglesia en un autobús) | `a church bus` | commonly a bus a church owns to carry its congregation |
+| `ah-b4-cu10-misa-en-ruta` (una iglesia en un autobús) | `church bus` | commonly a bus a church owns to carry its congregation |
+| `ah-b4-cu13-orli-sui-binari` (una sartoria su un tram) | `a tailor on a streetcar` | a person (also a passenger), not a tailor's shop on board |
+| `ah-b4-cu13-orli-sui-binari` (una sartoria su un tram) | `tailor on a streetcar` | a person (also a passenger), not a tailor's shop on board |
+| `ah-b4-cu13-orli-sui-binari` (una sartoria su un tram) | `tailor on a tram` | a person (also a passenger), not a tailor's shop on board |
+| `ah-b4-cu13-orli-sui-binari` (una sartoria su un tram) | `tailor’s tram` | a tram a tailor owns or uses, not a shop on board |
+| `ah-b4-cu18-granite-woodwind-recital` (a flute made of stone) | `a rock flute` | also a flute played in rock music |
+| `ah-b4-cu18-granite-woodwind-recital` (a flute made of stone) | `rock flute` | also a flute played in rock music |
+| `ah-b4-cu29-wax-sledge-on-the-farm` (a sled made of wax) | `a toboggan made of wax` | a toboggan has no runners; the scene's sled has two |
+| `ah-b4-cu29-wax-sledge-on-the-farm` (a sled made of wax) | `toboggan made of wax` | a toboggan has no runners; the scene's sled has two |
+| `ah-b4-cu29-wax-sledge-on-the-farm` (a sled made of wax) | `a sleigh made of wax` | a sleigh is a larger, usually horse-drawn vehicle |
+| `ah-b4-cu29-wax-sledge-on-the-farm` (a sled made of wax) | `sleigh made of wax` | a sleigh is a larger, usually horse-drawn vehicle |
+| `ah-b4-cu36-pupils-among-the-nets` (a school on a fishing boat) | `lessons held on a fishing boat` | an activity (also fishing lessons), not a school |
+| `ah-b4-cu39-lemurs-down-the-aisle` (a zoo on an airplane) | `zoo flight` | a flight that carries zoo animals |
+| `ah-b5-ob32-ship-bridge-swinging-needle` (a magnetic compass) | `指南针` | any compass: also said of the distractor `a gyrocompass` |
+| `ah-b4-cq22-weeds-and-hammock` (a lazy farmer) | `a sluggish farmer` | slow or lethargic, not unwilling to work |
+| `ah-b4-cq22-weeds-and-hammock` (a lazy farmer) | `sluggish farmer` | slow or lethargic, not unwilling to work |
+| `ah-b4-cq29-divers-reef-hull` (a sunken ship) | `a shipwreck` | also a wreck stranded on rocks: fits the distractor `a stranded ship` |
+| `ah-b4-cq29-divers-reef-hull` (a sunken ship) | `shipwreck` | also a wreck stranded on rocks: fits the distractor `a stranded ship` |
+| `ah-b4-cq32-chef-warm-milk` (a broken fridge) | `损坏的冰箱` | physical damage: also fits the distractor `a cracked fridge` |
+| `ah-b5-ob63-ministere-galette-pliee` (une crêpe) | `thin pancake` | any thin pancake (blini, a Chinese pancake) |
+| `ah-b5-ob64-clinic-rice-saffron-pan` (paella) | `西班牙炖饭` | 炖饭 is the usual word for the distractor `risotto` |
+| `ah-b5-ob64-clinic-rice-saffron-pan` (paella) | `西班牙炒饭` | fried rice, another dish |
+| `ah-b5-ob14-railway-depot-rope-teams` (tug of war) | `rope pulling` | any hauling on a rope |
+| `ah-b5-ob19-depot-freight-wagon-numbers` (stencilling) | `模板印刷` | stencil / template printing in industry too, broader than the craft |
+
+   Marked by the audit and KEPT (a judgement call; the compound-noun forms follow bank v2's
+   convention, `a submarine cinema`):
+
+
+- `Darts`: `Dart`, `飞镖`
+- `ein Brutkasten`: `incubator`
+- `una sartoria su un tram`: `电车上的裁缝店`
+- `a church inside a windmill`: `a windmill converted into a church`, `windmill converted into a church`
+- `a cinema inside a lighthouse`: `Lighthouse cinema`, `a lighthouse cinema`, `lighthouse cinema`, `a lighthouse turned cinema`, `lighthouse turned cinema`, `lighthouse movie theater`, `灯塔电影院`, `灯塔影院`
+- `a school on a fishing boat`: `trawler school`, `fishing boat school`, `渔船学校`
+- `a zoo on an airplane`: `airplane zoo`
+- `a breathalyzer`: `a breath analyzer`, `breath analyzer`
+- `paella`: `西班牙海鲜饭`
+
+6. **The described-guesser bar of plan 0108 is a gate, applied once** (decided on the draft by the
+   reviewing main session, not by the owner;
+   `FLOOR_DROP_1`, `FLOOR_DROP_2`, header `edits.v3.floor_runs`). The 100-item draft was never
+   pushed. Its floor run (`v3/floor_run1/`) gave described 0.134 and `complex_qualified` 0.225,
+   over that kind's bar of 0.217: the described guesser picked 11 NEW items 3 times of 5 or more,
+   none of which it had picked in their gating run (its three solved examples are drawn from the
+   item list, so they change with it):
+
+   | dropped on floor run 1 | described hits of 5 |
+   |---|---|
+   | `ah-b4-ob84-atelier-bloc-hetre` (des sabots) | 3 |
+   | `ah-b4-cq01-carpenter-dull-teeth` (a blunt saw) | 3 |
+   | `ah-b4-cq03-bouillon-fond-perce` (une casserole trouée) | 5 |
+   | `ah-b4-cq08-camp-lake-overturned-hull` (a capsized canoe) | 5 |
+   | `ah-b4-cq09-storm-parlour-soaked-keys` (a waterlogged piano) | 4 |
+   | `ah-b4-cu02-harbour-paper-anchor` (an anchor made of paper) | 5 |
+   | `ah-b4-cu16-feather-forge-tool` (a hammer made of feathers) | 5 |
+   | `ah-b5-ob08-surgeon-courtyard-webbing` (slacklining) | 5 |
+   | `ah-b5-ob09-compliance-officer-jammer` (roller derby) | 3 |
+   | `ah-b5-ob34-labo-tourner-tubes` (une centrifugeuse) | 3 |
+   | `ah-b5-ob40-linguists-yew-corridors` (a hedge maze) | 5 |
+
+   The reserve backfilled once, in authoring order, kind for kind (5 obscure, 4
+   complex_qualified, 2 complex_unnatural): `a lazy farmer`, `a sunken ship`, `a broken fridge`, `a snow-covered car`, `a surfboard made of chocolate`, `a salamander`, `an armadillo`, `a monkey puzzle tree`, `une crêpe`, `paella`, `Handschuhe aus Honig`. Floor run 2 on that
+   100-item bank (`v3/floor_run2/`): described 0.052; one new item was picked 5 of 5, `woodturning`
+   (`ah-b4-ob18-grandpa-lathe-bowls`, 0 of 5 on run 1 and in its gating run), and is dropped with
+   no backfill: **99 items**. Kept items of bank v2 are not dropped on these runs (they were
+   admitted on bank v2's floor of record); the described guesser hit `a didgeridoo` (5 and 5), `a
+   pickaxe made of rubber` (3 and 5), `a fjord` (4, then 0) and `a platypus` (0, then 5). 22
+   candidates that passed every stage stay in reserve (`edits.v3.passed_not_selected`).
+   **This procedure is a selection on the described guesser's own measurements, and its examples
+   change with the item list: the final described floor is an optimistic estimate for the new
+   items.**
+
+Rebuild (from the repo alone; CI runs it):
+
+```
+python scripts/build_association_hard_bank_v3.py --out <fresh path>     # then copy it over
+python scripts/build_association_hard_bank_v3.py --check
+```
+
+### Known issues of bank v3 (the header's `known_issues`)
+
+
+- the 52 items kept from bank v2 keep its rule (guessable in one measurement of two stays; authoring.guess records both) and were not gated again; the new items are under 3 of 5 in both measurements of their one run; the options-only rates are conditioned on those selections, on the frozen option order and on the examples the described guesser was shown
+- the topic guesser (the item's fine category beside the options) picks the gold far above chance: mc.category is close to a definition of the gold; measured, not a floor
+- no human review of scenes, golds or forms: every grader is claude-opus-5-5
+- the bank is selected on Qwen3.6-27B's own gate; the 52 kept items and the new ones passed it in different runs, each item in one run
+- gold positions are a seeded shuffle and not balanced: a reader who always picks the first option is right on the share of items the header's histogram shows for slot 1
+- the judge's concept pool (header `concepts`) is the whole bank's and was rebuilt for the added items, so no judge call of bank v2 replays; a successor bank that only drops items must carry this list unchanged for kept items' calls to replay
+- the prompt-only reader is expected at the ceiling: the family separates lenses from each other and from token lenses, not a lens from a reader of the text
+- the described-guesser bar was applied as a gate ONCE (edits.v3.floor_runs): new items the described guesser picked 3 of 5 or more on two floor runs were dropped, with one backfill between them; that is a selection on the guesser's own measurements, and its solved examples change with the item list, so the frozen described floor is an optimistic estimate for the new items; kept items it picked on those runs were not dropped
+- `a whirlpool` lists `a maelstrom` as an accepted form and `a maelstrom` is a distractor of `a rogue wave`: the concept pool merges the two entries (as for any shared form), so a maelstrom line pins and blocks for both items
+- the forms of the 52 kept items were not derived again; the forms of the new items come from one forms pass (v3/forms_v3.json) and one scene-aware audit read by the builder's author, not by a second person
+
+Found after the bank was frozen (not in the header):
+
+- **The frozen floor still shows items a guesser picks 3 times of 5 or more**, as every floor
+  run of this family has (other examples each time). Described: 5 new items (`Handschuhe aus
+  Honig` and `una iglesia en un autobús` 5 of 5; `a reed boat`, `a sea stack`, `a sitar` 4) and 5
+  kept items (`a fjord` 5, `um trator de chocolate` 4, `a didgeridoo`, `a lithophone`, `a
+  platypus` 3). Blind: `una clepsidra` (new) 3 of 5; it was 0 and 2 of 5 in its gating run, 1 and
+  2 of 5 on floor runs 1 and 2. The gate was applied once (step 6 above) and nothing is
+  dropped on the final measurement; every per-kind bar is met on it. The per-item draws of
+  this final run are not in the repo (only its aggregates, in
+  `evals/baselines/lucky_guessing.json`): a file added under this directory moves the
+  family's manifest rows, which the ledger pins to the bank's stamp.
+- **`a platypus` (kept) is the pattern `a refractometer` was dropped for, on the described
+  guesser**: 3 then 1 of 5 in its gating measurements (`reguess_v1.json`), 5 of 5 on floor run
+  2, 3 of 5 on the final floor. It is the only kept item that leaked in a gating measurement
+  and stays.
+- **`a leaking kettle` (`ah-b4-cq11-stove-dribbling-whistle-pot`) has a distractor its scene
+  states**: the pot "began to whistle", and the list holds `a whistling kettle`. That is the
+  `CAND_DROP` standard, and it was not found because the option audit's prompt excluded
+  sibling-qualifier options ("the same thing with another qualifier are wrong BY DESIGN: never
+  flag those"), so the audit could not find this class on any complex item. It makes the item
+  harder for every arm (it is one of the prompt-only reader's three fails). The item stays:
+  the bank is frozen.
+- Several new `obscure` golds are not rare (`a sitar`, `lacrosse`, `tug of war`, `a whirlpool`,
+  `a hovercraft`, `a magnetic compass`, `a breathalyzer`, `an armadillo`, `paella`, `une
+  crêpe`): the authoring brief's "terms a quiz-goer knows" was read generously, and a gold the
+  subject cannot name fails its gate.
+- A marked form kept by hand is a judgement of one reader (the list above); `Dart` / `飞镖` also
+  name the single dart, and `incubator` any incubator.
+
+## Bank v2 (`items.json`, 56 items; no longer registered)
+
+The 52 kept items of bank v3 were selected by the rules of this section.
 
 | kind | items |
 |---|---|
@@ -233,7 +470,7 @@ are listed too):
 | `ah-b2-ob02-mouth-frame-twang` | `a mouth harp` | commonly a harmonica |
 | `ah-b2-ob02-mouth-frame-twang` | `mouth harp` | commonly a harmonica |
 
-### Known issues (the header's `known_issues`)
+### Known issues of bank v2 (its header's `known_issues`)
 
 - items guessable in one measurement of two stay (authoring.guess records both); the options-only rates are conditioned on that selection and on the frozen option order
 - the topic guesser (the item's fine category beside the options) picks about half the golds: mc.category is close to a definition of the gold; measured, not a floor
@@ -244,8 +481,9 @@ are listed too):
 - the prompt-only reader is expected at the ceiling: the family separates lenses from each other and from token lenses, not a lens from a reader of the text
 
 
-Found by review r2, after the bank was frozen (not in the header; to be taken with the next bank
-version, since a fix moves the bank and its floors):
+Found by review r2, after the bank was frozen (not in the header). **Bank v3 drops the four items
+named here** (a refractometer, una zampogna, tie-dye, a solar halo); the described-guesser picks
+of the first bullet were left as they are:
 
 - `a refractometer` is guessable by the blind guesser in most replicate draws (14 of 20 over four
   measurements); it stays because one gating measurement was under 3 of 5, the rule as written.
@@ -261,7 +499,7 @@ version, since a fix moves the bank and its floors):
 The same read as `association` (`docs/read_sites.md`): render `chat_summarize` (the scene, then
 "Summarize the preceding story in one sentence.", thinking off), read at the 19 summarize-suffix
 and chat-tail tokens, one contiguous run ending at the final token; scene positions are never
-read. Layers 20, 24, ..., 60. `reads=lite` reads the same sites. 56 x 19 x 11 = 11704
+read. Layers 20, 24, ..., 60. `reads=lite` reads the same sites. 100 x 19 x 11 = 20900
 cells per 11-layer arm.
 
 ## Scoring
@@ -320,7 +558,83 @@ quote re-ask counted as a fail); `wsbench report` prints them under `## breakdow
 **Chance**: 1/8 uniform. A reader who knows the construction never picks a bare head: 1/6 on the
 complex kinds (item-weighted over the bank: 0.144).
 
-## Validation
+## Validation on bank v3 (plan 0116, 2026-11-23)
+
+Reads: the 52 kept items' cells are the stored reads of plans 0108 / 0115 (their plan rows are
+byte-identical in bank v3's plan); the new items were read on 2026-11-23 by the same driver, arm
+by arm (plan-file mode on a pinned bank file: the 48 of the draft, then the 11 backfilled), and
+merged into one file per arm on bank v3's `plan_sha` (20691 cells, 209 per item, no empty
+sample). Judged by the registered instrument (`assoc-hard-v1+gate-h2+bank-v3`,
+`layers=20,...,60`), every arm twice (digests shared, judge calls fresh; no call of bank v2
+replays: the concept pool was rebuilt). 95% bootstrap CIs over items, first judging. The kept /
+new split is of ONE judging of the 99-item bank; it is not bank v2's score.
+
+| arm | all 99 [95% CI] | kept 52 [95% CI] | new 47 [95% CI] | second judging (all / kept / new) | items differing |
+|---|---|---|---|---|---|
+| Oracle lens (RL) `s3d-rl600` | 0.899 [0.838, 0.949] | 0.923 [0.846, 0.981] | 0.872 [0.766, 0.957] | 0.899 / 0.923 / 0.872 | 0 |
+| Oracle lens (SFT) `s3d-sft251` | 0.889 [0.818, 0.939] | 0.885 [0.788, 0.962] | 0.894 [0.809, 0.979] | 0.889 / 0.865 / 0.915 | 2 |
+| NLA `mlnla11-rl600` | 0.818 [0.727, 0.889] | 0.788 [0.673, 0.904] | 0.851 [0.745, 0.957] | 0.828 / 0.808 / 0.851 | 1 |
+| J-lens `jlens-public` | 0.242 [0.162, 0.323] | 0.212 [0.115, 0.327] | 0.277 [0.149, 0.404] | 0.202 / 0.192 / 0.213 | 4 |
+| prompt-only `po-opus-v1` (the frozen floor) | 0.970 [0.939, 1.000] | 1.000 [1.000, 1.000] | 0.936 [0.851, 1.000] | 0.970 / 1.000 / 0.936 | 0 |
+| logit lens L63 (the frozen floor; one judging) | 0.040 [0.010, 0.081] | 0.038 [0.000, 0.096] | 0.043 [0.000, 0.106] |  | |
+
+By kind (obscure / complex_qualified / complex_unnatural, first judging):
+
+| arm | all | kept 52 | new 47 | bare head / sibling picked (of 46 compounds) |
+|---|---|---|---|---|
+| Oracle lens (RL) | 48 of 53 / 16 of 16 / 25 of 30 | 23 of 26 / 9 of 9 / 16 of 17 | 25 of 27 / 7 of 7 / 9 of 13 | 0 / 4 |
+| Oracle lens (SFT) | 47 of 53 / 16 of 16 / 25 of 30 | 23 of 26 / 9 of 9 / 14 of 17 | 24 of 27 / 7 of 7 / 11 of 13 | 3 / 2 |
+| NLA | 46 of 53 / 15 of 16 / 20 of 30 | 22 of 26 / 8 of 9 / 11 of 17 | 24 of 27 / 7 of 7 / 9 of 13 | 7 / 1 |
+| J-lens | 16 of 53 / 6 of 16 / 2 of 30 | 7 of 26 / 3 of 9 / 1 of 17 | 9 of 27 / 3 of 7 / 1 of 13 | 24 / 1 |
+| prompt-only | 53 of 53 / 14 of 16 / 29 of 30 | 26 of 26 / 9 of 9 / 17 of 17 | 27 of 27 / 5 of 7 / 12 of 13 | 0 / 0 |
+| logit lens L63 (the frozen floor; one judging) | 3 of 53 / 0 of 16 / 1 of 30 | 1 of 26 / 0 of 9 / 1 of 17 | 2 of 27 / 0 of 7 / 0 of 13 | 19 / 0 |
+
+The first-ask pass rate equals the headline on every arm except the NLA (0.808 against 0.818:
+one pass came after the quote re-ask), no item is undecided, and at most 4 of 99 items change
+verdict between two judgings. On the kept 52 the first judging differs from bank v2's first
+judging in at most four items per arm (same reads; the judge calls are new): Oracle lens (RL)
+48 and 48, Oracle lens (SFT) 46 and 46, NLA 43 then 41, J-lens 9 then 11, prompt-only 51 then
+52, logit lens 2 and 2.
+
+**The order is the same as on bank v2: prompt-only floor 0.970 > Oracle lens (RL) 0.899 > Oracle
+lens (SFT) 0.889 > NLA 0.818 >> J-lens 0.242 > logit lens L63 0.040.** Paired on the first
+judgings (arm only / other only, exact McNemar): Oracle lens (RL) against the floor 3 / 10, p =
+0.09; Oracle lens (SFT) against the floor 3 / 11, p = 0.06; Oracle lens (RL) against (SFT) 4 / 3, p
+= 1.0; NLA against the floor 3 / 18, p = 0.002; NLA against the Oracle lens (RL) 3 / 11, p =
+0.06; NLA against (SFT) 3 / 10, p = 0.09. The two Oracle lenses are not separated from each
+other, and each is 8 to 9 points under the floor without a significant paired difference on 99
+items; the family still does not separate a strong prose lens from a reader of the text.
+
+Fails of the first judging. Prompt-only (3, all new): `a blunt drill`, `a leaking kettle`, `a zoo
+on an airplane`. Oracle lens (RL) (10): `Handschuhe aus Honig`, `a cinema inside a lighthouse`,
+`a kalimba`, `a monkey puzzle tree`, `a sled made of wax`, `una sartoria su un tram` (new), `a
+green flash`, `a pamonha`, `a red tide`, `ein Archiv in einem U-Boot` (kept). Logit lens L63
+passes (4): `a mirage`, `a library in a helicopter` (kept), `tug of war`, `a magnetic compass`
+(new).
+
+**Options-only guessers** (`wsbench baseline`, 5 draws, bank order; the THIRD and final floor
+measurement, on the 99 items, frozen in `evals/baselines/lucky_guessing.json`):
+
+| guesser | all 99 [95% CI over items] | kept 52 | new 47 | obscure (bar 0.175) | complex_qualified (0.217) | complex_unnatural (0.217) | mean ± sd over the 5 draws |
+|---|---|---|---|---|---|---|---|
+| blind | 0.010 [0.000, 0.026] | 0.004 [0.000, 0.012] | 0.017 [0.000, 0.051] | 0.011 | 0.013 | 0.007 | 0.010 ± 0.007 |
+| described (the floor of record) | 0.091 [0.042, 0.139] | 0.077 [0.027, 0.146] | 0.106 [0.038, 0.191] | 0.109 | 0.013 | 0.100 | 0.091 ± 0.016 |
+| topic (diagnostic, `NOT_A_FLOOR`) | 0.394 [0.303, 0.485] | 0.423 [0.296, 0.554] | 0.362 [0.234, 0.489] | 0.453 | 0.463 | 0.253 | 0.394 ± 0.007 |
+| uniform | 0.147 [0.117, 0.178] | 0.146 [0.104, 0.188] | 0.149 [0.102, 0.200] | 0.162 | 0.138 | 0.127 | 0.147 ± 0.020 |
+
+**Every per-kind bar of plan 0108 (the kind's chance + 0.05) is met by the blind and the
+described guesser**, and the family-level described rate (0.091) is under uniform chance. That
+is after the gate was applied (step 6 of "The new items" above): the described rate was 0.134
+on the 100-item draft (`complex_qualified` 0.225, over its bar) and 0.052 on floor run 2. The
+bank was selected on those two measurements of the described guesser, whose examples change
+with the item list, so **0.106 on the new items is an optimistic estimate**; on this final
+run it again picks five new and five kept golds 3 times of 5 or more ("Found after the bank
+was frozen" above). The topic guesser is a diagnostic and not gated on (owner decision).
+
+Not done on bank v3: a hand read of verdicts (bank v2's hand read below covers its 56 items
+and its arms), the owner's own read, an ATI panel.
+
+## Validation of bank v2 (plans 0108 and 0115; 56 items)
 
 Measured 2026-11-23 on the 56 items of bank v2, from stored readouts of Qwen3.6-27B (layers 20
 to 60, the 19 sites; no new read) and judged by the registered instrument (`gate-h2`), every
@@ -439,6 +753,16 @@ plan 0108 only). The logit-lens L63 floor and the Oracle lens (SFT) read were de
 
 ## Versions
 
+- Bank v3 (plan 0116, `+bank-v3`): bank v2 minus four items, plus 47 new items; the registered
+  bank. Its first build, a 100-item draft, was judged and had floors frozen on the branch,
+  missed the described-guesser bar and was never pushed; the bank of record is the 99-item
+  build (plan 0116 §7, §8). The concept pool was rebuilt, so every arm was judged anew.
+  **A named exception to the rule below ("a bank change after results is a new version")**:
+  the 100-item draft was floored and judged locally under the `...+bank-v3` stamp before the
+  99-item bank took it. The exception was decided by the reviewing main session (not by the
+  owner) because no result of the draft left the branch. `v3/floor_run1/` and `v3/floor_run2/`
+  are measurements of 100-item lists and say so in their `bank` field; a local result
+  directory of the draft must not be reported as bank v3.
 - Bank v1 was the first build, 74 items: registered on the branch, judged on every arm in
   validation, never merged. Its options-only gate failed in bank order (blind 0.154,
   described 0.211; obscure 0.236 and 0.305 against a bar of 0.175), so the bank changed after
@@ -454,9 +778,9 @@ plan 0108 only). The logit-lens L63 floor and the Oracle lens (SFT) read were de
 
 ## Judge prompts
 
-`prompt_version`: `assoc-hard-v1+gate-h2+bank-v2`. Judge calls are keyed `assoc-hard-v1` (`CALL_VERSION`:
+`prompt_version`: `assoc-hard-v1+gate-h2+bank-v3`. Judge calls are keyed `assoc-hard-v1` (`CALL_VERSION`:
 prompts + options); the stamp adds the code-side gate (`GATE_VERSION`, `gate-h2`) and the bank
-(`BANK_TAG`, `bank-v2`). Summary results add `+maj3v` (nothing under
+(`BANK_TAG`, `bank-v3`). Summary results add `+maj3v` (nothing under
 `opts=draws=1`, the single-draw diagnostic) and the digest tail. Judge: the repo default
 (`claude-opus-5-5`). Output schema `readout_mc` / `quote_mc`: `{"choice": int, "quote": str}`.
 `{READOUT_PHRASE}` and `{CANNOT}` of the plan are interpolated below. Token readouts get the
@@ -573,6 +897,12 @@ The readout below is a digest of the readouts across every read layer and positi
   (16 two-measurement leakers, 1 off-grid list, 18 + 4 by the two runs of the grid pass, 14 by
   the bank-order pass); `gate-h2` and bank v2 after the first validation and the review of the
   PR; instrument `assoc-hard-v1+gate-h2+bank-v2`.
+- 2026-11-23 (plan 0116): bank v3, `assoc-hard-v1+gate-h2+bank-v3`, 99 items = 52 of bank v2
+  (the four known-issue items dropped) + 47 new items, each gated in one run, after the
+  described-guesser bar was applied once as a gate (11 dropped, 11 backfilled, 1 dropped).
+  Prompt-only floor 0.970 [0.939, 1.000], lucky blind 0.010, described 0.091 (every per-kind
+  bar met), topic 0.394 (not a floor), logit lens L63 0.040 [0.010, 0.081]; Oracle lens (RL)
+  0.899, Oracle lens (SFT) 0.889, NLA 0.818, J-lens 0.242. No prompt or gate change.
 - 2026-11-23 (plan 0115): the two measurements plan 0108 deferred. Oracle lens (SFT)
   `s3d-sft251` 0.893 [0.804, 0.964] (second judging 0.893); logit lens L63 floor frozen at
   0.036 [0.000, 0.089] (2 of 56). No bank, stamp, prompt or gate change.

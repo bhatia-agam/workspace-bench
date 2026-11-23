@@ -96,7 +96,8 @@ def test_read_plan_is_the_association_read(items):
 def test_the_ledger_has_the_family_and_the_easy_entry_did_not_move():
     path = registry.REPO_ROOT / "tests/golden/manifest_0101_declared.json"
     families = json.loads(path.read_text(encoding="utf-8"))
-    assert FAMILY in families and "0108" in str(families[FAMILY]["plan"])
+    # the entry is the one declared with bank v3 (plan 0116); plan 0108 declared the first
+    assert FAMILY in families and "0116" in str(families[FAMILY]["plan"])
     assert len(families) >= 7  # the six earlier entries stay
     blob = json.dumps(families["association"], sort_keys=True, ensure_ascii=False).encode()
     assert hashlib.sha256(blob).hexdigest() == ASSOCIATION_LEDGER_SHA256

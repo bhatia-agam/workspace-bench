@@ -182,6 +182,7 @@ def build_item(
     guess: tuple[dict[str, Any], dict[str, Any]],
     edits: dict[str, Any],
     reguess: dict[str, Any],
+    form_drops: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     name, m, pm = it["name"], it["mc"], it["pilot_meta"]
     gold, ds = m["gold"], list(m["distractors"])
@@ -196,7 +197,7 @@ def build_item(
         guessed = {"list": "bank_order", **reguess[name]}
     else:
         guessed = {"list": "candidate", "final": guess[0][name], "confirm": guess[1][name]}
-    drops = list(FORM_DROPS.get(name, {}))
+    drops = list((FORM_DROPS if form_drops is None else form_drops).get(name, {}))
     scene = it["prompt"]
 
     def names(option: str) -> list[str]:

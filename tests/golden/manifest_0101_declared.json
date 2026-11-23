@@ -8,12 +8,12 @@
   "note": "the family moved from the category basic to the category association: directory evals/association/association, package wsbench.evals.association.association, group=association; bank bytes, stamp, plan and call keys unchanged; the only row that moved is list.category"
  },
  "association_hard": {
-  "prompt_version": "assoc-hard-v1+gate-h2+bank-v2",
-  "bank_file": "items.json",
-  "bank_sha256": "169a3dd777455124bc5d6579e69a519e6be3444f65cb574a88b92c87aa98a10c",
-  "rows_sha256": "f313ac7f296f4a2ebb88e6acbb2e05ec8ecaf9864e75cb105987d1f809ace35f",
-  "plan": "0108",
-  "note": "new family: hard association, assoc-hard-v1+gate-h2 on bank v2 (56 items; bank v1, 74 items, was judged in validation and never merged)"
+  "prompt_version": "assoc-hard-v1+gate-h2+bank-v3",
+  "bank_file": "items_v3.json",
+  "bank_sha256": "43cf3425538b5b36ece311005948068e216f758578f16a3471deb2f03ed2fc6f",
+  "rows_sha256": "84adaf9f1a68c0d0a5e59ef9c9f3e5fd0c7372bc709f4d3f36b7e1de154c58f6",
+  "plan": "0116",
+  "note": "bank v3 (plan 0116): bank v2 minus the four known-issue items plus 47 new items, each gated in one run, after the described-guesser bar was applied once as a gate; 99 items, assoc-hard-v1+gate-h2+bank-v3"
  },
  "chain_intermediates": {
   "prompt_version": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3",

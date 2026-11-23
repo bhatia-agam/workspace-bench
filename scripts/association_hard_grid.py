@@ -12,6 +12,10 @@ the same prompt; the described guesser's examples come from the other items of t
 its picks depend on which items are in it). Every model call is cached in `--work` by key and
 prompt, so a re-run with the same prompts asks nothing twice. It reads the scene, the options
 and the forms only.
+
+Bank v3 (plan 0116) ran it ONCE on its own candidates, `--no-tables --context <kept>`: the
+tables of bank v2 do not apply, a list that does not parse is dropped with the reason, and the
+kept items of bank v2 join the described guesser's example pool without being measured.
 """
 
 import argparse
@@ -212,17 +216,22 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--src", type=Path, required=True)
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--no-tables", action="store_true", help="candidates of a later bank version")
+    ap.add_argument("--context", type=Path, help="a built bank whose items only join the examples")
     a = ap.parse_args(argv)
     if a.out.exists():
         raise SystemExit(f"{a.out} exists; write to a fresh path")
     a.work.mkdir(parents=True, exist_ok=True)
-    from build_association_hard_bank import DROP, SCENE_NAMED  # the tables of record
+    import build_association_hard_bank as tables  # the tables of record
+
+    drop_table = {} if a.no_tables else tables.DROP
+    scene_named = {} if a.no_tables else tables.SCENE_NAMED
 
     calls = Calls(a.work)
     src = [
         it
         for it in json.loads(a.src.read_text(encoding="utf-8"))["items"]
-        if it["name"] not in DROP
+        if it["name"] not in drop_table
     ]
     by = {it["name"]: it for it in src}
     out_items: dict[str, Any] = {}
@@ -239,7 +248,11 @@ def main(argv: list[str] | None = None) -> int:
             unparsed[it["name"]] = r
         else:
             roles[it["name"]] = r
-    if unparsed:
+    if unparsed and a.no_tables:
+        dropped.update(
+            {n: f"grid pass: the list does not fit the grid ({w})" for n, w in unparsed.items()}
+        )
+    elif unparsed:
         raise SystemExit(
             f"items that do not fit the grid (add them to DROP with the reason): {unparsed}"
         )
@@ -269,7 +282,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 3. a distractor the scene names (SCENE_NAMED): one replacement from the gold and category
     swaps: dict[str, Any] = {}
-    for n, old in SCENE_NAMED.items():
+    for n, old in scene_named.items():
         it = by[n]
         m = it["mc"]
         listed = [m["gold"], *m["distractors"]]
@@ -325,6 +338,14 @@ def main(argv: list[str] | None = None) -> int:
         for it in src
         if it["name"] not in dropped
     }
+    context: list[str] = []
+    if a.context:
+        bank = json.loads(a.context.read_text(encoding="utf-8"))["items"]
+        context = [it["name"] for it in bank]
+        lists = {
+            **{it["name"]: (list(it["mc"]["options"]), it["mc"]["gold"]) for it in bank},
+            **lists,
+        }
     items = lg_items(lists)
     reqs = []
     for i, item in enumerate(items):
@@ -387,6 +408,8 @@ def main(argv: list[str] | None = None) -> int:
         "swaps": swaps,
         "dropped": dropped,
     }
+    if a.context:
+        doc["context_items"] = context
     a.out.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(f"composed {len(out_items)}, swaps {len(swaps)}, dropped {len(dropped)}: {dropped}")
     return 0
