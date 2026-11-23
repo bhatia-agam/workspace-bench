@@ -1037,6 +1037,25 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "association_hard":
+        # plan 0108: its own branch, the same read as association (the three-family branch
+        # below, LITE_SITE_FAMILIES and frozen_lite_rule are not touched); lite = the same sites
+        _h, items = _bank(family)
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat_summarize",
+                {"kind": "suffix_text_then_tail", "text": SUMMARIZE_SUFFIX.strip()},
+                GRID,
+                text=it["prompt"],
+                suffix=SUMMARIZE_SUFFIX,
+                note="the 19 suffix and chat-tail tokens; story positions are never "
+                "read (docs/read_sites.md)",
+                lite_positions=dict(SAME),
+            )
+            for it in items
+        ]
     if family in ("association", "conjunctive_association", "role_bound_association"):
         # plan 0039 §C2: association reads the conjunctive / role-bound sites exactly (its bank
         # v2 scene is `prompt`; the siblings' is `stimulus`)

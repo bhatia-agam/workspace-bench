@@ -83,9 +83,9 @@ audited, then goes up as ONE data PR per set. Code changes go in their own PRs f
 
 ## Scope: the 30 families, and when a family may ship short
 
-- **30 families** = the 32 families `all` runs (`registry.drop_superseded`) minus `jlens_concept_pr`
-  and `user_modeling_hard` (plan 0106: its items were selected on Qwen3.6-27B's own gates, so no
-  adapted set carries it; `adapt.families.NOT_ADAPTED`).
+- **30 families** = the 33 families `all` runs (`registry.drop_superseded`) minus `jlens_concept_pr`,
+  `user_modeling_hard` and `association_hard` (plans 0106 and 0108: their items were selected on
+  Qwen3.6-27B's own gates, so no adapted set carries them; `adapt.families.NOT_ADAPTED`).
   `introspection` and `hinted_cutoff` are in scope on every set.
 - Every item is gated on the subject itself: thinking off, its own chat template, greedy right
   AND >= 8/10 sampled (10/10 for chain).

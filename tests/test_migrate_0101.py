@@ -344,7 +344,7 @@ def test_tables_agree_with_the_registry_and_the_plan():
     # replay it); a family that changed category since is listed here and in `LATER_MOVES`
     moved_since = {"association": "association"}  # plan 0107: from `basic`
     # a family registered after the migration (plan 0106) was never moved by the script
-    since = {"user_modeling_hard"}
+    since = {"user_modeling_hard", "association_hard"}
     today = {**mig.CATEGORY, **moved_since}
     layout = registry._layout()
     assert {f: c for f, c in layout.items() if f not in since} == today

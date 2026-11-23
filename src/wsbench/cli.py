@@ -969,7 +969,8 @@ def _marks_floor(fam: str, e: dict, f: Callable[[object], str]) -> str:
 def _topic_floor(fam: str, e: dict, f: Callable[[object], str]) -> str:
     """Round 4: where the topic guesser (options + each item's topic) is measured, it is shown,
     and the family's floor is the highest measured guesser. Round 5 (Camila r3): a topic guesser
-    that is no floor of the family (``lucky_guessing.NOT_A_FLOOR``, directed_modulation) is shown
+    that is no floor of the family (``lucky_guessing.NOT_A_FLOOR``: directed_modulation,
+    association_hard) is shown
     marked so and never sets the floor."""
     if "topic" not in e:
         return ""

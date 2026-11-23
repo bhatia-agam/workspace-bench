@@ -23,6 +23,7 @@ FLAT = ("numbers",)
 # every family whose summary-mode judge is an LLM call fed by the shared example readouts
 SUMMARY_JUDGED = [
     "association",
+    "association_hard",
     "basic_readout_st",
     "buggy_code",
     "conjunctive_association",

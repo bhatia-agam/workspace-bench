@@ -201,7 +201,8 @@ def test_provenance_is_recorded(path):
     assert src["family_templates"]["nyt_groups"] in readme
     # (user_modeling_hard, plan 0106: no adapted set carries it, so the set's file never names it)
     assert set(data["_not_gated"]) == (
-        set(ti.NOT_GATED) - {"model_multihop", "nyt_connections", "user_modeling_hard"}
+        set(ti.NOT_GATED)
+        - {"model_multihop", "nyt_connections", "user_modeling_hard", "association_hard"}
     ) | {"introspection"}
     assert data["model_multihop"]["pinned"] and data["nyt_connections"]["opt_in"]
 

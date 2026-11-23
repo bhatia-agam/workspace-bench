@@ -199,7 +199,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   described / uniform, plus round 4's `topic` guesser, the MC leakage standard's: it reads a
   frozen topic file `evals/baselines/topics/<family>.json` where one exists (main's families:
   `lists` / `item` forms), else each item's builder topic `meta["topic"]` for
-  `TOPIC_FAMILIES` (association, basic_readout, multihop, poetry, directed_modulation;
+  `TOPIC_FAMILIES` (association, association_hard, basic_readout, multihop, poetry, directed_modulation;
   `topic_source` picks; keep both paths). Bank v3 of basic_readout / multihop / association /
   poetry was rebuilt for it by `scripts/mc_leakage_r4.py`, evals/baselines/README.md; a rebuilt
   list never drops an observed confuser, a distractor a cached judge picked or the readouts name
@@ -345,10 +345,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `scripts/adapt_introspection_mp_modal.py` (calib gate `g0_pass` before any run; parts on the
   `wsb-introspection-mp` volume). A non-plain residual (`spec.residual`) is refused by `Producer`.
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
-  (the source of truth); do not restate them here. Fourteen families keep their own `judge.py`
+  (the source of truth); do not restate them here. Fifteen families keep their own `judge.py`
   (+ `score.py`): Camila's originals (agentic, jailbreak, jlens_concept_pr, moral, relational,
   role-bound, conjunctive, user_modeling; hallucination left for HallucinationBench, plan 0040),
-  directed_modulation, hinted_cutoff, knowledge_cutoff, model_multihop, user_modeling_hard and wrong_intermediate (plan 0050: a blind 6-way MC over B',
+  association_hard, directed_modulation, hinted_cutoff, knowledge_cutoff, model_multihop, user_modeling_hard and wrong_intermediate (plan 0050: a blind 6-way MC over B',
   the true bridge B and four same-category distractors frozen in bank v2 by
   `scripts/wrong_intermediate_mc_options.py`; a gold pick is credited only with a verified or
   near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or (a quote cut
@@ -592,6 +592,56 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `scripts/association_distractors.py` (Opus proposer from the gold alone, lint + entailment
   check, 5-draw scene screen). Its ATI entry (full panel, argon via Gemini WIF, 2026-11-01) keeps
   no item under the all-fail rule (plan 0071), so the family is skipped under the flag.
+- association_hard (plan 0108, `assoc-hard-v1+gate-h2+bank-v2`, 56 items; full tier only, not in
+  core, no fast cut) is a SEPARATE package beside `association`, whose files, stamps, cached
+  calls, floors and manifest rows must not move: never thread a family or bank parameter
+  through `association/judge.py`. It imports pure helpers only (`association.judge.holding_lines`
+  / `flat_list_void` / `FLAT_RUN_MIN`, conjunctive's `draw_key` / `majority` / `n_draws`) and no
+  prompt. Items are `obscure` (an uncommon thing) or `complex_qualified` / `complex_unnatural`
+  (a thing with a qualifier, material or place); options are frozen IN THE BANK in bank order
+  (`mc.options`, `mc.gold_position`; never shuffled at run time), and a complex list is the
+  symmetric grid of 3 qualifiers x 2 heads plus the two bare heads (`mc.grid`; the bare head
+  is a distractor on purpose). Summary mode asks ONE 8-way MC + cannot tell in three draws
+  (keys `<id>|L-1`, `#d1`, `#d2`; `|retry1` and `|quote` hang off the draw's key) and takes the
+  majority of the draws' pass / fail verdicts (`+maj3v`; `opts=draws=1` has no suffix). The
+  system prompt carries the compound rule (one line must state every part; a line for a
+  compound is not a line for its bare head). `gate.py` (`GATE_VERSION = "gate-h2"`) is
+  association's gate with these changes: 3b / 3c and the quote's own other-option test read
+  the text with the gold's matched forms blanked out (`gate.names_other`); the gold's own bare
+  head in the QUOTE does not keep 3b / 3c from running (h2); a non-Latin quote without a
+  listed form goes to the quote-only re-judge like any other (h2; no `gold_unlisted_script`);
+  no homograph rule. A listed form in the quote passes whatever else the quote holds, as in
+  `association` (a test documents it). The gate is code, in no call fingerprint: any change
+  bumps `GATE_VERSION` (`tests/test_association_hard.py` pins the file's sha256 beside it); a
+  prompt or option change bumps `CALL_VERSION`; a bank change after any result is a new bank
+  version (`BANK_TAG`; v1 was the 74-item first build, judged and never merged). The judge's
+  concept pool (pins, other-option forms, the token-list void) is FROZEN in the bank header
+  (`concepts`, V13), so a successor bank that only drops items and carries the list replays
+  kept items' calls. Pins are plural-tolerant (`mc.form_hits(..., suffix=2)`); the listed-form
+  credit stays exact. Every row carries `pass_first_ask`; extras `by_kind`,
+  `picked_bare_head`, `picked_sibling`, `pass_rate_first_ask`, `breakdown_md`.
+  Bank: `scripts/build_association_hard_bank.py --src <bank_final_B.json> --guess
+  <floors_B.json> <guess_confirm.json> [--check]` from the authoring candidate (out of the
+  repo: it holds Qwen's replies, per-arm outcomes and the dropped items) and the frozen inputs
+  beside the bank: `grid_v1.json` and `grid_run1.json` (`scripts/association_hard_grid.py`,
+  run twice: the composed grid cell, scene screen and guesser measurements per complex item;
+  an item whose list is identical in both runs must pass the guesser rule in BOTH),
+  `forms_v1.json` (`scripts/association_hard_forms.py`: audited English / Chinese names of
+  every option, written without the scene), `reguess_v1.json`
+  (`scripts/association_hard_reguess.py`: the guessers on every obscure item IN THE BANK'S
+  FROZEN ORDER, since the candidate lists were over-fitted to another option order, blind
+  0.01 there and 0.21 in bank order). Tables `DROP`, `SCENE_NAMED`, `FORM_DROPS` (a form that
+  is an ordinary word for another thing, or names the gold in another sense than the scene's:
+  read a new item's forms against its scene). Every accepted form also lists itself without
+  its leading article. `bank.validate` (V1-V13) runs in the builder, the judge's loader (fail
+  closed) and the bank tests; `WSB_ASSOC_HARD_SRC=<dir>` enables the byte-identical rebuild
+  test. Never edit `items.json` or a scene by hand; after a rebuild bump the bank version if
+  results exist, update the sha literal and re-declare the ledger entry. Own `readplan` branch
+  (the association read; `LITE_SITE_FAMILIES` and `frozen_lite_rule` untouched), `NOT_GATED`
+  for ATI, `adapt.families.NOT_ADAPTED`, validator `NOT_AUTHORABLE`. Its `topic` guesser is
+  measured but `lucky_guessing.NOT_A_FLOOR` (owner decision: `mc.category` is close to a
+  definition of the gold); the prompt-only reader solves the family (floor above every lens):
+  it ranks lenses against each other, not against a reader of the text.
 - buggy_code (plan 0030) is pair-scored on the bank's symmetric `twin` field: headline
   `pair_rate` since 2026-10-30 (metric `pass_rate`, in the macro, `chance` 0.0;
   `specific_pair_rate`, the grade-≥8 bar, in extras; instrument `INSTRUMENT_V1`
@@ -1170,7 +1220,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 ## Tiers and categories (plan 0098)
 - `tiers.py` (imports `registry` and `fast` only; `registry` never imports it): `TIERS = ("fast",
   "core", "full")`, `DEFAULT = "core"`, `CORE` (18 families: conjunctive_association joined on 2026-11-21, Camila; the registered
-  `user_modeling` bank is NOT core; `user_modeling_hard`, plan 0106, is registered in full and
+  `user_modeling` bank is NOT core; `association_hard`, plan 0108, is registered in full only;
+  `user_modeling_hard`, plan 0106, is registered in full and
   joins `CORE` as the 19th in a separate step (its floors are frozen since plan 0112): plan 0106 commit 5, with the fast cut
   and the final ledger entry),
   `core()` / `full()` / `families(tier)`, `tier_of(name)` (`core` | `full` | `""`), `check()`

@@ -78,7 +78,14 @@ MARK_DRAWS = 5
 MARK_FAMILIES = frozenset({"moral_rationale"})
 # round 4: the families whose builder records every item's topic (the topic variant)
 TOPIC_FAMILIES = frozenset(
-    {"association", "basic_readout_st", "multihop_st", "poetry", "directed_modulation"}
+    {
+        "association",
+        "association_hard",
+        "basic_readout_st",
+        "multihop_st",
+        "poetry",
+        "directed_modulation",
+    }
 )
 # round 5 (Camila r3, 2026-11-01, decision (3)): guessers that are measured and recorded but are
 # NOT a floor for the family, so ``standard``, ``leakage_failures`` and ``bar`` skip them.
@@ -89,7 +96,14 @@ TOPIC_FAMILIES = frozenset(
 # "if the concept is mentioned in any context it should count"), so a guesser given the
 # instruction measures the stimulus, not leakage from the options. The valid floors are the
 # options-only (``blind``) and ``described`` guessers (evals/basic/directed_modulation/README.md).
-NOT_A_FLOOR: dict[str, frozenset[str]] = {"directed_modulation": frozenset({"topic"})}
+# association_hard (plan 0108, owner decision: "a topic guesser above chance is fine; don't gate
+# on it"): its topic line is `mc.category`, written for the distractor proposer and close to a
+# definition of the gold ("wind-played string instrument" for an Aeolian harp), so the topic
+# guesser is measured and recorded as a diagnostic, never a floor.
+NOT_A_FLOOR: dict[str, frozenset[str]] = {
+    "directed_modulation": frozenset({"topic"}),
+    "association_hard": frozenset({"topic"}),
+}
 
 
 def is_floor(family: str | None, variant: str) -> bool:
@@ -173,6 +187,10 @@ SYSTEM_QUESTION_NYT = (
 # judge's question (that would hand the blind guesser the question it is denied).
 DESCRIPTIONS: dict[str, str] = {
     "association": "which concept an unseen short scene evokes without naming it",
+    "association_hard": (
+        "which thing an unseen short scene evokes without naming it; some options are a thing "
+        "with a qualifier, an unusual material or an unusual place"
+    ),
     "conjunctive_association": (
         "which compound mental state — an emotion, belief, or motive, together with whose it is "
         "and what it is about — holds in an unseen scene"
@@ -295,6 +313,20 @@ def _association() -> list[Item]:
         shown, gold = build_options(it)
         out.append(Item(it["id"], [shown[:-1]], [gold], meta={"topic": fine_topic(it["mc"])}))
     return out
+
+
+def _association_hard() -> list[Item]:
+    """The options in bank order (the judge never shuffles); the topic is the fine category."""
+    _h, items = load_bank_file(bank_path("association_hard"))
+    return [
+        Item(
+            it["id"],
+            [list(it["mc"]["options"])],
+            [int(it["mc"]["gold_position"])],
+            meta={"topic": fine_topic(it["mc"]), "kind": it["kind"]},
+        )
+        for it in items
+    ]
 
 
 _GLOSS = re.compile(r"\s*\([^)]*\)")
@@ -688,6 +720,7 @@ BUILDERS: dict[str, Callable[[], list[Item]]] = {
     "chain_intermediates": _chain,
     "introspection": _introspection,
     "association": _association,
+    "association_hard": _association_hard,
     "conjunctive_association": _conjunctive,
     "role_bound_association": _role_bound,
     "relational_multihop": _relational,
@@ -1813,7 +1846,8 @@ def leakage_failures(
 ) -> dict[str, float]:
     """The MC leakage standard on one family's live entries (``floors()``): ``variant -> mean`` for
     each measured ``LEAKAGE_GUESSERS`` guesser above ``chance + LEAKAGE_MARGIN`` (empty: passes).
-    With ``family``, its ``NOT_A_FLOOR`` guessers are skipped (directed_modulation's ``topic``)."""
+    With ``family``, its ``NOT_A_FLOOR`` guessers are skipped (the ``topic`` guesser of
+    directed_modulation and association_hard)."""
     limit = chance + LEAKAGE_MARGIN + 1e-9
     return {
         v: float(entry[v]["mean"])
@@ -1839,7 +1873,8 @@ def bar(entry: dict[str, Any], family: str | None = None) -> tuple[float, str] |
     the contrarian question reader passes 0.792 and always-no 0.917). The uniform lines'
     (``uniform*``) guesser side readers never count; their ``side_prior`` does (guesser-free).
     With ``family``, its ``NOT_A_FLOOR`` guessers never count (directed_modulation's ``topic``:
-    its topic is the instruction's category, Camila r3)."""
+    its topic is the instruction's category, Camila r3; association_hard's ``topic``: its topic
+    line is close to a definition of the gold, plan 0108)."""
     means: list[tuple[float, str]] = []
     for v, e in entry.items():
         if not isinstance(e, dict) or not is_floor(family, v):

@@ -37,6 +37,7 @@ WHAT = {
     "buggy_code": "The bug in a short program, and no bug in its clean twin.",
     "chain_intermediates": "The running value of a two- or three-step arithmetic chain.",
     "association": "A concept a scene implies but never names.",
+    "association_hard": "An uncommon thing, or an ordinary thing in an unusual state, material or place, that a scene implies but never names. A reader of the text alone solves it, so it compares lenses with each other.",
     "conjunctive_association": "A compound state a vignette implies: what is felt, about what, towards whom.",
     "user_modeling": "An attribute of the user that a chat implies.",
     "user_modeling_hard": "One to three things a chat implies about its user, every one of them stated.",

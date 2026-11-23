@@ -1698,7 +1698,7 @@ def test_no_adapted_set_carries_the_family(real_families, tmp_path, monkeypatch,
     from wsbench.adapt import judge_inputs as ji
     from wsbench.cli import main
 
-    assert set(families.NOT_ADAPTED) == {FAMILY}
+    assert set(families.NOT_ADAPTED) == {FAMILY, "association_hard"}
     for table in (families.FAMILIES, families.REGENERATE, ji.FAMILIES):
         assert FAMILY not in table
     with pytest.raises(SystemExit, match="selected on Qwen3\\.6-27B's own gates"):

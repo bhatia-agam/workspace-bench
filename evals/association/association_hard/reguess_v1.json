@@ -1,0 +1,524 @@
+{
+ "version": 1,
+ "built": "2026-11-23",
+ "model": "claude-opus-5-5",
+ "what": "per obscure item, hits of 5 of the family's blind and described options-only guessers on the list in the bank's frozen option order, in two measurements; the examples of the described guesser are drawn from the bank this pass was given",
+ "bank_items": [
+  "ah-b1-ob01-wind-strung-box-window",
+  "ah-b1-ob04-aboriginal-tube-circular-breath",
+  "ah-b1-ob07-geology-rock-strike-tones",
+  "ah-b1-ob08-rattan-sphere-lab",
+  "ah-b1-ob11-club-budget-mixed-pole",
+  "ah-b1-ob14-seamstress-pool-gloves",
+  "ah-b1-ob19-farmer-heated-pen-spoons",
+  "ah-b1-ob25-rink-referee-red-ocean",
+  "ah-b1-ob28-rail-inspector-heat-shimmer",
+  "ah-b1-ob32-farm-milk-sugar-prism",
+  "ah-b1-ob42-priest-hiding-hole-archive",
+  "ah-b1-ob48-festa-junina-milho-panela",
+  "ah-b1-ob49-storm-wading-pink-filter",
+  "ah-b1-cq13-ajedrez-loro-joven",
+  "ah-b1-cq17-boulanger-gluten",
+  "ah-b1-cq19-drummer-no-rhythm",
+  "ah-b1-cq25-archive-ivy-windows",
+  "ah-b1-cq26-lab-tree-bare",
+  "ah-b1-cu01-frozen-concert-strings",
+  "ah-b1-cu06-palco-de-marmore",
+  "ah-b1-cu07-folded-chapel-ringer",
+  "ah-b1-cu08-trading-floor-waddler",
+  "ah-b1-cu23-ward-under-the-rotating-lamp",
+  "ah-b1-cu26-lanes-across-the-nave",
+  "ah-b1-cu27-akten-in-der-tiefe",
+  "ah-b2-ob01-tuned-steel-drum-yard",
+  "ah-b2-ob02-mouth-frame-twang",
+  "ah-b2-ob03-cajon-flamenco-cocina",
+  "ah-b2-ob06-zampogna-presepe-montano",
+  "ah-b2-ob08-barrister-vicarage-lawn-hoops",
+  "ah-b2-ob12-dispatcher-forest-checkpoints",
+  "ah-b2-ob13-analista-piscina-gol-flutuante",
+  "ah-b2-ob16-camp-knotted-cord-hanger",
+  "ah-b2-ob18-festival-shirt-spirals",
+  "ah-b2-ob26-railway-sky-white-ring",
+  "ah-b2-ob28-bank-clerk-green-sunset-flash",
+  "ah-b2-ob30-quarry-drum-trembling",
+  "ah-b2-ob31-jardin-cylindre-gradue",
+  "ah-b2-ob32-antique-glass-clicking-box",
+  "ah-b2-ob33-brew-kettle-floating-glass",
+  "ah-b2-cq03-meson-tomates-aplastados",
+  "ah-b2-cq16-priest-rows-down-the-nave",
+  "ah-b2-cu07-quarry-soft-tool",
+  "ah-b2-cu09-rotor-stacks-quiet",
+  "ah-b2-cu10-cuentas-bajo-cubierta",
+  "ah-b3-ob02-duck-billed-creek",
+  "ah-b3-ob06-criniera-scena",
+  "ah-b3-ob07-cloister-bird-lyre",
+  "ah-b3-ob10-stinkender-baum-campus",
+  "ah-b3-ob18-buried-jars-winter-cabbage",
+  "ah-b3-ob19-abbey-cellar-hive-drink",
+  "ah-b3-ob23-stranded-river-bend",
+  "ah-b3-ob24-comboio-arcos-vale",
+  "ah-b3-ob25-dialect-ferry-cliffs",
+  "ah-b3-ob30-swamp-fan-boat-fishing",
+  "ah-b3-ob33-thai-cooking-three-wheeler",
+  "ah-b3-ob35-theatre-zeppelin-tour",
+  "ah-b3-ob36-overnight-train-piper",
+  "ah-b3-ob42-bar-association-gala",
+  "ah-b3-ob43-chapel-ringed-tallow",
+  "ah-b3-ob48-mina-de-prata-andina",
+  "ah-b3-cq05-fairground-horses-mid-gallop",
+  "ah-b3-cq08-evidence-bag-bloom",
+  "ah-b3-cq12-plaza-basin-coins",
+  "ah-b3-cq26-bank-vault-sofa-sagging",
+  "ah-b3-cu03-lavoura-cacau-doce",
+  "ah-b3-cu04-stage-gown-transparent",
+  "ah-b3-cu05-geologist-swinging-granite",
+  "ah-b3-cu06-cumple-volante-horneado",
+  "ah-b3-cu17-granja-humo-pliegos",
+  "ah-b3-cu20-teatro-seduta-fondente",
+  "ah-b3-cu21-chapel-entrance-beeswax",
+  "ah-b3-cu23-barbells-before-the-bench",
+  "ah-b3-cu36-verdict-over-the-clouds"
+ ],
+ "items": {
+  "ah-b1-ob01-wind-strung-box-window": {
+   "final": {
+    "blind": 5,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 0
+   }
+  },
+  "ah-b1-ob04-aboriginal-tube-circular-breath": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b1-ob07-geology-rock-strike-tones": {
+   "final": {
+    "blind": 1,
+    "described": 2
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 2
+   }
+  },
+  "ah-b1-ob08-rattan-sphere-lab": {
+   "final": {
+    "blind": 5,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 5
+   }
+  },
+  "ah-b1-ob11-club-budget-mixed-pole": {
+   "final": {
+    "blind": 0,
+    "described": 1
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 2
+   }
+  },
+  "ah-b1-ob14-seamstress-pool-gloves": {
+   "final": {
+    "blind": 0,
+    "described": 3
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 3
+   }
+  },
+  "ah-b1-ob19-farmer-heated-pen-spoons": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b1-ob25-rink-referee-red-ocean": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b1-ob28-rail-inspector-heat-shimmer": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b1-ob32-farm-milk-sugar-prism": {
+   "final": {
+    "blind": 5,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 2,
+    "described": 0
+   }
+  },
+  "ah-b1-ob42-priest-hiding-hole-archive": {
+   "final": {
+    "blind": 5,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 5
+   }
+  },
+  "ah-b1-ob48-festa-junina-milho-panela": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b1-ob49-storm-wading-pink-filter": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob01-tuned-steel-drum-yard": {
+   "final": {
+    "blind": 0,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 5
+   }
+  },
+  "ah-b2-ob02-mouth-frame-twang": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob03-cajon-flamenco-cocina": {
+   "final": {
+    "blind": 1,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 5
+   }
+  },
+  "ah-b2-ob06-zampogna-presepe-montano": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob08-barrister-vicarage-lawn-hoops": {
+   "final": {
+    "blind": 0,
+    "described": 1
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob12-dispatcher-forest-checkpoints": {
+   "final": {
+    "blind": 5,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 5
+   }
+  },
+  "ah-b2-ob13-analista-piscina-gol-flutuante": {
+   "final": {
+    "blind": 5,
+    "described": 1
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 5
+   }
+  },
+  "ah-b2-ob16-camp-knotted-cord-hanger": {
+   "final": {
+    "blind": 0,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 3
+   }
+  },
+  "ah-b2-ob18-festival-shirt-spirals": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob26-railway-sky-white-ring": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob28-bank-clerk-green-sunset-flash": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob30-quarry-drum-trembling": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob31-jardin-cylindre-gradue": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b2-ob32-antique-glass-clicking-box": {
+   "final": {
+    "blind": 5,
+    "described": 2
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 3
+   }
+  },
+  "ah-b2-ob33-brew-kettle-floating-glass": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob02-duck-billed-creek": {
+   "final": {
+    "blind": 0,
+    "described": 3
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 1
+   }
+  },
+  "ah-b3-ob06-criniera-scena": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob07-cloister-bird-lyre": {
+   "final": {
+    "blind": 5,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 0
+   }
+  },
+  "ah-b3-ob10-stinkender-baum-campus": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob18-buried-jars-winter-cabbage": {
+   "final": {
+    "blind": 5,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 5
+   }
+  },
+  "ah-b3-ob19-abbey-cellar-hive-drink": {
+   "final": {
+    "blind": 4,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 5,
+    "described": 5
+   }
+  },
+  "ah-b3-ob23-stranded-river-bend": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob24-comboio-arcos-vale": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob25-dialect-ferry-cliffs": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob30-swamp-fan-boat-fishing": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 2
+   }
+  },
+  "ah-b3-ob33-thai-cooking-three-wheeler": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob35-theatre-zeppelin-tour": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob36-overnight-train-piper": {
+   "final": {
+    "blind": 0,
+    "described": 5
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 5
+   }
+  },
+  "ah-b3-ob42-bar-association-gala": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob43-chapel-ringed-tallow": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  },
+  "ah-b3-ob48-mina-de-prata-andina": {
+   "final": {
+    "blind": 0,
+    "described": 0
+   },
+   "confirm": {
+    "blind": 0,
+    "described": 0
+   }
+  }
+ }
+}

@@ -28,6 +28,7 @@ CATEGORY = {
     "arithmetic_intermediates": "computational",
     "user_modeling": "association",
     "user_modeling_hard": "association",
+    "association_hard": "association",
     "conjunctive_association": "association",
     "agentic_misalignment": "safety",
     "jailbreak_recognition": "safety",

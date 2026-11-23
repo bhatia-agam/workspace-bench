@@ -138,6 +138,20 @@ in this read (the 100-item entry passed 22 of 100 in all), and the new think ite
 about the kept think items' rate. The 29-family raw mean moves from 0.119 to 0.126. The native `prompt_only.json` entry is still the 100-item one (stale
 stamp: not drawn).
 
+**association_hard, bank v2 (2026-11-23, plan 0108): its first floors.** Lucky guessers on
+the 56 items (5 draws, the bank's frozen option order): blind 0.021, described 0.100 (the
+floor of record; per kind 0.127 obscure, 0.111 and 0.047 on the two compound kinds, each under
+its chance + 0.05), uniform 0.139, chance 0.125 (0.167 on the compounds for a reader who never
+picks a bare head). Both are selection-conditioned (items guessable in two replicate
+measurements were dropped, the obscure ones in bank order after a first build showed blind
+0.21 there against 0.01 in the order the lists had been authored on). Its topic guesser is at
+0.411 and is NOT a floor (`lucky_guessing.NOT_A_FLOOR`, owner decision: the topic line is
+`mc.category`, close to a definition of the gold). Prompt-only summary floor (`po-opus-v1`,
+0 refused): **0.982**, above every lens measured (Oracle lens (RL) 0.929, NLA 0.821, J-lens
+0.161): the reader of the text solves the family, which therefore compares lenses with each
+other and is no test of a lens against the text. No logit-lens entry yet (GPU), no ATI entry
+(`NOT_GATED`). Details: `evals/association/association_hard/README.md`.
+
 **user_modeling_hard, bank v4 (2026-11-23, plan 0112): its first floors.** The family was
 registered without floors (plan 0106: measured in its validation). On bank v4 (155 items, 229
 parts, instrument `umh-v3+bank-v4`): lucky guessing (Opus 5.5, 5 draws per item, every list of
@@ -508,7 +522,7 @@ averaged over draws with its std, `majority` the per-item plurality vote. Famili
 | relational_multihop | 1 | 18 | rel-v3 (#209 round 6): one composed-relation list (12 chains over the two hops + three decoys, 5 singles, 1 near form); rel-v2's 13-option list failed the leakage bar |
 | moral_rationale | 1 or 2 | 5 | committed items one list, deliberative items one per side; single pick (`ec-v9`): question 0.706, described 0.704, blind 0.608 vs chance 0.176, far above the standard (the bank still leaks; see the floors of record) |
 | user_modeling | 1 | 2-10 | um-v3.4 (MC leakage standard, Camila r2): Gender shows male / female / nonbinary, Country lists are three regional triples plus one, two Occupation neighbours; re-frozen 2026-11-01: blind 0.190 -> 0.200, described 0.210 -> 0.184 vs chance 0.134 -> 0.155 (both within chance + 5 pts; the residual is the bank's dog / cat and full-time golds, see `evals/association/user_modeling/README.md`); bank v2 (the 47 selfdescribe items): blind 0.170, described 0.204 vs chance 0.179; bank v3 (126 items, um-v3.5: two `NEIGHBOURS` per new Country / Occupation gold): blind 0.159, described 0.124 vs chance 0.144; both within the standard |
-| directed_modulation | 1 | 5 | plan 0035: distractors are other items' concepts outside the gold's relatedness group (19 lists redrawn); re-frozen 2026-10-30 at `dm-2026-10-31+expressed`: blind 0.138 -> 0.148, described 0.178 -> 0.168, uniform 0.190 (unchanged); topic 0.758 is a diagnostic, not a floor (round 5, `NOT_A_FLOOR`: its topic is the instruction's category, which names the answer); valid floors blind / described, both within chance + 5 |
+| directed_modulation | 1 | 5 | plan 0035: distractors are other items' concepts outside the gold's relatedness group (19 lists redrawn); re-frozen 2026-10-30 at `dm-2026-10-31+expressed`: blind 0.138 -> 0.148, described 0.178 -> 0.168, uniform 0.190 (unchanged); topic 0.758 is a diagnostic, not a floor (round 5, `NOT_A_FLOOR`: its topic is the instruction's category, which names the answer; the only other `NOT_A_FLOOR` entry is association_hard's topic guesser, plan 0108); valid floors blind / described, both within chance + 5 |
 | typo | 1 | 5 | the correction |
 | multihop | 1-2 | 5 | one list per bridge; bank v2 options are other questions' bridges / targets of the same kind (plan 0041) |
 | basic_readout | 1 | 5 | the readout list (the headline unit) |

@@ -460,6 +460,7 @@ REGENERATE = {
 # them (`judge_inputs.uncovered_families`; under WSB_BANK_ROOT `readplan.families()` lists only
 # the families the root has). Never in FAMILIES or REGENERATE.
 NOT_ADAPTED: dict[str, str] = {
+    "association_hard": "selected on Qwen3.6-27B's own gate (plan 0108); no adapted set carries it",
     "user_modeling_hard": "selected on Qwen3.6-27B's own gates (plan 0106); no adapted set "
     "carries it",
 }

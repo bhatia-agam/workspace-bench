@@ -147,6 +147,8 @@ NOT_GATED: dict[str, str] = {
     "scorer discounted instruction narration, not because the answer is hidden (Camila "
     "2026-10-24); since plan 0028 narration counts and since plan 0035 any mention counts, so "
     "the text alone answers it",
+    "association_hard": "new family (plan 0108): no panel run; the prompt-only reader solves "
+    "nearly every item, so few would survive",
     "user_modeling_hard": "new family (plan 0106): no panel run yet; the prompt-only reader is "
     "expected to solve most items, so few would survive",
     "typo_st": "excluded from the ATI subset by design (Camila 2026-10-29)",

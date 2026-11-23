@@ -68,7 +68,7 @@ def test_ati_subset_names_a_stale_entry_without_ids(capsys, real_families):
     assert cli.main(["check", "ati_subset"]) == 0
     out = capsys.readouterr().out
     assert out.startswith("PASS  ati_subset: 12 families' entries match") and out.count("\n") == 1
-    assert "21 not gated by design; NOTE: chain_intermediates: entry gated on another bank" in out
+    assert "22 not gated by design; NOTE: chain_intermediates: entry gated on another bank" in out
     assert "issue #559" in out
 
 

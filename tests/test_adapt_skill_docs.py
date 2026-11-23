@@ -52,12 +52,13 @@ def test_registered_bank_table_matches_the_registry(real_families):
 
 
 def test_the_driver_builds_the_30_families(real_families):
-    """Scope: the families `all` runs minus jlens_concept_pr and user_modeling_hard (plan 0106:
-    not adapted); the driver freezes the item families and the build / side builds install the
-    rest."""
+    """Scope: the families `all` runs minus jlens_concept_pr, user_modeling_hard (plan 0106:
+    not adapted) and association_hard (plan 0108: not adapted); the driver freezes the item
+    families and the build / side builds install the rest."""
     scope = set(registry.drop_superseded(sorted(registry.FAMILIES))) - {
         "jlens_concept_pr",
         "user_modeling_hard",
+        "association_hard",
     }
     assert len(scope) == 30
     sh = (REPO / "scripts/adapt_set.sh").read_text(encoding="utf-8")

@@ -113,6 +113,10 @@ def _last_option(family: str) -> str:
 
         part = load_bank(family)["items"][0]["parts"][0]
         return p.option_lines(part["options"]).splitlines()[-1]
+    if family == "association_hard":  # plan 0108: the first item's list, in bank order
+        from wsbench.evals.association.association_hard import judge as j
+
+        return j.shown_options(j.load_items()[1][0])[0][-1]
     if family == "introspection":  # round 4: floored for its diagnostic judge column
         bank = ij.load()
         (u,) = ij.units(bank, bank["items"][:1])

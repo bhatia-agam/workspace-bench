@@ -21,6 +21,12 @@ NAME_REFERENT = (
     "This text describes something it never names. Reply with the single word or short phrase "
     "that names it, and nothing else."
 )
+# association_hard's complex kinds (plan 0108): the compound-aware question of its authoring run
+NAME_COMPOUND = (
+    "This text describes something it never names. Reply with one short noun phrase that names "
+    "it completely, including every element the text makes essential (a defining property of "
+    "the thing, or a second thing or circumstance it is combined with), and nothing else."
+)
 # Gates the source repo ran at 10/10 rather than 8/10 (their bank headers record the rule).
 THRESHOLDS: dict[str, float] = {"chain_intermediates": 1.0}
 
@@ -209,6 +215,25 @@ def _user_modeling_hard() -> list[Question]:
     return out
 
 
+def _association_hard() -> list[Question]:
+    """The bank's own gate (plan 0108): `obscure` items on the name-the-referent question, the
+    complex kinds on the compound-aware one; any accepted form of the gold answers it."""
+    out = []
+    for it in bank_items("association_hard"):
+        ask = NAME_REFERENT if it["kind"] == "obscure" else NAME_COMPOUND
+        gate = it["authoring"]["gate"]
+        out.append(
+            Question(
+                it["id"],
+                f"{ask}\n\n{it['prompt']}",
+                [str(it["mc"]["gold"]), *(str(f) for f in it["mc"]["aliases"])],
+                float(gate["n_correct"]) / float(gate["n_samples"]),
+                {"kind": it["kind"], "lang": it["lang"]},
+            )
+        )
+    return out
+
+
 def readable_outcome(verified: str) -> str:
     """``exec: exit 0; stdout = '-53.5'`` as a sentence, so the grader is not matching harness
     syntax against a plain-English answer. Anything else is returned unchanged."""
@@ -299,6 +324,7 @@ BUILDERS: dict[str, Callable[[], list[Question]]] = {
     "buggy_code": _buggy_code,
     "moral_rationale": _moral,
     "user_modeling_hard": _user_modeling_hard,
+    "association_hard": _association_hard,
 }
 
 # Families with no answerable question, and what their own gate is instead.

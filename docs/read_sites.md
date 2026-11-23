@@ -68,6 +68,9 @@ has frozen a rule into `evals/<category>/<family>/lite_rule.json`:
   exactly the full cells.
 - `role_bound_association`: `final_token`, below.
 
+`association_hard` is read at the same 19 sites as `association` (its scene is the item's
+`prompt` too); its lite rule is `same`, set in code (`readplan`), with no `lite_rule.json`.
+
 ## Role-bound
 
 - **Layers:** `readplan.GRID` (20..60 step 4, 11 layers) at the 19 sites.

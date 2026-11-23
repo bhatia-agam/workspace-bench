@@ -262,6 +262,7 @@ and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging ru
 | Computational | [`buggy_code`](evals/computational/buggy_code/README.md) | core, fast | The bug in a short program, and no bug in its clean twin. | Claude judge | 143 |
 | Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) | core, fast | The running value of a two- or three-step arithmetic chain. | Claude judge | 120 |
 | Association | [`association`](evals/association/association/README.md) | - | A concept a scene implies but never names. | Claude judge | 93 |
+| Association | [`association_hard`](evals/association/association_hard/README.md) | - | An uncommon thing, or an ordinary thing in an unusual state, material or place, that a scene implies but never names. A reader of the text alone solves it, so it compares lenses with each other. | Claude judge | 56 |
 | Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | core, fast | A compound state a vignette implies: what is felt, about what, towards whom. | Claude judge | 100 |
 | Association | [`user_modeling`](evals/association/user_modeling/README.md) | - | An attribute of the user that a chat implies. | Claude judge | 126 |
 | Association | [`user_modeling_hard`](evals/association/user_modeling_hard/README.md) | - | One to three things a chat implies about its user, every one of them stated. | Claude judge | 155 |

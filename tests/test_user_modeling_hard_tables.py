@@ -140,6 +140,7 @@ def test_viewer_groups_the_family_under_association(real_families):
     in_group = sorted(metas.values(), key=lambda m: m.order)
     assert [m.name for m in in_group if m.group == "Association"] == [
         "association",
+        "association_hard",
         "user_modeling",
         "user_modeling_hard",
         "conjunctive_association",
