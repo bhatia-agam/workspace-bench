@@ -1,21 +1,74 @@
 # directed_modulation
 
-The model is told to think about a concept, not to think about it, or to keep a secret word or
-preference hidden, while copying an unrelated sentence verbatim; the residual is read at
-every position where the model is writing that sentence. Does the readout carry the held
-concept? 100
-items, chat render (source bank `lens-eval-directed-modulation.json`, family key
+The model is told to think about a concept, or to keep a secret word or preference hidden,
+while copying an unrelated sentence verbatim; the residual is read at every position where the
+model is writing that sentence. Does the readout carry the held concept? 102 items, chat render
+(bank v2, `items_v2.json`; source bank `lens-eval-directed-modulation.json`, family key
 `directed-modulation` there):
 
-- **pair** (70): 35 concept/carrier pairs, each as a `think` item ("Think about the body part
-  clavicle while you write. Now write exactly this sentence: ...") and a `dont_think` twin.
+- **think** (72; subfamily key `pair`, polarity `think`): "Think about the body part clavicle
+  while you write. Now write exactly this sentence: ...". 35 items of the source bank
+  (`dm-pair-NN-pos`) and 37 new ones (`dm-think-NN`, bank v2).
 - **secret** (15): a secret word the model must never reveal (`zephyr`, `obsidian`, ...).
 - **preference** (15): a hobby or preference the model must conceal.
+
+There are no "don't think about X" items: see [Bank v2](#bank-v2-plan-0109).
 
 Every item is gated at >= 8/10 compliance: the model copies the carrier and never mentions the
 concept. Read sites: the assistant's writing positions (one row per position, k samples each).
 The bank header's `eval_render_note` ("directed-modulation is the only chat-templated family")
 predates the chat-rendered families and is superseded by `wsbench plan`.
+
+## Bank v2 (plan 0109)
+
+**Numbers of before 2026-11-20 are on the 100-item bank (`items.json`), which had 35
+`dont_think` items**; they carry the stamp `dm-2026-10-31+expressed` (no bank tag) and are not
+comparable with bank v2 rows (`dm-2026-10-31+expressed+bank-v2`).
+
+The bank was built and gated on 2026-11-20 (as the unmerged plan 0102) and registered by plan
+0109. Camila, 2026-11-20: regular directed modulation should be "just regular, not 'don't think'"; the
+secret and preference items stay, and the bank is refilled with regular think items.
+`items_v2.json` (`version: 2`, `supersedes: items.json`; `items.json` is frozen and unchanged):
+
+| | `items.json` | `items_v2.json` |
+|---|---|---|
+| think | 35 | 72 (the same 35, then 37 new) |
+| dont_think | 35 | 0 (removed: `dm-pair-NN-neg`) |
+| secret | 15 | 15 (unchanged) |
+| preference | 15 | 15 (unchanged) |
+| items | 100 | 102 |
+
+- **Kept items** (35 think + 15 secret + 15 preference): byte-identical and in their original
+  order; their read-plan rows are unchanged, so readouts of the 100-item bank serve them.
+- **New items** (`dm-think-35` ..): the source bank's five instruction templates with new
+  concepts (one per category: 19 categories the bank already had, 18 new ones) and new carrier
+  sentences, gated on Qwen3.6-27B (chat render, thinking off, greedy + 10 samples at T=0.7): the
+  reply is the carrier word for word and never mentions the concept, greedy AND >= 8/10 (74
+  authored, 74 pass, 37 selected). The gate checks behaviour only, as for the source items. New
+  items have no twin (`pair_id` null) and `base_rate_per_100k` null.
+- **Option lists.** The distractor pool is the whole subfamily, so the think pool grew from 35
+  concepts to 72 and **all 35 kept think items have new option lists** (same gold, new
+  distractors); the 30 secret / preference lists are unchanged. Golden:
+  `tests/golden/directed_modulation_options_v2.json` (`directed_modulation_options.json` still
+  pins `items.json`'s lists). The new concepts' relatedness groups are in
+  `distractor_groups.json` (additive: each new concept joins its prompt category's group; no
+  existing concept moved, so `items.json`'s lists are unchanged).
+- **Read plan.** The bank has its own plan (102 rows) and no `plan_lineage` (a drop-and-add step
+  is not a drop-only step): a readouts file must be read for the 37 new items and stamped with
+  this plan's `plan_sha`.
+- **Stamp.** `judge.instrument(header)`: `dm-2026-10-31+expressed+bank-v2` for bank v2;
+  `items.json` (`WSB_BANK_FILE_DIRECTED_MODULATION=evals/basic/directed_modulation/items.json`)
+  and the adapted banks carry no `version` and keep `dm-2026-10-31+expressed`. No prompt, rubric
+  or call key changed (`JUDGE_PROMPT_VERSION` = `dm-2026-10-31`).
+- `white_bear` (the think vs don't-think contrast) needs both twins of a pair, so it is absent
+  on bank v2; the code path stays for `items.json` and the adapted banks.
+- **Fast subset.** The family is not in `fast-v5`, the subset `--fast` runs (it is not a core family), so `--fast` skips
+  it. The five older fast files (`fast-v1` .. `fast-v3`, `fast-safety-v1`, `fast-safety-v2`)
+  hold 62 items of `items.json`, 17 of them dont_think items, and pin its `bank_sha`: those
+  entries are records of the 100-item bank and fail closed for this family
+  (`evals/fast/README.md`, "Re-freezing").
+- **ATI.** Unchanged: the family is not gated (the instruction states the concept) and has no
+  entry in `evals/baselines/anti_text_inversion.json`.
 
 ## Scoring (plan 0035, 2026-10-30)
 
@@ -42,9 +95,9 @@ content-vs-narration classifier rather than an identifier).
   pergola / alcove / turret). So no synonym, instance or close relative of the gold is ever a
   competing option ("neck" or "shoulders" for clavicle are never options: no item has them as a
   target). The draw is the seeded pre-0035 draw with each related pick replaced in place by a
-  seeded redraw, so the 81 items that had no related distractor keep their option lists (golden:
-  `tests/golden/directed_modulation_options.json`). A concept missing from the groups file is a
-  hard error.
+  seeded redraw, so the 81 items of `items.json` that had no related distractor kept their option
+  lists (golden: `tests/golden/directed_modulation_options.json`; bank v2:
+  `directed_modulation_options_v2.json`). A concept missing from the groups file is a hard error.
 - **Credit rules** (one block per subfamily, all with the same close-relative clause
   `CLOSE_RELATIVE`: "for directed modulation we can accept synonyms and close relatives as
   evidence of thinking about the concept"): any morphological variant, a synonym, a close relative
@@ -88,17 +141,17 @@ content-vs-narration classifier rather than an identifier).
 
 ## Blind judge and valid floors (round 5, Camila r3)
 
-**The judge never sees the concept outside the option list.** Verified on main for every one of
-the 100 items (`tests/test_dm_blind_judge.py`, which renders the real prompts through the run
-path): the native judge prompt (`SYSTEM` + `USER`, 1200 calls on a 2-layer x 6-position toy read),
-the summary-mode judge prompt (100 calls), and the summarizer's prompt (`digest.DIGEST_SYSTEM` +
-the task line with `DIGEST_TASK_NOTE`, 200 per-layer digests) name neither the item's concept nor
+**The judge never sees the concept outside the option list.** Verified for every one of
+the 102 items of bank v2 (`tests/test_dm_blind_judge.py`, which renders the real prompts through
+the run path): the native judge prompt (`SYSTEM` + `USER`, 204 calls on a 1-layer x 2-position toy
+read), the summary-mode judge prompt (102 calls), and the summarizer's prompt
+(`digest.DIGEST_SYSTEM` + the task line with `DIGEST_TASK_NOTE`, 102 per-layer digests) name neither the item's concept nor
 any of its match forms once the readout block and the six option lines are removed, and no fixed
 prompt text (credit rules, basis notes, summary note, task note) names any concept of the bank.
 The instruction ("Think about the body part clavicle ...") is never rendered to either the
 summarizer or the judge. The summarizer is told the task TYPE only (the model copies a dictated
 sentence while told to think of, not think of, or keep secret "a certain concept, noun or
-object"). No prompt changed in round 5; the judge instrument stays `dm-2026-10-31+expressed`.
+object"). No prompt changed in round 5 or in plan 0109 (bank v2 adds only the `+bank-v2` stamp).
 
 **The `topic` guesser is not a valid floor for this family.** Its topic line is the category the
 instruction names right before the concept (`lucky_guessing._dm_topic`: "the body part
@@ -106,20 +159,26 @@ clavicle" -> "a body part"; the secret and preference items get their subfamily'
 piece of the instruction "think of X", and the instruction is the answer. A readout that restates
 the instruction is a credited hit here by design (any context counts), so a guesser handed the
 instruction measures the stimulus, not what the option lists leak. `lucky_guessing.NOT_A_FLOOR`
-records this: the topic guesser is still measured and frozen as a diagnostic (0.758), but the MC
+records this: the topic guesser is still measured and frozen as a diagnostic (0.759), but the MC
 leakage standard (`lucky_guessing.standard`, `leakage_failures`) and the reported floor
-(`lucky_guessing.bar`, the `report` floor column, shown "topic 0.758 (not a floor)") read only
+(`lucky_guessing.bar`, the `report` floor column, shown "topic 0.759 (not a floor)") read only
 the two valid floors.
 
-| guesser (Opus 5.5, 5 draws, 100 items, instrument `dm-2026-10-31+expressed`) | mean | chance | line (chance + 5) | verdict |
-|---|---|---|---|---|
-| options-only (`blind`) | 0.148 | 0.200 | 0.250 | pass |
-| `described` (task type + 3 solved examples) | 0.168 | 0.200 | 0.250 | pass (the family's floor) |
-| seeded-uniform | 0.190 | 0.200 | — | (chance line, not a guesser) |
-| `topic` (described + the instruction's category) | 0.758 | 0.200 | — | diagnostic only, not a floor |
+Bank v2, re-measured 2026-11-20 with fresh draws (the 100-item bank's values, at
+`dm-2026-10-31+expressed`, in the last column):
+
+| guesser (Opus 5.5, 5 draws, 102 items, instrument `dm-2026-10-31+expressed+bank-v2`) | mean | chance | line (chance + 5) | verdict | 100-item bank |
+|---|---|---|---|---|---|
+| options-only (`blind`) | 0.224 | 0.200 | 0.250 | pass (the family's floor) | 0.148 |
+| `described` (task type + 3 solved examples) | 0.202 | 0.200 | 0.250 | pass | 0.168 |
+| seeded-uniform | 0.180 | 0.200 | — | (chance line, not a guesser) | 0.190 |
+| `topic` (described + the instruction's category) | 0.759 | 0.200 | — | diagnostic only, not a floor | 0.758 |
 
 So directed_modulation meets the MC leakage standard on its valid floors; its floor is the
-`described` guesser, 0.168. Options were not changed (round 4's reason stands: the gold is in the
+`blind` guesser, 0.224. The prompt-only summary floor on bank v2 is 1.000 (saturated, 0 of 102
+refused); the logit-lens L63 floor on bank v2 is 0.412 [0.324, 0.510] (42 of 102: kept think 19
+of 35, new think 22 of 37, secret 0 of 15, preference 1 of 15; all 102 items read 2026-11-23;
+it was 0.220 on the 100-item bank). Options were not changed (round 4's reason stands: the gold is in the
 prompt the model reads, and the distractor rule is plan 0035's, from other items' concepts
 outside the gold's relatedness group). The prompt-only reader is a saturated ceiling, not a
 floor, for the same reason the topic guesser is not one: it reads the instruction.
@@ -146,7 +205,8 @@ wsbench judge family=directed_modulation readouts=<arm>.jsonl out=outputs/<arm>/
 
 ## Judge prompts
 
-`prompt_version`: `dm-2026-10-31+expressed` (the instrument; plan 0035). Judge calls are keyed by
+`prompt_version`: `dm-2026-10-31+expressed+bank-v2` (the instrument; plan 0035, `+bank-v2` plan
+0109; `dm-2026-10-31+expressed` on `items.json` and the adapted banks). Judge calls are keyed by
 `JUDGE_PROMPT_VERSION` = `dm-2026-10-31` (new prompts: no earlier cache hits). Judge:
 the repo default (`claude-opus-5-5`), temperature 0. Seed 0, 4 distractors. Output schema:
 `{"choice": int, "form": exact|variant|synonym|translation|description|none, "basis":
@@ -291,8 +351,8 @@ evidence samples, never against the note-taker's words. `white_bear` is kept (ea
 digest verdict); `pass_at_1` is omitted. The denominator rule is unchanged: an item with a
 missing (item, layer) cell and no positive is undecided; a failed digest is an unjudged row
 (undecided, counted in `n_unjudged_cells`); an empty digest is a negative without a call.
-The prompt version is stamped `digest.prompt_version("dm-2026-10-31+expressed", args,
-"directed_modulation")` (defaults: `dm-2026-10-31+expressed+digest-v4-task-extractive+sj-v9`, plus
+The prompt version is stamped `digest.prompt_version(judge.instrument(header), args,
+"directed_modulation")` (bank v2: `dm-2026-10-31+expressed+bank-v2` plus the digest tags, plus
 `+reads-lite` under `reads=lite`).
 
 The user message is `USER` with its opening paragraph (the "single token position" framing and

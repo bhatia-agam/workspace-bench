@@ -10,7 +10,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
-from wsbench import digest, mc, reads
+from wsbench import digest, fast, mc, reads
 from wsbench.cache import Cache
 from wsbench.family import fail, pass_rate_result, rate, require_cells
 from wsbench.llm import Spend
@@ -493,7 +493,19 @@ def _scoped(bank: dict[str, Any], args: JudgeArgs) -> tuple[str, list[dict[str, 
     elif scope == "headline":
         pool = [it for it in pool if it["kind"] != "beta0" and is_headline(it)]
     picked = item_scope(pool, args)
+    if args.scope == fast.SCOPE:
+        picked = _fast_items(picked)
     return scope, picked + _twin_items(bank, picked)
+
+
+def _fast_items(picked: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """``picked`` without the inject items that are no unit of the fast entry. Under the fast
+    scope ``items`` holds the entry's READ ids, the rows its units and their twins read. A
+    cross twin reads its partner's inject row, so that row can be read for a unit while the
+    partner itself is no unit: it is a readout only, and judging it as an item would ask for
+    its own twins' rows, which the fast read plan does not hold."""
+    scored = {u for us in fast.entry(NAME)["units"].values() for u in us}
+    return [it for it in picked if it["kind"] != "inject" or it["id"] in scored]
 
 
 def item_task_notes() -> dict[str, str]:

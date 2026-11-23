@@ -11,7 +11,7 @@ Exit code: 0 = PASS, 1 = FAIL, 2 = usage error (unknown check, missing or unknow
 | check | what it guards | options | needs |
 |---|---|---|---|
 | `fast_subset` | The registered banks are byte-identical to the ones the fast subset was frozen on (`fast.entry`). | | offline |
-| `ati_subset` | Every anti-text-inversion entry still matches its family's judge instrument and bank (`text_inversion.subset_entry`). | | offline |
+| `ati_subset` | Every anti-text-inversion entry still matches its family's judge instrument and bank (`text_inversion.subset_entry`). The one listed exception (chain_intermediates, `text_inversion.STALE_NO_ITEM_PENDING_AUDIT`: an entry of another bank with no id, read on the one bank recorded there) passes with a `NOTE` naming the family. | | offline |
 | `frozen_pins` | The pinned tests of the fast subset, the ATI freeze and the bank versions pass. | | offline, `dev` extra |
 | `readme_prompts` | Every judge prompt in the code is verbatim in its family README (`tests/test_prompts_in_readme.py`). | | offline, `dev` extra |
 | `readouts_contract` | A readouts file parses under the contract: no malformed, duplicate or mixed-kind rows. | `readouts=FILE` `[family=F]` | offline |

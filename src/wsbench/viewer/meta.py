@@ -222,3 +222,180 @@ def load_hb(repo: Path | None) -> dict[str, EvalMeta]:
             name, title, group, table.get(key) or what, "", judged, section, order=order
         )
     return out
+
+
+# ------------------------------------------------------------- methods: one colour each
+
+# The reading methods, in display order: store value -> (title, short alias, colour). This is
+# the only place a method colour is defined; the stylesheet rules, the chart series and the
+# question page's data are all generated from it. The hues stay apart under the three common
+# colour-vision deficiencies and reach 3:1 against the page's white cards. Runs of one method
+# share its hue and differ by shade and line style (``run_styles``).
+METHODS: dict[str, tuple[str, str, str]] = {
+    "olens": ("O-lens", "O", "#18528b"),
+    "nla": ("NLA", "NLA", "#b83514"),
+    "jlens": ("J-lens", "J", "#17a173"),
+    "logit_lens": ("Logit lens", "LL", "#9e75d7"),
+    "continuation": ("Model continuation", "Cont", "#b87e0a"),
+    "other": ("Other", "Other", "#6b7280"),
+}
+# how far the n-th run of one method is mixed towards white, and its line's dash pattern
+RUN_SHADES = (0.0, 0.38, 0.6)
+RUN_DASHES = ("", "6 3", "2 3", "8 3 2 3")
+
+
+def method_key(method: str | None) -> str:
+    return method if method in METHODS else "other"
+
+
+def method_color(method: str | None) -> str:
+    return METHODS[method_key(method)][2]
+
+
+def tint(color: str, share: float) -> str:
+    """``color`` mixed with white: 0 keeps it, 1 is white."""
+    rgb = [int(color[i : i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(c + (255 - c) * share):02x}" for c in rgb)
+
+
+def run_styles(runs: list[dict]) -> dict[str, dict[str, str]]:
+    """``{run_id: {color, base, dash}}`` for the shown runs: the method's colour; each further
+    run of the same method takes the next shade and the next dash pattern."""
+    seen: dict[str, int] = {}
+    out = {}
+    for r in runs:
+        key = method_key(r.get("method"))
+        n = seen.get(key, 0)
+        seen[key] = n + 1
+        base = METHODS[key][2]
+        out[r["run_id"]] = {
+            "color": tint(base, RUN_SHADES[n % len(RUN_SHADES)]),
+            "base": base,
+            "dash": RUN_DASHES[n % len(RUN_DASHES)],
+        }
+    return out
+
+
+# ------------------------------------------------------------- HallucinationBench taxonomy
+
+# Copied from HallucinationBench (this package must not import it):
+# ``hallucination_bench/taxonomy_v2.py`` ``VERDICTS`` + ``SCORING_EXTRA`` (continuation_miss)
+# + the ``failed`` pseudo-leaf, and ``hallucination_bench/index.py`` ``MAIN_LEAF_WEIGHTS`` and
+# ``FAMILY_WEIGHTS_V8``. ``tests/test_viewer.py`` checks that every leaf a store holds is here.
+# verdict -> (title, what it means, [(leaf, title, shade, one-line definition)])
+HB_VERDICTS: dict[str, tuple[str, str, list[tuple[str, str, str, str]]]] = {
+    "hallucination": (
+        "Hallucination",
+        "The readout asserts something the conversation contradicts.",
+        [
+            ("false_claim", "False claim", "#f08c78", "The situation itself is wrong."),
+            ("substitution_category", "Substitution (category)", "#f6b3a4",
+             "A thing of another class stands in the slot."),
+            ("detail", "Wrong detail", "#fbd7ce",
+             "The situation is right and one specific (name, number, date) is wrong."),
+        ],
+    ),
+    "probe_candidate": (
+        "Probe candidate",
+        "Not in the text, and possibly represented by the model: a probe decides.",
+        [
+            ("substitution_sibling", "Substitution (sibling)", "#c3a8ea",
+             "Another member of the same class stands in the slot."),
+            ("supplementary_false", "Extra, false", "#d9c8f2",
+             "An added statement about the world that is false."),
+            ("ambiguous_topic", "Ambiguous topic", "#ebe2f8",
+             "A reading of an ambiguous topic that the text does not settle."),
+        ],
+    ),
+    "thinky": (
+        "Thinky",
+        "A statement about the model's own state or reasoning.",
+        [("model_state", "Model state", "#a5cdf3", "What the model is thinking or about to do.")],
+    ),
+    "correct": (
+        "Correct",
+        "Supported by the conversation, or true about the world.",
+        [
+            ("correct", "Correct", "#9fdcc6", "The conversation supports it."),
+            ("supplementary_true", "Extra, true", "#cfeee3",
+             "An added statement about the world that is true."),
+        ],
+    ),
+    "unresolved": (
+        "Unresolved",
+        "Neither supported nor contradicted, or excused as a possible continuation.",
+        [
+            ("unverifiable", "Unverifiable", "#ecd97a", "The conversation does not settle it."),
+            ("continuation_miss", "Excused continuation", "#f3e7a8",
+             "A different possible continuation of the text; not counted as a hallucination."),
+            ("unknown_incorrect", "Incorrect, kind unknown", "#f9f2d2",
+             "Established as wrong without a finer leaf."),
+        ],
+    ),
+    "junk": (
+        "Junk",
+        "Not a claim: formatting, filler or off-topic text.",
+        [("junk", "Junk / off topic", "#e3e6eb", "Asserts nothing about the conversation.")],
+    ),
+    "failed": (
+        "Failed",
+        "The judge call did not return a usable answer for the segment.",
+        [("failed", "Judge failed", "#ffffff", "No leaf; the cell is not scored.")],
+    ),
+}  # fmt: skip
+# the verdict's own colour: legend dots and the segment list's left border
+HB_VERDICT_INK = {
+    "hallucination": "#b3261e", "probe_candidate": "#6d3fc0", "thinky": "#1d6fb8",
+    "correct": "#0f7a5a", "unresolved": "#8a6d00", "junk": "#6b7280", "failed": "#6b7280",
+}  # fmt: skip
+HB_LEAF_VERDICT: dict[str, str] = {
+    leaf: verdict for verdict, (_t, _w, leaves) in HB_VERDICTS.items() for leaf, *_ in leaves
+}
+HB_MAIN_LEAF_WEIGHTS = {
+    "false_claim": 1.0, "substitution_category": 0.5, "substitution_sibling": 0.5, "detail": 0.2,
+}  # fmt: skip
+HB_STORY_LEAF_WEIGHTS = {
+    "false_claim": 1.0, "substitution_category": 1.0, "detail": 0.2, "substitution_sibling": 0.0,
+}  # fmt: skip
+HB_FAMILY_WEIGHTS = {
+    "main": 9.0, "am_claims": 3.0, "am_situation": 3.0, "sibling": 1.0, "story": 1.0,
+    "overrefusal": 1.0, "benign_roleplay": 2.0,
+}  # fmt: skip
+# the axes of HallucinationBench's span classifier, shown for a segment when a store has them
+HB_SPAN_AXES = ("grounding", "type", "target", "severity", "unsupported_kind")
+
+
+def hb_leaves() -> list[dict[str, str | float | None]]:
+    """Every leaf with its verdict, titles, shade and main-index weight, in legend order."""
+    out: list[dict[str, str | float | None]] = []
+    for verdict, (vtitle, _what, leaves) in HB_VERDICTS.items():
+        for leaf, title, shade, text in leaves:
+            out.append(
+                {"leaf": leaf, "title": title, "verdict": verdict, "verdict_title": vtitle,
+                 "color": shade, "text": text, "weight": HB_MAIN_LEAF_WEIGHTS.get(leaf)}
+            )  # fmt: skip
+    return out
+
+
+def palette_css() -> str:
+    """The stylesheet rules generated from the two palettes above: method dots, chips and bar
+    fills, and the claim-map leaf backgrounds with one underline style per verdict."""
+    rules = [":root{" + "".join(f"--m-{k}:{v[2]};" for k, v in METHODS.items()) + "}"]
+    for key in METHODS:
+        rules.append(f".m-{key}{{background:var(--m-{key})}}")
+        rules.append(f".sc.c-{key} .fill{{background:var(--m-{key})}}")
+        rules.append(f".mchip.mc-{key}{{border-color:var(--m-{key})}}")
+    mark = {
+        "hallucination": f"border-bottom:2px solid {HB_VERDICT_INK['hallucination']}",
+        "probe_candidate": f"border-bottom:2px dashed {HB_VERDICT_INK['probe_candidate']}",
+    }
+    for verdict, (_t, _w, leaves) in HB_VERDICTS.items():
+        for leaf, _title, shade, _text in leaves:
+            extra = mark.get(verdict, "")
+            if leaf == "failed":
+                extra = "outline:1px dashed #6b7280;outline-offset:-1px"
+            if leaf == "junk":
+                extra = "color:#4b5563"
+            rules.append(f".leaf-{leaf}{{background:{shade};{extra}}}")
+            rules.append(f".segrow.leaf-b-{leaf}{{border-left-color:{HB_VERDICT_INK[verdict]}}}")
+    return "".join(rules)

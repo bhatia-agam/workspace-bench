@@ -1,4 +1,4 @@
-"""Prompts of the user_modeling_hard judge (``umh-v2``): one identification MC per part and the
+"""Prompts of the user_modeling_hard judge (``umh-v3``): one identification MC per part and the
 blind quote check. Every string of :data:`PROMPTS` is printed verbatim in the family README;
 templates are rendered with ``str.replace``, the conversation last."""
 
@@ -11,10 +11,13 @@ from wsbench.llm import schema_block
 
 __all__ = ["option_lines", "render_user_turn"]
 
-CALL_VERSION = "umh-v2"  # every judge call's fingerprint (the rubric, the gates, the quote check)
+# every judge call's fingerprint (the rubric, the gates, the quote check). umh-v3 (plan 0112):
+# the echo re-ask has a second reason text (UMH_RETRY_REASON_ECHO_QUOTE, review r4 F3)
+CALL_VERSION = "umh-v3"
 # a bank v<N>, N >= 2, stamps +bank-v<N> (judge.instrument). Summary results add +maj<N>v
 # (judge.majority_stamp; draws=1 has no suffix) and the digest tail
-BANK_STAMP = "+bank-v2"  # the registered bank (review r3)
+# the registered bank (plan 0112; bank v3 was the plan's first build, judged and never merged)
+BANK_STAMP = "+bank-v4"
 PROMPT_VERSION = CALL_VERSION + BANK_STAMP  # the registered instrument
 
 # the option types that compete as a flat list (mc.token_note): a run of them singles out none
@@ -298,6 +301,15 @@ UMH_RETRY_REASON_ECHO = (
     "state no value. Do not quote from that bullet again: if a DIFFERENT bullet or list states "
     "the value about the user in words of its own, quote that one"
 )
+# review r4 F3 (umh-v3): the QUOTE is the user's own words but the bullet it sits in also states
+# the value in words of its own (it is not in the draw's refused set), so the re-ask must not
+# steer the judge off that bullet
+UMH_RETRY_REASON_ECHO_QUOTE = (
+    "the quoted words only repeat the user's own words from the conversation, which state no "
+    "value. If the same bullet goes on to state the value about the user in words of its own, "
+    "quote those words; otherwise, if a DIFFERENT bullet or list states the value about the "
+    "user in words of its own, quote that one"
+)
 UMH_RETRY_REASON_DESC = (
     "a second reader, shown only the readout it comes from, did not accept that bullet or list "
     "as stating this value about the user (it may state a broader or a neighbouring value, name "
@@ -376,8 +388,10 @@ _QUOTE_TEMPLATE = (
     "\n"
     "{type_rule_quote}"
 )
-# prose only: 130 of the 149 chats ask for "a hypothetical but realistic" biography of the writer,
-# and the check read "as a fictional master saddler" as a role-play persona (review r2)
+# prose only: most chats ask for "a hypothetical but realistic" biography of the writer (the
+# bank header's `request_variant_counts["A"]`, computed from the items by `bank.counts` and
+# checked by V10: never a number typed here), and the check read "as a fictional master saddler"
+# as a role-play persona (review r2)
 QUOTE_PERSONA = (
     ' That holds when the draft calls its subject hypothetical, fictional or imagined ("me, the '
     'hypothetical locksmith", "as a fictional locksmith named Jane"): the writer asked for it '
@@ -462,6 +476,7 @@ UMH_RETRY_REASONS: dict[str, str] = {
     "quote": UMH_RETRY_REASON_QUOTE,
     "bullet": UMH_RETRY_REASON_BULLET,
     "echo": UMH_RETRY_REASON_ECHO,
+    "echo_quote": UMH_RETRY_REASON_ECHO_QUOTE,
     "desc_rejected": UMH_RETRY_REASON_DESC,
 }
 TYPE_RULES: dict[str, str] = {
@@ -513,6 +528,7 @@ PROMPTS: dict[str, str] = {
     "UMH_RETRY_REASON_QUOTE": UMH_RETRY_REASON_QUOTE,
     "UMH_RETRY_REASON_BULLET": UMH_RETRY_REASON_BULLET,
     "UMH_RETRY_REASON_ECHO": UMH_RETRY_REASON_ECHO,
+    "UMH_RETRY_REASON_ECHO_QUOTE": UMH_RETRY_REASON_ECHO_QUOTE,
     "UMH_RETRY_REASON_DESC": UMH_RETRY_REASON_DESC,
     "UMH_RETRY_AGAIN": UMH_RETRY_AGAIN,
     "UMH_QUOTE_SYSTEM": UMH_QUOTE_SYSTEM,
@@ -657,7 +673,9 @@ def render_quote_check(
 
 def retry_text(choice: object, value: str, quote: str, gate: str, *, again: bool = False) -> str:
     """One re-ask block, appended to the draw's own user turn after the blocks of its earlier
-    re-asks (``again`` = it is not the first). The same text whatever the pick was."""
+    re-asks (``again`` = it is not the first). The same text whatever the pick was. ``gate`` is
+    a key of :data:`UMH_RETRY_REASONS`: the answer's gate, or ``echo_quote`` for an echo whose
+    quote alone is the copy (``judge.retry_reason``)."""
     return (
         (UMH_RETRY_AGAIN if again else UMH_RETRY)
         .replace("{reason}", UMH_RETRY_REASONS[gate])

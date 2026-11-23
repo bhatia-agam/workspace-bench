@@ -38,11 +38,35 @@
     apply();
   }
 
+  // The runs table: a click on a heading sorts by that column (numbers by value, text by
+  // text; cells without a value stay last), a second click reverses.
+  function sortable() {
+    const table = document.getElementById("runs");
+    if (!table || table.dataset.ready) return;
+    table.dataset.ready = "1";
+    const heads = Array.from(table.tHead.rows[0].cells);
+    heads.forEach((th, col) => th.addEventListener("click", () => {
+      const dir = th.dataset.dir === "asc" ? "desc" : "asc";
+      heads.forEach((h) => { delete h.dataset.dir; });
+      th.dataset.dir = dir;
+      const key = (tr) => { const td = tr.cells[col]; return td.dataset.v != null ? td.dataset.v : td.textContent.trim(); };
+      const rows = Array.from(table.tBodies[0].rows);
+      const numeric = rows.every((tr) => key(tr) === "" || key(tr) === "—" || !isNaN(parseFloat(key(tr))));
+      rows.sort((a, b) => {
+        const x = key(a), y = key(b), ex = x === "" || x === "—", ey = y === "" || y === "—";
+        if (ex || ey) return ex === ey ? 0 : ex ? 1 : -1;
+        const d = numeric ? parseFloat(x) - parseFloat(y) : x.localeCompare(y);
+        return dir === "asc" ? d : -d;
+      });
+      rows.forEach((tr) => table.tBodies[0].appendChild(tr));
+    }));
+  }
+
   function closeMenus(e) {
     document.querySelectorAll("details.pick[open]").forEach((d) => { if (!d.contains(e.target)) d.open = false; });
   }
 
-  function init() { questionFilter(); }
+  function init() { questionFilter(); sortable(); }
   document.addEventListener("click", closeMenus);
   document.addEventListener("DOMContentLoaded", init);
   document.addEventListener("htmx:afterSettle", init);

@@ -1,7 +1,7 @@
 """Refill a crafted ATI family's bank (plan 0019, phase 2): retire the bank items the panel gate
 did not admit and append panel-ATI replacements from the family's refill pool.
 
-    python scripts/ati_refill_merge.py --family model_specific_directed_modulation \\
+    python scripts/archive/ati_refill_merge.py --family model_specific_directed_modulation \\
         --pool outputs/baselines/refill/model_specific_directed_modulation/pool.json --add ids.txt
 
 - Retired items move, unchanged, to the bank's ``retired_panel_gate`` list, each with its panel
@@ -31,7 +31,7 @@ from typing import Any
 
 from wsbench import registry
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 FROZEN = REPO / "evals" / "baselines" / "anti_text_inversion.json"
 
 

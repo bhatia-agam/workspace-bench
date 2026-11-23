@@ -179,7 +179,7 @@ def test_subject_thinking_flags():
     assert {"qwen3.5-0.8b", "qwen3.5-2b", "qwen3.5-4b", "qwen3.5-9b", "qwen3-8b",
             "qwen3.6-35b-a3b", "glm-5.3", "glm-5.3-flash", "deepseek-v4-flash",
             "deepseek-v4-pro", "kimi-k3", "muse-spark-open", "gemma-4-31b-it",
-            "dory-4b"} == on  # fmt: skip
+            "dory-4b", "inkling-2-mini"} == on  # fmt: skip
     assert {"olmo-3-7b", "olmo-3.1-32b", "kimi-k2"} == off
     assert nl.default_thinking("qwen3.5-0.8b") == "on"
     assert nl.default_thinking("olmo-3-7b") == "off"

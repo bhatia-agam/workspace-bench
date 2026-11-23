@@ -4,7 +4,6 @@ rates, the tri-state item rule and the pass-rate result epilogue."""
 import re
 import sys
 import unicodedata
-from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from typing import Any, NoReturn
 
@@ -154,16 +153,6 @@ def cell_text(cell: Cell) -> tuple[str, str]:
         return render_bag(cell.tokens, cell.scores), " | ".join(cell.tokens)
     text = "\n".join(s for s in (cell.samples or ()) if s.strip())
     return text, text
-
-
-def last_pos_rows(cells: Sequence[Cell]) -> tuple[dict[tuple[str, int], Cell], int]:
-    """Per (item, layer) the max-pos row (the last read position), and how many other rows the
-    file carried at those (item, layer) keys."""
-    groups: dict[tuple[str, int], list[Cell]] = defaultdict(list)
-    for c in cells:
-        groups[(c.id, c.layer)].append(c)
-    chosen = {k: max(cs, key=lambda c: c.pos) for k, cs in groups.items()}
-    return chosen, sum(len(cs) - 1 for cs in groups.values())
 
 
 def require_cells(name: str, missing: Sequence[Any], n_expected: int, args: JudgeArgs) -> None:
