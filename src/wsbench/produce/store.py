@@ -297,7 +297,9 @@ class Subject:
         return self.backend.capture(ids, layers, positions)
 
     def release(self) -> None:
-        """Drop the model (a served engine is about to take the GPU); the tokenizer stays."""
+        """Drop the model; the tokenizer stays. This does not reliably give the GPU memory
+        back to another process: capture in a process of its own before a server needs the
+        GPU (`wsbench read` does)."""
         if self._backend is not None:
             self._backend = None
             import gc

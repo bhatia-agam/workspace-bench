@@ -1456,6 +1456,9 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   the residual store, packed per server start, one readouts file + sidecar per eval (sidecar
   last); `shard=`/`shards=` write parts that the last process joins; `judge=True` calls `run`;
   `launcher=modal` is `produce/modal_launch.py` (imported only then). `tests/test_read_command.py`.
+  Cells that need the subject model are captured by a CHILD process (`cli._capture_process`,
+  `capture=`) before the engine starts: a model dropped in-process keeps its GPU memory. `join=True`
+  writes eval files from parts (`read.join`); the Modal launcher runs capture, shards, join.
   `read method=model_continuation model_dir=` (`served/continuation.py`): the layer-free baseline,
   rows at one layer number (`layer=`, 44), judged with `layers=<that>`.
 - No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through

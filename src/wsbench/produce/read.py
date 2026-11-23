@@ -3,6 +3,7 @@ decode per pack of evals -> one readouts file per eval with its sidecar (`docs/f
 
 import json
 import os
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,12 +43,18 @@ def plan_file_jobs(path: Path) -> list[Job]:
     ]
 
 
+def load_bundle(lens: Path) -> Any:
+    """The lens bundle at ``lens`` (``served.bundle.load``): its name, sampling, prompts."""
+    from .served import bundle as bundle_mod
+
+    return bundle_mod.load(lens)
+
+
 def open_engine(name: str, lens: Path, **options: Any) -> tuple[Any, Any]:
     """The lens bundle at ``lens`` and a loaded engine for it (``served.engine.load``)."""
-    from .served import bundle as bundle_mod
     from .served import engine as engine_mod
 
-    bundle = bundle_mod.load(lens)
+    bundle = load_bundle(lens)
     return bundle, engine_mod.load(name, bundle, **options)
 
 
@@ -141,19 +148,32 @@ def read_evals(
 
     def flush() -> None:
         cells = [c for _, _, part, _ in pack for c in part]
+        t0 = time.time()
         texts = engine.decode(cells) if cells else []
+        seconds = time.time() - t0
+        # the engine keeps the token ids of its last decode, one list per readout row
+        rows = getattr(engine, "tokens", None) or []
+        per_cell = len(rows) // len(cells) if cells and len(rows) % len(cells) == 0 else 0
         lo = 0
         for j, target, part, counts in pack:
             lines = [row(c, t) for c, t in zip(part, texts[lo : lo + len(part)], strict=True)]
+            mine = rows[lo * per_cell : (lo + len(part)) * per_cell] if per_cell else []
             lo += len(part)
             _write(target, lines)
             complete = finish(out, j, shards, reader=reader, sampling=sampling)
+            share = seconds * len(part) / len(cells) if cells else 0.0
             done.append(
                 {
                     "family": j.family,
                     "status": "read",
                     "file": str(target),
                     "cells": len(part),
+                    "tokens": sum(len(r) for r in mine),
+                    # this eval's share, by cells, of its pack's decode time (server start,
+                    # token bank and requests); evals of one pack are decoded together
+                    "seconds": round(share, 1),
+                    "pack_cells": len(cells),
+                    "pack_seconds": round(seconds, 1),
                     "from_store": counts.store,
                     "pulled": counts.pulled,
                     "captured": counts.captured,
@@ -161,7 +181,11 @@ def read_evals(
                     "complete": complete,
                 }
             )
-            print(f"{j.family}: {len(part)} cells read -> {target}", flush=True)
+            print(
+                f"{j.family}: {len(part)} cells read, {done[-1]['tokens']} tokens, "
+                f"{share:.0f} s of a {seconds:.0f} s pack -> {target}",
+                flush=True,
+            )
         pack.clear()
 
     for item in loaded:
@@ -202,10 +226,7 @@ def read_continuations(
             lines = [row(c, [t]) for c, t in zip(cells, texts[lo : lo + len(part)], strict=True)]
             lo += len(part)
             _write(target, lines)
-            one_layer = Job(
-                j.family, [_at_layer(s, layer) for s in j.specs], j.plan_sha, j.reads, j.fast
-            )
-            finish(out, one_layer, shards, reader=reader, sampling="prose1")
+            finish(out, one_layer(j, layer), shards, reader=reader, sampling="prose1")
             done.append(
                 {"family": j.family, "status": "read", "file": str(target), "cells": len(part)}
             )
@@ -231,3 +252,72 @@ def _at_layer(spec: ReadSpec, layer: int) -> ReadSpec:
     import dataclasses
 
     return dataclasses.replace(spec, layers=[layer])
+
+
+def missing(
+    jobs: Sequence[Job],
+    store: st.Store,
+    tokenizer: Any,
+    pull: Any = None,
+    *,
+    shard: int = 0,
+    shards: int = 1,
+    limit: int = 0,
+) -> dict[str, int]:
+    """Per eval, how many items are neither in the store nor in the dataset: the ones only a
+    forward pass of the subject model can supply. Reads indexes only."""
+    out: dict[str, int] = {}
+    for j in jobs:
+        located = [
+            st.locate(s, tokenizer) for s in st.shard(j.specs, shard, shards)[: limit or None]
+        ]
+        stored = store.has(j.family, {at.spec.id: at.key for at in located})
+        rest = [at for at in located if at.spec.id not in stored]
+        n = sum(1 for at in rest if pull is None or pull.folder_of(at) is None)
+        if n:
+            out[j.family] = n
+    return out
+
+
+def join(
+    jobs: Sequence[Job], out: Path, shards: int, *, reader: str, sampling: str
+) -> list[dict[str, Any]]:
+    """Write every eval's readouts file and sidecar from the parts under ``<out>/parts``: the
+    step after ``shards`` processes that could not see each other's files (one container per
+    GPU). An eval whose parts are not all there is reported, and nothing is written for it."""
+    done = []
+    for j in jobs:
+        parts = [part_path(out, j.family, i, shards) for i in range(shards)]
+        lacking = [p.name for p in parts if not p.exists()]
+        if lacking:
+            done.append({"family": j.family, "status": "incomplete", "missing_parts": lacking})
+            continue
+        finish(out, j, shards, reader=reader, sampling=sampling)
+        rows = sum(1 for _ in (out / f"{j.family}.jsonl").open(encoding="utf-8"))
+        done.append({"family": j.family, "status": "joined", "rows": rows})
+    return done
+
+
+def totals(done: Sequence[dict[str, Any]], wall_seconds: float) -> dict[str, Any]:
+    """One summary of a call's reads: cells, readout tokens, decode seconds and the rates."""
+    read_rows = [d for d in done if d.get("status") == "read"]
+    packs = {(d["pack_cells"], d["pack_seconds"]) for d in read_rows}
+    cells = sum(d["cells"] for d in read_rows)
+    tokens = sum(d["tokens"] for d in read_rows)
+    decode = sum(seconds for _, seconds in packs)
+    return {
+        "evals_read": len(read_rows),
+        "cells": cells,
+        "tokens": tokens,
+        "packs": len(packs),
+        "decode_seconds": round(decode, 1),
+        "wall_seconds": round(wall_seconds, 1),
+        "cells_per_second": round(cells / decode, 1) if decode else 0.0,
+        "tokens_per_second": round(tokens / decode, 1) if decode else 0.0,
+        "forward_passes": sum(d["forward_passes"] for d in read_rows),
+    }
+
+
+def one_layer(j: Job, layer: int) -> Job:
+    """The job as a layer-free method writes it: every row at the one layer number."""
+    return Job(j.family, [_at_layer(s, layer) for s in j.specs], j.plan_sha, j.reads, j.fast)
