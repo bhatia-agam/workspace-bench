@@ -417,6 +417,25 @@ def _snapshot(root: Path) -> dict:
     return out
 
 
+def test_a_second_run_reports_its_cache_clean_up_after_a_set_line(
+    tmp_path: Path, monkeypatch, capsys
+):
+    """The line for a set entry must not replace the record of runs already reported."""
+    path = tmp_path / "runs.json"
+    path.write_text("{}", encoding="utf-8")
+    row = {"bench": "wsb", "lens": LENS, "evals": 1, "sets": ["full"], "db_bytes": 0,
+           "downloaded_files": 0, "downloaded_bytes": 0, "seconds": 0,
+           "readouts": {"on_volume": []}}  # fmt: skip
+    out = [
+        {**row, "run": "a", "run_id": "run-a", "status": "set ingested", "set": "core"},
+        {**row, "run": "b", "run_id": "run-b", "status": "ingested", "cleaned": (3, 1024)},
+    ]
+    monkeypatch.setattr(reader, "ingest_manifest", lambda *a, **k: out)
+    assert cli.main(["ingest", str(path), "adapter=manifest", f"store={tmp_path / 'store'}"]) == 0
+    text = capsys.readouterr().out
+    assert "stored as a set of run-a" in text and "run-b: removed 3 downloaded files" in text
+
+
 FOUR = ("full", "core", "fast", "anti-text-inversion")
 
 
