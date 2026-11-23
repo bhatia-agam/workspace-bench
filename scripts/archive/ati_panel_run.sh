@@ -2,8 +2,8 @@
 # The whole ATI panel pipeline for one output root (plan 0019): build -> answers (Claude locally:
 # opus AND sonnet when PILOT=1, else each family's slot; qwen / astra / argon on Modal, in
 # parallel) -> slots (pilot) -> readouts -> judge -> gate.
-#   OUT=outputs/baselines/ati_pilot_guess VARIANT=guess LIMIT=30 PILOT=1 scripts/ati_panel_run.sh
-#   OUT=outputs/baselines/text_inversion VARIANT=guess scripts/ati_panel_run.sh  # full; needs
+#   OUT=outputs/baselines/ati_pilot_guess VARIANT=guess LIMIT=30 PILOT=1 scripts/archive/ati_panel_run.sh
+#   OUT=outputs/baselines/text_inversion VARIANT=guess scripts/archive/ati_panel_run.sh  # full; needs
 #       $OUT/claude_slot.json (copy it from the pilot root)
 # Needs a local env with wsbench + modal + transformers on PATH as $BIN (Qwen tokenizes
 # locally) and the ant profile (ANTHROPIC_API_KEY unset). OpenRouter is only called from Modal.

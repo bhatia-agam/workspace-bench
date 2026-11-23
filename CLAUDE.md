@@ -7,7 +7,7 @@ results schema, registry, runner, CLI, `readplan` = the producer-facing read pla
 the porting gate, `produce/` = the optional HF-transformers producer behind the `gpu` extra).
 `plans/` is the 2026-09-15..17 design history of the nine-family restructure, not a current
 pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
-the newcomer's path (what it is, requirements, time and cost, install, `wsbench try`, running,
+the newcomer's path (what it is, requirements, time, install, `wsbench try`, running,
 outputs, checks, viewer, one table of the evals, credits); reference material lives in `docs/`
 (evals, running, tiers, judges, baselines, fast_subset, results_contract, porting, checks,
 judge_backends). `tests/test_readme_style.py` keeps dates, plan numbers and
@@ -108,7 +108,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 ## Family conventions
 - `wsbench/family.py` holds the helpers the newer families share: `require_cells` (missing
   cells exit 2 unless `allow_missing=True`; a dry run only reports), `cell_text` (a token bag is
-  judged scored but verified against bare tokens), `last_pos_rows`, `quote_in` (verbatim after
+  judged scored but verified against bare tokens), `quote_in` (verbatim after
   `mc.fold`), `tri_state` (pass / fail / undecided), `rate` / `mean`, `pass_rate_result` (the
   pass-rate `FamilyResult` epilogue: decided-only value, bootstrap CI, completeness, counts).
   A pass-rate family's `run()` is: load bank -> `item_scope` -> `load_readouts` -> select cells ->
@@ -231,7 +231,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (summary prompt-only entry schema + `protocol` + `ati`), written by `wsbench freeze
   kind=logit_lens` from `layers=63` summary runs (refused otherwise; registered banks only) and
   drawn as the report's third column by the summary prompt-only row-match rule; never a gate.
-  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099; strict ATI 0.046 over
+  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099, 0.126 since directed_modulation's bank v2 entry of 2026-11-23, plan 0109, 0.122 over 30 families since user_modeling_hard's first entry, plan 0112; strict ATI 0.046 over
   the 7 `ati-subset-v2` families with an entry; model_multihop has none). An entry is tied to its
   family's summary instrument, digest settings, judge model and read plan:
   `tests/test_logit_lens_floor.py` (`test_every_committed_entry_matches_its_live_row`,
@@ -271,7 +271,12 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`_gate_legacy`). `anti_text_inversion=True` sets each family's `items` to it with
   `JudgeArgs.scope`, which `is_subset` ignores; ungated / empty families are skipped
   (`NotInScope`, exit 0), a stale (instrument or, on panel entries, `bank_sha`) or missing entry
-  fails (exit 2). API `reasoning_extraction` refusals are recorded once and never retried or
+  fails (exit 2), except chain_intermediates only, listed by name in
+  `text_inversion.STALE_NO_ITEM_PENDING_AUDIT` with the fingerprint of its bank v3 (plan 0110,
+  issue #559): its registered `panel-v2` entry, `bank_sha`-stale with NO id, is still "no ATI
+  item" (`StaleNoItem`, a `NotInScope`) while the bank in use is that recorded bank. Every other stale entry (with an id, of any unlisted family with or without
+  ids, under an adapted set's gate, chain's own on any other bank such as a bank-v1 pin or a
+  later bank) and any instrument mismatch still exit "re-gate". API `reasoning_extraction` refusals are recorded once and never retried or
   reworded; `claude_slot.json` (`stage=slots`) moves a family Opus refuses on > 20% of items to
   Sonnet. A crafted family (`CRAFTED`) that would go ungated is a stop-and-report (SystemExit).
   chain_intermediates is gated on `any_of_3` and knowledge_cutoff on `ati_pass`
@@ -364,7 +369,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   on a gated gold pick with an inferred basis; its full label, `judge.draw_label`, is a
   diagnostic). Both reuse conjunctive's `draw_key` / `majority` / `n_draws`; draw 0 keeps the
   single-call key.
-  user_modeling_hard (plan 0106, `umh-v2+bank-v2` since review r3: judge calls `umh-v2`, bank v2; full tier, not in core until its validation is done)
+  user_modeling_hard (plan 0106; `umh-v3+bank-v4` since plan 0112: judge calls `umh-v3`, bank v4, floors frozen; full tier, core is a separate step)
   is a SEPARATE package that imports three pure helpers (`user_modeling.judge.decode_choice`,
   `user_modeling.prompts.render_user_turn` / `option_lines`, conjunctive's draw helpers) and no
   prompt: never thread a family parameter through `user_modeling`, whose files, stamps and
@@ -383,8 +388,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `|quote`, `|quote2`, ...) and the pick stands when ANY reading's quote check returns the
   gold; a malformed quote-check choice is undecided. These are code-side gates, in no call
   fingerprint: changing one needs a stamp bump (review r3 bumped `umh-v1` to `umh-v2` because
-  results of three gate versions carried one stamp; never change a gate under a stamp that has
-  results, frozen or not).
+  results of three gate versions carried one stamp; never change a gate, a prompt or the bank under a stamp
+  that has results, frozen or not: review r4 F1).
   The bank's `forms` are NOT a judge lexicon (build lint, capable question, diagnostics only).
   `bank.validate` (V1-V14) is run by the builder (`scripts/build_user_modeling_hard_bank.py`),
   the judge's loader (fail closed) and the bank tests; `min_full_positions` = the header's
@@ -394,7 +399,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   list, guessable at 3 of 5), never by hand in `items.json`, and no user message is ever
   edited. Rebuild without touching `.venv`: `HF_HOME=<cache> HF_HUB_OFFLINE=1 uv run --no-sync
   --with transformers --with jinja2 python scripts/build_user_modeling_hard_bank.py --src
-  <bank_candidate.json> --pools <option_pools.json> --out <fresh path>`, copy it over
+  <bank_candidate.json> --wave <wave5_candidate.json> --pools <option_pools.json> --out <fresh
+  path>` (the registered bank needs both sources: the tables name wave-5 items, so a build
+  without `--wave` exits), copy it over
   `items.json`, then `--check`; then re-declare the manifest-ledger entry and update the counts
   the tests and READMEs pin. Review r2 (2026-11-21, after the first validation run; still
   `umh-v1`): a draw has at most `gate.MAX_REASKS` = 2 re-asks (keys `|retry1`, `|retry2`) for
@@ -425,7 +432,53 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   headline; `broader_suspect` (now with a `profession` list) and `formless` are flags, never
   gates (measured: a denial kills true passes). The lucky guesser's `question` variant shows
   `judge_label`. `tests/test_user_modeling_hard_bank.py` ties the biography-request count in
-  README.md / NOTICE.md to the bank. It has its own `readplan` branch
+  README.md / NOTICE.md to the bank (the header's `request_variant_counts`, computed by
+  `bank.counts`; never type the number in a comment).
+  Plan 0112 (2026-11-23; `umh-v3`, bank v4 = 155 items, 229 parts: 110 of bank v2 + 45 of the
+  harder wave, `authoring.wave` 5, header `provenance`): **the strict gate is a rule of the
+  builder, on ONE draw per item** (`gate_fails`: every part at the original label-gate bar,
+  where an EMPTY sample under the stem `My answer is:` counts as a wrong answer and the no-stem
+  question decides only for an empty stem GREEDY; a candidate under it is dropped into
+  `edits.not_strictly_gated`, never admitted by a looser leg, by re-drawing empties or by a
+  second draw; it fails closed: a missing gate record, a missing `greedy_verdict`, another
+  sample count than 10 or a record that claims a second draw is a SystemExit, never a default).
+  The plan's first build (bank v3, `umh-v3+bank-v3`, 175 items; judged, floors frozen on the
+  branch, never merged) had admitted 19 wave-5 items on a second draw of the stem question; the
+  owner dropped them (two chances where every other item had one; mean held-out single-draw
+  pass probability 0.50), so they are in `edits.second_draw_not_admitted` and the bank took a
+  new version under the stamp rule above. Six parts are in on the no-stem leg as the rule is
+  written (`edits.no_stem_leg`, pinned by `NO_STEM_PARTS` in the bank test, named in the family
+  README); do not drop or re-gate them silently. The wave's candidate file comes from
+  `scripts/umh_wave_candidate.py --harder <the wave's run dir> --redraw-table <...> --out
+  <wave5_candidate.json>` (the second draw is recorded there as the diagnostic `second_draw`
+  and gates nothing). Every count about the bank in the header's `known_issues` is computed
+  (`known_issues(items, log)`; a typed one went stale in the first build): never type one. The
+  header's `plan_lineage` is ONE drop-only step from the first build's read plan
+  (`FIRST_BUILD_PLAN_SHA`) to the bank's: the L63 floor's readouts were made on that plan and
+  are judged through it (`reads` guard iii), nothing was read again. The owner dropped the three
+  near-stated items (`umh-two-w1035-A` with the last life-type part and the only relabelled
+  gold, so `GOLD_RELABEL` is empty and its branch is tested on a fixture; the wave's two
+  `engaged` items) and one of two copies of a vignette (`umh-state-w5113-B`). Also-true flags
+  of state lists are decided by ONE written rule from the chat alone (review r4 F2: right to
+  say it vs only possible; 1 swap, fixed before judging, 42 kept; never swap a distractor
+  because a lens failed on it). Do not call that pass blind or written before judging: its
+  write-up came 13 minutes after judging started and moved no verdict, and two of its parts'
+  arm outcomes were known. Mixed-state lists hold two bars (r2 "the other situation supports
+  it", F2 "right to say it"): `anxious` in `umh-state-w4108-A` / `-w4026-A` is out of part 1
+  and still in part 0 (`known_issues`). Judge: `judge.retry_reason` picks the echo re-ask
+  text, and an echo whose holding statement is not itself an echo gets
+  `UMH_RETRY_REASON_ECHO_QUOTE`, which must never say "not from that bullet" (review r4 F3).
+  Floors are frozen (`PENDING_FLOOR` in `tests/test_po_floors_r3.py` is empty; prompt-only
+  0.703, logit lens L63 0.019, lucky blind 0.114, described 0.093; the lucky `described`
+  guesser's prompts show examples from the whole bank, so a bank change means new calls for
+  it even when every other call replays; `fine` misses the per-kind lucky bar on blind, owner decision open) and the bank's sha256 is
+  pinned in the bank test: a bank edit now means bank v5, a new stamp, the floors re-measured
+  (L63: re-read every item on the new plan, or a drop-only `plan_lineage`) and a new ledger
+  entry. The judge's call keys hold `CALL_VERSION`, not the bank version, so a drop-only bank
+  change replays every call of a kept item from an earlier run's `cells.jsonl`
+  (`scripts/cache_only_run.py` with `opts=aggregate=summary` needs no credential and counts an
+  uncached call as unjudged). A partial `freeze kind=prompt_only source=<po-opus run>` rewrites
+  `_source` without its `fallback` block: keep main's file and add the one entry (as plan 0109). It has its own `readplan` branch
   (`LITE_SAME_FAMILIES` is plan 0061's constant and stays five), is `NOT_GATED` for ATI and
   `adapt.families.NOT_ADAPTED` (no adapted set carries it), and `wsbench report` prints its
   `extras.breakdown_md` under `## breakdowns` (`cli._breakdowns`; absent key = unchanged output).
@@ -698,6 +751,69 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   regex diagnostic's `mt-regex-2026-10-30+md+fz`) as `multihop_mt_regex`
   (`tests/test_rename_multihop_mt.py`). Since plan 0101 that family is `multihop`, and the
   reused key of this paragraph is the FORMER key `multihop_mt` (the behaviour is retained).
+- **Plan 0110 (2026-11-23): chain_intermediates is on bank v3** (`items_v3.json`, 120 items, 113
+  depth-2 and 7 depth-3, 127 slots): bank v2's 54 items a per-item vetting kept, byte-identical
+  and in order with their v2 MC lists, its 66 flawed items removed (Camila 2026-11-20: "drop the
+  66 chained items ... can we refill?"; 41 whose scored intermediate lies between two add /
+  subtract steps and is not required, 23 with a chance-prone gold 10 / 12 / 15 / 25, 2
+  duplicates; the header's `selection.dropped_v2`), 66 new gated chains `chain-v3-d<depth>p-NNNN`.
+  `scripts/build_chain_v3.py` (`candidates` / `requests` / `freeze` / `check`) holds the drop
+  table `DROPPED`, the construction rules C1-C6 (`violations`, the bank rule in `select`; NEW
+  items only: 33 kept items break one and stay) and the gate with its four behavioural probes;
+  `check` re-runs every filter on the frozen file, and `freeze` never rewrites one. Depth 3 fell
+  from 36 to 7 because Qwen3.6-27B passes the strict gate on 8 of 163 alternating depth-3
+  candidates (4 with the probes). Own 120-row read plan, no `plan_lineage` (drop + add): the
+  kept rows are identical, so a readouts file = the old kept rows + the 66 new items read, with
+  a sidecar on the new `plan_sha`. Stamp: `judge.bank_tag(header)` adds `+bank-v<N>` for N >= 3
+  to every RESULT stamp (summary MC = `judge.instrument`, native, `opts=judge=free`) and to no
+  call key; `prompts.PROMPT_VERSION = INSTRUMENT_V2 + "+bank-v3"`; `items_v2.json`,
+  `items.json` and the adapted banks (header version 2) keep the unsuffixed stamps, *and
+  `NATIVE_PROMPT_VERSION`, the ATI gate's instrument and the native call key, did not move*.
+  The v1-era tests read `tests/fixtures/chain_intermediates_v1_toy.jsonl` (the examples file
+  holds bank-v3 ids). Floors on bank v3: lucky `described` 0.143 (blind 0.110, uniform 0.108,
+  analytic 0.119), prompt-only summary 0.983, logit lens L63 0.000 (all 120 items read by the
+  bundled `Producer`, `freeze partial=True`). Fast: the family is core, so the fast subset was
+  re-cut as `fast-v5` (the fast bullet). Manifest ledger: declared with the new bank. The
+  `adapt` generator (`GENERATORS["chain_intermediates"]`) does not apply C1-C6 and the adapted
+  sets still derive from bank v2. **ATI: NOT re-gated; the subset is re-checked in the full ATI audit (issue #559).** The
+  registered entry (panel-v2, 0 ids of bank v2's 120, guarded by bank v2's `bank_sha`) is
+  untouched and stale by `bank_sha`. For chain_intermediates only, listed by name in
+  `text_inversion.STALE_NO_ITEM_PENDING_AUDIT` together with bank v3's fingerprint (the rule
+  holds on that bank only), `subset_entry` serves the registered
+  `bank_sha`-stale entry with NO id as "no ATI item" (`StaleNoItem`, a `NotInScope`), so the
+  family is skipped
+  under `anti_text_inversion=True` and left out of `report --fast anti_text_inversion=True`
+  exactly as before, and `wsbench check ati_subset` passes with a `NOTE` naming it; *the stale
+  check is retained for every other entry (one with an id, any unlisted family's zero-id
+  entry, an adapted set's: "gated on a different bank ... re-gate"), and so is the
+  instrument-mismatch exit* (`plans/0110-chain-refill.md` § ATI). `tests/test_refilled_banks`
+  holds the list equal to the registered stale zero-id entries (`PENDING_REGATE` is empty); a
+  re-gate or the audit removes the name.
+- **Plan 0109 (2026-11-23; built 2026-11-20 as the unmerged plan 0102): directed_modulation is on bank v2** (`items_v2.json`, 102 items: the
+  35 think + 15 secret + 15 preference items of `items.json` byte-identical and in order, its 35
+  dont_think items removed (Camila: "just regular, not 'don't think'"), 37 new gated think items
+  `dm-think-NN`). Own 102-row read plan, no `plan_lineage` (drop + add): the kept rows are
+  identical, so a readouts file = the old kept rows + the 37 new items read, with a sidecar on the
+  new `plan_sha`. The option pool is the whole subfamily, so the 35 kept think items have new
+  lists (`tests/golden/directed_modulation_options_v2.json`; `..._options.json` still pins
+  `items.json`); `distractor_groups.json` gained the new concepts additively, and a new bank
+  concept must be added there first (hard error otherwise). Stamp: `judge.instrument(header)`,
+  `dm-2026-10-31+expressed+bank-v2`; `items.json` and the adapted banks (no `version`) keep
+  `dm-2026-10-31+expressed`. Tests of the dont_think twin / `white_bear` pin `items.json`
+  (`WSB_BANK_FILE_DIRECTED_MODULATION`) and `tests/fixtures/directed_modulation_v1_toy.jsonl`.
+  Floors on bank v2: lucky `blind` 0.224, prompt-only summary 1.000 (saturated), logit lens L63
+  0.412 (all 102 items read by the bundled `Producer`, `freeze partial=True`). Fast: the family
+  is not core, so it is not in the core-half cut (`fast-v4`, `fast-v5`; `--fast` skips it, as before). **Its entry in the five
+  older fast files (`fast-v1` .. `fast-v3`, `fast-safety-v1` / `-v2`) is a record of the
+  100-item bank, with no successor**: under one of them `fast.entry` fails closed for it, and
+  an all-families `plan` / `run` of that version exits 2 (`NOT_REFROZEN` in
+  `tests/test_fast_subset.py`, next to `REFROZEN`; `evals/fast/README.md` "Re-freezing"). The
+  ids changed, so `scripts/fast_refreeze_bank.py` does not apply, and those files' selection
+  rule needs 23 arms' outcomes the new items do not have. Manifest ledger: declared with the
+  new bank; its `plan.fast_plan_sha` rows of those five versions read `unavailable`
+  (`manifest_0101_declare.fast_equivalents` skips a version that has no plan for the family).
+  ATI: `NOT_GATED`, no entry, nothing to re-gate. The adapted sets still derive from
+  `items.json` and keep their dont_think items and their stamp.
 - **Plan 0101 (2026-11-20): the multi-token families took the plain keys, the single-token ones
   became `<key>_st`, and every family directory moved under its category.** `basic_readout_mt`
   -> `basic_readout`, `multihop_mt` -> `multihop`, `multilingual_mt` -> `multilingual`, `typo_mt`
@@ -948,7 +1064,13 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   samples of the other units (NO version in the stream key), split over the family's strata in
   proportion to each stratum's NON-ATI units by largest remainder, not half of each stratum (`UNITS`
   holds each family's unit, read rows and stratum; `cut` in the file records the counts);
-  full positions everywhere. 1,203 units, 1,441 read items. A strict-ATI family outside the
+  full positions everywhere. 1,203 units, 1,441 read items. Read ids are ROWS, not items:
+  introspection's 250 hold `inject|protocol:trial1|b4|oceans` (the one non-ATI headline item,
+  no unit) because the unit `...|trees`'s cross twin reads that row, so under the fast scope
+  the introspection judge drops inject items that are no unit of the entry
+  (`judge._fast_items`) instead of judging them and asking for their twins' rows, which the
+  fast plan does not hold (`tests/test_fast_core_half.py` dry-runs every family's judge on a
+  file of the fast plan alone: no missing cell). A strict-ATI family outside the
   family list is refused by the cut. The ATI units bias an ATI family's fast value toward
   them (README). `fast.VARIANTS = {"": "fast-v4"}`: **`--fast-safety` / `fast=safety` is
   retired** (`fast.RETIRED_VARIANTS`: `cli._fast_arg` and `fast.select` raise a usage error
@@ -977,7 +1099,15 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   needs no ledger entry and stales none, also for a family registered after the golden. Any
   unlisted tier or core-list change fails T1 like any other row; the golden is never
   regenerated and the ledger is written only by `manifest_0101_declare.py ... --write`.
-  The cut reads ATI ids through `text_inversion.subset_entry` (stale entry = exit) and refuses
+  **Plan 0110 (2026-11-23): `fast.DEFAULT = "fast-v5"`, the first re-cut** (same command and
+  seed, after chain_intermediates' bank v3): `fast_v5.json` differs from `fast_v4.json` in
+  `version` and in that family's entry alone (60 units of bank v3, 23 kept and 37 new items), so
+  the other 15 families' fast-v4 rows and FAST files stay valid (`fast.compatible` /
+  `fast.same_reads`), chain's fast-v4 row is `stale fast subset (fast-v4)`, and under
+  `fast_version=fast-v4` `fast.entry` fails closed for it. `tests/test_fast_core_half.py` pins
+  fast-v5 (`V5_SHA256`, `V5_FAST_PLAN_SHA`, `RECUT`) and the frozen fast-v4 file's sha. Wherever
+  this bullet says fast-v4 is the default or the active cut, read fast-v5.
+  The cut reads ATI ids through `text_inversion.subset_entry` (stale entry = exit; the one listed exception holds no id and is not a strict-ATI family) and refuses
   `WSB_BANK_ROOT`, a `WSB_BANK_FILE_*` pin of its families, `WSB_NO_NYT` and `WSB_NO_NOCOT`.
   `run --fast` in process mode exits when `fast.VERSION` is not a selectable version (a child
   judges `fast.DEFAULT`); `fast.ati_view` raises on a non-fast row. Viewer
@@ -1029,7 +1159,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - `tiers.py` (imports `registry` and `fast` only; `registry` never imports it): `TIERS = ("fast",
   "core", "full")`, `DEFAULT = "core"`, `CORE` (18 families: conjunctive_association joined on 2026-11-21, Camila; the registered
   `user_modeling` bank is NOT core; `user_modeling_hard`, plan 0106, is registered in full and
-  joins `CORE` as the 19th once its validation is done: plan 0106 commit 5, with the fast cut
+  joins `CORE` as the 19th in a separate step (its floors are frozen since plan 0112): plan 0106 commit 5, with the fast cut
   and the final ledger entry),
   `core()` / `full()` / `families(tier)`, `tier_of(name)` (`core` | `full` | `""`), `check()`
   (every `CORE` key registered, not superseded / retired / `not_in_macro`; its static part runs
@@ -1206,8 +1336,8 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   others. Register an existing guard or test file (`checks.pytest_outcome`) instead of
   rewriting it; external checks come in by dotted path through `$WSB_CHECKS`.
 - `group=<category>` on `plan` and `run` (`groups.py`): the families of one registry category
-  (`registry.CATEGORIES`), with no additions (`role_bound_association` is in
-  `anti_bag_of_features` only). `computation` is accepted for `computational`.
+  (`registry.CATEGORIES`). Its one addition is `groups.ALSO_IN`: `group=association` also
+  selects `role_bound_association`. `computation` is accepted for `computational`.
 - `judge_backend=batches` / `$WSB_JUDGE_BACKEND` (`judge_batches.py`, `docs/judge_backends.md`):
   the opt-in Message Batches backend of Claude judge calls; the default stays live.
 - `wsbench capture` + `produce/store.py` (`docs/producing_readouts.md` § The residual store):

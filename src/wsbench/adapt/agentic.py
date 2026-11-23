@@ -139,7 +139,6 @@ POOL4_SHA256: dict[str, str | None] = {
         "a8a546c14fcf4f75d426ded23ebed17578f095c1c6fef058b06e7e5bd5fc9407"
     ),
 }
-POOL4_ROUTE = "agentic.pool_v4"
 # am-pool-v5 (scripts/agentic_pool_v5.py): a third pool, loaded CHAINED after v3 and v4
 # (``load_pool("v5")`` = v3's pairs, then v4's, then v5's); its own files and pins
 POOL5_NAME, POOL5_PREFIX, POOL5_VERSION = "am-pool-v5", "amp5-", 5
@@ -150,7 +149,6 @@ POOL5_SHA256: dict[str, str | None] = {
         "40cee53685fca1e18c4dfaac73f9f3b51d4777431dc7936d517453c03afa7814"
     ),
 }
-POOL5_ROUTE = "agentic.pool_v5"
 # am-pool-v6 (scripts/agentic_pool_v6.py, plan 0089): a fourth pool, loaded CHAINED after v3, v4
 # and v5 (``load_pool("v6")`` = v3's pairs, then v4's, v5's, v6's); its own files and pins
 POOL6_NAME, POOL6_PREFIX, POOL6_VERSION = "am-pool-v6", "amp6-", 6
@@ -161,7 +159,6 @@ POOL6_SHA256: dict[str, str | None] = {
         "43a6a97c1eee1a3e1d2a5846cca08b5a8004d72b13c5380be0532586972f122f"
     ),
 }
-POOL6_ROUTE = "agentic.pool_v6"
 # am-pool-v7 (scripts/agentic_pool_v7.py, plan 0089): a fifth pool, loaded CHAINED after v3 .. v6
 # (``load_pool("v7")`` = v3's pairs, then v4's, v5's, v6's, v7's); its own files and pins
 POOL7_NAME, POOL7_PREFIX, POOL7_VERSION = "am-pool-v7", "amp7-", 7
@@ -172,7 +169,6 @@ POOL7_SHA256: dict[str, str | None] = {
         "60155c15fec5e6159428e1000267cfac99d6b6ed6c82b25dadeae823e8ac9a91"
     ),
 }
-POOL7_ROUTE = "agentic.pool_v7"
 POOL_VERSIONS = ("v3", "v4", "v5", "v6", "v7")
 
 

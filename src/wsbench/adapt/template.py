@@ -8,9 +8,9 @@ SENTINEL = "ZQXSENTINELXQZ"
 SYS_SENTINEL = "ZQXSYSTEMXQZ"
 REPLY_SENTINEL = "ZQXREPLYXQZ"
 # turn openers that name the role themselves (no separate role token): GLM's <|user|>,
-# DeepSeek-V4's <|User|> spelled with fullwidth bars (U+FF5C). ChatML / Gemma / Kimi spell the
-# role as its own token after the opener ("<|im_start|>", "user").
-ROLE_MARKERS = ("<|user|>", "<\uff5cUser\uff5c>")
+# DeepSeek-V4's <|User|> spelled with fullwidth bars (U+FF5C), Inkling-2's <|message_user|>.
+# ChatML / Gemma / Kimi spell the role as its own token after the opener ("<|im_start|>", "user").
+ROLE_MARKERS = ("<|user|>", "<\uff5cUser\uff5c>", "<|message_user|>")
 # Kimi-K3's XTML render: a turn is <|open|>message role="user"<|sep|>{content}<|close|>message
 # <|sep|><|end_of_msg|>; the role is an attribute value several tokens after the opener, so the
 # turn starts at the <|open|> before it. Its think channel opens <|open|>think<|sep|>.

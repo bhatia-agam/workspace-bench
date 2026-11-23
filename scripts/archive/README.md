@@ -12,6 +12,11 @@ lookups were adjusted); the plans that introduced them name the old path under `
 | `conjunctive/composition_check.py` | `scripts/conjunctive/` | Plan 0049 C2 diagnostic: does a passing quote hold a credit word for every varied axis. |
 | `poetry/freeze_bank.py` | `scripts/poetry/` | Plan 0038 §3: froze poetry bank v2 from the gate-passing pool. |
 | `poetry/proxy_e0.py` | `scripts/poetry/` | Plan 0038 §5 pre-registration: the deterministic proxy of poetry's rule on cached readouts. |
+| `ati_panel_run.sh` | `scripts/` | Plan 0019 driver: the whole ATI panel pipeline for one output root (build, answers, readouts, judge, gate). |
+| `ati_refill_merge.py` | `scripts/` | Plan 0019 phase 2: retired the bank items the panel gate did not admit and appended replacements from the refill pool. |
+| `lucky_guess_modal.py` | `scripts/` | Plan 0046 §2.4: the lucky-guessing baseline with an OpenRouter guesser, run on Modal. |
+| `native_jlens_modal.py` | `scripts/` | Plan 0054 R6: J-lens readouts at the native-language read sites for a subject model, on Modal. |
+| `build_mmh_tierc.py` | `scripts/` | Plan 0078 R51-R52: generated one tier C batch of invented entities for the model_multihop adapted sets. |
 
 Not archived although their names carry a round or version: `agentic_pool_v3..v7.py`,
 `mc_leakage_r4.py`, `conjunctive/make_v2..v5_bank.py` and the other bank builders are imported by

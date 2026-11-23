@@ -506,8 +506,8 @@ def test_f_family_outside_the_fast_subset_is_skipped_at_once(offline, ticker, tm
     root.mkdir()
     argv = ["run", "--fast", "all=True", f"readouts_root={root}", f"out={out}", "wait=600"]
     assert main(argv) == 0
-    assert "notfast: skipped (not in fast-v4)" in capsys.readouterr().out
-    assert _manifest(out)["families"]["notfast"] == {"status": "skipped", "error": "not in fast-v4"}
+    assert "notfast: skipped (not in fast-v5)" in capsys.readouterr().out
+    assert _manifest(out)["families"]["notfast"] == {"status": "skipped", "error": "not in fast-v5"}
     assert ticker.ticks == 0 and ran == [] and offline == []
 
 

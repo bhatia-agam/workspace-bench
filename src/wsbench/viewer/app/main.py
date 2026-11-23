@@ -1,6 +1,7 @@
 """The FastHTML app: routes only. Pages are built in ``pages``, data comes from ``query``."""
 
 import hmac
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -10,12 +11,13 @@ from starlette.middleware.gzip import GZipMiddleware
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
 
+from wsbench.viewer import meta
 from wsbench.viewer.app import pages
 from wsbench.viewer.query import BENCH_TITLES, Store
 
 # FastHTML serves static extensions (css, js) relative to static_path: /static/app.css
 STATIC = Path(__file__).resolve().parents[1] / "static"
-ASSET_VERSION = "7"
+ASSET_VERSION = "9"
 
 
 COOKIE = "bench_viewer_key"
@@ -45,6 +47,8 @@ def create_app(store_root: Path, private: bool = False, key: str | None = None) 
     """The viewer app over one store. ``private`` shows items marked private; ``key`` puts
     the whole app behind a link key (hosted deployments)."""
     db = Store(store_root, private=private)
+    # the runs page counts each run's stored readout text once; do it before the first visit
+    threading.Thread(target=db.runs_table, daemon=True).start()
     hdrs = (
         Link(rel="stylesheet", href=f"/static/app.css?v={ASSET_VERSION}"),
         Script(src=f"/static/app.js?v={ASSET_VERSION}", defer=True),
@@ -95,6 +99,11 @@ def create_app(store_root: Path, private: bool = False, key: str | None = None) 
         v, q = view(req)
         return page("Search", pages.search_page(db, v, q))
 
+    @rt("/runs")
+    def runs(req: Request):
+        v, _q = view(req)
+        return page("Runs", pages.runs_page(db, v))
+
     @rt("/bookmarks")
     def bookmarks(req: Request):
         v, _q = view(req)
@@ -125,8 +134,9 @@ def create_app(store_root: Path, private: bool = False, key: str | None = None) 
         }
         runs = [
             {
-                "id": r["run_id"], "label": r["label"], "method": r["method"], "lens": r["lens"],
-                "description": r["description"],
+                "id": r["run_id"], "label": r["label"], "method": meta.method_key(r["method"]),
+                "lens": r["lens"], "description": r["description"],
+                "integrity": r["integrity"], "integrityReason": r["integrity_reason"],
                 "pass": verdicts[r["run_id"]]["pass"] if r["run_id"] in verdicts else None,
                 "score": verdicts[r["run_id"]]["score"] if r["run_id"] in verdicts else None,
             }

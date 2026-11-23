@@ -125,4 +125,6 @@ def test_tie_gate_counts_result_heads_only():
 
 def test_stamp():
     assert prompts.HEADS_VERSION == "heads-v5" and prompts.MC_CALL_VERSION == "chain-mc-2026-10-30"
-    assert prompts.PROMPT_VERSION == "chain-mc-2026-10-30+heads-v5+start-op+key-ex2"
+    assert prompts.INSTRUMENT_V2 == "chain-mc-2026-10-30+heads-v5+start-op+key-ex2"
+    # plan 0110: the registered instrument names bank v3 (no prompt, gate or call key changed)
+    assert prompts.PROMPT_VERSION == prompts.INSTRUMENT_V2 + "+bank-v3"

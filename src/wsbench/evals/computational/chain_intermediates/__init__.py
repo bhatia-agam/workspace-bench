@@ -1,6 +1,6 @@
 """Chained intermediates: a two- or three-step arithmetic chain with the start number given last,
 answered with no chain of thought; can a lens name an intermediate the model computed but never
-wrote? Bank v2 (plan 0038): every intermediate in 10..99, frozen 8-option MC lists."""
+wrote? Bank v3 (plan 0110): every intermediate in 10..99, frozen 8-option MC lists."""
 
 from wsbench.evals.computational.chain_intermediates import prompts as _prompts
 from wsbench.judge_config import JudgeConfig
@@ -14,15 +14,17 @@ SPEC = register(
         name="chain_intermediates",
         title="Chained intermediates",
         group="computational",
-        bank=family_rel("chain_intermediates") / "items_v2.json",
+        # plan 0110 (2026-11-23): bank v3 = bank v2 minus the 66 items whose scored intermediate
+        # is not required, chance-prone or a duplicate, plus 66 new gated chains (120 items)
+        bank=family_rel("chain_intermediates") / "items_v3.json",
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",
         higher_is_better=True,
         run=judge.run,
         task_note=_prompts.DIGEST_TASK_NOTE,
-        # summary mode: 156 MC calls (one per intermediate slot) + 156 null_shuffled calls on
+        # summary mode: 127 MC calls (one per intermediate slot) + 127 null_shuffled calls on
         # partner digests, plus 120 digests; native: one call per cell (120 x 27 x 11 at GRID)
-        calls_per_arm="≈ 430 (summary) / ≈ 36k (native, full)",
+        calls_per_arm="≈ 370 (summary) / ≈ 36k (native, full)",
         sources="",  # in-house items; the construct idea is named in the family README
         # plan 0032 §2.6.5: the full read is the start number's last token through the render's
         # end, 27 contiguous positions on Qwen3.6-27B (>= 20 required)
