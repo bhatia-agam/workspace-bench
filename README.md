@@ -188,6 +188,9 @@ question.
 [docs/producing_readouts.md](docs/producing_readouts.md#the-residual-store) has the store's
 layout, every key of `capture` and how to capture your own cell list.
 
+To read a lens of your own over these activations with a served engine, on your GPUs or on
+Modal, see [docs/fast_path.md](docs/fast_path.md) (`wsbench read`).
+
 Every command takes `key=value` arguments; `--help` lists a command's keys and `--show` prints
 the resolved settings without running. Producing readouts with a bundled lens, the read plan's
 format and all options of `judge` and `run`: [docs/producing_readouts.md](docs/producing_readouts.md),

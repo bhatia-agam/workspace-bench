@@ -296,6 +296,18 @@ class Subject:
     def capture(self, ids: list[int], layers: list[int], positions: list[int]) -> dict[int, Any]:
         return self.backend.capture(ids, layers, positions)
 
+    def release(self) -> None:
+        """Drop the model (a served engine is about to take the GPU); the tokenizer stays."""
+        if self._backend is not None:
+            self._backend = None
+            import gc
+
+            import torch
+
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+
     def steered(self, *args: Any, **kwargs: Any) -> Any:
         return self.backend.steered(*args, **kwargs)
 
