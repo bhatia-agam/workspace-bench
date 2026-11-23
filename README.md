@@ -22,7 +22,7 @@ This README says "eval" for what the code calls a family.
 | Hardware to judge | None beyond a laptop: judging is API calls. |
 | Hardware to produce readouts | Only if you run a lens here. The reference model's activations are already stored: the residual store is the public Hugging Face dataset [agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), and `wsbench capture` fills a local copy from it by download, on any machine, running the model only for the cells the dataset does not hold ([Stored activations](#stored-activations)). The reference model is Qwen3.6-27B. The runs below served the lens on NVIDIA B200 GPUs (183 GiB each), where the served reader used 174 GiB at 768 requests in flight, in containers with 128 GiB of memory; a smaller GPU needs fewer requests in flight and was not measured. Capturing activations holds the model at 32-bit precision, about 110 GB of weights (estimate). |
 | Disk | 0.8 GB for the checkout. Readouts and judge caches of a full run were not measured; plan for tens of GB. |
-| Network | The Anthropic API. Two evals fetch pinned public data: `nyt_connections` its puzzles when it plans or judges, `knowledge_cutoff` part of its questions when it plans. The stored activations come from Hugging Face ([agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), 60 GB in all; an eval's files are fetched when it is first read). The model itself is downloaded to capture cells the dataset does not hold, and by `wsbench produce`, whose bundled methods need its weights to turn a stored vector into a readout. |
+| Network | The Anthropic API. Two evals fetch pinned public data: `nyt_connections` its puzzles when it plans or judges, `knowledge_cutoff` part of its questions when it plans. The stored activations come from Hugging Face ([agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), 62 GB in all; an eval's files are fetched when it is first read). The model itself is downloaded to capture cells the dataset does not hold, and by `wsbench produce`, whose bundled methods need its weights to turn a stored vector into a readout. |
 
 ## Time and cost
 
@@ -155,29 +155,34 @@ uv run wsbench capture --fast store=outputs/store     # pull the fast subset's a
 An item is taken from the dataset only when its exact token ids, read positions and layers are
 the ones the plan has today (`evals/residuals/map.json` records them for every stored item), so
 a question whose prompt changed since the capture is captured again, never read stale. What
-the dataset holds of the current read plan:
+the dataset holds of the read plan at upstream commit `5a5d8376` (checked item by item with
+`wsbench capture families=all check=True`; a later change to a question bank shows up there as
+cells "in neither"):
 
 | set | evals | cells in the plan | cells stored | not stored |
 |---|---|---|---|---|
-| Every eval (`families=all`) | 32 | 3,407,387 | 3,239,252 | 168,135 |
+| Every eval (`families=all`) | 32 | 3,408,168 | 3,382,285 | 25,883 |
 | The core evals | 18 | 2,906,722 | 2,884,128 | 22,594 |
 | The fast subset (`--fast`) | 16 | 438,790 | 425,513 | 13,277 |
 
-Three evals are not stored whole. `user_modeling_hard` (142,252 cells, outside the core set)
-is not stored yet: it has not been captured and uploaded, so `capture` runs the model for it.
-39 `knowledge_cutoff` questions are left out on purpose, because their source asks not to be
-republished (22,594 cells; 23 of them, 13,277 cells, are in the fast subset); `capture` reads
-them with the model. `jlens_concept_pr` (3,289 cells, in no macro) ships read positions
-without prompts, so there is nothing to capture. Every other eval is stored whole.
+Two evals are not stored whole. 39 `knowledge_cutoff` questions are left out on purpose,
+because their source asks not to be republished (22,594 cells; 23 of them, 13,277 cells, are in
+the fast subset); `capture` reads them with the model. `jlens_concept_pr` (3,289 cells, in no
+macro) ships read positions without prompts, so there is nothing to capture. Every other eval
+is stored whole, `user_modeling_hard` and the current `directed_modulation` bank included.
 
-| capture | `dtype=` | in the dataset | evals | cells | size |
+| capture | `dtype=` | in the dataset | evals | cells of the plan | size |
 |---|---|---|---|---|---|
-| The forward pass run in 32-bit floats: the default, reproducible on one GPU model | `fp32` | `float32-capture/` | 30 | 3,239,252 | 39.7 GB |
-| The model as shipped, a 16-bit forward pass: an older, partial capture | `bf16` | the repository root | 28 | 1,371,161 | 20.6 GB |
+| The forward pass run in 32-bit floats: the default, reproducible on one GPU model | `fp32` | `float32-capture/` | 31 | 3,382,285 | 41.1 GB |
+| The model as shipped, a 16-bit forward pass: an older, partial capture | `bf16` | the repository root | 28 | 1,368,048 | 20.6 GB |
 
-The 16-bit capture has neither safety eval (`agentic_misalignment`, `jailbreak_recognition`)
-and keeps the names some evals had when it was made; items are looked up by id and key, so the
-names do not matter. Both captures store their vectors as 16-bit floats.
+The dataset's `full/` folders hold every question of an eval. Its `fast/` folders hold an
+earlier selection of the fast subset, not today's; that does not matter, because the store
+looks an item up by id and key in every folder of a capture and finds the current fast
+subset's questions in `full/`. The 16-bit capture has neither safety eval
+(`agentic_misalignment`, `jailbreak_recognition`), no `user_modeling_hard`, 65 of the 102
+`directed_modulation` questions, and the names some evals had when it was made, which the
+lookup by id and key makes irrelevant. Both captures store their vectors as 16-bit floats.
 
 `wsbench produce family=<eval>` reads its activations the same way, for every bundled method
 (`logit_lens`, `jlens`, `rlens`, `olens`, `nla`): the store, then the dataset, and a forward

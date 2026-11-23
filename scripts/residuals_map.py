@@ -5,12 +5,19 @@ Run it with that commit's source on the path, so the keys are those of the promp
 captured (the dataset holds vectors, item ids, layers and positions, never text):
 
     PYTHONPATH=<checkout of the capture's bench commit>/src python scripts/residuals_map.py \\
-        <dataset dir holding manifest.json and <variant>/<eval>/index.json> <out.json>
+        <dataset dir holding manifest.json and <variant>/<eval>/index.json> <out.json> [folder ...]
 
-It only uses that checkout's `readplan`, `registry` and `produce.render`, and needs the subject's
-tokenizer (no model, no GPU). The map is then written by
+With folders (`full/poetry`), only those are keyed: the way to update the map after some
+folders of the dataset were replaced or added at a later benchmark commit. It only uses that
+checkout's `readplan`, `registry` and `produce.render`, and needs the subject's tokenizer (no
+model, no GPU). The map is then written by one of
 
     python scripts/residuals_map.py merge <part.json>... <map.json> <dataset repo> <revision>
+    python scripts/residuals_map.py splice <map.json> <part.json> <revision>
+
+`merge` writes a whole map from one part per capture; `splice` replaces or adds a part's
+folders in an existing map and records the dataset revision and each such folder's own
+benchmark commit.
 """
 
 import hashlib
@@ -37,7 +44,7 @@ def folder_items(index: dict) -> dict[str, list[tuple[int, int]]]:
     return out
 
 
-def build(dataset: Path, out: Path) -> None:
+def build(dataset: Path, out: Path, only: list[str] | None = None) -> None:
     from transformers import AutoTokenizer
 
     from wsbench import readplan, registry
@@ -50,6 +57,8 @@ def build(dataset: Path, out: Path) -> None:
     evals: dict[str, dict] = {}
     for index_path in sorted(dataset.glob("*/*/index.json")):
         variant, name = index_path.parts[-3], index_path.parts[-2]
+        if only and f"{variant}/{name}" not in only:
+            continue
         have = folder_items(json.loads(index_path.read_text()))
         specs = readplan.plan(name, fast=True) if variant == "fast" else readplan.plan(name)
         keys, differ = {}, 0
@@ -113,9 +122,31 @@ def merge(parts: list[Path], out: Path, repo: str, revision: str) -> None:
     out.write_text(text + "\n")
 
 
+def splice(map_path: Path, part_path: Path, revision: str) -> None:
+    """Replace or add the part's folders in the map's entry for that capture. Each spliced
+    folder records the benchmark commit its keys were built at; the other folders and the
+    other captures are left as they are. An item of a `fast/` folder is kept even when a
+    spliced `full/` folder now holds it: the map only ever names places where the key holds."""
+    mapping = json.loads(map_path.read_text())
+    part = json.loads(part_path.read_text())
+    capture = mapping["captures"][part["capture"]]
+    if capture["model_revision"] != part["model_revision"]:
+        raise SystemExit("the part is for another model revision than the map's capture")
+    for folder, info in sorted(part["folders"].items()):
+        capture["folders"][folder] = {
+            "bench_commit": part["bench_commit"],
+            "items": dict(sorted(info["items"].items())),
+        }
+    capture["folders"] = dict(sorted(capture["folders"].items()))
+    mapping["revision"] = revision
+    map_path.write_text(json.dumps(mapping, sort_keys=True) + "\n")
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "merge":
         *part_files, target, dataset_repo, dataset_revision = sys.argv[2:]
         merge([Path(p) for p in part_files], Path(target), dataset_repo, dataset_revision)
+    elif sys.argv[1] == "splice":
+        splice(Path(sys.argv[2]), Path(sys.argv[3]), sys.argv[4])
     else:
-        build(Path(sys.argv[1]), Path(sys.argv[2]))
+        build(Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3:] or None)

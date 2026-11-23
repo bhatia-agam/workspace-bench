@@ -33,22 +33,27 @@ readouts files that `wsbench run` judges.
 
 ## What is stored
 
-The 32-bit capture of the reference model, which is what `dtype=fp32` (the default) reads:
+The 32-bit capture of the reference model, which is what `dtype=fp32` (the default) reads,
+against the read plan at upstream commit `5a5d8376`:
 
 | set | evals | cells in the plan | cells stored | not stored |
 |---|---|---|---|---|
-| Every eval | 32 | 3,407,387 | 3,239,252 | 168,135 |
+| Every eval | 32 | 3,408,168 | 3,382,285 | 25,883 |
 | The core evals | 18 | 2,906,722 | 2,884,128 | 22,594 |
 | The fast subset | 16 | 438,790 | 425,513 | 13,277 |
 
-Not stored: `user_modeling_hard` (142,252 cells), not captured and uploaded yet; 39
-`knowledge_cutoff` questions (22,594 cells, 13,277 of them in the fast subset), left out on
-purpose; `jlens_concept_pr` (3,289 cells), which ships no prompts. `wsbench read` runs the
-model for the first two and cannot read the third. The capture is 39.7 GB in
-`float32-capture/`; the repository root holds an older, partial 16-bit capture (28 evals,
-1,371,161 cells, 20.6 GB, neither safety eval), read with `dtype=bf16`. An eval's files are
-downloaded when it is first read. `wsbench capture families=all check=True` prints the current
-state per eval.
+Not stored: 39 `knowledge_cutoff` questions (22,594 cells, 13,277 of them in the fast subset),
+left out on purpose, for which `wsbench read` runs the model; and `jlens_concept_pr` (3,289
+cells), which ships no prompts and cannot be read. Every other eval is stored whole. The
+capture is 41.1 GB in `float32-capture/` (31 evals). Its `full/` folders hold every question;
+its `fast/` folders hold an earlier selection of the fast subset, and the store finds today's
+fast questions in `full/` by id and key. The repository root holds an older, partial 16-bit
+capture (28 evals, 1,368,048 cells of this plan, 20.6 GB; neither safety eval, no
+`user_modeling_hard`, 65 of the 102 `directed_modulation` questions), read with `dtype=bf16`.
+An eval's files are downloaded when it is first read. A question bank that changes after this
+commit is not in the dataset until it is captured and uploaded again; `wsbench capture
+families=all check=True` prints the current state per eval, and the model runs for whatever is
+in neither place.
 
 ## Hardware and time
 
