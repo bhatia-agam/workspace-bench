@@ -21,6 +21,11 @@ class StoreError(RuntimeError):
     written for another model or dtype, rows that are not the plan's)."""
 
 
+class NoPromptError(StoreError):
+    """A plan row that ships no prompt (a ``captured`` render without token ids): there is
+    nothing to run the subject on, so the eval cannot be captured or read from a store."""
+
+
 # ---------------------------------------------------------------- cells and items
 
 
@@ -92,6 +97,8 @@ def locate(spec: ReadSpec, tokenizer: Any) -> Located:
     from .producer import _positions
     from .render import render
 
+    if spec.render == "captured" and "input_ids" not in (spec.extra or {}):
+        raise NoPromptError(f"{spec.family}/{spec.id}: the plan ships this item without a prompt")
     rendered = render(spec, tokenizer)
     fast_of = spec.positions.get("kind") == "fast_of"  # tested on decoded tokens (plan 0090)
     pos = list(_positions(spec.positions, rendered.decoded if fast_of else rendered.tokens))
@@ -187,6 +194,16 @@ class Store:
         tmp.write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
         os.replace(tmp, stem.with_suffix(".json"))
         return stem
+
+    def has(self, family: str, want: dict[str, str]) -> set[str]:
+        """The ids among ``want`` (item id -> key) that are stored under that key (reads the
+        indexes only, no vectors)."""
+        out: set[str] = set()
+        for path in sorted(self.folder(family).glob("*.json")):
+            for e in json.loads(path.read_text(encoding="utf-8"))["items"]:
+                if want.get(e["id"]) == e["key"]:
+                    out.add(e["id"])
+        return out
 
     def find(self, family: str, want: dict[str, str]) -> tuple[dict[str, Item], list[str]]:
         """The stored items among ``want`` (item id -> key), and the ids that are stored under
