@@ -3,7 +3,8 @@ R51-R52): gw's sibling-country route (Opus 5.5 writes, Sonnet 5.5 screens), dedu
 the pool and earlier batches, written to ``$WSB_POOL_DIR/mmh_tierc_b<k>.json``; pin the printed
 sha256 in ``wsbench.adapt.mmh_tierc.TIERC_SHA256[k]``.
 
-    WSB_ANTHROPIC_AUTH=sdk ANTHROPIC_PROFILE=default python scripts/build_mmh_tierc.py --batch 1
+    WSB_ANTHROPIC_AUTH=sdk ANTHROPIC_PROFILE=default \\
+        python scripts/archive/build_mmh_tierc.py --batch 1
 """
 
 import argparse

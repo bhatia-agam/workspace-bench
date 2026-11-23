@@ -15,14 +15,14 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from wsbench import fast, readplan, registry, tiers  # noqa: E402
+from wsbench import fast, groups, readplan, registry, tiers  # noqa: E402
 
 START, END = "<!-- evals table: start -->", "<!-- evals table: end -->"
 
 WHAT = {
     "basic_readout": "The multi-word answer to a factual question the model has read but not yet answered.",
     "basic_readout_st": "The same with a one-word answer.",
-    "directed_modulation": "A concept the model was told to think about, not think about, or hide while copying a sentence.",
+    "directed_modulation": "A concept the model was told to think about, or to keep hidden, while copying a sentence.",
     "multi_concept_directed_modulation": "Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence.",
     "multihop": "The unstated multi-word bridge of a two- or three-hop fact.",
     "multihop_st": "The unstated one-word bridge of a two-hop fact.",
@@ -81,9 +81,12 @@ def table() -> str:
                 f"| {scored_by(name)} | {len(readplan.plan(name)):,} |"
             )
     lines.append("")
-    lines.append(
-        f"`group=<category>` selects a category by its key ({', '.join(registry.CATEGORIES)})."
-    )
+    line = f"`group=<category>` selects a category by its key ({', '.join(registry.CATEGORIES)})."
+    for group, extra in groups.ALSO_IN.items():
+        also = ", ".join(f"`{n}`" for n in extra)
+        home = ", ".join(sorted({f"`{registry.FAMILIES[n].group}`" for n in extra}))
+        line += f" `group={group}` also selects {also}, which is listed under {home}."
+    lines.append(line)
     return "\n".join(lines)
 
 

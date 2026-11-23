@@ -3,7 +3,6 @@
 ## Layers
 - Every read grid is in absolute Qwen3.6-27B layers, out of 64. The sets are:
   - `GRID` = 20..60 step 4
-  - `SIX` = 20,28,36,44,52,60
   - `FIVE` = 20,36,44,52,60
   - arithmetic: [56, 60]
   - multi_concept_directed_modulation: [44,52,56,60]

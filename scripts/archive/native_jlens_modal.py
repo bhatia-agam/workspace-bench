@@ -10,7 +10,7 @@ this script's 27B re-read differs from the cache at that one site. Writes
 readouts=<out>``.
 
     source /workspace/wsb-runs/run_env.sh   # Modal profile / environment
-    PYTHONPATH=src modal run scripts/native_jlens_modal.py --model qwen3.5-4b \\
+    PYTHONPATH=src modal run scripts/archive/native_jlens_modal.py --model qwen3.5-4b \\
         --lens qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens_n1000.pt --out DIR
 """
 
@@ -19,7 +19,7 @@ from pathlib import Path
 
 import modal
 
-WSB = Path(__file__).resolve().parents[1]
+WSB = Path(__file__).resolve().parents[2]
 app = modal.App("native-jlens")
 hf = modal.Volume.from_name("adapt-hf-cache", create_if_missing=True)
 image = (

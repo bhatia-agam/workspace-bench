@@ -3,15 +3,13 @@
 // questions, h next cell with the expected answer, / search, n next match, b bookmark, ? help.
 (function () {
   const HAS_EXPECTED = 1, HAS_QUOTE = 2;
-  const LEAVES = {
-    correct: "Correct", false_claim: "False claim", detail: "Wrong detail",
-    substitution_category: "Substitution (category)", substitution_sibling: "Substitution (sibling)",
-    unverifiable: "Unverifiable", junk: "Junk / off topic", continuation_miss: "Excused continuation",
-    model_state: "Model state", supplementary_true: "Extra, true", supplementary_false: "Extra, false",
-    ambiguous_topic: "Ambiguous topic", failed: "Judge failed",
-  };
-  const METHODS = { olens: "O-lens", nla: "NLA", jlens: "J-lens", logit_lens: "Logit lens", other: "Other" };
+  // Method names and colours, and the claim-map leaves with their verdicts, come with the page's
+  // data (one palette, defined in meta.py); these are filled in init().
+  let LEAVES = {}, METHODS = {}, LEAF_INFO = {}, AXES = [];
   let S = null; // page state
+  const dot = (m) => '<i class="dot m-' + esc(m) + '" title="' + esc(METHODS[m] || m) + '"></i>';
+  const mchip = (m) => '<span class="mchip mc-' + esc(m) + '" title="' + esc(METHODS[m] || m) + '">' + dot(m) + esc((S.D.methods[m] || {}).alias || m) + "</span>";
+  const integ = (r) => (r.integrity ? '<span class="tag integ" title="' + esc(r.integrityReason || "") + '">' + esc(r.integrity) + "</span>" : "");
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
   const $ = (id) => document.getElementById(id);
@@ -25,6 +23,9 @@
     if (!el || el.dataset.ready) return;
     el.dataset.ready = "1";
     const D = JSON.parse(el.textContent);
+    LEAVES = {}; LEAF_INFO = {}; METHODS = {}; AXES = D.axes || [];
+    (D.leaves || []).forEach((l) => { LEAVES[l.leaf] = l.title; LEAF_INFO[l.leaf] = l; });
+    Object.keys(D.methods || {}).forEach((m) => { METHODS[m] = D.methods[m].title; });
     const saved = lsGet("bv.open." + D.bench + "." + D.model, null);
     const known = new Set(D.runs.map((r) => r.id));
     let open = new URLSearchParams(location.search).get("runs") ? D.open : (saved || D.open);
@@ -62,6 +63,9 @@
   }
 
   function prep(d) {
+    // readouts that cannot be had here: no cells at all (the server sends one placeholder
+    // cell holding the marker), and a notice in the pane where the readouts would be
+    if (d.readouts && d.readouts.available === false) { d.unavailable = d.readouts; d.cells = {}; d.layers = []; d.positions = []; }
     const terms = (d.terms || []).filter((t) => t && String(t).length > 1 || /^\d$/.test(t));
     if (terms.length) {
       const parts = terms.map((t) => {
@@ -149,7 +153,7 @@
       answer = '<div class="answer"><div><label>Expected answer</label>' + (chips(it.expected, "gold") || '<span class="hint">not in the bank</span>') + "</div>" +
         ((it.intermediates || []).length ? "<div><label>Hidden intermediates the lens should show</label>" + chips(it.intermediates, "gold soft") + "</div>" : "") + "</div>";
     }
-    const runs = D.runs.filter((r) => S.open.includes(r.id)).map((r) => '<span class="rv" title="' + esc(r.label + "  ·  " + r.lens) + '"><i class="dot m-' + esc(r.method === "logit_lens" ? "logit" : r.method) + '"></i>' + verdictBadge(r) + "</span>").join("");
+    const runs = D.runs.filter((r) => S.open.includes(r.id)).map((r) => '<span class="rv" title="' + esc(r.label + "  ·  " + r.lens) + '">' + dot(r.method) + verdictBadge(r) + "</span>").join("");
     let prompt = "";
     if (!it.hidden) {
       const meta = it.meta || {};
@@ -164,7 +168,9 @@
       '<button class="btn sm" data-act="prev" title="previous question (k)">‹ prev</button><button class="btn sm" data-act="next" title="next question (j)">next ›</button>' +
       '<button class="btn sm" data-act="mark" title="bookmark this cell (b); Shift+B adds a note">☆ bookmark</button>' +
       '<button class="btn sm" data-act="help" title="keys (?)">?</button></div>' + answer + prompt +
-      '<details class="howjudged"><summary>How this eval is judged</summary><p>' + esc(D.judgedBy || "") + "</p>" +
+      '<details class="howjudged"><summary>How this eval is judged' + (D.scoredBy ? ' <span class="hint">scored by ' + esc(D.scoredBy) + "</span>" : "") + "</summary>" +
+      (D.scoredBy ? '<p class="by-line">Scored by: <b>' + esc(D.scoredBy) + "</b></p>" : "") + "<p>" + esc(D.judgedBy || "") + "</p>" +
+      (D.summaryNote ? '<p class="hint">' + esc(D.summaryNote) + "</p>" : "") +
       (D.gates || []).map((g) => '<div class="gate"><b>' + esc(g.name) + "</b><p>" + esc(g.text) + "</p></div>").join("") + "</details>";
     const p = $("qprompt");
     if (p) p.addEventListener("toggle", () => lsSet("bv.prompt.open", p.open));
@@ -230,7 +236,8 @@
   function renderStrip() {
     const D = S.D;
     if (!S.positions.length) {
-      $("qstrip").innerHTML = S.loading ? '<div class="empty">loading readouts…</div>' : '<div class="empty">No readouts stored for this question in the open methods.</div>';
+      const gone = S.open.some((r) => S.data[r] && S.data[r].unavailable);
+      $("qstrip").innerHTML = S.loading ? '<div class="empty">loading readouts…</div>' : '<div class="empty">' + (gone ? "The readouts of the open runs are not available here; verdicts and judge calls are shown below." : "No readouts stored for this question in the open methods.") + "</div>";
       return;
     }
     const full = fullTokens();
@@ -256,7 +263,7 @@
     S.open.forEach((rid) => {
       const d = S.data[rid], run = D.runs.find((r) => r.id === rid);
       if (!d || !d.cells) return;
-      maps += '<div class="map"><div class="map-name" title="' + esc(run.lens) + '"><i class="dot m-' + (run.method === "logit_lens" ? "logit" : run.method) + '"></i>' + esc(run.label) + '</div><div class="map-scroll"><canvas data-run="' + esc(rid) + '"></canvas></div></div>';
+      maps += '<div class="map"><div class="map-name" title="' + esc(run.lens) + '">' + mchip(run.method) + esc(run.label) + integ(run) + '</div><div class="map-scroll"><canvas data-run="' + esc(rid) + '"></canvas></div></div>';
     });
     const anyClaim = S.open.some((r) => S.data[r] && S.data[r].claim);
     const anyLv = S.open.some((r) => S.data[r] && S.data[r].lv && Object.keys(S.data[r].lv).length);
@@ -265,10 +272,23 @@
       (anyLv ? '<span><i class="sw" style="background:#15803d"></i><i class="sw" style="background:#f87171"></i>bar at the left: the judge\'s verdict for that layer (exact)</span>' : "");
     $("qstrip").innerHTML =
       '<div class="strip"><div class="strip-h"><b>Prompt tokens</b><span class="hint">' + esc(mode) + ' · ← → move</span></div><div class="toks">' + toks + "</div></div>" +
-      '<div class="maps"><div class="strip-h"><b>Layers × positions</b><span class="hint">↑ ↓ change layer · click a cell</span><span class="legend">' + legend + "</span></div>" + maps + "</div>";
+      '<div class="maps"><div class="strip-h"><b>Layers × positions</b><span class="hint">↑ ↓ change layer · click a cell</span><span class="legend">' + legend + "</span></div>" + maps + "</div>" + (anyClaim ? claimLegend() : "");
+    const lg = $("cmlegend");
+    if (lg) lg.addEventListener("toggle", () => lsSet("bv.cmlegend.open", lg.open));
     drawMaps();
     const cur = $("qstrip").querySelector(".tok.cur");
     if (cur) { const box = cur.parentElement; if (cur.offsetTop < box.scrollTop || cur.offsetTop + cur.offsetHeight > box.scrollTop + box.clientHeight) box.scrollTop = cur.offsetTop - box.clientHeight / 2; }
+  }
+
+  // The claim-map legend: every leaf in its colour, grouped under its verdict. A block of its
+  // own between the maps and the panes, so it never covers readout text.
+  function claimLegend() {
+    const groups = (S.D.verdicts || []).map((v) => {
+      const leaves = (S.D.leaves || []).filter((l) => l.verdict === v.id);
+      return '<div class="cmgroup"><b title="' + esc(v.what) + '"><i class="vdot" style="background:' + esc(v.color) + '"></i>' + esc(v.title) + "</b>" +
+        leaves.map((l) => '<span class="lchip leaf-' + esc(l.leaf) + '" title="' + esc(l.text + (l.weight != null ? "  ·  weight " + l.weight : "")) + '">' + esc(l.title) + "</span>").join("") + "</div>";
+    }).join("");
+    return '<details class="cmlegend" id="cmlegend" ' + (lsGet("bv.cmlegend.open", true) ? "open" : "") + '><summary>Claim-map legend <span class="hint">segment colour = leaf, grouped by verdict</span></summary><div class="cmgroups">' + groups + "</div></details>";
   }
 
   // One canvas per open method: layers down (deepest on top), read positions across, layer
@@ -359,11 +379,17 @@
       while (j < text.length && m[j] === m[i] && (!segOf || segOf[j] === segOf[i])) j++;
       let cls = (m[i] & 1 ? " t" : "") + (m[i] & 2 ? " q" : "") + (m[i] & 4 ? " f" : "");
       let attr = "";
-      if (segOf && segOf[i] >= 0) { const sg = segs[segOf[i]]; cls += " seg leaf-" + sg.leaf + (S.seg === sg ? " sel" : ""); attr = ' data-seg="' + segOf[i] + '"'; }
+      if (segOf && segOf[i] >= 0) { const sg = segs[segOf[i]]; cls += " seg leaf-" + sg.leaf + (S.seg === sg ? " sel" : ""); attr = ' data-seg="' + segOf[i] + '" title="' + esc(leafName(sg.leaf)) + '"'; }
       out += cls || attr ? '<span class="' + cls.trim() + '"' + attr + ">" + esc(text.slice(i, j)) + "</span>" : esc(text.slice(i, j));
       i = j;
     }
     return out;
+  }
+
+  // "False claim (Hallucination)": the leaf with the verdict it belongs to
+  function leafName(leaf) {
+    const info = LEAF_INFO[leaf];
+    return info ? info.title + " (" + info.verdict_title + ")" : leaf;
   }
 
   function readoutHtml(d) {
@@ -497,10 +523,14 @@
       if (g.chk) chk = '<div class="sub">Continuation check</div>' + kv(g.chk);
       const tags = Object.assign({}, g.tags);
       delete tags.raw_leaf; delete tags.status;
-      return '<div class="segrow leaf-b-' + g.leaf + (S.seg === g ? " sel" : "") + '" data-seg="' + k + '"><div class="segtop"><span class="lchip leaf-' + g.leaf + '">' + esc(LEAVES[g.leaf] || g.leaf) + '</span><span class="hint">weight ' + (g.w == null ? "— (not a claim)" : g.w) + "</span></div>" +
+      // the span classifier's axes, where the store has them for this segment
+      const ax = {};
+      AXES.forEach((k) => { if (tags[k] != null && tags[k] !== "") { ax[k] = tags[k]; delete tags[k]; } });
+      const axes = Object.keys(ax).length ? '<div class="sub">Span classifier</div>' + kv(ax) : "";
+      return '<div class="segrow leaf-b-' + g.leaf + (S.seg === g ? " sel" : "") + '" data-seg="' + k + '"><div class="segtop"><span><span class="lchip leaf-' + g.leaf + '">' + esc(LEAVES[g.leaf] || g.leaf) + '</span><span class="hint">' + esc((LEAF_INFO[g.leaf] || {}).verdict_title || "") + '</span></span><span class="hint">weight ' + (g.w == null ? "— (not a claim)" : g.w) + "</span></div>" +
         '<div class="segtext">' + esc(text) + "</div>" + (g.why ? '<div class="why">' + esc(g.why) + "</div>" : "") +
         (g.con ? '<div class="quote no">contradicted by: “' + esc(g.con) + "”</div>" : "") + (g.sup ? '<div class="quote ok">supported by: “' + esc(g.sup) + "”</div>" : "") +
-        (S.seg === g ? chk + (Object.keys(tags).length ? '<div class="sub">Tags</div>' + kv(tags) : "") : "") + "</div>";
+        axes + (S.seg === g ? chk + (Object.keys(tags).length ? '<div class="sub">Tags</div>' + kv(tags) : "") : "") + "</div>";
     }).join("") + "</div>";
     if (j.m && j.m.stages) out += '<div class="sec"><h5>Pipeline stages</h5>' + kv(j.m.stages) + "</div>";
     return out;
@@ -516,8 +546,9 @@
       if (!d) body = '<div class="empty sm">loading…</div>';
       else if (d.private) body = '<div class="private">private question</div>';
       else if (d.error) body = '<div class="empty sm">' + esc(d.error) + "</div>";
-      else body = '<div class="ro">' + readoutHtml(d) + '</div><div class="jd">' + judgeHtml(rid, d) + "</div>";
-      html += '<section class="pane' + (S.expanded === rid ? " expanded" : "") + '" data-run="' + esc(rid) + '"><header><i class="dot m-' + (run.method === "logit_lens" ? "logit" : run.method) + '"></i><div class="pt"><b title="' + esc(run.lens + (run.description ? "\n" + run.description : "")) + '">' + esc(run.label) + "</b><small>" + esc(METHODS[run.method] || "") + " · L" + S.layer + " · pos " + S.pos + " " + esc(showTok(S.tokens.get(S.pos))) + "</small></div>" + verdictBadge(run) +
+      else if (d.unavailable) body = '<div class="noreadouts"><b>Readouts not available here</b>They are at <code>' + esc(d.unavailable.where || "") + "</code>" + (d.unavailable.why ? "<br>" + esc(d.unavailable.why) : "") + '</div><div class="jd">' + judgeHtml(rid, d) + "</div>";
+      else body = (d.readouts && d.readouts.available ? '<div class="ondemand">readouts read on demand from ' + esc(d.readouts.where || "") + "</div>" : "") + '<div class="ro">' + readoutHtml(d) + '</div><div class="jd">' + judgeHtml(rid, d) + "</div>";
+      html += '<section class="pane' + (S.expanded === rid ? " expanded" : "") + '" data-run="' + esc(rid) + '"><header>' + mchip(run.method) + '<div class="pt"><b title="' + esc(run.lens + (run.description ? "\n" + run.description : "")) + '">' + esc(run.label) + "</b><small>" + esc(METHODS[run.method] || "") + (S.layer == null ? "" : " · L" + S.layer + " · pos " + S.pos + " " + esc(showTok(S.tokens.get(S.pos)))) + "</small></div>" + integ(run) + verdictBadge(run) +
         '<button class="ib" data-act="expand" title="expand / restore">⤢</button><button class="ib" data-act="close" title="remove this pane">×</button></header><div class="pbody">' + body + "</div></section>";
     });
     const keep = {};

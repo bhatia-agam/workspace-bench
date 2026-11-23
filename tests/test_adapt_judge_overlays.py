@@ -687,7 +687,9 @@ GOLDEN = {
     # basic_readout: main's gate_name_forms over the registered bank v7 (bank v6 with its
     # capital item replaced; every kept item's forms are v5's; over bank v6 it was 15c34b1c...)
     "basic_readout": "0a15acd775d425efacc01db269f867b87776519d9a6767b0bac3fe2bb10dabab",
-    "directed_modulation": "fd243c54157a7ee801010ea58af6f84d5b1fe37157433d56be62d9f5e2762924",
+    # directed_modulation: the registered bank v2 (plan 0109: 72 think + 15 secret + 15
+    # preference; over the 100-item items.json it was fd243c54...)
+    "directed_modulation": "fcb880ebb56b97f75907b49977db9005aa1b3cfeb699ef55de277957b7256aef",
     "multi_concept_directed_modulation": (
         "646c2023b0a6f780780533829d9693fc7c15ad470d03dc3f93901ac8d26ef0f0"
     ),

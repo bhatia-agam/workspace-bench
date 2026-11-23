@@ -1,4 +1,4 @@
-"""user_modeling_hard (umh-v2): one blind identification MC per PART of an item (1-3 implied
+"""user_modeling_hard (umh-v3): one blind identification MC per PART of an item (1-3 implied
 traits of the user), read at every token of the chat render; a gold pick counts only with a
 verified quote that a blind second reading of its statement also assigns to the gold."""
 
@@ -157,6 +157,9 @@ def _answer(r: Mapping[str, Any], u: Unit, chat: str) -> dict[str, Any]:
             for s in loc.echoed
             if gate.mostly_chat(s, chat, [str(part["gold"]), *map(str, part.get("forms") or ())])
         ],
+        # gate `echo`: how many statements held the quote (review r4 F3: when one of them is not
+        # in `echoed`, it states the gold in words of its own and the re-ask must not rule it out)
+        "n_echo_statements": len(loc.echoed),
         "credit": "",
         "quote_check_choice": None,
         "quote_check_pick": None,
@@ -165,6 +168,19 @@ def _answer(r: Mapping[str, Any], u: Unit, chat: str) -> dict[str, Any]:
         "formless": False,
         "rationale": _str(r, "rationale"),
     }
+
+
+def retry_reason(row: Mapping[str, Any]) -> str:
+    """The key of ``prompts.UMH_RETRY_REASONS`` for a rejected answer: its gate, except that an
+    ``echo`` with a statement left outside ``row["echoed"]`` is ``echo_quote``. That statement
+    holds the copied quote and is not itself an echo (``gate.echoes`` under the gold's forms: it
+    is not mostly the chat's words). It may state the gold in a word the chat lacks, or be a long
+    own-worded bullet that merely contains the copied span; it is not refused either way, and the
+    reason text is conditional ("If the same bullet goes on to state ..."), so it is right in
+    both cases and never says "Do not quote from that bullet again" (review r4 F3)."""
+    if row["gate"] == "echo" and len(row["echoed"]) < int(row.get("n_echo_statements", 0)):
+        return "echo_quote"
+    return str(row["gate"])
 
 
 def quote_key(key: str, j: int) -> str:
@@ -279,7 +295,7 @@ def judge_units(
         for u in pending:
             blocks = "".join(
                 prompts.retry_text(
-                    x["choice"], x["pick_value"], x["evidence"], x["gate"], again=j > 0
+                    x["choice"], x["pick_value"], x["evidence"], retry_reason(x), again=j > 0
                 )
                 for j, x in enumerate(rejected[u.key])
             )

@@ -7,7 +7,14 @@ from wsbench.llm import schema_block
 JUDGE_PROMPT_VERSION = "dm-2026-10-31"  # keys every judge-call fingerprint (plan 0035 prompts)
 # the instrument (EvalSpec, results stamp, floors). Plan 0035: blind judge (no instruction shown),
 # related-group distractors, close relatives credited, headline = expressed (gold picked, any basis)
-PROMPT_VERSION = JUDGE_PROMPT_VERSION + "+expressed"
+INSTRUMENT_V1 = JUDGE_PROMPT_VERSION + "+expressed"
+# plan 0109: bank v2 (items_v2.json, 2026-11-20: the 35 dont_think items removed, 37 new gated
+# think items; the kept think items' option lists are new, the pool being the whole subfamily)
+# stamps +bank-v2 (judge.instrument), so floors and results measured on the 100-item bank are
+# never served for it. The frozen items.json and the adapted banks carry no version: no suffix.
+# Stamp only: no prompt, rubric or call key changed (JUDGE_PROMPT_VERSION).
+BANK_STAMP = "+bank-v2"
+PROMPT_VERSION = INSTRUMENT_V1 + BANK_STAMP  # the registered instrument (bank v2)
 SEED = 0  # fixes the distractor draw and the shown option order per item
 N_DISTRACTORS = 4
 # the family's token-list rule inputs (plan 0032 §2.7.2); the EvalSpec registers the same values

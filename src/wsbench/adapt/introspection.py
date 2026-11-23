@@ -59,7 +59,10 @@ from .subjects import get as get_subject
 FAMILY = "introspection"
 APP = "adapt-introspection"  # scripts/adapt_introspection_modal.py
 # subjects served by their own variant of that script's app (``ADAPT_INTROSPECTION=<key>``)
-APP_OF: dict[str, str] = {"dory-4b": "adapt-introspection-dory-4b"}
+APP_OF: dict[str, str] = {
+    "dory-4b": "adapt-introspection-dory-4b",
+    "inkling-2-mini": "adapt-introspection-inkling-2-mini",
+}
 # NVIDIA Dory (looped): layers are indices of the mOre-lenses unrolled view (``Subject`` dory-4b),
 # so the HF load is rewritten into that view (``looped.unroll``, exits 1/2/4, the 2-loop model)
 LOOP_EXITS, READER_LOOPS = (1, 2, 4), 2
@@ -664,10 +667,24 @@ class HFEngine:
     @classmethod
     def load(cls, hf_id: str, revision: str | None = None) -> "HFEngine":
         import torch
-        from transformers import AutoModelForCausalLM
+        from transformers import AutoConfig, AutoModelForCausalLM
 
         from wsbench.produce.backend import Backend
 
+        if AutoConfig.from_pretrained(hf_id, revision=revision).model_type == "inkling2_loop":
+            # Inkling-2-Mini: the released NVFP4 / MXFP8 checkpoint (transformers' NVFP4 path
+            # wants one CUDA device), rewritten into its unrolled view: block L = entry L
+            from transformers import Inkling2LoopForConditionalGeneration
+
+            from . import inkling_loop
+
+            model = Inkling2LoopForConditionalGeneration.from_pretrained(
+                hf_id, revision=revision, dtype=torch.bfloat16, device_map="cuda"
+            )
+            inkling_loop.unroll(model)
+            model.eval()
+            dev = str(next(model.parameters()).device)
+            return cls(Backend(model=model, tokenizer=None, device=dev, model_id=hf_id), revision)
         model = AutoModelForCausalLM.from_pretrained(
             hf_id, revision=revision, dtype=torch.bfloat16, device_map="auto"
         )
