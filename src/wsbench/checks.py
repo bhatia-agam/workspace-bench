@@ -153,16 +153,24 @@ def ati_subset() -> Outcome:
     from wsbench.baselines import text_inversion as ti
 
     registry.load_all()
-    served, skipped = [], []
+    served, skipped, stale = [], [], []
     for name in sorted(registry.FAMILIES):
         try:
             ti.subset_entry(name)
             served.append(name)
+        except ti.StaleNoItem:  # a listed family (plan 0110): no ATI item, not a failure
+            stale.append(name)
         except ti.NotInScope:
             skipped.append(name)
+    note = (
+        f"; NOTE: {', '.join(stale)}: entry gated on another bank with no ATI id, served as "
+        f"no ATI item on the bank recorded for it until the ATI audit (issue #559)"
+        if stale
+        else ""
+    )
     return True, (
         f"{len(served)} families' entries match their judge instrument and bank; "
-        f"{len(skipped)} not gated by design"
+        f"{len(skipped) + len(stale)} not gated by design{note}"
     )
 
 

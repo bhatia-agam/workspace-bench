@@ -87,7 +87,9 @@ def test_non_fast_plan_is_byte_identical_to_pre_0090():
 
 V1, V2, VS1 = "fast-v1", "fast-v2", "fast-safety-v1"  # frozen predecessors
 V3 = "fast-v3"  # the default from 2026-11-20 to plan 0104 (conjunctive_association on bank v6)
-V4 = "fast-v4"  # plan 0104: the default, a seeded random half of core (test_fast_core_half.py)
+V4 = "fast-v4"  # plan 0104: a seeded random half of core, the default until plan 0110
+V5 = "fast-v5"  # plan 0110: the default, fast-v4 re-cut for chain_intermediates' bank v3
+CORE_HALF = {V4, V5}  # tests/test_fast_core_half.py
 VS = "fast-safety-v2"  # plan 0095: `--fast-safety` (retired by plan 0104; the file stays)
 OUTCOME_SELECTED = (V1, V2, VS1, V3, VS)  # the frozen predecessors this file is about
 FAMILIES_V1 = sorted(fast.subset(V1))  # 24
@@ -151,7 +153,7 @@ REAL_RUN_CALLS = mcjudge.run_calls  # the `toy` fixture replaces it
 @pytest.fixture(autouse=True)
 def _the_frozen_predecessors(monkeypatch, _default_fast_subset):
     """Plan 0104: this file tests the machinery on the versions it was written for. The default
-    is fast-v4 now (``tests/test_fast_core_half.py``); here every test starts on fast-v3, the
+    is fast-v5 now (``tests/test_fast_core_half.py``); here every test starts on fast-v3, the
     last outcome-selected version, as it did while fast-v3 was the default, so the assertions
     below keep their values. ``--fast`` runs the active subset, whatever made it active.
     Returns the version that was active when the test's setup reached this fixture, after
@@ -1332,11 +1334,12 @@ def test_v2_is_v1_without_the_two_safety_families():
 
 
 def test_subset_versions(monkeypatch):
-    assert fast.VERSION == V3 and set(fast.VERSIONS) == {V1, V2, VS1, V3, VS, V4}
+    assert fast.VERSION == V3 and set(fast.VERSIONS) == {V1, V2, VS1, V3, VS, V4, V5}
     assert not hasattr(fast, "COMPATIBLE")  # per family since 2026-11-20: fast.compatible
     assert fast.KEY_ERA == {
         **{V1: "pre-0101", V2: "pre-0101", VS1: "pre-0101", V3: "0101", VS: "0101"},
         V4: "0101",
+        V5: "0101",
     }
     assert not hasattr(fast, "PATH")
     assert fast.subset() is fast.subset(V3) and fast.families() == FAMILIES_V3
@@ -1728,8 +1731,8 @@ def test_versions_are_entry_compatible_per_family():
     """Plans 0094 / 0095, per family since 2026-11-20: two versions are compatible for a family
     iff both hold it with the identical entry. Every family is compatible across all five files
     except the ones a re-freeze moved (``REFROZEN``), which split at that re-freeze."""
-    files = {v: fast.subset(v) for v in OUTCOME_SELECTED}  # fast-v4: test_fast_core_half.py
-    assert set(files) == {V1, V2, VS1, V3, VS} == set(fast.VERSIONS) - {V4}
+    files = {v: fast.subset(v) for v in OUTCOME_SELECTED}  # fast-v4 / -v5: test_fast_core_half.py
+    assert set(files) == {V1, V2, VS1, V3, VS} == set(fast.VERSIONS) - CORE_HALF
     for a in files:
         for b in files:
             for fam in set(files[a]) | set(files[b]):
@@ -1876,22 +1879,23 @@ def test_files_of_the_frozen_predecessors_load_under_the_new_defaults(tmp_path, 
 
 
 def test_select_and_use():
-    """Plan 0104: fast-v4 is the default and the only selectable subset; ``--fast-safety``
-    (``select("safety")``) is retired with a message; ``use`` activates any registered version
-    (``report fast_version=``), which is how the frozen predecessors are still read."""
-    assert fast.DEFAULT == V4 and fast.VARIANTS == {"": V4}
+    """Plan 0104 (fast-v5 since plan 0110): the default is the only selectable subset;
+    ``--fast-safety`` (``select("safety")``) is retired with a message; ``use`` activates any
+    registered version (``report fast_version=``), which is how the frozen predecessors are
+    still read."""
+    assert fast.DEFAULT == V5 and fast.VARIANTS == {"": V5}
     with pytest.raises(ValueError, match=r"--fast-safety is retired \(plan 0104\)"):
         fast.select("safety")
     assert fast.VERSION == V3  # this file's fixture; a refused select changes nothing
     assert fast.use(VS) == VS == fast.VERSION
     assert fast.subset() is fast.subset(VS) and fast.families() == FAMILIES_V1
     assert fast.entry(JB)["positions"] == {"kind": "punct_special"}
-    assert fast.select("") == V4 == fast.VERSION and fast.select() == V4
+    assert fast.select("") == V5 == fast.VERSION and fast.select() == V5
     with pytest.raises(ValueError, match=r"unknown fast variant 'v1' \(known: ''\)"):
         fast.select("v1")  # fast-v1 is not selectable
     with pytest.raises(ValueError, match="unknown fast subset 'fast-v9'"):
         fast.use("fast-v9")
-    assert fast.VERSION == V4
+    assert fast.VERSION == V5
     fast.use(VS)  # left active: the next test starts on its own subset all the same
 
 
@@ -1899,7 +1903,7 @@ def test_every_test_starts_on_the_default_subset(_the_frozen_predecessors):
     """The conftest reset: the test before this one leaves ``fast-safety-v2`` active
     (``test_select_and_use``), and this one's setup still found the default. Only then does
     this file's fixture make fast-v3 active."""
-    assert _the_frozen_predecessors == fast.DEFAULT == V4 and fast.VERSION == V3
+    assert _the_frozen_predecessors == fast.DEFAULT == V5 and fast.VERSION == V3
 
 
 def test_cli_plan_fast_safety(tmp_path, capsys):
@@ -1968,7 +1972,7 @@ def test_cli_judge_fast_safety_of_the_two_safety_families(
     assert fake.n("digest") > 0 and (text.n == 36 if fam == AM else fake.n("item_recognition") > 0)
     assert macro([r])["families"] == [fam] and macro([r])["fast_subset"] == VS
     # plain --fast is still fast-v3: the family is not in it
-    fast.VERSION = V3  # the default of the time (fast.DEFAULT is fast-v4 since plan 0104)
+    fast.VERSION = V3  # the default of the time (fast.DEFAULT is a core-half cut since plan 0104)
     capsys.readouterr()
     plain = ["judge", f"family={fam}", f"readouts={path}", f"out={tmp_path / 'j'}", "--fast"]
     assert main(plain) == 2
@@ -2061,7 +2065,7 @@ def test_cli_run_fast_safety_judges_and_reports(tmp_path, capsys, monkeypatch):
     assert "typo: skipped (not in fast-safety-v2)" in text and "stale fast subset" not in text
     assert read_results(out / AM).config["fast_subset"] == VS
     # a bare report in a fresh process is the fast-v3 view, with the hint
-    fast.VERSION = V3  # the default of the time (fast.DEFAULT is fast-v4 since plan 0104)
+    fast.VERSION = V3  # the default of the time (fast.DEFAULT is a core-half cut since plan 0104)
     assert main(["report", f"dir={out}"]) == 0
     text = capsys.readouterr().out
     assert text.startswith(
@@ -2239,7 +2243,7 @@ def test_cli_report_fast_safety(tmp_path, capsys):
     m = json.loads(capsys.readouterr().out)["macro"]
     assert m["fast_subset"] == VS and m["excluded"] == []
     assert sorted(m["families"]) == ["basic_readout_st", JB, "poetry"]
-    fast.VERSION = V3  # the default of the time (fast.DEFAULT is fast-v4 since plan 0104)
+    fast.VERSION = V3  # the default of the time (fast.DEFAULT is a core-half cut since plan 0104)
     assert main(["report", f"dir={tmp_path}", "fast_version=fast-safety-v2"]) == 0
     text = capsys.readouterr().out
     assert text.startswith(

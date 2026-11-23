@@ -62,7 +62,7 @@ secret and preference items stay, and the bank is refilled with regular think it
   or call key changed (`JUDGE_PROMPT_VERSION` = `dm-2026-10-31`).
 - `white_bear` (the think vs don't-think contrast) needs both twins of a pair, so it is absent
   on bank v2; the code path stays for `items.json` and the adapted banks.
-- **Fast subset.** The family is not in `fast-v4` (it is not a core family), so `--fast` skips
+- **Fast subset.** The family is not in `fast-v5`, the subset `--fast` runs (it is not a core family), so `--fast` skips
   it. The five older fast files (`fast-v1` .. `fast-v3`, `fast-safety-v1`, `fast-safety-v2`)
   hold 62 items of `items.json`, 17 of them dont_think items, and pin its `bank_sha`: those
   entries are records of the 100-item bank and fail closed for this family

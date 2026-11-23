@@ -23,8 +23,7 @@ from wsbench.registry import (
 )
 
 GRID = list(range(20, 61, 4))  # the benchmark's layer grid for Qwen3.6-27B (64 layers)
-# history (plan 0032 §2.1.2): no plan row reads these any more; every family's grid is GRID
-SIX = [20, 28, 36, 44, 52, 60]  # the association families' former coarser grid
+# history (plan 0032 §2.1.2): no plan row reads this any more; every family's grid is GRID
 FIVE = [20, 36, 44, 52, 60]  # the former five in-house layers (old jailbreak and removed arms)
 N_MODEL_LAYERS = 64  # Qwen3.6-27B, the frozen banks' subject
 LAYERS_ENV = "WSB_LAYERS"  # `all` or a csv: plan()'s layers when its argument is None (producer)
@@ -753,6 +752,28 @@ MULTILINGUAL_ALL_POSITIONS = (
 )
 
 
+def user_modeling_hard_specs(items: Iterable[dict[str, Any]]) -> list[ReadSpec]:
+    """user_modeling_hard's read plan for ``items`` (``id`` + ``messages``): the family's branch
+    of ``_plan``, and what its bank builder hashes for the header's ``plan_lineage``."""
+    return [
+        ReadSpec(
+            "user_modeling_hard",
+            it["id"],
+            "chat_context",
+            {"kind": "all"},
+            GRID,
+            messages=it["messages"],
+            note=(
+                "every token of the render (system turn, user turn, assistant header, empty "
+                "think block); lite = the same positions"
+            ),
+            lite_positions=dict(SAME),
+            lite_layers=None,
+        )
+        for it in items
+    ]
+
+
 def _plan(family: str) -> list[ReadSpec]:
     """The read plan for one family, one ReadSpec per bank item."""
     if family in (
@@ -971,23 +992,7 @@ def _plan(family: str) -> list[ReadSpec]:
         # plan 0106: its own branch (the user_modeling branch above and LITE_SAME_FAMILIES,
         # plan 0061's constant, are not touched); the same read as user_modeling
         _h, items = _bank(family)
-        return [
-            ReadSpec(
-                family,
-                it["id"],
-                "chat_context",
-                {"kind": "all"},
-                GRID,
-                messages=it["messages"],
-                note=(
-                    "every token of the render (system turn, user turn, assistant header, empty "
-                    "think block); lite = the same positions"
-                ),
-                lite_positions=dict(SAME),
-                lite_layers=None,
-            )
-            for it in items
-        ]
+        return user_modeling_hard_specs(items)
     if family == "moral_rationale":
         _h, items = _bank(family)
         if items and int(items[0].get("bank_version", 1)) >= 4:

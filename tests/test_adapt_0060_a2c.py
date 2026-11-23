@@ -39,7 +39,9 @@ def _chain_bank():
 
 def test_chain_gate_is_v2_rule_and_first_is_an_annotation():
     _h, items = _chain_bank()
-    it = next(i for i in items if i["name"] == "chain-d3p-0637")  # v2 kept it: first 8/10
+    # a v1 item the registered bank still holds (chain-d3p-0637, used here until plan 0110
+    # dropped it from bank v3, was another); the first-render leg is graded 8/10 below
+    it = next(i for i in items if i["name"] == "chain-d3p-0753")
     asks = {a.leg: a for a in fams.get("chain_intermediates").asks(it)}
     assert set(asks) == {"surface", "note:first"}
     assert asks["surface"].messages[-1]["content"] == it["prompt"]  # the seed-last render

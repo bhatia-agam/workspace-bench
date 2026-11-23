@@ -1135,13 +1135,13 @@
  },
  "chain_intermediates": {
   "blind": {
-   "mean": 0.10333333333333332,
-   "std": 0.0191847740553689,
+   "mean": 0.11000000000000001,
+   "std": 0.010865337342004412,
    "majority": 0.10833333333333334,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.0921875,
+   "analytic_floor": 0.11861979166666667,
    "n_items": 120,
    "n_draws": 5,
    "n_api_fail": 0,
@@ -1152,18 +1152,17 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2",
-   "written": "2026-11-01T02:24:33+00:00",
-   "restamped": "2026-11-04 (heads-v5): measured at chain-mc-2026-10-30+heads-v4+start-op+key-ex2; only the answer-head rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3",
+   "written": "2026-11-23T03:01:22+00:00"
   },
   "uniform": {
-   "mean": 0.10166666666666666,
-   "std": 0.030276503540974917,
-   "majority": 0.075,
+   "mean": 0.10833333333333332,
+   "std": 0.027638539919628332,
+   "majority": 0.06666666666666667,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.0921875,
+   "analytic_floor": 0.11861979166666667,
    "n_items": 120,
    "n_draws": 5,
    "n_api_fail": 0,
@@ -1174,18 +1173,17 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2",
-   "written": "2026-11-04T07:45:08+00:00",
-   "restamped": "2026-11-04 (heads-v5): measured at chain-mc-2026-10-30+heads-v4+start-op+key-ex2; only the answer-head rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3",
+   "written": "2026-11-23T03:03:57+00:00"
   },
   "described": {
-   "mean": 0.13333333333333333,
-   "std": 0.015590239111558086,
+   "mean": 0.14333333333333334,
+   "std": 0.018066236157232327,
    "majority": 0.13333333333333333,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.0921875,
+   "analytic_floor": 0.11861979166666667,
    "n_items": 120,
    "n_draws": 5,
    "n_api_fail": 0,
@@ -1196,9 +1194,8 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2",
-   "written": "2026-11-01T02:27:07+00:00",
-   "restamped": "2026-11-04 (heads-v5): measured at chain-mc-2026-10-30+heads-v4+start-op+key-ex2; only the answer-head rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3",
+   "written": "2026-11-23T03:03:57+00:00"
   }
  },
  "basic_readout_st": {
@@ -2069,6 +2066,100 @@
    "rule": "single pick",
    "instrument": "mmh-2026-11-06+mmh-forms-v3+bank-v2",
    "written": "2026-11-06T18:56:00+00:00"
+  }
+ },
+ "user_modeling_hard": {
+  "blind": {
+   "mean": 0.1135483870967742,
+   "std": 0.014852728300930759,
+   "majority": 0.10967741935483871,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.10109407818426909,
+   "n_items": 155,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.0,
+   "n_options_per_list": [
+    4,
+    6,
+    7
+   ],
+   "model": "claude-opus-5-5",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "umh-v3+bank-v4",
+   "written": "2026-11-23T06:32:00+00:00"
+  },
+  "question": {
+   "mean": 0.07741935483870968,
+   "std": 0.0,
+   "majority": 0.07741935483870968,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.10109407818426909,
+   "n_items": 155,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.0,
+   "n_options_per_list": [
+    4,
+    6,
+    7
+   ],
+   "model": "claude-opus-5-5",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "umh-v3+bank-v4",
+   "written": "2026-11-23T06:35:12+00:00"
+  },
+  "uniform": {
+   "mean": 0.09032258064516129,
+   "std": 0.026989033114002435,
+   "majority": 0.05161290322580645,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.10109407818426909,
+   "n_items": 155,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.0,
+   "n_options_per_list": [
+    4,
+    6,
+    7
+   ],
+   "model": "seeded-uniform",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "umh-v3+bank-v4",
+   "written": "2026-11-23T06:35:12+00:00"
+  },
+  "described": {
+   "mean": 0.0929032258064516,
+   "std": 0.007355970484510566,
+   "majority": 0.08387096774193549,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.10109407818426909,
+   "n_items": 155,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.0,
+   "n_options_per_list": [
+    4,
+    6,
+    7
+   ],
+   "model": "claude-opus-5-5",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "umh-v3+bank-v4",
+   "written": "2026-11-23T06:56:45+00:00"
   }
  }
 }

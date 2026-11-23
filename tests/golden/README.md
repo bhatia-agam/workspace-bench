@@ -168,7 +168,8 @@ set nyt_connections' and knowledge_cutoff's nocot texts), on the pre-0090 code, 
 version) regenerates it the same way; `--fast` must never move it.
 Since plan 0101 the writer emits today's family keys while this file keeps the pre-0101 ones, so
 a regeneration takes only the changed family's three values from the writer's output (plan 0109,
-2026-11-20: `directed_modulation`, bank v2's 102-row plan; every other row is unchanged).
+2026-11-20: `directed_modulation`, bank v2's 102-row plan; plan 0110, 2026-11-23:
+`chain_intermediates`, bank v3's 120-row plan; every other row is unchanged).
 
 ## Pinned-path request pin (plan 0096, 2026-11-18)
 

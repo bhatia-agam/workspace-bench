@@ -42,6 +42,118 @@ uv run wsbench viewer serve
 (`adapted/<model>/`), so the model dropdown lists them. Ingest is idempotent: an unchanged
 source is skipped. `wsbench viewer --help` lists every key.
 
+## Runs manifest
+
+Runs that live on a volume are listed in a manifest and ingested with one command, one lens at
+a time:
+
+```bash
+uv run wsbench viewer ingest runs.json adapter=manifest            # every finished run
+uv run wsbench viewer ingest runs.json adapter=manifest run=<name> # one run (lens=, bench= narrow further)
+uv run wsbench viewer check                                        # scores = the result files?
+```
+
+The manifest is a JSON list of runs, or an object with `runs` whose `volume`, `environment`
+and `model` are defaults for every run. One run:
+
+| key | meaning |
+|---|---|
+| `bench` | `wsb` or `hb` |
+| `method` | `olens`, `nla`, `jlens`, `logit_lens`, `continuation` or `other` |
+| `lens` (or `lens_id`) | the lens id; with `run` it names the store run `<bench>__<model>__<lens>__<run>` |
+| `label` (or `alias`) | the short name the pages show for this run |
+| `run` | the run's name |
+| `set` | `full`, `core`, `fast` or `anti-text-inversion` (`ati`); any other text is a description of a run that stands alone |
+| `families_file` | on a `core` entry: a file listing the core evals, one per line (default: the benchmark's core tier) |
+| `volume`, `environment` | a Modal volume and its environment, or a directory laid out like the volume |
+| `judged` | WorkspaceBench: the directory of `<eval>/results.json` + `cells.jsonl`. HallucinationBench: the directory of `<family>/out/` trees (`<eval>/<judge>/<arm>/cells.jsonl`, `index/<judge>/index.json`) |
+| `readouts` | the directory of the readout files (`merged/<eval>.jsonl`, else the read's shards) |
+| `judged_ati` | the anti-text-inversion results (default: `judged_ati/` beside `judged`) |
+| `derived` | sets derived from this full run: `[{"set": "fast", "run": ..., "judged": ...}]`, one per judged folder (default: run `<run>-fast` when it exists) |
+| `report` | the run's `report.json`: its macro and floors. The stored macro is the report's when one is given |
+| `results_file` | the run's own per-eval results (`{eval: {"value": ...}}`); ingest says where the judged folder differs from it |
+| `timing_note` | the run's own words on its timings and costs; the runs page shows them on hover over the numbers |
+| `bench_commit`, `engine` | text |
+| `cells`, `read_gpu_hours`, `read_wall_seconds`, `judge_wall_seconds`, `judge_calls`, `judge_usd`, `total_usd`, `total_wall_seconds` | numbers from the run's result files; `null` when no file holds one |
+| `integrity` | `{"label": "" / "partial" / "provisional" / "incomplete", "reason": "..."}` as the run's result files say; left out, it is read per eval from the results themselves |
+| `state` | left out = finished. A run whose state does not start with done / finished / complete / judged is skipped with a line saying so; the same command picks it up later |
+| `sources`, `note` | where the numbers came from; free text |
+
+A runs file that names its fields `lens_id`, `alias`, `judge_seconds`, `judge_usd_list`,
+`bench_commit_wsb` / `judge_commit_hb` is read as it is.
+
+A runs file may list one entry per set of a run. The entries of one lens and run name are
+one store run, ingested together:
+
+- `full`: the run itself, from its `judged` folder.
+- `core`: the core tier of that same folder; the entry's `judged` is not read.
+- `anti-text-inversion`: the results in its `judged` folder (`judged_ati/`), stored as the
+  run's anti-text-inversion set.
+- `fast`: the run named `<run>-fast` or `<run>-fast-<more>` (or an entry with the full run's
+  name), stored as a fast set of the run, marked derived. A fast run with no full entry is a
+  run of its own. Which fast set it is comes from the results themselves, not from the entry:
+  results stamped with the current fast subset are the run's **Fast** set, results stamped
+  with an earlier subset are stored under that subset's name and shown as an earlier fast
+  subset. One run can therefore carry both, from two `fast` entries with different `judged`
+  folders; two folders scored on the same subset are refused.
+
+Only the `full` entry writes the run row, its source, judge and full scores. An entry that
+cannot be placed (a `core` entry without its full run, a second entry for the same run with
+another set, a second `fast` entry for the same judged folder, a `judged` value that is not a
+path) and a folder whose results are stamped with
+another set than the entry names are reported as `FAILED`; the store keeps what it had, the
+other runs are still ingested, and the command exits 1.
+
+`report`, `results_file` and `families_file` are looked up as local files first (an absolute
+path, else beside the manifest), then as paths on the run's volume; a file in neither place
+fails the run and its sets, naming both places.
+
+What ingest does with a run:
+
+- It lists the run's files on the volume and compares them (size and time) with the last
+  ingest: an unchanged run is skipped without a download, a changed one is replaced.
+  When the files are unchanged and the entry still names the same folders, a change of its
+  facts alone (timings, cost, notes, label, the report or families file) is written in place:
+  nothing is downloaded and the run database is not rebuilt. The report's floors are stored
+  at a full ingest only (`force=True`).
+- Results, judge caches, indexes and run summaries are downloaded into the cache
+  (`cache=DIR`, else `$WSB_VIEWER_CACHE`, else `~/.cache/wsbench-viewer`) and ingested by the
+  WorkspaceBench and HallucinationBench adapters. Only files an adapter reads are fetched:
+  HallucinationBench's raw call cache and joint cells are not, nor are the judge-call caches
+  of a run's derived sets.
+- The cache cleans up after itself. A WorkspaceBench run's judge-call cache and readout file
+  are fetched eval by eval and removed as soon as the eval is in the run database; once a run
+  is stored, every remaining cell or readout file (`*.jsonl`) is removed from its cache
+  folder, and the command prints one line per run with the count and size. The result files,
+  reports, indexes and summaries stay: they are what `viewer check` and a facts update read
+  again. A removed file is fetched again only by a forced or changed ingest; an unchanged run
+  is recognised from the volume's listing alone. `keep_downloads=True` keeps everything.
+- Readout files are not downloaded (`readouts=none`, the default). The run database records
+  where each eval's files are (`modal://<volume>@<environment>/<path>`), and a question page
+  fetches the eval's file into the cache the first time it is opened, then reads it locally.
+  Such a run has scores, verdicts, judge calls and digests, the expected-answer and quote
+  highlights computed when a question is opened, but no per-layer proxy charts and no readout
+  search. Where the volume cannot be reached (no `modal` command, no credentials, no network)
+  the page shows `[readouts not available here: <address> (<why>)]` in place of the readouts.
+  `readouts=index` fetches each eval's readout file once at ingest for the cell index, the
+  flags and the proxy charts (text of flagged cells only); `readouts=copy` keeps all text, so
+  search works. HallucinationBench samples are in the judge's own cells file and are always
+  stored.
+- The store never records a cache path as a readout source. `wsbench viewer sources` lists the
+  runs of a store whose readout files no longer exist on this machine; their cells without
+  stored text show the same marker.
+
+`wsbench viewer check` compares every stored headline score of the manifest runs with the
+run's own result files (WorkspaceBench: `numbers.value` of each `results.json` per set and the
+report's macro; HallucinationBench: the index value per family and layer) and prints each
+mismatch; it exits 1 when there is one.
+
+Per run the catalog keeps the manifest's facts (`run_facts`), which score sets the run has and
+whether a set was judged as such or derived from the full run (`run_set`: the core rows and
+the fast questions of a full run are derived; a separately read fast run is not), each eval's
+integrity (`run_eval`) and HallucinationBench's index rows per layer (`hb_index`).
+`manifest.json` in the store documents every table.
+
 ## Where things go
 
 - Store: `store=DIR`, else `$WSB_VIEWER_STORE`, else `outputs/viewer_store`. It holds
@@ -58,13 +170,67 @@ source is skipped. `wsbench viewer --help` lists every key.
   (offline). Without them the strip shows the read positions only, and says so.
 - Sanity check: `WSB_CHECKS="viewer_store=wsbench.viewer.checks:viewer_store" wsbench check
   viewer_store` ingests the toy run and compares scores and verdicts with its results.json.
-- Groups: the headings of the README's 'The evals' section, which are the registry's eval
-  categories (`registry.CATEGORIES`, what `group=` selects).
-- Subsets: the dropdown offers **Core** (the default tier, where a core eval has a full-run
-  score: the core evals' rows of the full run and the core macro), **Full bench**, **Fast
-  subset**, **Fast subset + safety** and **ATI**, each only where the store has data for it.
+- Categories: the registry's eval categories (`registry.CATEGORIES`, what `group=` selects),
+  read from the registry when a page is built, so a store ingested earlier follows them too.
+  Every eval is listed once, under its own category.
+- Sets: **Core**, **Full**, **Fast** and **Anti-text-inversion**, each offered only where the
+  store has scores for it. Core is the benchmark's core tier (`wsbench.tiers.CORE`, read when
+  the page is built): the core evals' rows of the full run with the core macro (as stored at
+  ingest; computed by the page for a run stored without them, or stored under an earlier core
+  list), so it is labelled "derived from the full run"; any other set carries the same words
+  when the store records it as derived from the full run rather than judged as that set.
+- Fast sets: **Fast** is the current fast subset (`wsbench.fast.DEFAULT`) and nothing else.
+  A run scored on an earlier fast subset is never shown as Fast: it is a set of its own,
+  titled as an earlier fast subset with its number of evals, and its page says that it is not
+  comparable with Fast. This holds for a run ingested now (its set is stored under the
+  subset its results are stamped with) and for a store written while an earlier subset was
+  the current one: its rows stay under `fast` and the page tells them apart when it is built,
+  by the subset named in the set's stored note and, where there is none, by the
+  evals and question list the rows cover. The store is not rewritten. The fast variant with
+  the two safety evals is no longer derived from a full run; a store that holds it shows it
+  as **Fast with safety (an earlier fast subset)**.
 - Family keys: a run tree written under an earlier name of an eval is read as the family that
   wrote it, by its content (`registry.dir_family`), and stored under the current key.
+
+## The pages
+
+- **Scores** (the first page): one row per eval, by category, with the category links above
+  the table. Columns: who scores the eval ("rule (regex)" where the registry names a
+  deterministic scorer, else "Claude judge"), the number of questions, one column per chosen
+  run with its 95% CI, and the floors. In summary mode the readouts of every eval, the
+  rule-scored ones included, first pass through the Claude summarizer. For HallucinationBench
+  the page also holds the table of index families (weight in the index, what each tests,
+  prompts, who scores it), the claim-map taxonomy (every leaf under its verdict, with its
+  weight) and each run's index rows as its index file has them: one row per layer and the
+  joint row, one column per family and per macro.
+- **One eval**: what it tests, an example, how it is judged and by whom, its gates, the scores
+  of the chosen runs, a per-layer chart, the stored score rows per layer (HallucinationBench:
+  the index row of each layer, and the joint row) and the question list with every run's
+  verdict. An eval a run's results mark as incomplete or provisional carries that tag beside
+  its score, with the reason on hover.
+- **One question**: the prompt, the layers x positions map of each open run, and one pane per
+  run with the readouts of the current cell next to the judge's decision. HallucinationBench
+  readouts are coloured by claim-map leaf, with a legend that groups the leaves under their
+  verdicts (hallucination, probe candidate, thinky, correct, unresolved, junk); a segment shows
+  the judge's reason and quotes, and the span classifier's axes when the store has them.
+  Readouts kept on a volume are read when the question is opened; where they cannot be had,
+  the pane says "Readouts not available here" with their address, and still shows the verdict
+  and the judge calls.
+- **Runs**: one row per run with what its result files gave ingest: method, run name, sets
+  (a derived one says so), cells, GPU-hours to read, read and judge wall-clock, judge calls,
+  judge and total cost, engine, bench commit, integrity label with its reason, and where the
+  readouts are (in the store, local, cached, on a volume, missing). A fact the files do not
+  hold is a dash. A click on a heading sorts.
+- **Layers**, **Filter** (compare two runs: questions one gets right and the other wrong, or
+  ranked by the difference of their rates), **Search** (readout full text) and **Bookmarks**.
+- Methods: O-lens, NLA, J-lens, logit lens and model continuation each have one colour, used
+  for that method in every chart, chip and legend (`meta.METHODS`); runs of the same method
+  differ by shade and line style. A run the store marks (partial, provisional, incomplete)
+  shows that label with its reason beside its name.
+- Runs shown before any is chosen: the lenses the alias file marks `default`, one run per
+  lens. When a lens has several runs, the one with scores in the set on screen is taken, then
+  the one that has a full set, then the one with the most evals in that set, then the newest;
+  the others are in the run chooser.
 
 ## What the page can and cannot say per layer
 
@@ -75,6 +241,7 @@ they are labelled **exact**.
 
 ## Layout
 
-`store.py` schema · `ingest/{wsb,hb}.py` adapters · `meta.py` README parsing ·
+`store.py` schema · `ingest/{wsb,hb}.py` adapters · `ingest/reader.py` the runs manifest ·
+`remote.py` volumes, the download cache and on-demand readouts · `meta.py` README parsing ·
 `gates.py` the gate explanations · `tokens.py` · `checks.py` · `query.py` reads · `app/` pages ·
 `static/` CSS and JS.

@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from typing import Any, Self
 
 DEFAULT_MODEL = "Qwen/Qwen3.6-27B"
+# the revision the banks were built on; the residual store and the published residuals use it
+DEFAULT_REVISION = "6a9e13bd6fc8f0983b9b99948120bc37f49c13e9"
 
 
 @dataclass
@@ -22,14 +24,19 @@ class Backend:
 
     @classmethod
     def load(
-        cls, model_id: str = DEFAULT_MODEL, *, device: str = "cuda", dtype: str = "bfloat16"
+        cls,
+        model_id: str = DEFAULT_MODEL,
+        *,
+        device: str = "cuda",
+        dtype: str = "bfloat16",
+        revision: str | None = None,
     ) -> Self:
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        tok = AutoTokenizer.from_pretrained(model_id)
+        tok = AutoTokenizer.from_pretrained(model_id, revision=revision)
         model = AutoModelForCausalLM.from_pretrained(
-            model_id, dtype=getattr(torch, dtype), device_map=device
+            model_id, dtype=getattr(torch, dtype), device_map=device, revision=revision
         )
         model.eval()
         return cls(model=model, tokenizer=tok, device=device, model_id=model_id)

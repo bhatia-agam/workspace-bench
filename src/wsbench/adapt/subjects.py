@@ -19,6 +19,13 @@ V4PRO_READ_BAND: tuple[int, ...] = (19, 23, 27, 31, 34, 38, 42, 46, 50, 53, 57)
 V4FLASH_READ_BAND: tuple[int, ...] = (15, 18, 21, 24, 26, 27, 30, 33, 36, 39, 42)
 # Dory-4B's O-lens sites on the 2-loop path (unrolled-view indices; see the Subject below)
 DORY_READ_BAND: tuple[int, ...] = (15, 19, 23, 27, 39, 43, 47, 51, 55, 59, 63)
+# Inkling-2-Mini's read / inject sites: every other entry of its 48-entry unrolled view
+# (adapt/inkling_loop.py: 0-5 pre-loop, 6-17 / 18-29 / 30-41 = passes 1-3 of blocks 6-17, 42-47
+# post-loop), odd entries 1, 3, ..., 47, so the last entry is a site (as Dory's O-lens sites are
+# odd unrolled entries). Camila 2026-11-23: "do every other layer, including unrolling the loop
+# part. it's the same way dory was trained, just on the looped layers." The ONE definition: the
+# Subject's band, the J-lens / logit-lens arms and any Oracle lens read these sites.
+INKLING_READ_BAND: tuple[int, ...] = tuple(range(1, 48, 2))
 # the benchmark's 11-layer grid of record (readplan.GRID, Qwen3.6-27B layers out of 64)
 GRID_27B: tuple[int, ...] = tuple(range(20, 61, 4))
 
@@ -431,6 +438,46 @@ SUBJECTS: dict[str, Subject] = {
             modal_app="adapt-dory-4b",
             modal_gpu=("H200", "H100"),
             modal_image="dory",
+            thinking_mode=True,
+        ),
+        # Thinking Machines Inkling-2-Mini: a LOOPED MoE VLM (text only here). 24 decoder blocks;
+        # blocks 6-17 run 3 times (3 passes; pass 2 and 3 restart from the pre-loop state and take
+        # gated messages from the previous pass), every block's input is an attention mix over
+        # 6-block "block states" (attention residuals). Layers are indices of the unrolled view
+        # (adapt/inkling_loop.py, execution order: 0-5 pre-loop, 6-41 the three passes of blocks
+        # 6-17, 42-47 post-loop; entry L = output of that block call = stock hidden_states[L+1] for
+        # L <= 46; stock's LAST hidden state is the normed final_input mix, entry 47 is the raw
+        # output of block 23, so a lens at 47 does not see the pre-head state).
+        # The checkpoint is the released mixed NVFP4 / MXFP8 one (Camila: it is the subject).
+        # Served by the vLLM nightly image vllm/vllm-openai:inkling-2-mini (pinned by digest);
+        # the hub template has no thinking-off mode, so a pinned template fixes effort "none"
+        # and opens the text channel (data/templates/inkling2_mini_nothink.jinja).
+        Subject(
+            "inkling-2-mini",
+            "thinkingmachines/Inkling-2-Mini",
+            "Inkling-2-Mini (3 passes, unrolled)",
+            48,
+            "inkling2",
+            "b85c3cfa615fc413cc9af3379f491b963f3b586a",
+            backend="modal",
+            read_band=INKLING_READ_BAND,
+            chat_template=str(TEMPLATES / "inkling2_mini_nothink.jinja"),
+            modal_app="adapt-inkling-2-mini",
+            # B200 only: the image's inkling2 kernels have no sm90 build (H200: "no kernel image
+            # is available for execution on the device", csrc/inkling2/conv_mix.cu, 2026-11-23)
+            modal_gpu=("B200",),
+            modal_replicas=16,
+            modal_image="inkling",
+            modal_volume="inkling-2-mini",
+            modal_weights="hf/hub/models--thinkingmachines--Inkling-2-Mini/snapshots/"
+            "b85c3cfa615fc413cc9af3379f491b963f3b586a",
+            # the text message closes with <|end_message|>; the eos (<|content_model_end_sampling|>)
+            # comes after it, and the model may open another message first: stop at the close
+            reply_end="<|end_message|>",
+            # the hub template reasons in a <|content_thinking|> message. Native langs are set by
+            # lab decision; the research-only measure route would need a thinking_template whose
+            # generation prompt opens <|content_thinking|> (the hub one has none, and the opener
+            # is all special tokens, invisible in decoded samples)
             thinking_mode=True,
         ),
     ]
