@@ -719,7 +719,7 @@ def test_process_mode_refuses_a_fast_version_only_this_process_made_active(
     _land(root, "a")
     monkeypatch.setattr(fast, "VERSION", "fast-v3")
     args = _config("procs=True", "fast=True")
-    with pytest.raises(SystemExit, match=r"judges fast-v4, but the active .* is fast-v3"):
+    with pytest.raises(SystemExit, match=r"judges fast-v5, but the active .* is fast-v3"):
         runner.run_families([spec], args, readouts_root=root, out=out)
     assert spawner.order == [] and list(rundirs.iterdir()) == []
     args = _config("opts=aggregate=native", "procs=True")  # not a fast run: no part in it

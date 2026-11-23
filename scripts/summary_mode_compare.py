@@ -46,6 +46,8 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     # keys), so its results carry +start-op; native free recall has no digest and is unchanged
     "chain_intermediates": {
         "chain-free-2026-10-30": "chain-free-2026-10-30+start-op",
+        # the registered bank v3 (plan 0110): the bank tag closes each stamp
+        "chain-free-2026-10-30+bank-v3": "chain-free-2026-10-30+start-op+bank-v3",
     },
     # summary mode judges the digest with the single-cell prompt; native cells=all is batched
     "arithmetic_intermediates": {

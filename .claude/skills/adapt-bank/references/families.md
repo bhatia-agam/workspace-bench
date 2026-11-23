@@ -19,7 +19,7 @@ change edits this table in the same PR.
 | basic_readout_st | `evals/basic/basic_readout_st/items_v8.json` |
 | basic_readout | `evals/basic/basic_readout/items_v7.json` |
 | buggy_code | `evals/computational/buggy_code/items_v2.json` |
-| chain_intermediates | `evals/computational/chain_intermediates/items_v2.json` |
+| chain_intermediates | `evals/computational/chain_intermediates/items_v3.json` |
 | conjunctive_association | `evals/association/conjunctive_association/items_v6.json` |
 | directed_modulation | `evals/basic/directed_modulation/items_v2.json` |
 | hinted_cutoff | `evals/model_specific/hinted_cutoff/items_v2.json` |
