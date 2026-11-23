@@ -617,3 +617,104 @@ def test_the_strict_ati_macro_from_a_fast_run(tmp_path, capsys):
         main(["report", f"dir={tmp_path}", "--fast", "anti_text_inversion=True", "json=True"]) == 0
     )
     assert "poetry" not in json.loads(capsys.readouterr().out)["macro"]["families"]
+
+
+def _fast_only_rows(fam: str) -> list[dict]:
+    """A readouts file that holds the family's fast read plan and nothing else: every layer of
+    every row, at the row's own positions where the plan lists them, else at stand-in ones."""
+    token = {"multi_concept_directed_modulation": {"token": "x"}}.get(fam, {})
+    rows = []
+    for s in readplan.plan(fam, fast=True):
+        kind = s.positions["kind"]
+        if kind == "positions":
+            pos = s.positions["positions"]
+        else:  # all_from_end reports negative offsets, -1 the last
+            pos = [-2, -1] if kind == "all_from_end" else [7, 8]
+        rows += [
+            {"id": s.id, "layer": layer, "pos": p, "samples": ["r"], **token}
+            for layer in s.layers
+            for p in pos
+        ]
+    return rows
+
+
+@pytest.mark.parametrize("fam", sorted(fast.subset(fast.DEFAULT)))
+def test_a_fast_only_read_holds_every_cell_the_judge_requires(fam, tmp_path, capsys):
+    """For every family of the default subset: the judge, given a readouts file of the fast
+    read plan alone, finds every cell it requires (a dry run: no call; it counts the missing
+    cells it would refuse). A unit, pair member or twin whose row the fast plan does not hold
+    shows here as missing cells or as an item without readouts."""
+    assert set(fast.subset(fast.DEFAULT)) == set(TABLE)
+    path = write_jsonl(tmp_path / f"{fam}.jsonl", _fast_only_rows(fam))
+    out = tmp_path / "o"
+    argv = ["judge", f"family={fam}", f"readouts={path}", f"out={out}", "--fast", "dry_run=True"]
+    assert main(argv) == 0, capsys.readouterr().err[-2000:]
+    r = read_results(out)
+    assert r.config["scope"] == fast.SCOPE and r.config["fast_subset"] == fast.DEFAULT
+    # multi_concept_directed_modulation expects the cells its window tokens place inside the
+    # dictated sentence (none of the stand-in ones): the item count below is its check
+    assert r.counts["n_expected_cells"] > 0 or fam == "multi_concept_directed_modulation"
+    assert r.counts["n_missing_cells"] == 0
+    assert r.extras["n_items_without_readouts"] == 0
+
+
+def test_judge_fast_of_introspection_reads_a_twins_row_without_judging_its_item(
+    tmp_path, monkeypatch
+):
+    """The one non-ATI headline item (``...|oceans``) is no fast unit, but its inject row is a
+    fast read: the cross twin of the unit ``...|trees`` reads it. The judge takes that row as
+    a readout only, so a FAST file (which has no row of the item's own gaussian twin) is
+    judged whole, and gives the fast value a file that also holds that twin gives."""
+    from wsbench.evals.model_specific.introspection import judge
+
+    bank = judge.load()
+    by = {it["id"]: it for it in bank["items"]}
+    e = fast.subset(V4)["introspection"]
+    units, read = e["units"]["all"], set(e["read_ids"])
+    rider = "inject|protocol:trial1|b4|oceans"
+    assert rider in read and rider not in units and by[rider]["headline"]
+    assert by[rider]["twins"]["gaussian"] not in read
+    assert [u for u in units if by[by[u]["twins"]["cross"]]["readout_of"] == rider] == [
+        "inject|protocol:trial1|b4|trees"
+    ]
+    # the readouts name the concept on 10 units and on the rider; one unit's gaussian twin
+    # names it too (a voided hit)
+    named = {u: by[u]["concept"] for u in [*units[:10], rider]}
+    void = by[units[0]]["twins"]["gaussian"]
+    named[void] = by[units[0]]["concept"]
+    layer = 56
+
+    def rows_of(ids):
+        return [
+            {"id": s.id, "layer": layer, "pos": p,
+             "samples": [f"MARK {named[s.id]}" if s.id in named else f"plain note {s.id}"]}
+            for s in readplan.plan("introspection") if s.id in ids
+            for p in s.positions["positions"]
+        ]  # fmt: skip
+
+    def judge_(system, user, schema):
+        options, rest = user.split("OPTIONS:\n", 1)[1].split("\n\n", 1)
+        labels = [ln.split(". ", 1)[1].split(" (", 1)[0] for ln in options.splitlines()]
+        for k, lab in enumerate(labels):
+            if f"MARK {lab}" in rest:
+                return {"choice": k + 1, "quote": f"MARK {lab}"}
+        return {"choice": labels.index(judge.NONE_OPTION) + 1, "quote": ""}
+
+    got = {}
+    for name, ids in (("fast", read), ("more", read | {by[rider]["twins"]["gaussian"]})):
+        path = write_jsonl(tmp_path / f"{name}.jsonl", rows_of(ids))
+        FakeLLM.install(monkeypatch, judge_)
+        out = tmp_path / name
+        argv = ["judge", "family=introspection", f"readouts={path}", f"out={out}", "--fast"]
+        assert main([*argv, f"layers={layer}"]) == 0
+        got[name] = r = read_results(out)
+        assert r.counts["n_missing_cells"] == 0 and r.extras["n_items_without_readouts"] == 0
+        head = {x["id"]: x for x in r.rows if x.get("role") == "headline"}
+        assert set(head) == set(units) and rider not in {x["id"] for x in r.rows}
+        assert {u for u, x in head.items() if x["pass"]} == set(units[1:10])
+        assert head[units[0]]["pass"] is False and head[units[0]]["pass_unpaired"] is True
+        assert r.n_items == r.extras["fast_n_units"] == r.extras["fast_n_scored"] == 124
+        assert r.extras["fast_units_missing"] == [] and "fast_rescore_mismatch" not in r.extras
+        assert r.value == pytest.approx(9 / 124)
+        assert r.extras["fast_family_value"] == pytest.approx(9 / 124)
+    assert got["fast"].value == got["more"].value and got["fast"].ci95 == got["more"].ci95

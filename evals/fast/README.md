@@ -31,7 +31,9 @@ uv run python scripts/fast_cut_core_half.py --version fast-v4 --seed 20261121 [-
   and `agentic_misalignment` (the owner's ruling): 16 families, 1,203 units, 1,441 read items.
 - **Units**: per family `ceil(n / 2)` of the units its headline averages (pairs for buggy_code,
   hinted_cutoff and role_bound_association, with both members read; headline concepts for
-  introspection, with the rows their twins read; stable slots for nyt_connections, with their
+  introspection, with the rows their twins read (a cross twin reads its partner's inject row,
+  so one inject row is read whose own concept is no unit: the judge takes it as a readout
+  only, never as an item with twins of its own); stable slots for nyt_connections, with their
   puzzles; items otherwise), drawn with `random.Random(f"20261121|<pre-0101 family name>")`
   over the units sorted by id. The seed was fixed before any outcome was looked at, and the
   version is NOT in the stream key.
