@@ -2109,12 +2109,10 @@ class Read(Capture):
                 f"({total['cells_per_second']} cells/s, {total['tokens_per_second']} tokens/s), "
                 f"{total['wall_seconds']} s in all"
             )
-        name = (
-            "read_stats.json"
-            if self.shards == 1
-            else f"read_stats.{self.shard}of{self.shards}.json"
-        )
-        stats = self.out / name if self.shards == 1 else self.out / "parts" / name
+        # what the engine knows about its own time: token bank, server start, requests
+        engine_stats = getattr(getattr(engine, "stats", None), "as_dict", dict)()
+        total["engine"] = {k: v for k, v in engine_stats.items() if k.endswith("_seconds")}
+        stats = read.stats_path(self.out, self.shard, self.shards)
         stats.parent.mkdir(parents=True, exist_ok=True)
         stats.write_text(json.dumps({"total": total, "evals": done}, indent=1), encoding="utf-8")
         print(
@@ -2137,7 +2135,37 @@ class Read(Capture):
                 print(f"{d['family']}: not joined, missing {', '.join(d['missing_parts'])}")
         n = sum(d["status"] == "joined" for d in done)
         print(f"readouts -> {self.out}/<eval>.jsonl ({n} of {len(done)} evals joined)")
+        self._join_stats()
         return 0 if n == len(done) else 1
+
+    def _join_stats(self) -> None:
+        """The shards' saved timing as one: `<out>/read_stats.json` and one total line."""
+        from wsbench.produce import read
+
+        files = [read.stats_path(self.out, i, self.shards) for i in range(self.shards)]
+        have = [f for f in files if f.exists()]
+        if self.shards == 1 or not have:
+            return
+        summed = read.sum_stats([json.loads(f.read_text(encoding="utf-8")) for f in have])
+        t = summed["total"]
+        target = read.stats_path(self.out, 0, 1)
+        target.write_text(json.dumps(summed, indent=1), encoding="utf-8")
+        parts = [
+            f"{k.removesuffix('_seconds').replace('_', ' ')} {t[k]} s"
+            for k in read.ENGINE_SECONDS
+            if k in t
+        ]
+        print(
+            f"read {t['cells']} cells, {t['tokens']} readout tokens in {t['packs']} pack(s) over "
+            f"{len(have)} of {self.shards} shard(s): {t['decode_seconds']} s decoding "
+            f"({t['cells_per_second']} cells/s, {t['tokens_per_second']} tokens/s); "
+            f"GPU time {t['gpu_seconds']} s"
+            + (f" ({', '.join(parts)})" if parts else "")
+            + f"; longest shard {t['wall_seconds']} s; timing -> {target}"
+        )
+        for i, one in enumerate(summed["shards"]):
+            name = have[i].name.split(".")[1]
+            print(f"  shard {name}: {one['cells']} cells, {one['wall_seconds']} s")
 
     def _judge(self, jobs: list[Any], layers: str = "") -> int:
         argv = [f"readouts_root={self.out}", f"out={self.judged}"]

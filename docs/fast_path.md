@@ -110,8 +110,11 @@ Each eval prints where its cells came from, for example `poetry: 1650 cells = 0 
 + 1650 pulled from the dataset + 0 captured (0 forward passes)`, and then
 `poetry: 1650 cells read, 73412 tokens, 31 s of a 412 s pack -> outputs/readouts/my-lens/poetry.jsonl`.
 The call ends with one line of totals (cells, readout tokens, packs, decode seconds, cells and
-tokens per second) and saves them per eval in `<out>/read_stats.json`; with several shards
-each process saves its own file under `<out>/parts/`.
+tokens per second) and saves them per eval in `<out>/read_stats.json`. With several shards
+each process saves its own under `<out>/parts/`, and the `join=True` call sums them into
+`<out>/read_stats.json` and prints the total: cells, readout tokens, decoding seconds, GPU time
+(the processes' wall-clock summed, with server start and requests apart) and the longest
+shard.
 
 The subject model is needed only for cells that are in neither the store nor the dataset. For
 those, `read` runs `wsbench capture` as a process of its own before the server starts, so the

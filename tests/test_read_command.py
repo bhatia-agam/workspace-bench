@@ -558,3 +558,51 @@ def test_join_then_judge_hands_run_the_folder_and_the_budget(served, monkeypatch
     assert cli.main([*base, "join=True", "judge=True", "in_flight_total=352"]) == 0
     assert f"readouts_root={out}" in seen["args"] and "in_flight_total=352" in seen["args"]
     assert "families=alpha" in seen["args"]
+
+
+# ---------------------------------------------------------------- totals after the join
+
+
+def test_the_join_sums_the_shards_timing_into_one_file_and_one_line(served, tmp_path, capsys):
+    where, out, engine, _ = served
+    engine.tokens = [[1, 2, 3]] * 9
+    extra = {"bank_seconds": 1.0, "server_start_seconds": 10.0, "request_seconds": 4.0}
+    engine.stats = types.SimpleNamespace(as_dict=lambda: {"rows": 9, "seconds": 15.0, **extra})
+    argv = plan_argv(tmp_path, where, out, [*A, *B])
+    for i in (0, 1):
+        assert cli.main([*argv, "shards=2", f"shard={i}"]) == 0
+    part = json.loads((out / "parts" / "read_stats.0of2.json").read_text())
+    assert part["total"]["engine"] == extra  # what the engine knows of its own time
+    capsys.readouterr()
+    assert cli.main([*argv, "shards=2", "join=True"]) == 0
+    text = capsys.readouterr().out
+    assert "read 9 cells, " in text and "over 2 of 2 shard(s):" in text and "GPU time" in text
+    assert "(bank 2.0 s, server start 20.0 s, request 8.0 s)" in text
+    assert "shard 0of2:" in text and "shard 1of2:" in text
+    saved = json.loads((out / "read_stats.json").read_text())
+    total = saved["total"]
+    assert (total["cells"], total["shards"], total["packs"]) == (9, 2, 2)
+    assert total["server_start_seconds"] == 20.0 and total["request_seconds"] == 8.0
+    assert total["gpu_seconds"] == round(sum(s["wall_seconds"] for s in saved["shards"]), 1)
+    assert total["wall_seconds"] == max(s["wall_seconds"] for s in saved["shards"])
+    assert {(e["family"], e["cells"]) for e in saved["evals"]} == {("alpha", 8), ("beta", 1)}
+
+
+def test_sum_stats_adds_totals_and_keeps_each_shard():
+    def one(cells, wall, family):
+        row = {"family": family, "status": "read", "cells": cells, "tokens": cells * 2}
+        total = {"cells": cells, "tokens": cells * 2, "packs": 1, "decode_seconds": wall - 1}
+        total |= {"wall_seconds": wall, "forward_passes": 0, "evals_read": 1}
+        total["engine"] = {"server_start_seconds": 3.0, "request_seconds": wall - 5}
+        return {"total": total, "evals": [row, {"family": "x", "status": "exists"}]}
+
+    got = read.sum_stats([one(10, 11.0, "a"), one(30, 21.0, "a")])
+    total = got["total"]
+    assert (total["cells"], total["tokens"], total["packs"], total["shards"]) == (40, 80, 2, 2)
+    assert total["decode_seconds"] == 30.0 and total["cells_per_second"] == round(40 / 30, 1)
+    assert total["gpu_seconds"] == 32.0 and total["wall_seconds"] == 21.0
+    assert total["server_start_seconds"] == 6.0 and total["request_seconds"] == 22.0
+    assert "bank_seconds" not in total and total["evals_read"] == 1
+    (row,) = got["evals"]
+    assert (row["family"], row["cells"], row["tokens"], row["forward_passes"]) == ("a", 40, 80, 0)
+    assert len(got["shards"]) == 2
