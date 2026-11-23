@@ -1210,6 +1210,10 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   `anti_bag_of_features` only). `computation` is accepted for `computational`.
 - `judge_backend=batches` / `$WSB_JUDGE_BACKEND` (`judge_batches.py`, `docs/judge_backends.md`):
   the opt-in Message Batches backend of Claude judge calls; the default stays live.
+- `wsbench capture` + `produce/store.py` (`docs/producing_readouts.md` § The residual store):
+  subject activations kept per item under a key (token ids, positions, layers, steering);
+  `store.cells_for` is the one way to get cells (store, then `pull`, then a forward pass). Needs
+  the `gpu` extra and is never imported by the judge path (`tests/test_residual_store.py`).
 - No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through
   `wsbench.paths` (`external(var, rel)` = `$var`, else `$WSB_DATA_ROOT/<rel>`, default root
   `/workspace`).
