@@ -64,7 +64,7 @@ lens at 11 layers, one sample per cell; carried over, not measured again with `w
 | what was read | cells | GPU-hours to read | wall-clock to read | start to score |
 |---|---|---|---|---|
 | Two questions, not judged | 803 | 0.04 | 4.5 min on 1 GPU | 4.5 min |
-| The fast subset as it was selected then (22 evals) | 657,690 | 2.03 | 12 to 16 min on 12 GPUs | 52 min |
+| The fast subset as it was selected then (22 evals) | 657,690 | 1.98 | 16 min on 12 GPUs | 52 min |
 | Every eval at the time (30 evals) | 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 2 h 29 min |
 
 With fewer GPUs the GPU-hours stay and the wall-clock grows in proportion. Folding an adapter

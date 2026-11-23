@@ -218,7 +218,7 @@ carried over and have not been measured again with `wsbench read`.
 | what was read | cells | GPU-hours to read | wall-clock to read | start to score |
 |---|---|---|---|---|
 | Two questions, not judged | 803 | 0.04 | 4.5 min on 1 GPU | 4.5 min |
-| The fast subset as it was selected then (22 evals, 2,160 questions) | 657,690 | 2.03 | 12 to 16 min on 12 GPUs | 52 min |
+| The fast subset as it was selected then (22 evals, 2,160 questions) | 657,690 | 1.98 | 16 min on 12 GPUs | 52 min |
 | Every eval at the time (30 evals) | 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 2 h 29 min |
 
 "Start to score" includes judging, which overlaps the read (`wsbench run wait=`) and takes
