@@ -12,6 +12,7 @@ BASE_IMAGE = "nvidia/cuda:12.9.1-devel-ubuntu24.04"
 PACKAGES = (
     "httpx",
     "safetensors",
+    "accelerate",  # a capture loads the subject model with `device_map=`
     "transformers>=5",
     "numpy>=1.26",
     "pydra-config>=0.0.17",
@@ -24,13 +25,16 @@ IGNORE = [".git", ".venv", "adapted", "outputs", "**/__pycache__", "tests"]
 
 
 def shard_args(argv: Sequence[str], gpus: int) -> list[list[str]]:
-    """The command line of each container: the caller's keys plus its shard."""
-    return [[*argv, f"shard={i}", f"shards={gpus}", "launcher=local"] for i in range(gpus)]
+    """The command line of each read container: the caller's keys plus its shard. The
+    capture step ran before, so a cell that is still missing is an error there."""
+    extra = ["launcher=local", "capture=False"]
+    return [[*argv, f"shard={i}", f"shards={gpus}", *extra] for i in range(gpus)]
 
 
 def launch(
     argv: Sequence[str],
     *,
+    capture_argv: Sequence[str] | None,
     gpus: int,
     gpu: str,
     volume: str,
@@ -39,11 +43,25 @@ def launch(
     app_name: str,
     timeout: int,
     sglang: str,
+    model_volume: str = "",
+    model_mount: str = "/model",
+    lens_volume: str = "",
+    lens_mount: str = "/lens",
 ) -> int:
-    """Run `wsbench read <argv> shard=i shards=<gpus>` in ``gpus`` containers and return the
-    worst exit code. ``volume`` is mounted at ``mount``: the store, the lens bundle and the
-    readouts root in ``argv`` must be paths under it. ``secret``: a Modal secret that holds
-    ``HF_TOKEN`` (only needed for a gated or private dataset), or empty."""
+    """Three steps, each `wsbench` in a container, and the worst exit code:
+
+    1. one GPU container runs `wsbench capture <capture_argv>`: it fills the store on the
+       volume from the dataset and runs the subject model for the cells the dataset lacks, so
+       the model is loaded at most once (skipped when ``capture_argv`` is None);
+    2. ``gpus`` GPU containers run `wsbench read <argv> shard=i shards=<gpus>`, each writing
+       its parts;
+    3. one CPU container runs `wsbench read <argv> shards=<gpus> join=True`, which writes
+       every eval's readouts file and sidecar from the parts.
+
+    ``volume`` is mounted at ``mount`` and holds the store and the readouts root. The subject
+    model's files and the lens bundle may live on volumes of their own, mounted read-only at
+    ``model_mount`` / ``lens_mount`` (`model=` and `lens=` in ``argv`` are then paths under
+    those). ``secret``: a Modal secret that holds ``HF_TOKEN``, or empty."""
     import modal
 
     image: Any = (
@@ -55,24 +73,39 @@ def launch(
     )
     app = modal.App(app_name)
     data = modal.Volume.from_name(volume, create_if_missing=True)
+    volumes: dict[str, Any] = {mount: data}
+    for name, where in ((model_volume, model_mount), (lens_volume, lens_mount)):
+        if name:
+            volumes[where] = modal.Volume.from_name(name).read_only()
     secrets = [modal.Secret.from_name(secret)] if secret else []
+    shared: dict[str, Any] = {
+        "image": image,
+        "volumes": volumes,
+        "secrets": secrets,
+        "timeout": timeout,
+        "serialized": True,
+    }
 
-    @app.function(
-        image=image,
-        gpu=gpu,
-        volumes={mount: data},
-        secrets=secrets,
-        timeout=timeout,
-        serialized=True,
-    )
-    def read_shard(args: list[str]) -> int:
+    def wsbench(args: list[str]) -> int:
         import subprocess
         import sys
 
-        code = subprocess.run([sys.executable, "-m", "wsbench", "read", *args]).returncode
+        data.reload()  # what the earlier steps committed
+        code = subprocess.run([sys.executable, "-m", "wsbench", *args]).returncode
         data.commit()
         return code
 
-    with app.run():
-        codes = list(read_shard.map(shard_args(argv, gpus)))
-    return max(codes, default=0)
+    # one body, registered twice under its own name: with a GPU and without
+    on_gpu = app.function(name="wsbench_gpu", gpu=gpu, **shared)(wsbench)
+    on_cpu = app.function(name="wsbench_cpu", **shared)(wsbench)
+    # enable_output: the containers' lines are printed here as they run, not only in Modal's logs
+    with modal.enable_output(), app.run():
+        if capture_argv is not None:
+            code = on_gpu.remote(["capture", *capture_argv])
+            if code:
+                return int(code)
+        codes = list(on_gpu.map([["read", *a] for a in shard_args(argv, gpus)]))
+        if max(codes, default=0):
+            return int(max(codes))
+        join = ["read", *argv, f"shards={gpus}", "join=True", "launcher=local"]
+        return int(on_cpu.remote(join))

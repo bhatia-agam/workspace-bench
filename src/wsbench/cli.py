@@ -199,6 +199,13 @@ def _raise_fd_limit() -> None:
         pass
 
 
+def _capture_process(argv: list[str]) -> int:
+    """Run `wsbench capture <argv>` as a child process and return its exit code."""
+    import subprocess
+
+    return subprocess.run([sys.executable, "-m", "wsbench", "capture", *argv]).returncode
+
+
 def _subject_revision(model: str, revision: object, *, need: bool = True) -> str:
     """The subject's revision sha, which keys the residual store: the given one, else the
     benchmark's pinned revision for the default model; any other model must name its own."""
@@ -1855,7 +1862,15 @@ class Read(Capture):
         self.server_args = ""  # the server's flags as one quoted string; empty = the engine's own
         self.in_flight = 4096  # request rows the client keeps in flight
         self.work = ""  # scratch folder for the token bank; empty = a temporary folder
+        # cells that are neither stored nor in the dataset need the subject model: True runs
+        # `wsbench capture` for them in a process of its own before the engine takes the GPU;
+        # False makes such a cell an error (after a capture step that already ran)
+        self.capture = True
+        # only join: write every eval's readouts file and sidecar from the parts that shards=
+        # processes wrote (needed when the processes could not see each other's files)
+        self.join = False
         self.judge = False  # then judge and report: `wsbench run readouts_root=<out>`
+        self.in_flight_total = 0  # judge=True: the judge's budget of calls in flight (0: its own)
         self.judged = ""  # the judge's out folder; default <out>_judged
         self.launcher = "local"  # local: this machine's GPU | modal: one container per GPU
         self.gpus = 1  # launcher=modal: containers, each reading shard i of gpus
@@ -1863,6 +1878,10 @@ class Read(Capture):
         self.modal_volume = ""  # launcher=modal: the volume that holds store, lens and out
         self.modal_mount = "/data"  # where that volume is mounted in the containers
         self.modal_secret = ""  # a Modal secret with HF_TOKEN, if the dataset needs one
+        self.modal_model_volume = ""  # a volume with the subject model's files, read-only
+        self.modal_model_mount = "/model"  # where it is mounted: then model=/model/<folder>
+        self.modal_lens_volume = ""  # a volume with the lens bundle, read-only
+        self.modal_lens_mount = "/lens"  # where it is mounted: then lens=/lens/<bundle>
         self.modal_app = "wsbench-read"
         self.modal_timeout = 14400  # seconds per container
         self.modal_sglang = "sglang[all]>=0.5"  # the pip requirement of the server in the image
@@ -1896,7 +1915,10 @@ class Read(Capture):
         self.server_args = str(self.server_args or "")
         self.in_flight = _int(self.in_flight)
         self.work = _path(self.work) if self.work else None
+        self.capture = _bool(self.capture)
+        self.join = _bool(self.join)
         self.judge = _bool(self.judge)
+        self.in_flight_total = _int(self.in_flight_total)
         self.judged = _path(self.judged) if self.judged else Path(f"{self.out}_judged")
         self.launcher = str(self.launcher)
         if self.launcher not in ("local", "modal"):
@@ -1904,7 +1926,10 @@ class Read(Capture):
         self.gpus = _int(self.gpus)
         if self.gpus < 1:
             raise ValueError(f"gpus must be >= 1, got {self.gpus}")
-        for key in ("modal_gpu", "modal_volume", "modal_mount", "modal_secret", "modal_app"):
+        for key in (
+            "modal_gpu", "modal_volume", "modal_mount", "modal_secret", "modal_app",
+            "modal_model_volume", "modal_model_mount", "modal_lens_volume", "modal_lens_mount",
+        ):  # fmt: skip
             setattr(self, key, str(getattr(self, key) or ""))
         self.modal_timeout = _int(self.modal_timeout)
         self.modal_sglang = str(self.modal_sglang)
@@ -1923,15 +1948,35 @@ class Read(Capture):
                 "judge=True runs here, but launcher=modal writes the readouts to the volume: "
                 "fetch them (modal volume get), then `wsbench run readouts_root=<dir>`"
             )
-        if self.judge and (self.shards != 1 or self.check):
-            raise ValueError("judge=True needs the whole read in this call: drop shards= / check=")
+        if self.join and (self.check or self.launcher == "modal"):
+            raise ValueError("join=True only joins parts: drop check= / launcher=modal")
+        if self.judge and (self.check or (self.shards != 1 and not self.join)):
+            raise ValueError(
+                "judge=True needs every eval's whole file: run the shards, then "
+                "`wsbench read ... shards=<n> join=True judge=True`"
+            )
 
     def modal_argv(self) -> list[str]:
         """This call's keys for the containers: everything but the launcher's own settings."""
         skip = {"launcher", "gpus", "shard", "shards", "fast_variant", "judge", "judged"}
+        skip |= {"join", "capture", "in_flight_total"}
         argv = []
         for key, value in self.to_dict().items():
             if key in skip or key.startswith("modal_") or value in (None, ""):
+                continue
+            argv.append(f"{key}={','.join(value) if isinstance(value, list) else value}")
+        return argv
+
+    def capture_argv(self, *, sharded: bool = True) -> list[str]:
+        """The `wsbench capture` call that fills the store for this read: the same evals,
+        store, dataset and subject, and this process's shard unless ``sharded`` is False."""
+        keys = ["families", "plan", "store", "model", "revision", "dtype", "device", "reads"]
+        keys += ["fast", "limit", "dataset", "dataset_revision"]
+        keys += ["shard", "shards"] if sharded else []
+        argv = []
+        for key in keys:
+            value = getattr(self, key)
+            if value in (None, "", False) or (key in ("limit", "shard") and not value):
                 continue
             argv.append(f"{key}={','.join(value) if isinstance(value, list) else value}")
         return argv
@@ -1942,8 +1987,15 @@ class Read(Capture):
         if self.launcher == "modal":
             from wsbench.produce import modal_launch
 
+            # a lens read captures once, before the shards; the baseline reads no activations
+            lens = self.method == "lens" and self.capture
             return modal_launch.launch(
                 self.modal_argv(),
+                capture_argv=self.capture_argv(sharded=False) if lens else None,
+                model_volume=self.modal_model_volume,
+                model_mount=self.modal_model_mount,
+                lens_volume=self.modal_lens_volume,
+                lens_mount=self.modal_lens_mount,
                 gpus=self.gpus,
                 gpu=self.modal_gpu,
                 volume=self.modal_volume,
@@ -1964,7 +2016,23 @@ class Read(Capture):
                 read.job(f, specs, reads=self.reads, fast=self.fast) for f, specs in plans.items()
             ]
         if self.method == "model_continuation":
+            if self.join:
+                from wsbench.produce.served import continuation
+
+                jobs1 = [read.one_layer(j, self.layer) for j in jobs]
+                code = self._join(jobs1, continuation.NAME, "prose1")
+                return (
+                    self._judge(jobs, layers=str(self.layer)) if self.judge and not code else code
+                )
             return self._continuations(jobs)
+        if self.join:  # a CPU step: the bundle's name and sampling kind, no engine
+            try:
+                made = read.load_bundle(self.lens)
+            except (OSError, ValueError, RuntimeError) as e:
+                print(f"read: {e}", file=sys.stderr)
+                return EXIT_USAGE
+            code = self._join(jobs, made.name, made.sampling_kind)
+            return self._judge(jobs) if self.judge and not code else code
         options: dict[str, Any] = {
             "greedy": self.greedy,
             "sampler": self.sampler,
@@ -1997,7 +2065,21 @@ class Read(Capture):
                 part = store.shard(j.specs, self.shard, self.shards)[: self.limit or None]
                 print(self._where(j.family, part, where, pull, tokenizer))
             return 0
+        import time
+
+        started = time.time()
+        split = {"shard": self.shard, "shards": self.shards, "limit": self.limit}
         try:
+            lacking = read.missing(jobs, where, tokenizer, pull, **split)
+            if lacking and self.capture:
+                # the subject model runs in a process of its own and is gone, with its GPU
+                # memory, before the server starts; that process also pulls from the dataset
+                n = sum(lacking.values())
+                print(f"{n} item(s) need the subject model: wsbench capture, in its own process")
+                code = _capture_process(self.capture_argv())
+                if code:
+                    print(f"read: the capture step failed (exit {code})", file=sys.stderr)
+                    return code
             done = read.read_evals(
                 jobs,
                 engine,
@@ -2007,25 +2089,55 @@ class Read(Capture):
                 reader=bundle.name,
                 sampling=bundle.sampling_kind,
                 pull=pull,
-                subject=subject,
                 pack_cells=self.pack_cells,
-                shard=self.shard,
-                shards=self.shards,
-                limit=self.limit,
+                **split,
             )
         except store.NoPromptError as e:
             print(f"read: {e}; leave that eval out", file=sys.stderr)
             return EXIT_USAGE
+        except store.StoreError as e:
+            print(f"read: {e}", file=sys.stderr)
+            return EXIT_USAGE
         finally:
             engine.close()
         n_read = sum(d["status"] == "read" for d in done)
+        total = read.totals(done, time.time() - started)
+        if n_read:
+            print(
+                f"read {total['cells']} cells, {total['tokens']} readout tokens in "
+                f"{total['packs']} pack(s): {total['decode_seconds']} s decoding "
+                f"({total['cells_per_second']} cells/s, {total['tokens_per_second']} tokens/s), "
+                f"{total['wall_seconds']} s in all"
+            )
+        name = (
+            "read_stats.json"
+            if self.shards == 1
+            else f"read_stats.{self.shard}of{self.shards}.json"
+        )
+        stats = self.out / name if self.shards == 1 else self.out / "parts" / name
+        stats.parent.mkdir(parents=True, exist_ok=True)
+        stats.write_text(json.dumps({"total": total, "evals": done}, indent=1), encoding="utf-8")
         print(
             f"readouts -> {self.out}/<eval>.jsonl "
-            f"({n_read} read, {len(done) - n_read} already there)"
+            f"({n_read} read, {len(done) - n_read} already there); timing -> {stats}"
         )
         if not self.judge:
             return 0
         return self._judge(jobs)
+
+    def _join(self, jobs: list[Any], reader: str, sampling: str) -> int:
+        """join=True: every eval's file and sidecar from its parts; exit 1 names what lacks."""
+        from wsbench.produce import read
+
+        done = read.join(jobs, self.out, self.shards, reader=reader, sampling=sampling)
+        for d in done:
+            if d["status"] == "joined":
+                print(f"{d['family']}: {d['rows']} rows joined from {self.shards} parts")
+            else:
+                print(f"{d['family']}: not joined, missing {', '.join(d['missing_parts'])}")
+        n = sum(d["status"] == "joined" for d in done)
+        print(f"readouts -> {self.out}/<eval>.jsonl ({n} of {len(done)} evals joined)")
+        return 0 if n == len(done) else 1
 
     def _judge(self, jobs: list[Any], layers: str = "") -> int:
         argv = [f"readouts_root={self.out}", f"out={self.judged}"]
@@ -2033,6 +2145,7 @@ class Read(Capture):
         argv += [f"families={','.join(j.family for j in jobs)}"]
         argv += ["allow_missing=True"] if self.limit else []
         argv += [f"layers={layers}"] if layers else []
+        argv += [f"in_flight_total={self.in_flight_total}"] if self.in_flight_total else []
         print(f"\n== judge: wsbench run {' '.join(argv)}")
         return _run_command(RunFamilies, argv)
 

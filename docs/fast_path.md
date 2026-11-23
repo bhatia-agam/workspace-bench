@@ -108,8 +108,16 @@ uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens jud
 
 Each eval prints where its cells came from, for example `poetry: 1650 cells = 0 from the store
 + 1650 pulled from the dataset + 0 captured (0 forward passes)`, and then
-`poetry: 1650 cells read -> outputs/readouts/my-lens/poetry.jsonl`. The model is loaded only if
-some cells are in neither the store nor the dataset; it is released before the server starts.
+`poetry: 1650 cells read, 73412 tokens, 31 s of a 412 s pack -> outputs/readouts/my-lens/poetry.jsonl`.
+The call ends with one line of totals (cells, readout tokens, packs, decode seconds, cells and
+tokens per second) and saves them per eval in `<out>/read_stats.json`; with several shards
+each process saves its own file under `<out>/parts/`.
+
+The subject model is needed only for cells that are in neither the store nor the dataset. For
+those, `read` runs `wsbench capture` as a process of its own before the server starts, so the
+model and its GPU memory are gone when the server needs the GPU (a model dropped inside the
+same process does not give its memory back). `capture=False` turns that off: a missing cell
+is then an error.
 
 | key | default | meaning |
 |---|---|---|
@@ -119,6 +127,7 @@ some cells are in neither the store nor the dataset; it is released before the s
 | `families`, `--fast`, `plan` | | which evals: a comma list or `all`, the fast subset, or a plan file (below) |
 | `store`, `dataset`, `dataset_revision`, `revision`, `dtype`, `model`, `device` | as on `capture` | where the activations come from |
 | `check` | `False` | only say where each eval's cells are |
+| `capture` | `True` | run `wsbench capture` in its own process first for cells that need the subject model; `False`: such a cell is an error |
 | `engine` | `sglang` | the serving engine |
 | `pack_cells` | `60000` | cells decoded per server start; evals are packed up to this many |
 | `sampler` | `hf` | `hf`: top-k, renormalise, then top-p, the order of `generate`; `native`: the server's own joint filter |
@@ -127,48 +136,64 @@ some cells are in neither the store nor the dataset; it is released before the s
 | `in_flight` | `4096` | request rows the client keeps in flight |
 | `work` | a temporary folder | scratch space for the copy of the embedding table |
 | `limit` | `0` | the first N questions of each eval |
-| `shard`, `shards` | `0`, `1` | one process per GPU: each reads every `shards`-th question from `shard` and writes a part under `<out>/parts/`; whichever process finishes an eval last joins the parts and writes the sidecar |
-| `judge`, `judged` | `False`, `<out>_judged` | then run `wsbench run readouts_root=<out> out=<judged>` on these evals |
+| `shard`, `shards` | `0`, `1` | one process per GPU: each reads every `shards`-th question from `shard` and writes a part under `<out>/parts/`; a process that sees every part of an eval joins them and writes the sidecar |
+| `join` | `False` | `True` with `shards=<n>`: only write each eval's file and sidecar from its `n` parts (a CPU step, for processes that could not see each other's files); exit 1 names an eval whose parts are not all there |
+| `judge`, `judged`, `in_flight_total` | `False`, `<out>_judged`, `0` | then run `wsbench run readouts_root=<out> out=<judged>` on these evals, with that budget of judge calls in flight when given; with several shards, on the `join=True` call |
 | `launcher`, `gpus`, `modal_*` | `local` | the Modal launcher (below) |
 
 Several GPUs on one machine are several processes:
 
 ```bash
+uv run wsbench capture fast=True store=outputs/store   # once: pull, and one model load if needed
 for i in 0 1 2 3; do
-  CUDA_VISIBLE_DEVICES=$i uv run wsbench read --fast lens=bundles/my-lens \
-      out=outputs/readouts/my-lens shard=$i shards=4 &
+  CUDA_VISIBLE_DEVICES=$i uv run wsbench read fast=True lens=bundles/my-lens \
+      out=outputs/readouts/my-lens shard=$i shards=4 capture=False &
 done; wait
-uv run wsbench run --fast readouts_root=outputs/readouts/my-lens out=outputs/judged/my-lens
+uv run wsbench read fast=True lens=bundles/my-lens out=outputs/readouts/my-lens shards=4 \
+    join=True judge=True in_flight_total=352
 ```
+
+The capture first means the 27B model is loaded once, not once per process. On one filesystem
+the last process to finish an eval joins its parts by itself; the `join=True` call is what
+makes that certain, and it is required when the processes ran on machines that do not share a
+live filesystem.
 
 `wsbench run wait=<seconds>` can be started before the read: it judges each eval when its
 sidecar appears, so judging overlaps reading.
 
 ## Run it on Modal
 
-The launcher is optional and thin (`src/wsbench/produce/modal_launch.py`, about 80 lines): it
-builds an image with SGLang and this checkout, and runs the same command in `gpus` containers,
-each on its own shard, against one volume. It needs `pip install modal` and a Modal account;
-nothing else in the repository imports Modal.
+The launcher is optional and thin (`src/wsbench/produce/modal_launch.py`, about 110 lines).
+It builds an image with SGLang and this checkout and runs three steps against one volume: one
+GPU container runs `wsbench capture` (the dataset pull, and the subject model for the cells
+the dataset lacks, loaded once); `gpus` GPU containers run the read, each on its own shard;
+one CPU container joins the parts into each eval's file and sidecar. It needs `pip install
+modal` and a Modal account; nothing else in the repository imports Modal.
 
 ```bash
-uv run wsbench read --fast launcher=modal gpus=12 modal_volume=<your volume> \
-    lens=/data/bundles/my-lens store=/data/store out=/data/readouts/my-lens
+uv run wsbench read fast=True launcher=modal gpus=8 modal_volume=<your volume> \
+    modal_lens_volume=<volume with the bundle> lens=/lens/my-lens \
+    store=/data/store out=/data/readouts/my-lens
 modal volume get <your volume> readouts/my-lens outputs/readouts/my-lens
-uv run wsbench run --fast readouts_root=outputs/readouts/my-lens out=outputs/judged/my-lens
+uv run wsbench run fast=True readouts_root=outputs/readouts/my-lens out=outputs/judged/my-lens
 ```
 
 An image for this path needs, beside SGLang and `httpx`, the packages `wsbench` itself imports
-(`pydra-config` and `pronouncing` are the two a serving image does not already have; the
-launcher's `PACKAGES` lists them), and network access to the Hugging Face hub for the dataset
-pull; an anonymous pull works, no token is needed for the public dataset.
+and a serving image does not already have: `pydra-config`, `pronouncing`, and `accelerate` (a
+capture loads the subject model with `device_map=`). The launcher's `PACKAGES` lists them. It
+also needs network access to the Hugging Face hub for the dataset pull; an anonymous pull
+works, no token is needed for the public dataset.
 
-The volume is mounted at `modal_mount` (default `/data`), so `lens=`, `store=` and `out=` are
-paths under it, and the bundle has to be on the volume first (`modal volume put`). Settings,
-all keys of the command: `gpus`, `modal_gpu` (default `B200`), `modal_volume`, `modal_mount`,
-`modal_secret` (a secret holding `HF_TOKEN`, only if your dataset needs one), `modal_app`,
-`modal_timeout`, `modal_sglang` (the pip requirement of the server). The image is a starting
-point: a serving stack moves fast, so pin `modal_sglang` to the version you tested.
+The volume `modal_volume` is mounted at `modal_mount` (default `/data`) and holds the store
+and the readouts, so `store=` and `out=` are paths under it. The lens bundle and the subject
+model's files can live on volumes of their own, mounted read-only: `modal_lens_volume` at
+`modal_lens_mount` (default `/lens`, then `lens=/lens/<bundle>`) and `modal_model_volume` at
+`modal_model_mount` (default `/model`, then `model=/model/<folder>`; without it the capture
+step downloads the model from the hub). The other settings, all keys of the command: `gpus`,
+`modal_gpu` (default `B200`), `modal_secret` (a secret holding `HF_TOKEN`, only if your
+dataset needs one), `modal_app`, `modal_timeout`, `modal_sglang` (the pip requirement of the
+server). The image is a starting point: a serving stack moves fast, so pin `modal_sglang` to
+the version you tested. While it runs, the containers' lines are printed in your terminal.
 
 ## The model-continuation baseline
 
