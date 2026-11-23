@@ -235,8 +235,8 @@ def _ingest_manifest(o: Ingest) -> int:
             from wsbench.viewer.query import is_earlier_fast, subset_title
 
             what = r.get("subset") or ""
-            said = f" ({subset_title(what)})" if is_earlier_fast(what) else ""
-            print(f"{head}: stored as a set of {r['run_id']}{said}")
+            note = f" ({subset_title(what)})" if is_earlier_fast(what) else ""
+            print(f"{head}: stored as a set of {r['run_id']}{note}")
         elif r["status"] == "unchanged":
             print(f"{head}: unchanged, skipped (force=True re-ingests)")
         elif r["status"] == "failed":
