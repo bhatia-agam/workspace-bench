@@ -78,6 +78,13 @@ NAMED_FILES = ("report", "results_file", "families_file")
 SOURCE_KEYS = ("bench", "model", "lens", "run", "volume", "environment", "judged", "readouts",
                "judged_ati")  # fmt: skip
 HB_SKIP = ("cache.jsonl",)  # the benchmark's raw call cache: not read by the viewer
+# what an ingest leaves in a run's cache folder once the run is stored: the files `viewer
+# check` and a facts update read again (results, reports, indexes, summaries, the set index:
+# all JSON). The judge-call caches, cell files and readout files (all JSON lines) are in the
+# run database by then and can be fetched again, so they are removed, with any unfinished
+# download.
+REMOVABLE = ("*.jsonl", "*.part")
+
 PART_OUTCOMES = ("n_parts_refused", "n_parts_too_long", "n_parts_all_dropped")
 OWN_CALLS = ("relational_multihop",)  # scorers that make their own API calls
 
@@ -348,6 +355,21 @@ def merge_indexes(indexes: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 # ------------------------------------------------------------------ ingest
+
+
+def clean(work: Path) -> tuple[int, int]:
+    """Remove the re-fetchable downloads (``REMOVABLE``) from a run's cache folder; ``(files
+    removed, bytes freed)``. Result files, reports, indexes and the set index stay."""
+    n = size = 0
+    if not work.is_dir():
+        return n, size
+    for pattern in REMOVABLE:
+        for p in sorted(work.rglob(pattern)):
+            if p.is_file() and not p.is_symlink():
+                size += p.stat().st_size
+                p.unlink()
+                n += 1
+    return n, size
 
 
 def _under(entries: Iterable[remote.Entry], base: str) -> list[tuple[remote.Entry, str]]:
@@ -656,7 +678,7 @@ def _fast_run_judged(entry: Mapping[str, Any]) -> str:
 
 
 def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_dir, repo,
-               force: bool, families) -> dict[str, Any]:  # fmt: skip
+               force: bool, families, keep_downloads: bool = False) -> dict[str, Any]:  # fmt: skip
     kind = set_kind(entry)
     if not is_path(entry["judged"]):
         return {"status": "failed", "why": f"its judged value is not a path: {entry['judged']!r}"}
@@ -719,25 +741,50 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
     core_families = _families_file(entry, volume)
 
     work = work_dir(cache, rid)
-    pairs = [(e, work / "judged" / r) for e, r in main if r.split("/")[0] in fams or "/" not in r]
-    pairs += [(e, work / "judged_ati" / r) for e, r in ati_files]
+    # fetched now: the result files of every set (small next to the rest, and kept). Fetched
+    # eval by eval while the run is ingested, and removed again once the eval is in the run
+    # database: the full run's judge-call caches and readout files. The judge-call caches of
+    # the other sets are never read (their cells and judge calls are the full run's).
+    calls = "cells.jsonl"
+    pairs, heavy = [], {}  # heavy: eval -> its (entry, destination) pairs
+    for e, r in main:
+        if r.endswith("/" + calls):
+            if r.split("/")[0] in fams:
+                heavy.setdefault(r.split("/")[0], []).append((e, work / "judged" / r))
+        elif r.split("/")[0] in fams or "/" not in r:
+            pairs.append((e, work / "judged" / r))
+    pairs += [(e, work / "judged_ati" / r) for e, r in ati_files if not r.endswith("/" + calls)]
     for d in derived:
         pairs += [(e, work / "derived" / d["dir"] / r)
-                  for e, r in judged_files(derived_files[d["judged"]], d["judged"])]  # fmt: skip
+                  for e, r in judged_files(derived_files[d["judged"]], d["judged"])
+                  if not r.endswith("/" + calls)]  # fmt: skip
     n_got, n_bytes = remote.fetch_all(volume, pairs)
-    pairs = []
     addresses: dict[str, str] = {}
     lazy: dict[str, list[tuple[str, int]]] = {}
     ro = _readout_files(volume, listing, ro_base, wsb.family_dirs(work / "judged"))
     for fam, files in ro.items():
         if readouts != "none" and len(files) == 1:
             dest = work / "readouts" / f"{fam}.jsonl"
-            pairs.append((files[0], dest))
+            heavy.setdefault(fam, []).append((files[0], dest))
             addresses[str(dest)] = volume.url(files[0].path)
+            dest.parent.mkdir(parents=True, exist_ok=True)
         else:
             lazy[fam] = [(volume.url(e.path), e.size) for e in files]
-    more = remote.fetch_all(volume, pairs)
-    n_got, n_bytes = n_got + more[0], n_bytes + more[1]
+    tally = {"files": n_got, "bytes": n_bytes, "removed": 0, "freed": 0}
+
+    def bring(fam: str) -> None:
+        got = remote.fetch_all(volume, heavy.get(fam, ()))
+        tally["files"], tally["bytes"] = tally["files"] + got[0], tally["bytes"] + got[1]
+
+    def drop(fam: str) -> None:
+        for _e, dest in () if keep_downloads else heavy.get(fam, ()):
+            if dest.is_file():
+                tally["removed"], tally["freed"] = (
+                    tally["removed"] + 1,
+                    (tally["freed"] + dest.stat().st_size),
+                )
+                dest.unlink()
+
     # everything is checked before the store is touched: a folder that holds another set
     # than the entry names is refused, and the run in the store stays as it is
     wrong = _wrong_scope(work / "judged", SCOPES.get(kind) if kind else ..., entry["set"])
@@ -768,7 +815,9 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
         run_name=entry["run"], source=volume.url(judged),
         source_name=lambda p: addresses.get(str(p), volume.url(ro_base)),
         remote_readouts=lazy, core_families=core_families,
+        before_family=bring, after_family=drop,
     )  # fmt: skip
+    n_got, n_bytes = tally["files"], tally["bytes"]
     cat = store.catalog(root)
     model = entry["model"] or wsb.ORIGINAL
     stored = cat.execute(
@@ -817,6 +866,7 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
         "placed": placed, "differs": _differs(entry, headline, volume, placed),
         "sets": sorted({r["subset"] for r in _stored_sets(root, rid)}),
         "downloaded_files": n_got, "downloaded_bytes": n_bytes,
+        "cleaned": (tally["removed"], tally["freed"]),
         "readouts": {"mode": readouts, "on_volume": sorted(lazy),
                      "indexed": sorted(set(ro) - set(lazy))},
     }  # fmt: skip
@@ -849,7 +899,7 @@ def ingest_hb(entry, root: Path, volume, cache: Path, *, build_dir, hb_repo, for
         if rest.startswith("index/"):
             if rest.endswith("/index.json"):
                 pairs.append((e, work / "_index" / f"{fam.replace('/', '_')}.json"))
-        else:
+        elif hb.reads(rest):  # the rest of a judged tree is not read: not fetched
             pairs.append((e, work / "lens" / rest))
             names[str(work / "lens" / rest)] = volume.url(e.path)
     n_got, n_bytes = remote.fetch_all(volume, pairs)
@@ -893,13 +943,16 @@ def ingest_entry(
     hb_repo: Path | None = None,
     force: bool = False,
     families: list[str] | None = None,
+    keep_downloads: bool = False,
 ) -> dict[str, Any]:
     """Ingest one manifest run. ``readouts``: ``none`` records where each eval's readout
     files are and reads a question's cells from there on demand (nothing is downloaded now, no
     per-cell flags or search); ``index`` fetches each eval's readout file once to index its
     cells and set the flags, keeping only flagged cells' text; ``copy`` also keeps every
     cell's text. HallucinationBench cells carry their samples in the judge's own cells file,
-    which is always ingested. Returns ``status`` = ingested | unchanged | in progress | not
+    which is always ingested. Once the run is in the store its cache folder keeps only what
+    is read again (``clean``; ``cleaned`` = files removed, bytes freed); ``keep_downloads``
+    leaves every download. Returns ``status`` = ingested | unchanged | in progress | not
     judged yet | failed, with the reason."""
     if readouts not in READOUT_MODES:
         raise SystemExit(f"readouts must be one of {', '.join(READOUT_MODES)}, not {readouts!r}")
@@ -925,12 +978,18 @@ def ingest_entry(
                 repo=repo,
                 force=force,
                 families=families,
+                keep_downloads=keep_downloads,
             )
     except (remote.UnavailableError, SystemExit) as e:
         return base | {"status": "failed", "why": str(e)}
     except Exception as e:  # one broken run never stops the others; the command still fails
         return base | {"status": "failed", "why": f"{type(e).__name__}: {e}"}
     db = store.run_db_path(store_root, base["run_id"])
+    if out["status"] in ("ingested", "unchanged", "facts updated") and not keep_downloads:
+        # the run is in the store: what is left of its downloads (also an earlier ingest's)
+        swept = clean(work_dir(cache, base["run_id"]))
+        before = out.get("cleaned") or (0, 0)
+        out["cleaned"] = (before[0] + swept[0], before[1] + swept[1])
     return (
         base
         | out

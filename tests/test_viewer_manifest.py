@@ -782,3 +782,125 @@ def test_a_full_run_derives_no_fast_with_safety_set(tmp_path: Path, sets_volume:
     con.close()
     assert "fast-safety" not in stored and "full" in stored
     assert "fast-safety" not in Store(root).subsets("wsb", wsb.ORIGINAL)
+
+
+# ------------------------------------------------------------------ the ingest cache
+
+
+def _downloads(tmp_path: Path, kind: str = "*.jsonl") -> list[str]:
+    work = tmp_path / "cache" / "ingest"
+    return sorted(str(p.relative_to(work)) for p in work.rglob(kind))
+
+
+def test_an_ingest_leaves_only_what_is_read_again_in_its_cache(
+    tmp_path: Path, volume: Path, monkeypatch, capsys
+):
+    """Once a run is stored, its cache folder keeps the result files, reports, indexes and
+    summaries; the judge-call caches, cell files and readout files are removed (they are in
+    the run database and on the volume). Files no adapter reads are not downloaded at all.
+    The score check, an unchanged run, a facts update and a forced re-ingest work as before."""
+    # files of the kind a real judged tree holds beside what the adapters read
+    _family(volume, f"out/{RUN}/{LENS}/judged_ati", FAM, 0.5, ATI)
+    for unread in (f"out/{RUN}/{LENS}/judged_ati/{FAM}", f"out/{RUN}-fast/{LENS}/judged/{FAM}"):
+        _jsonl(volume / unread / "cells.jsonl", [{"key": "x", "result": {}, "meta": {}}])
+    arm = volume / f"out/hb-run/{LENS}/hb/main/out/wsbench_chat/{hb.JUDGE}/{LENS}"
+    (arm / "cells_joint.jsonl").write_text("{}\n")
+    fetched: list[str] = []
+    real = remote.LocalVolume.get
+
+    def get(self, path, dest):
+        fetched.append(path)
+        return real(self, path, dest)
+
+    monkeypatch.setattr(remote.LocalVolume, "get", get)
+    root, out = _ingest(tmp_path, volume, readouts="index")
+    assert out[RUN]["status"] == "ingested" and out["hb-run"]["status"] == "ingested"
+    # read while ingesting, then removed: the full run's judge calls and readouts, HB's cells
+    names = {p.rsplit("/", 1)[-1] for p in fetched}
+    assert {"cells.jsonl", f"{FAM}.jsonl", "results.json", "index.json", "summary_v2.json"} <= names
+    assert f"{JUDGED}/{FAM}/cells.jsonl" in fetched
+    # never read, so never fetched: the other sets' judge calls, HB's joint cells and raw cache
+    assert not [p for p in fetched if "judged_ati" in p and p.endswith("cells.jsonl")]
+    assert not [p for p in fetched if f"{RUN}-fast" in p and p.endswith("cells.jsonl")]
+    assert not [p for p in fetched if p.endswith(("cells_joint.jsonl", "cache.jsonl"))]
+    assert _downloads(tmp_path) == [] and _downloads(tmp_path, "*.part") == []
+    assert out[RUN]["cleaned"][0] == 2 and out[RUN]["cleaned"][1] > 0  # judge calls, readouts
+    assert out["hb-run"]["cleaned"][0] == 1  # the arm's cells
+    kept = _downloads(tmp_path, "*.json")
+    rid, hb_rid = out[RUN]["run_id"], out["hb-run"]["run_id"]
+    for want in (f"{rid}/judged/{FAM}/results.json", f"{rid}/judged/{FAM}/reader_judge.json",
+                 f"{rid}/derived/fast/{FAM}/results.json", f"{rid}/derived/sets.json",
+                 f"{rid}/judged_ati/{FAM}/results.json",
+                 f"{hb_rid}/lens/index/{hb.JUDGE}/index.json",
+                 f"{hb_rid}/lens/wsbench_chat/{hb.JUDGE}/{LENS}/summary_v2.json"):  # fmt: skip
+        assert want in kept, want
+    # the store has what the removed files held: judge calls, cells, the claim map
+    db = Store(root)
+    assert db.cells(rid, FAM, IDS[0])["judgments"] and db.cells(rid, FAM, IDS[0])["cells"]
+    assert db.cells(hb_rid, "main", "it-0")["cells"]["20:5"]["g"]
+    # the score check still reads the result files; nothing is fetched for it
+    fetched.clear()
+    got = checks.store_scores(root)
+    assert got[rid]["mismatches"] == [] and "result files in" in got[rid]["against"]
+    assert got[hb_rid]["mismatches"] == [] and "index files in" in got[hb_rid]["against"]
+    # an unchanged run is recognised without the removed files, and downloads nothing
+    again = reader.ingest_manifest(_manifest(tmp_path, volume), root, readouts="index")
+    assert [r["status"] for r in again] == ["unchanged", "unchanged", "in progress"]
+    # facts alone: updated in place, again without a download
+    facts = reader.ingest_manifest(
+        _manifest(tmp_path, volume, cells=12), root, readouts="index", run=RUN
+    )
+    assert facts[0]["status"] == "facts updated" and Store(root).run_facts(rid)["cells"] == 12
+    assert fetched == []
+    # what an earlier ingest left behind is swept when the run is seen again
+    left = tmp_path / "cache" / "ingest" / rid / "judged" / FAM / "cells.jsonl"
+    left.write_text("{}\n")
+    assert cli.main(["ingest", str(_manifest(tmp_path, volume, cells=12)), "adapter=manifest",
+                     f"store={root}", "readouts=index", f"run={RUN}"]) == 0  # fmt: skip
+    text = capsys.readouterr().out
+    assert f"{rid}: removed 1 downloaded files from the cache" in text and not left.exists()
+    # a forced re-ingest fetches the removed files again, and only those
+    forced = reader.ingest_manifest(
+        _manifest(tmp_path, volume, cells=12), root, readouts="index", run=RUN, force=True
+    )
+    assert forced[0]["status"] == "ingested" and forced[0]["downloaded_files"] == 2
+    assert sorted(p.rsplit("/", 1)[-1] for p in fetched) == sorted(["cells.jsonl", f"{FAM}.jsonl"])
+    assert _downloads(tmp_path) == []
+    assert checks.store_scores(root)[rid]["mismatches"] == []
+    # keep_downloads=True leaves them
+    kept_run = reader.ingest_manifest(
+        _manifest(tmp_path, volume, cells=12), root, readouts="index", run=RUN, force=True,
+        keep_downloads=True,
+    )  # fmt: skip
+    assert kept_run[0]["cleaned"] == (0, 0)
+    assert _downloads(tmp_path) == [
+        f"{rid}/judged/{FAM}/cells.jsonl",
+        f"{rid}/readouts/{FAM}.jsonl",
+    ]
+
+
+def test_the_hb_adapter_names_the_files_it_reads():
+    judge, lens = hb.JUDGE, "a-lens"
+    layer = f"benign_roleplay/{judge}/{lens}/hb_only/jailbreak_recognition"
+    read = [
+        f"wsbench_chat/{judge}/{lens}/cells.jsonl",
+        f"story/{judge}/{lens}/summary_v2.json",
+        f"index/{judge}/index.json",
+        f"or/overrefusal/{judge}/offtopic_index/index_counts.jsonl",
+        f"or/overrefusal/{judge}/offtopic/{lens}.jsonl",
+        f"or/overrefusal/{judge}/sj_records_full.jsonl",
+        "br_index_root/index_counts.jsonl",
+        f"{layer}/L20/results.json",
+        f"{layer}/L20/cells.jsonl",
+    ]
+    unread = [
+        f"wsbench_chat/{judge}/{lens}/cells_joint.jsonl",
+        f"wsbench_chat/{judge}/{lens}/cache.jsonl",
+        f"story/{judge}/{lens}/summary.json",
+        f"index/{judge}/index.md",
+        f"agentic_misalignment/{judge}/{lens}/cells.jsonl",
+        f"overrefusal/{judge}/digest/{lens}.jsonl",
+        f"{layer}/all/results.json",
+    ]
+    assert [r for r in read if not hb.reads(r)] == []
+    assert [r for r in unread if hb.reads(r)] == []

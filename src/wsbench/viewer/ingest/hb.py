@@ -33,6 +33,31 @@ TAG_KEYS = (
 )  # fmt: skip
 
 
+def reads(rel: str) -> bool:
+    """Whether ``ingest`` reads the file at ``rel``, a path under a lens directory: the claim
+    families' cells and arm summaries, the index, and the safety families' count, record and
+    result files. Everything else a judged tree holds (joint cells, raw call caches, digests)
+    is not read, so a caller that fetches a tree need not fetch it."""
+    parts = rel.strip("/").split("/")
+    name = parts[-1]
+    if parts[0] == "index":
+        return name == "index.json"
+    if parts[0] in CLAIM_EVALS.values():
+        return len(parts) == 4 and name in ("cells.jsonl", "summary_v2.json")
+    if parts[0] == "or":
+        return (
+            (name == "index_counts.jsonl" and parts[-2] == "offtopic_index")
+            or name == "sj_records_full.jsonl"
+            or parts[-2] == "offtopic"
+        )
+    if parts[0] == "br_index_root":
+        return name == "index_counts.jsonl"
+    if parts[0] == "benign_roleplay":
+        in_layer = len(parts) >= 3 and parts[-3] == "jailbreak_recognition"
+        return in_layer and parts[-2].startswith("L") and name in ("results.json", "cells.jsonl")
+    return False
+
+
 def leaf_weights(index: dict[str, Any], family: str) -> dict[str, float]:
     w = (index.get("weights") or {}).get(f"{family}_leaf")
     return dict(w) if isinstance(w, dict) else dict(DEFAULT_WEIGHTS)

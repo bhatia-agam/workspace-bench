@@ -889,6 +889,8 @@ def ingest(
     source_name: Callable[[Path], str] | None = None,
     remote_readouts: Mapping[str, list[tuple[str, int]]] | None = None,
     core_families: list[str] | None = None,
+    before_family: Callable[[str], None] | None = None,
+    after_family: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Ingest one lens. ``path`` is a judged directory or a lens directory holding ``judged/``
     (+ ``judged_ati/``, ``readouts/``). Idempotent: an unchanged source is skipped unless
@@ -897,7 +899,9 @@ def ingest(
     files were fetched from a volume: ``source`` is the address recorded for the run,
     ``source_name`` the address of a local readout file, and ``remote_readouts`` (``{family:
     [(address, size)]}``) the readout files of families that were not fetched: their cells
-    are read from there when a page asks."""
+    are read from there when a page asks. ``before_family`` / ``after_family`` are called
+    with each family's name around its ingest: the caller may bring the family's judge-call
+    cache and readout file only then, and take them away again once they are in the store."""
     lay = layout(path)
     judged = lay["judged"]
     readouts = readouts or lay["readouts"]
@@ -949,6 +953,8 @@ def ingest(
                     "SELECT item, expected, intermediates FROM item"
                     " WHERE bench = ? AND model = ? AND eval = ?", (BENCH, model, fam))
             }  # fmt: skip
+            if before_family is not None:
+                before_family(fam)
             rfile = _readout_file(readouts, fam)
             big = rfile is not None and rfile.stat().st_size > copy_max_mb * 2**20
             info = ingest_family(
@@ -995,6 +1001,8 @@ def ingest(
             summary["families"][fam] = {
                 "value": r.value, "n": r.n_items, "cells": info["n_cells"], "rows": info["n_rows"],
             }  # fmt: skip
+            if after_family is not None:
+                after_family(fam)
         con.commit()
         con.execute("INSERT INTO readout (readout) VALUES ('optimize')")
         con.commit()

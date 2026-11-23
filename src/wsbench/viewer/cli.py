@@ -41,6 +41,8 @@ ingest keys
                 index and flags; copy: keep all text)  cache=DIR (downloads; default
                 $WSB_VIEWER_CACHE or ~/.cache/wsbench-viewer)  hb_repo=DIR  families=a,b
                 environment=NAME (the Modal environment of runs that name none)
+                keep_downloads=True (keep the judge-call caches and cell files in the cache;
+                by default they are removed once the run is stored, the result files stay)
   common        store=DIR (default $WSB_VIEWER_STORE or outputs/viewer_store)
                 build_dir=DIR (build the database on a fast local disk, then move it)
                 force=True (re-ingest an unchanged source)
@@ -83,11 +85,13 @@ class Ingest(Options):
         self.bench = None
         self.cache = None
         self.environment = None
+        self.keep_downloads = False  # adapter=manifest: leave every download in the cache
 
     def finalize(self) -> None:
         if self.adapter not in ADAPTERS:
             raise ValueError(f"adapter must be one of {', '.join(ADAPTERS)}, not {self.adapter!r}")
         self.force = _bool(self.force)
+        self.keep_downloads = _bool(self.keep_downloads)
         self.copy_max_mb = int(self.copy_max_mb)
         if self.adapter == "manifest":
             self.readouts = self.readouts or "none"
@@ -199,12 +203,19 @@ def _ingest_manifest(o: Ingest) -> int:
         build_dir=Path(o["build_dir"]) if o["build_dir"] else None,
         repo=Path(o["repo"]) if o["repo"] else None,
         hb_repo=Path(o["hb_repo"]) if o["hb_repo"] else None, force=o["force"],
-        families=_list(o["families"]),
+        families=_list(o["families"]), keep_downloads=o["keep_downloads"],
     )  # fmt: skip
     if not out:
         print("no run of the manifest matches")
+    said: set[str] = set()
     for r in out:
         head = f"{r['bench']} {r['run']} {r['lens']}" + (f" [{r['set']}]" if r.get("set") else "")
+        n, freed = r.get("cleaned") or (0, 0)
+        if n and r["run_id"] not in said:  # once per run, not once per set entry
+            said.add(r["run_id"])
+            print(f"{r['run_id']}: removed {n} downloaded files from the cache ({_mb(freed)}): "
+                  "judge-call caches, cell and readout files, now in the run database; the "
+                  "result files stay (keep_downloads=True keeps all)")  # fmt: skip
         if r["status"] == "ingested":
             print(f"{head}: ingested as {r['run_id']}: {r['evals']} evals, sets "
                   f"{', '.join(r['sets'])}; database {_mb(r['db_bytes'])}, downloaded "

@@ -118,8 +118,16 @@ What ingest does with a run:
   at a full ingest only (`force=True`).
 - Results, judge caches, indexes and run summaries are downloaded into the cache
   (`cache=DIR`, else `$WSB_VIEWER_CACHE`, else `~/.cache/wsbench-viewer`) and ingested by the
-  WorkspaceBench and HallucinationBench adapters. HallucinationBench's raw call cache is not
-  fetched.
+  WorkspaceBench and HallucinationBench adapters. Only files an adapter reads are fetched:
+  HallucinationBench's raw call cache and joint cells are not, nor are the judge-call caches
+  of a run's derived sets.
+- The cache cleans up after itself. A WorkspaceBench run's judge-call cache and readout file
+  are fetched eval by eval and removed as soon as the eval is in the run database; once a run
+  is stored, every remaining cell or readout file (`*.jsonl`) is removed from its cache
+  folder, and the command prints one line per run with the count and size. The result files,
+  reports, indexes and summaries stay: they are what `viewer check` and a facts update read
+  again. A removed file is fetched again only by a forced or changed ingest; an unchanged run
+  is recognised from the volume's listing alone. `keep_downloads=True` keeps everything.
 - Readout files are not downloaded (`readouts=none`, the default). The run database records
   where each eval's files are (`modal://<volume>@<environment>/<path>`), and a question page
   fetches the eval's file into the cache the first time it is opened, then reads it locally.
