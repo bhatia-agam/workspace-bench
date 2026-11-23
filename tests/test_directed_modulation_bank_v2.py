@@ -117,13 +117,13 @@ def test_stamp_by_bank_version():
     assert registry.FAMILIES["directed_modulation"].judge.prompt_version == dp.PROMPT_VERSION
     assert dp.PROMPT_VERSION == dp.INSTRUMENT_V1 + "+bank-v2" == "dm-2026-10-31+expressed+bank-v2"
     assert judge.instrument(_raw(V2)) == dp.PROMPT_VERSION
-    assert judge.instrument(_raw(V1)) == dp.INSTRUMENT_V1  # items.json / adapted banks: no suffix
+    assert judge.instrument(_raw(V1)) == dp.INSTRUMENT_V1  # items.json (no version): no suffix
     assert judge.instrument({}) == dp.INSTRUMENT_V1
     assert judge.instrument() == dp.PROMPT_VERSION  # no header: the bank judged now
 
 
 def test_prompt_only_freeze_accepts_the_judged_banks_stamp(monkeypatch):
-    """An unversioned bank (items.json, every existing adapted set) still stamps
+    """An unversioned bank (items.json; the adapted sets before plan 0113) still stamps
     ``dm-2026-10-31+expressed``, and the prompt-only freeze accepts a floor on that stamp while
     that bank is the one judged (``prompt_only.judged_bank_stamp``)."""
     from wsbench.baselines import prompt_only as po

@@ -584,7 +584,7 @@
     "buggy_code": "buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2+digest-v5-task-extractive+sj-v10",
     "chain_intermediates": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10",
     "conjunctive_association": "comp-v5+maj+digest-v5-task-extractive+sj-v10",
-    "directed_modulation": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+    "directed_modulation": "dm-2026-10-31+expressed+bank-v2+digest-v5-task-extractive+sj-v10",
     "hinted_cutoff": "hc-2026-11-04b+bank-v2+digest-v5-task-extractive+sj-v10",
     "jailbreak_recognition": "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins+digest-v5-task-extractive+sj-v10",
     "knowledge_cutoff": "cutoff-judge-2026-10-31+kcgate-v3+digest-v5-task-extractive+sj-v10",
@@ -2065,16 +2065,16 @@
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
-     "n_items": 48,
-     "n_items_decided": 48,
+     "n_items": 51,
+     "n_items_decided": 51,
      "counts": {
-      "n_expected_cells": 48,
+      "n_expected_cells": 51,
       "n_missing_cells": 0,
       "n_unjudged_cells": 0,
       "n_empty_cells": 0
      },
      "judge_model": "claude-opus-5-5",
-     "instrument": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+     "instrument": "dm-2026-10-31+expressed+bank-v2+digest-v5-task-extractive+sj-v10",
      "layers_judged": [
       44
      ],
@@ -2099,9 +2099,9 @@
      },
      "decided": {},
      "digest_unserved": [],
-     "written": "2026-11-19T19:49:58+00:00",
+     "written": "2026-11-23T07:03:58+00:00",
      "value": 1.0,
-     "n": 48,
+     "n": 51,
      "ci": [
       1.0,
       1.0

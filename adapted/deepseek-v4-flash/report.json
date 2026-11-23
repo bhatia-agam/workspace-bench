@@ -1646,18 +1646,64 @@
    "note": "120 after auto; the delta audit dropped an exact duplicate (pool closed): 119/120. Final data round (2026-11-17): independent audit (295 must-drops proposed, 216 applied; the 64 nyt label slots and 15 wrong_intermediate hop-2 items kept, see AUDIT.md), one back-fill, a delta audit of every post-audit item (50 drops, applied drop-only), every remaining gate-passing pool row closed so the final freeze ships only audited, lucky-measured items."
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 99,
-   "n_original_pass": 98,
-   "n_items": 98,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 100,
+   "n_items": 100,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (no Brief / refill route): 99/100 registered items pass the compliance gate on DeepSeek-V4-Flash; pairs kept atomic -> 98."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23, plan 0113): the 34 dont_think items left the set; the 64 kept originals (34 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on DeepSeek-V4-Flash (copies the carrier, never names the concept, greedy AND >= 8/10): 36 pass, 1 fail (dm-think-39). Provenance: this set's run-tree gate log was not found, so the gate rows of the kept originals were seeded from the shipped bank at 5a5d8376 (each item with its recorded rate / pass; 64 rows, not re-run on the subject); n_original_gated counts log rows, seeded ones included. The 1 registered think original(s) the set had not shipped (a pair member had failed; which one was not on record) were gated afresh on 2026-11-23: none passes; 1 fail (dm-pair-23-pos). 100/102 ship (70 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "34 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-18-neg', 'dm-pair-19-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "22e7fef0ced20ee56f366c26e5975e02bbd4651c26da1cecd52d2f2655dc597b",
+     "to": "e9dd86a5d133615469bb62de48dd915bb885b79ff19d0d9d1f099ee12e0efdd0",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-18-neg",
+      "dm-pair-19-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:33:10+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -1875,11 +1921,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 58 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "Rebuilt on DeepSeek-V4-Flash (plan 0084): the gw ccut v2 pipeline re-run on the subject (pool 2024-05..2026-02: v2's verified items plus GLM-5.3's drafted 2025-07..2026-02 extension, reused; V4-Flash fades 2024-06..2025-04, est. cutoff 2025-04, base-N 10-20% through 2025-12), paired with v2's date / rating calipers plus the masked guessability rating (R18, caliper 20); 75 pairs (attempt 0, every gate passing), 17 dropped by the independent audit (5 wrong hint answers, 12 answers readable from the question) -> 58; date checks pass (day AUROC 0.533, cell excess +0.052)."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "45d8f5c6",
-  "adapt_sha256": "15ceed52bb8e754a"
+  "git": "a3033c75",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "deepseek-v4-flash",
  "label": "DeepSeek-V4-Flash",
