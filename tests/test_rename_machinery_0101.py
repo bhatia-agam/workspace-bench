@@ -2,6 +2,7 @@
 multi-token family since 2026-11-20, ``<bare>_st`` = the single-token one that held the key
 before): names, stamps, evidence, bank lookup under a root, pins, out dirs, resumed files."""
 
+import importlib.util
 import json
 
 import pytest
@@ -294,3 +295,85 @@ def test_a_partner_readouts_file_is_never_resumed(bare, tmp_path):
     refuse_partner_file(path, st)
     refuse_partner_file(tmp_path / "absent.jsonl", bare)
     refuse_partner_file(path, "moral_rationale")  # a family outside any pair: no check
+
+
+# ---------------------------------------------------------------- plan 0106: the ledger rule
+
+
+def _declare_mod():
+    spec = importlib.util.spec_from_file_location(
+        "manifest_0101_declare", registry.REPO_ROOT / "scripts/manifest_0101_declare.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _manifest(families: dict[str, dict[str, str]]) -> dict:
+    """A synthetic manifest: family -> its ``plan.fast_plan_sha`` rows."""
+
+    def fam(name: str, fast: dict[str, str]) -> dict:
+        return {
+            "files": {"bank_file": "items.json", "bank_sha256": f"sha-{name}"},
+            "plan": {"plan_sha": f"plan-{name}", "fast_plan_sha": dict(fast)},
+            "stamps": {"prompt_version": f"{name}-v1", "prompts_sha256": f"p-{name}"},
+            "run": {"native": {"judge_calls": ["a", "b"]}},
+        }
+
+    return {
+        "script_sha256": "s",
+        "shared": {"digest_prompt_version": "digest-v5", "n_families": len(families)},
+        "families": {name: fam(name, fast) for name, fast in families.items()},
+    }
+
+
+def test_a_later_fast_cut_does_not_stale_a_new_familys_ledger_entry():
+    """Plan 0106 §7.4: a family the golden does not have keeps its ``plan.fast_plan_sha`` rows
+    outside its ledger entry (``without_fast``), so a fast version cut after its declaration
+    neither fails T1 nor can be re-declared; a golden family still follows ``new_fast_rows``."""
+    dec = _declare_mod()
+    old = {"fam_a": {"fast-v4": "A"}, "fam_b": {"fast-v4": "B"}}
+    gold = _manifest(old)
+    cur = _manifest({**old, "fam_c": {"fast-v5": "C5"}})
+    assert "a new family needs one too" in dec.verdict(gold, cur, {})[1][0]
+    led = {"fam_c": dec.declare(gold, cur, {}, "fam_c", "0106", "new family")}
+    declared, failures = dec.verdict(gold, cur, led)
+    assert list(declared) == ["fam_c"] and declared["fam_c"].startswith("new family")
+    assert not failures
+    # the entry hashes the family's rows without its fast rows, and nothing else is left out
+    bare = json.loads(json.dumps(cur["families"]["fam_c"]))
+    del bare["plan"]["fast_plan_sha"]
+    assert led["fam_c"]["rows_sha256"] == dec.rows_sha256(bare)
+    assert dec.without_fast(cur["families"]["fam_c"])["plan"] == {"plan_sha": "plan-fam_c"}
+    assert dec.without_fast({"stamps": {}}) == {"stamps": {}}
+    # a later fast version (and a moved row of an older one) for the NEW family: still passing,
+    # and `declare` has nothing new to hash
+    later = _manifest({**old, "fam_c": {"fast-v5": "C5", "fast-v6": "C6"}})
+    assert dec.verdict(gold, later, led) == (declared, [])
+    with pytest.raises(dec.Refused, match="already declared in this state"):
+        dec.declare(gold, later, led, "fam_c", "0106", "again")
+    # every other row of the new family is still guarded (its full plan among them)
+    moved = json.loads(json.dumps(later))
+    moved["families"]["fam_c"]["plan"]["plan_sha"] = "plan-moved"
+    assert "changed again" in dec.verdict(gold, moved, led)[1][0]
+    # the same added row on a GOLDEN family follows `new_fast_rows`: it fails unless it equals
+    # the family's row under a golden version
+    bad = _manifest({"fam_a": {"fast-v4": "A", "fast-v6": "X"}, "fam_b": old["fam_b"]})
+    assert "its fast plan moved" in dec.verdict(gold, bad, {})[1][0]
+    same = _manifest({"fam_a": {"fast-v4": "A", "fast-v6": "A"}, "fam_b": old["fam_b"]})
+    assert dec.verdict(gold, same, {}) == ({}, [])
+
+
+def test_the_ledger_rule_for_new_families_moves_no_existing_entry():
+    """``without_fast`` is applied for ``g is None`` only: a declared GOLDEN family's entry is
+    hashed exactly as before (its rows with the acceptable new fast rows set aside)."""
+    dec = _declare_mod()
+    gold = _manifest({"fam_a": {"fast-v4": "A"}, "fam_b": {"fast-v4": "B"}})
+    cur = _manifest({"fam_a": {"fast-v4": "A", "fast-v5": "A"}, "fam_b": {"fast-v4": "B"}})
+    cur["families"]["fam_a"]["stamps"] = {"prompt_version": "fam_a-v2", "prompts_sha256": "p2"}
+    entry = dec.declare(gold, cur, {}, "fam_a", "9999", "test")
+    kept = json.loads(json.dumps(cur["families"]["fam_a"]))
+    del kept["plan"]["fast_plan_sha"]["fast-v5"]  # the acceptable new row, set aside as before
+    assert entry["rows_sha256"] == dec.rows_sha256(kept)
+    assert kept["plan"]["fast_plan_sha"] == {"fast-v4": "A"}  # the golden rows stay hashed
+    assert dec.verdict(gold, cur, {"fam_a": entry})[1] == []

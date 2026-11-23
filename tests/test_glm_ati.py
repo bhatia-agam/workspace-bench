@@ -199,8 +199,9 @@ def test_provenance_is_recorded(path):
     assert src["family_templates"]["mmh_bridge"] == ti.FAMILY_PANEL_TEMPLATES["mmh_bridge"]
     readme = (registry.REPO_ROOT / "evals" / "baselines" / "README.md").read_text()
     assert src["family_templates"]["nyt_groups"] in readme
+    # (user_modeling_hard, plan 0106: no adapted set carries it, so the set's file never names it)
     assert set(data["_not_gated"]) == (
-        set(ti.NOT_GATED) - {"model_multihop", "nyt_connections"}
+        set(ti.NOT_GATED) - {"model_multihop", "nyt_connections", "user_modeling_hard"}
     ) | {"introspection"}
     assert data["model_multihop"]["pinned"] and data["nyt_connections"]["opt_in"]
 

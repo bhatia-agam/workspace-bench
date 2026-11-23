@@ -186,6 +186,29 @@ def _user_modeling() -> list[Question]:
     return out
 
 
+def _user_modeling_hard() -> list[Question]:
+    """The bank's own label gate, one question per PART (id ``<name>#p<k>``): asked outright
+    with the label the part was gated under (``attr_label``, ordinal labels included: this
+    question is asked with the chat), does the model name the value the conversation implies?"""
+    out = []
+    for it in bank_items("user_modeling_hard"):
+        turns = "\n".join(f"{m['role']}: {m['content']}" for m in it["messages"])
+        for k, p in enumerate(it["parts"]):
+            gate = p.get("gate") or {}
+            n = gate.get("n_samples")
+            out.append(
+                Question(
+                    f"{it['id']}#p{k}",
+                    f"{turns}\n\nBased on that conversation, what is the user's "
+                    f"{p['attr_label']}? Answer in one word or short phrase.",
+                    [str(p["gold"]), *(str(f) for f in p.get("forms") or [])],
+                    float(gate["n_correct"]) / float(n) if n else None,
+                    {"item": it["id"], "kind": it["kind"], "type": p["type"]},
+                )
+            )
+    return out
+
+
 def readable_outcome(verified: str) -> str:
     """``exec: exit 0; stdout = '-53.5'`` as a sentence, so the grader is not matching harness
     syntax against a plain-English answer. Anything else is returned unchanged."""
@@ -275,6 +298,7 @@ BUILDERS: dict[str, Callable[[], list[Question]]] = {
     "user_modeling": _user_modeling,
     "buggy_code": _buggy_code,
     "moral_rationale": _moral,
+    "user_modeling_hard": _user_modeling_hard,
 }
 
 # Families with no answerable question, and what their own gate is instead.

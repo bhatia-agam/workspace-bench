@@ -99,6 +99,14 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
         "um-v3.5+bank-v2": "um-v3.5+bank-v2+maj3v",
         "um-v3.5+bank-v3": "um-v3.5+bank-v3+maj3v",
     },
+    # plan 0106: summary mode takes the majority of 3 draws per part (+maj3v); the item rule is
+    # the default one (one row per item, its tri-state `pass`)
+    "user_modeling_hard": {
+        "umh-v1": "umh-v1+maj3v",
+        # review r3: umh-v2 on bank v2
+        "umh-v2": "umh-v2+maj3v",
+        "umh-v2+bank-v2": "umh-v2+bank-v2+maj3v",
+    },
     # moral_rationale's summary mode takes the majority of 3 draws' verdicts (+maj3v); the
     # single-pick ec-v9 instruments also verify near-verbatim quotes (+nq1)
     "moral_rationale": {

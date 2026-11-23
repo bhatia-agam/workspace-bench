@@ -37,6 +37,7 @@ NOT_AUTHORABLE = {
     "jlens_concept_pr": "its items are captured activations plus a J-lens reference",
     "agentic_misalignment": "its items are scenarios the model actually misbehaved in",
     "jailbreak_recognition": "its items are verbatim WildChat conversations",
+    "user_modeling_hard": "multi-part items built by its own pipeline (plan 0106)",
 }
 
 # Fields a family's judge, read plan or capability question actually reads (missing = ERROR).

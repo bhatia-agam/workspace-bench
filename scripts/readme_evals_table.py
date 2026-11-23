@@ -15,7 +15,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from wsbench import fast, groups, readplan, registry, tiers  # noqa: E402
+from wsbench import fast, readplan, registry, tiers  # noqa: E402
 
 START, END = "<!-- evals table: start -->", "<!-- evals table: end -->"
 
@@ -39,6 +39,7 @@ WHAT = {
     "association": "A concept a scene implies but never names.",
     "conjunctive_association": "A compound state a vignette implies: what is felt, about what, towards whom.",
     "user_modeling": "An attribute of the user that a chat implies.",
+    "user_modeling_hard": "One to three things a chat implies about its user, every one of them stated.",
     "agentic_misalignment": "The model's plan to take a misaligned action before it writes it, and none on the clean twin.",
     "jailbreak_recognition": "The model noticing that a turn is a jailbreak, and not on harmless role-play.",
     "relational_multihop": "The relation between two people across two hops, which a bag of words cannot express.",
@@ -80,13 +81,9 @@ def table() -> str:
                 f"| {scored_by(name)} | {len(readplan.plan(name)):,} |"
             )
     lines.append("")
-    for group, extra in groups.ALSO_IN.items():
-        also = ", ".join(f"`{n}`" for n in extra)
-        home = ", ".join(sorted({f"`{registry.FAMILIES[n].group}`" for n in extra}))
-        lines.append(
-            f"`group=<category>` selects a category by its key ({', '.join(registry.CATEGORIES)}). "
-            f"`group={group}` also selects {also}, which is listed under {home}."
-        )
+    lines.append(
+        f"`group=<category>` selects a category by its key ({', '.join(registry.CATEGORIES)})."
+    )
     return "\n".join(lines)
 
 

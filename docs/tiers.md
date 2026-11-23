@@ -7,7 +7,7 @@ names them instead (a tier flag together with `families=` is a usage error).
 |---|---|---|---|---|
 | `fast` | `--fast` | the frozen fast subset: a seeded random half of core without the two safety families, the strict ATI subset whole ([Fast subset](fast_subset.md)) | 16 | the fast macro |
 | `core` | none (the default), or `--core` | the core families, each with its full registered bank and its unchanged instrument | 18 | the **core macro**: the mean over the core rows |
-| `full` | `--full` (`all=True` is its synonym) | every family except a superseded or retired one | 31 | the macro over every row |
+| `full` | `--full` (`all=True` is its synonym) | every family except a superseded or retired one | 32 | the macro over every row |
 
 Core, by registry key: `agentic_misalignment`, `jailbreak_recognition`,
 `arithmetic_intermediates`, `buggy_code`, `nyt_connections`, `moral_rationale`, `poetry`,
@@ -17,8 +17,9 @@ Core, by registry key: `agentic_misalignment`, `jailbreak_recognition`,
 `conjunctive_association`
 (`wsbench.tiers.CORE`; tagged `core` in [The evals](../README.md#the-evals) and in the `tier` column of
 `wsbench list`). Core has 18 families today (the values of `conjunctive_association` sit below
-its text floors, see its README). A hard user_modeling bank (new items, in
-preparation) will join it as its 19th; the registered `user_modeling` bank is in full only.
+its text floors, see its README). The hard user-modelling bank, `user_modeling_hard`, is
+registered in full and joins core as its 19th once its validation is done; the registered
+`user_modeling` bank is in full only.
 
 When to use which: `fast` for quick iteration, `core` for the number a method is reported on,
 `full` to check that a method does not regress on basic functionality. Core is a subset of full

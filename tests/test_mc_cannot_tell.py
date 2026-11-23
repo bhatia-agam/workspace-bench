@@ -108,6 +108,11 @@ def _last_option(family: str) -> str:
         from wsbench.evals.model_specific.model_multihop import judge as j
 
         return j.shown_options(j.load_items()[0])[-1]
+    if family == "user_modeling_hard":  # plan 0106: the first part's list, in bank order
+        from wsbench.evals.association.user_modeling_hard import prompts as p
+
+        part = load_bank(family)["items"][0]["parts"][0]
+        return p.option_lines(part["options"]).splitlines()[-1]
     if family == "introspection":  # round 4: floored for its diagnostic judge column
         bank = ij.load()
         (u,) = ij.units(bank, bank["items"][:1])

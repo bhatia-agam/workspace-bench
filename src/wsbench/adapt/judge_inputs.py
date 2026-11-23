@@ -2176,9 +2176,12 @@ restamp rewrites it there); entity / processing items keep the registered block.
 
 def uncovered_families() -> list[str]:
     """Registered families with no entry in :data:`FAMILIES` (must be empty: a new family is
-    audited before it can be adapted)."""
+    audited before it can be adapted). A family no adapted set carries
+    (``families.NOT_ADAPTED``, plan 0106) needs no entry."""
+    from wsbench.adapt.families import NOT_ADAPTED
+
     registry.load_all()
-    return sorted(set(registry.FAMILIES) - set(FAMILIES))
+    return sorted(set(registry.FAMILIES) - set(FAMILIES) - set(NOT_ADAPTED))
 
 
 def check_item(

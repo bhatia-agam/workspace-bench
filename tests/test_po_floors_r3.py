@@ -272,6 +272,19 @@ SONNET_DIGEST = ("agentic_misalignment", "jailbreak_recognition")
 # pass / fail vote; empty again since every such floor was re-scored on its family's final bank.
 # 2026-11-05 (plan 0073, #366): multihop_st gate r11 (the final answer never names the bridge)
 PENDING_RESCORE: dict[str, str] = {"multihop_st": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5"}
+# registered, its floor not frozen yet (plan 0106: measured in its validation, before it joins
+# core); the entry leaves this table when the floor is in the committed file
+PENDING_FLOOR: dict[str, str] = {
+    "user_modeling_hard": "plan 0106 validation (instrument umh-v2+bank-v2 since review r3)"
+}
+
+
+def test_a_family_with_a_pending_floor_is_not_core():
+    """`PENDING_FLOOR` has no expiry, so it must never excuse a core family: a family joins
+    `tiers.CORE` only in a commit that also freezes its floor and empties its entry here."""
+    from wsbench import tiers
+
+    assert not set(PENDING_FLOOR) & set(tiers.CORE)
 
 
 def test_committed_floor_file_is_the_refreeze(real_families):
@@ -280,7 +293,9 @@ def test_committed_floor_file_is_the_refreeze(real_families):
     fallback where Opus declined (agentic_misalignment only), none refused by both."""
     got = json.loads(FROZEN.read_text(encoding="utf-8"))
     fams = {k: v for k, v in got.items() if not k.startswith("_")}
-    assert set(fams) == set(poo.families())  # every category but jlens_concept_pr
+    # every category but jlens_concept_pr (and a new family whose floor is pending)
+    assert set(fams) == set(poo.families()) - set(PENDING_FLOOR)
+    assert set(PENDING_FLOOR) <= set(poo.families())
     versions = po.instrument_versions()
     for fam, e in fams.items():
         assert e["protocol"] in (po.PO_OPUS, po.PO_FALLBACK), fam

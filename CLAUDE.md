@@ -340,10 +340,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `scripts/adapt_introspection_mp_modal.py` (calib gate `g0_pass` before any run; parts on the
   `wsb-introspection-mp` volume). A non-plain residual (`spec.residual`) is refused by `Producer`.
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
-  (the source of truth); do not restate them here. Thirteen families keep their own `judge.py`
+  (the source of truth); do not restate them here. Fourteen families keep their own `judge.py`
   (+ `score.py`): Camila's originals (agentic, jailbreak, jlens_concept_pr, moral, relational,
   role-bound, conjunctive, user_modeling; hallucination left for HallucinationBench, plan 0040),
-  directed_modulation, hinted_cutoff, knowledge_cutoff, model_multihop and wrong_intermediate (plan 0050: a blind 6-way MC over B',
+  directed_modulation, hinted_cutoff, knowledge_cutoff, model_multihop, user_modeling_hard and wrong_intermediate (plan 0050: a blind 6-way MC over B',
   the true bridge B and four same-category distractors frozen in bank v2 by
   `scripts/wrong_intermediate_mc_options.py`; a gold pick is credited only with a verified or
   near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or (a quote cut
@@ -364,6 +364,71 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   on a gated gold pick with an inferred basis; its full label, `judge.draw_label`, is a
   diagnostic). Both reuse conjunctive's `draw_key` / `majority` / `n_draws`; draw 0 keeps the
   single-call key.
+  user_modeling_hard (plan 0106, `umh-v2+bank-v2` since review r3: judge calls `umh-v2`, bank v2; full tier, not in core until its validation is done)
+  is a SEPARATE package that imports three pure helpers (`user_modeling.judge.decode_choice`,
+  `user_modeling.prompts.render_user_turn` / `option_lines`, conjunctive's draw helpers) and no
+  prompt: never thread a family parameter through `user_modeling`, whose files, stamps and
+  manifest rows must not move. Items have 1-3 `parts` (one implied trait each); the judge asks
+  one identification MC per PART (three draws, keys `<cell key>|p<k>`, `#d<n>`, `|retry1`,
+  `|quote`) over options frozen IN THE BANK in bank order (never shuffled at run time), and an
+  item passes iff every part passes (one row per item with a tri-state `pass` and a `parts`
+  list, so `fast.units`, `decided_outcomes` and the ATI adapter take their default paths).
+  No lexicon decides: a pick is verified by `gate.locate` (quote real, in one statement, not
+  the user's own words; re-asks, review r2 below) and, for a standing gold pick with an inferred basis, by a
+  blind quote check on the statement, shown inside its own readout line (`UMH_QUOTE_*`); basis
+  `reply_plan` never passes.
+  Review r1: the echo test is `gate.echoes` (a verbatim block OR 80% of the content words are
+  the chat's, on the quote, and on its statement for a quote that adds no word of its own);
+  every distinct statement holding the quote is a reading (`gate.MAX_STATEMENTS` = 4, keys
+  `|quote`, `|quote2`, ...) and the pick stands when ANY reading's quote check returns the
+  gold; a malformed quote-check choice is undecided. These are code-side gates, in no call
+  fingerprint: changing one needs a stamp bump (review r3 bumped `umh-v1` to `umh-v2` because
+  results of three gate versions carried one stamp; never change a gate under a stamp that has
+  results, frozen or not).
+  The bank's `forms` are NOT a judge lexicon (build lint, capable question, diagnostics only).
+  `bank.validate` (V1-V14) is run by the builder (`scripts/build_user_modeling_hard_bank.py`),
+  the judge's loader (fail closed) and the bank tests; `min_full_positions` = the header's
+  `min_render_tokens` (needs the subject's tokenizer). Every bank edit goes through the
+  builder's tables (`DROP`, `DROP_KINDS`, `FORM_DROPS`, `FORM_RULES`, `GOLD_RELABEL`, `OPTION_SWAPS` = a distractor the chat also makes
+  true, replaced; `REGUESS` / `REGUESS_SWAPS` = the options-only guess re-run on each changed
+  list, guessable at 3 of 5), never by hand in `items.json`, and no user message is ever
+  edited. Rebuild without touching `.venv`: `HF_HOME=<cache> HF_HUB_OFFLINE=1 uv run --no-sync
+  --with transformers --with jinja2 python scripts/build_user_modeling_hard_bank.py --src
+  <bank_candidate.json> --pools <option_pools.json> --out <fresh path>`, copy it over
+  `items.json`, then `--check`; then re-declare the manifest-ledger entry and update the counts
+  the tests and READMEs pin. Review r2 (2026-11-21, after the first validation run; still
+  `umh-v1`): a draw has at most `gate.MAX_REASKS` = 2 re-asks (keys `|retry1`, `|retry2`) for
+  any gate in `gate.RETRIED`, which now includes `desc_rejected`; the quote check of an answer
+  is keyed by that answer's own key (`<draw key>|retry1|quote`); a statement the quote check
+  refused is never read again in the draw, so no path passes without a quote check that
+  returned the gold on a statement not yet refused; the prose quote check shows the statement
+  inside its own readout line (`QUOTE_CONTEXT`, `Located.context`) and is told that a persona
+  the draft calls hypothetical or fictional is still the writer (`QUOTE_PERSONA`); the token
+  quote check's text is unchanged, keep it so (a persona clause there primes token lists);
+  `gate.states_beyond` exempts from the echo gate a text that says the PICKED value (for the
+  gold also the bank's `forms`: the one place the judge's code reads them, never to credit) in
+  a word the chat lacks. Mixed-state lists must not hold a feeling the item's OTHER situation
+  supports (both parts show the plain label): screen a new mixed item against the whole
+  message. Bank v1 after review r2: 149 items, 226 parts.
+  Review r3 (2026-11-23; `umh-v2`, bank v2 = 111 items, 159 parts): the kind `life` is removed
+  (owner decision; `bank.KINDS` has six, the builder's `DROP_KINDS`), and so are the multi-trait
+  items whose life-type part is stated (umh-two-w1035-A keeps the only life-type part, flagged
+  for the owner); builder tables `GOLD_RELABEL` (optician -> optometrist), `FORM_RULES` (a
+  loose form removed wherever its gold lists it) and the two-letter-code rule; the option seed
+  prefix stays `umh-v1` (`bank.STAMP`, a bank property). Judge: `gate.states_beyond` needs the
+  form as ONE contiguous phrase and `gate._same_word` is a closed suffix list (no prefix rule);
+  `gate.echoes` gates any quote whose STATEMENT is mostly chat; an echoed statement joins the
+  draw's refused set (compared on `digest.fold_quote`); `gate.reask_allowed` = at most
+  `MAX_REASKS` (2) re-asks, `MAX_REASKS_DESC` (1) of them after `desc_rejected`; every row and
+  part carries `pass_first_ask` (a pass obtained after a re-ask counts as a fail) and extras
+  `pass_rate_first_ask` / `first_ask`, printed in `breakdown_md`: report it beside the
+  headline; `broader_suspect` (now with a `profession` list) and `formless` are flags, never
+  gates (measured: a denial kills true passes). The lucky guesser's `question` variant shows
+  `judge_label`. `tests/test_user_modeling_hard_bank.py` ties the biography-request count in
+  README.md / NOTICE.md to the bank. It has its own `readplan` branch
+  (`LITE_SAME_FAMILIES` is plan 0061's constant and stays five), is `NOT_GATED` for ATI and
+  `adapt.families.NOT_ADAPTED` (no adapted set carries it), and `wsbench report` prints its
+  `extras.breakdown_md` under `## breakdowns` (`cli._breakdowns`; absent key = unchanged output).
   role-bound judges bank v2 (`items_v2.json`, `read_plan_bank` = items.json): `judge.load_items`
   draws option names from items.json's pool, so kept items' calls stay cached, and
   `judge.instrument` stamps `+bank-v2` only for the registered bank (a version-2 header without
@@ -660,6 +725,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   name for the two position-reduced families, `fast_equivalents`); any other new row fails
   ("its fast plan moved") unless the family is declared with a new bank. So cutting a fast
   version needs no entry from the families it leaves alone and stales no earlier entry.
+  A family the golden does NOT have (a new family, plan 0106) has no golden row to compare a
+  new fast row with, so its `plan.fast_plan_sha` rows are left out of what its entry compares
+  and hashes (`manifest_0101_declare.without_fast`, `g is None` only; its `plan_sha` row stays
+  in): a fast version cut after its declaration does not stale the entry.
   `scripts/manifest_0101.py` is the golden's script plus ONE `try` in `plan_entry` (a family
   whose bank changed after an older fast version was frozen made `fast.entry` exit the whole
   manifest; that row now reads `unavailable`); T1 pins the sha of the script that made
@@ -959,8 +1028,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 ## Tiers and categories (plan 0098)
 - `tiers.py` (imports `registry` and `fast` only; `registry` never imports it): `TIERS = ("fast",
   "core", "full")`, `DEFAULT = "core"`, `CORE` (18 families: conjunctive_association joined on 2026-11-21, Camila; the registered
-  `user_modeling` bank is NOT core: a hard user_modeling bank of new items is to join as the
-  19th, a later plan),
+  `user_modeling` bank is NOT core; `user_modeling_hard`, plan 0106, is registered in full and
+  joins `CORE` as the 19th once its validation is done: plan 0106 commit 5, with the fast cut
+  and the final ledger entry),
   `core()` / `full()` / `families(tier)`, `tier_of(name)` (`core` | `full` | `""`), `check()`
   (every `CORE` key registered, not superseded / retired / `not_in_macro`; its static part runs
   at import). `full()` is `registry.drop_superseded(sorted(FAMILIES))`, what `all=True` runs.
@@ -1136,8 +1206,8 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   others. Register an existing guard or test file (`checks.pytest_outcome`) instead of
   rewriting it; external checks come in by dotted path through `$WSB_CHECKS`.
 - `group=<category>` on `plan` and `run` (`groups.py`): the families of one registry category
-  (`registry.CATEGORIES`). Its one addition is `groups.ALSO_IN`: `group=association` also
-  selects `role_bound_association`. `computation` is accepted for `computational`.
+  (`registry.CATEGORIES`), with no additions (`role_bound_association` is in
+  `anti_bag_of_features` only). `computation` is accepted for `computational`.
 - `judge_backend=batches` / `$WSB_JUDGE_BACKEND` (`judge_batches.py`, `docs/judge_backends.md`):
   the opt-in Message Batches backend of Claude judge calls; the default stays live.
 - No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through

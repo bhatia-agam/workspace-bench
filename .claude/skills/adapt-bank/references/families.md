@@ -43,6 +43,7 @@ change edits this table in the same PR.
 | role_bound_association | `evals/anti_bag_of_features/role_bound_association/items_v2.json` |
 | typo | `evals/basic/typo/items_v2.json` |
 | user_modeling | `evals/association/user_modeling/items_v3.json` |
+| user_modeling_hard | `evals/association/user_modeling_hard/items.json` |
 | wrong_intermediate | `evals/model_specific/wrong_intermediate/items_v4.json` |
 
 **"Bank now"** lines (added 2026-11-02) give each family's registered fields and judge

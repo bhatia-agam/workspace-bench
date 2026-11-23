@@ -103,6 +103,23 @@ def test_gate_adapted_keeps_only_items_every_reader_fails(adapted):
     assert written["fam"]["ids"] == ["a", "e"]
 
 
+def test_gate_adapted_names_no_family_the_set_cannot_carry(adapted):
+    """Review r1 of plan 0106: the set's file took every ``NOT_GATED`` key, so the next re-gate
+    would have named ``user_modeling_hard``, a family no adapted set carries
+    (``adapt.families.NOT_ADAPTED``); `tests/test_glm_ati.py` pins the committed files' key set."""
+    from wsbench.adapt.families import NOT_ADAPTED
+
+    root, out = adapted
+    assert set(NOT_ADAPTED) <= set(ti.NOT_GATED) and "user_modeling_hard" in NOT_ADAPTED
+    ti.gate_adapted(out)
+    written = json.loads((root / ti.ADAPTED_FILE).read_text())
+    assert set(written["_not_gated"]) == set(ti.NOT_GATED) - set(NOT_ADAPTED)
+    # a families= re-gate merges into the file and adds none either
+    ti.gate_adapted(out, families=["fam"])
+    written = json.loads((root / ti.ADAPTED_FILE).read_text())
+    assert not set(written["_not_gated"]) & set(NOT_ADAPTED)
+
+
 def test_adapted_source_carries_no_qwen_subset_definition(adapted):
     """Plan 0085: the strict-ATI subset version and the family-specific answer forms are
     Qwen3.6-27B's; an adapted set's file names neither."""

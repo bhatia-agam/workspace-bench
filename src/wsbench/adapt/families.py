@@ -456,9 +456,18 @@ REGENERATE = {
 }
 
 
+# Registered families no adapted set carries (plan 0106): every `all`-style adapt path skips
+# them (`judge_inputs.uncovered_families`; under WSB_BANK_ROOT `readplan.families()` lists only
+# the families the root has). Never in FAMILIES or REGENERATE.
+NOT_ADAPTED: dict[str, str] = {
+    "user_modeling_hard": "selected on Qwen3.6-27B's own gates (plan 0106); no adapted set "
+    "carries it",
+}
+
+
 def get(name: str) -> Family:
     if name not in FAMILIES:
-        why = REGENERATE.get(name, "unknown family")
+        why = REGENERATE.get(name) or NOT_ADAPTED.get(name, "unknown family")
         raise SystemExit(f"{name!r} is not gated item by item: {why}")
     return FAMILIES[name]
 

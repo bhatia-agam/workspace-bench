@@ -349,6 +349,9 @@ FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
     "introspection": {"summ_fallback": f"default+{REFUSAL_MODEL}"},
     "moral_rationale": {"summ_fallback": f"default+{REFUSAL_MODEL}"},
     "user_modeling": {"summ_fallback": f"default+{REFUSAL_MODEL}"},
+    # plan 0106: the user_modeling route for declined digests; a three-part item needs three
+    # kinds of statement to survive one digest, so a single mention has room in the rare tier
+    "user_modeling_hard": {"summ_fallback": f"default+{REFUSAL_MODEL}", "summ_rare": "25"},
     "model_specific_directed_modulation": {"summ_fallback": f"default+{REFUSAL_MODEL}"},
 }
 # re-audit r2 (buggy_code): an extractive line's "[N samples]" counts the samples holding the

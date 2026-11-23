@@ -1,0 +1,1003 @@
+{
+ "note": "one shared pool per attribute type for the whole bank; clusters = true near neighbours; closed = the option list is the whole scale",
+ "recipe": "open pools: gold + 1 near neighbour (same cluster) + 2 decoy pairs (2 other clusters x 2 values) + 1 single = 7 options; closed pools: whole scale",
+ "edits_r3": "review r3 (2026-11-23): `optometrist` joins the cluster of `optician` (the relabelled gold of umh-two-w1035-A); broader classes added for `profession` (the head nouns of its two-word values: 'mechanic' is not `car mechanic`) and `diet`. gold_use_in_final is the authoring run's record and was not recomputed.",
+ "pools": {
+  "profession": {
+   "label": "occupation",
+   "clusters": [
+    [
+     "electrician",
+     "plumber",
+     "carpenter"
+    ],
+    [
+     "nurse",
+     "pharmacist",
+     "paramedic"
+    ],
+    [
+     "dentist",
+     "veterinarian"
+    ],
+    [
+     "bus driver",
+     "truck driver",
+     "train driver"
+    ],
+    [
+     "architect",
+     "civil engineer"
+    ],
+    [
+     "chef",
+     "baker"
+    ],
+    [
+     "firefighter",
+     "police officer"
+    ],
+    [
+     "farmer",
+     "fisherman"
+    ],
+    [
+     "hairdresser",
+     "tailor"
+    ],
+    [
+     "accountant",
+     "bank teller"
+    ],
+    [
+     "journalist",
+     "translator"
+    ],
+    [
+     "librarian",
+     "teacher"
+    ],
+    [
+     "lawyer",
+     "notary"
+    ],
+    [
+     "pilot",
+     "flight attendant"
+    ],
+    [
+     "car mechanic",
+     "welder"
+    ],
+    [
+     "photographer",
+     "graphic designer"
+    ],
+    [
+     "software developer",
+     "data analyst"
+    ],
+    [
+     "physiotherapist",
+     "optician",
+     "optometrist"
+    ],
+    [
+     "social worker",
+     "psychologist"
+    ],
+    [
+     "florist",
+     "landscape gardener"
+    ],
+    [
+     "bricklayer",
+     "roofer"
+    ],
+    [
+     "waiter",
+     "bartender"
+    ],
+    [
+     "midwife",
+     "radiographer"
+    ],
+    [
+     "real estate agent",
+     "insurance broker"
+    ],
+    [
+     "musician",
+     "actor"
+    ],
+    [
+     "beekeeper",
+     "shepherd"
+    ],
+    [
+     "butcher",
+     "cheesemonger"
+    ]
+   ]
+  },
+  "country": {
+   "label": "country of residence",
+   "clusters": [
+    [
+     "Germany",
+     "Austria",
+     "Switzerland"
+    ],
+    [
+     "France",
+     "Belgium"
+    ],
+    [
+     "Spain",
+     "Portugal"
+    ],
+    [
+     "Brazil",
+     "Argentina",
+     "Chile"
+    ],
+    [
+     "Mexico",
+     "Colombia",
+     "Peru"
+    ],
+    [
+     "Japan",
+     "South Korea"
+    ],
+    [
+     "China",
+     "Vietnam"
+    ],
+    [
+     "India",
+     "Pakistan",
+     "Bangladesh"
+    ],
+    [
+     "Australia",
+     "New Zealand"
+    ],
+    [
+     "United Kingdom",
+     "Ireland"
+    ],
+    [
+     "United States",
+     "Canada"
+    ],
+    [
+     "Netherlands",
+     "Denmark"
+    ],
+    [
+     "Sweden",
+     "Norway",
+     "Finland"
+    ],
+    [
+     "Poland",
+     "Czech Republic",
+     "Hungary"
+    ],
+    [
+     "Italy",
+     "Greece"
+    ],
+    [
+     "Turkey",
+     "Egypt"
+    ],
+    [
+     "Nigeria",
+     "Ghana"
+    ],
+    [
+     "Kenya",
+     "South Africa"
+    ],
+    [
+     "Indonesia",
+     "Malaysia",
+     "Philippines"
+    ],
+    [
+     "Thailand",
+     "Singapore"
+    ],
+    [
+     "Russia",
+     "Ukraine"
+    ],
+    [
+     "Israel",
+     "Morocco"
+    ]
+   ]
+  },
+  "religion": {
+   "label": "religion",
+   "clusters": [
+    [
+     "Muslim",
+     "Jewish"
+    ],
+    [
+     "Buddhist",
+     "Hindu"
+    ],
+    [
+     "Sikh",
+     "Jain"
+    ],
+    [
+     "Catholic",
+     "Orthodox Christian"
+    ],
+    [
+     "Mormon",
+     "Jehovah's Witness"
+    ],
+    [
+     "atheist",
+     "Baha'i"
+    ]
+   ]
+  },
+  "denomination": {
+   "label": "religious denomination",
+   "clusters": [
+    [
+     "Quaker",
+     "Mennonite"
+    ],
+    [
+     "Latter-day Saint",
+     "Seventh-day Adventist"
+    ],
+    [
+     "Eastern Orthodox",
+     "Coptic Orthodox"
+    ],
+    [
+     "Reform Jewish",
+     "Orthodox Jewish"
+    ],
+    [
+     "Lutheran",
+     "Methodist",
+     "Baptist"
+    ],
+    [
+     "Anglican",
+     "Presbyterian"
+    ],
+    [
+     "Zen Buddhist",
+     "Tibetan Buddhist"
+    ],
+    [
+     "Pentecostal",
+     "Roman Catholic"
+    ]
+   ]
+  },
+  "diet": {
+   "label": "diet",
+   "clusters": [
+    [
+     "vegan",
+     "vegetarian",
+     "pescatarian"
+    ],
+    [
+     "keto",
+     "paleo"
+    ],
+    [
+     "gluten-free",
+     "lactose-free"
+    ],
+    [
+     "halal",
+     "kosher"
+    ],
+    [
+     "low-sodium",
+     "diabetic diet"
+    ]
+   ]
+  },
+  "heritage": {
+   "label": "ethnic heritage",
+   "clusters": [
+    [
+     "Korean",
+     "Japanese",
+     "Chinese",
+     "Vietnamese"
+    ],
+    [
+     "Italian",
+     "Greek",
+     "Portuguese"
+    ],
+    [
+     "Mexican",
+     "Cuban",
+     "Puerto Rican"
+    ],
+    [
+     "Nigerian",
+     "Ethiopian",
+     "Somali"
+    ],
+    [
+     "Indian",
+     "Pakistani"
+    ],
+    [
+     "Polish",
+     "Ukrainian"
+    ],
+    [
+     "Lebanese",
+     "Iranian",
+     "Turkish"
+    ],
+    [
+     "Irish",
+     "Scottish"
+    ],
+    [
+     "Filipino",
+     "Samoan"
+    ]
+   ]
+  },
+  "marital": {
+   "label": "marital status",
+   "closed": true,
+   "clusters": [
+    [
+     "single"
+    ],
+    [
+     "engaged",
+     "married"
+    ],
+    [
+     "separated",
+     "divorced"
+    ],
+    [
+     "widowed"
+    ]
+   ]
+  },
+  "pet": {
+   "label": "pet",
+   "closed": true,
+   "clusters": [
+    [
+     "dog",
+     "cat"
+    ],
+    [
+     "parrot",
+     "rabbit"
+    ],
+    [
+     "horse"
+    ],
+    [
+     "goldfish",
+     "tortoise"
+    ]
+   ]
+  },
+  "life": {
+   "label": "current life situation",
+   "clusters": [
+    [
+     "new parent",
+     "expecting a baby",
+     "new grandparent"
+    ],
+    [
+     "widowed",
+     "divorcing",
+     "newly single"
+    ],
+    [
+     "caregiver",
+     "single parent"
+    ],
+    [
+     "unemployed",
+     "changing careers"
+    ],
+    [
+     "retiring soon",
+     "newly retired"
+    ],
+    [
+     "recent immigrant",
+     "studying abroad"
+    ],
+    [
+     "long-distance relationship",
+     "newlywed",
+     "engaged"
+    ],
+    [
+     "empty nester",
+     "foster parent"
+    ],
+    [
+     "new homeowner",
+     "moving house"
+    ],
+    [
+     "university student",
+     "mature student"
+    ],
+    [
+     "sober",
+     "recovering from surgery"
+    ],
+    [
+     "starting a business",
+     "on sabbatical"
+    ]
+   ]
+  },
+  "state": {
+   "label": "emotional state",
+   "clusters": [
+    [
+     "numb",
+     "burned out"
+    ],
+    [
+     "homesick",
+     "lonely",
+     "nostalgic"
+    ],
+    [
+     "relieved",
+     "proud"
+    ],
+    [
+     "guilty",
+     "ashamed",
+     "embarrassed"
+    ],
+    [
+     "envious",
+     "resentful"
+    ],
+    [
+     "overwhelmed",
+     "anxious"
+    ],
+    [
+     "hopeful",
+     "restless"
+    ],
+    [
+     "grieving",
+     "betrayed"
+    ],
+    [
+     "bored",
+     "disappointed"
+    ],
+    [
+     "insecure",
+     "frustrated"
+    ],
+    [
+     "content",
+     "awestruck"
+    ]
+   ]
+  },
+  "expertise": {
+   "label": "level of expertise in {domain}",
+   "closed": true,
+   "clusters": [
+    [
+     "beginner"
+    ],
+    [
+     "intermediate"
+    ],
+    [
+     "advanced"
+    ],
+    [
+     "expert"
+    ]
+   ]
+  },
+  "goal": {
+   "label": "underlying goal in asking",
+   "clusters": [
+    [
+     "reassurance",
+     "validation"
+    ],
+    [
+     "ammunition for an argument",
+     "a second opinion"
+    ],
+    [
+     "a chance to vent",
+     "to be talked out of it"
+    ],
+    [
+     "an excuse to say no",
+     "someone to decide for them"
+    ],
+    [
+     "the safest option",
+     "neutral information"
+    ],
+    [
+     "step-by-step instructions",
+     "creative ideas"
+    ]
+   ]
+  },
+  "attitude": {
+   "label": "attitude toward {object}",
+   "closed": true,
+   "clusters": [
+    [
+     "skeptical",
+     "hostile"
+    ],
+    [
+     "enthusiastic",
+     "curious"
+    ],
+    [
+     "indifferent",
+     "resigned"
+    ],
+    [
+     "protective"
+    ]
+   ]
+  },
+  "fine_occ": {
+   "label": "specific occupation",
+   "clusters": [
+    [
+     "ICU nurse",
+     "ER nurse",
+     "hospice nurse",
+     "school nurse"
+    ],
+    [
+     "immigration attorney",
+     "tax attorney",
+     "divorce attorney",
+     "patent attorney"
+    ],
+    [
+     "structural engineer",
+     "geotechnical engineer",
+     "HVAC engineer"
+    ],
+    [
+     "pastry chef",
+     "sushi chef",
+     "line cook"
+    ],
+    [
+     "orthodontist",
+     "oral surgeon",
+     "dental hygienist"
+    ],
+    [
+     "air traffic controller",
+     "flight dispatcher"
+    ],
+    [
+     "anesthesiologist",
+     "radiologist",
+     "dermatologist",
+     "pediatrician"
+    ],
+    [
+     "court interpreter",
+     "literary translator"
+    ],
+    [
+     "wedding photographer",
+     "wildlife photographer"
+    ],
+    [
+     "crane operator",
+     "forklift operator"
+    ],
+    [
+     "sound engineer",
+     "lighting technician"
+    ],
+    [
+     "piano tuner",
+     "violin maker"
+    ],
+    [
+     "sommelier",
+     "barista"
+    ],
+    [
+     "farrier",
+     "sheep shearer"
+    ],
+    [
+     "proofreader",
+     "court stenographer"
+    ]
+   ]
+  },
+  "position": {
+   "label": "playing position",
+   "clusters": [
+    [
+     "goalkeeper",
+     "striker"
+    ],
+    [
+     "point guard",
+     "center"
+    ],
+    [
+     "pitcher",
+     "catcher"
+    ],
+    [
+     "quarterback",
+     "linebacker"
+    ],
+    [
+     "scrum-half",
+     "prop"
+    ],
+    [
+     "wicketkeeper",
+     "fast bowler"
+    ]
+   ]
+  },
+  "instrument": {
+   "label": "instrument played",
+   "clusters": [
+    [
+     "cello",
+     "viola",
+     "double bass"
+    ],
+    [
+     "oboe",
+     "clarinet",
+     "bassoon"
+    ],
+    [
+     "trumpet",
+     "trombone",
+     "French horn"
+    ],
+    [
+     "drums",
+     "bass guitar"
+    ],
+    [
+     "harp",
+     "pipe organ"
+    ],
+    [
+     "accordion",
+     "bagpipes"
+    ]
+   ]
+  }
+ },
+ "broader_classes_never_accepted_as_forms": {
+  "fine_occ": [
+   "nurse",
+   "attorney",
+   "lawyer",
+   "engineer",
+   "chef",
+   "cook",
+   "dentist",
+   "doctor",
+   "physician",
+   "translator",
+   "interpreter",
+   "photographer",
+   "operator",
+   "technician",
+   "teacher"
+  ],
+  "denomination": [
+   "christian",
+   "protestant",
+   "jewish",
+   "muslim",
+   "buddhist",
+   "orthodox"
+  ],
+  "life": [
+   "parent",
+   "student",
+   "retired",
+   "relationship",
+   "immigrant",
+   "single",
+   "moving"
+  ],
+  "country": [
+   "europe",
+   "asia",
+   "africa",
+   "latin",
+   "america",
+   "scandinavia"
+  ],
+  "state": [
+   "stressed",
+   "upset",
+   "sad",
+   "negative",
+   "emotional",
+   "tired",
+   "unhappy",
+   "bad"
+  ],
+  "profession": [
+   "tradesman",
+   "tradesperson",
+   "healthcare",
+   "worker",
+   "driver",
+   "engineer",
+   "mechanic",
+   "analyst",
+   "designer",
+   "developer",
+   "officer",
+   "agent",
+   "broker",
+   "attendant",
+   "gardener",
+   "technician",
+   "operator",
+   "medic"
+  ],
+  "instrument": [
+   "strings",
+   "woodwind",
+   "brass"
+  ],
+  "position": [
+   "player"
+  ],
+  "heritage": [
+   "asian",
+   "european",
+   "african",
+   "latino",
+   "hispanic"
+  ],
+  "religion": [
+   "christian",
+   "religious"
+  ],
+  "diet": [
+   "dietary",
+   "restricted diet",
+   "special diet"
+  ],
+  "marital": [],
+  "pet": [],
+  "expertise": [
+   "experienced",
+   "knowledgeable",
+   "amateur"
+  ],
+  "goal": [],
+  "attitude": []
+ },
+ "gold_use_in_final": {
+  "profession": {
+   "flight attendant": 2,
+   "veterinarian": 3,
+   "electrician": 2,
+   "insurance broker": 2,
+   "paramedic": 1,
+   "data analyst": 2,
+   "journalist": 1,
+   "welder": 2,
+   "bricklayer": 1,
+   "butcher": 2,
+   "bus driver": 2,
+   "graphic designer": 2,
+   "actor": 1,
+   "roofer": 2,
+   "real estate agent": 2,
+   "bartender": 2,
+   "architect": 2,
+   "photographer": 1,
+   "waiter": 1,
+   "dentist": 1,
+   "social worker": 1,
+   "civil engineer": 2,
+   "hairdresser": 2,
+   "baker": 1,
+   "carpenter": 2,
+   "optician": 1,
+   "car mechanic": 1,
+   "lawyer": 2,
+   "farmer": 1,
+   "tailor": 1,
+   "accountant": 1,
+   "software developer": 1,
+   "firefighter": 1
+  },
+  "country": {
+   "Argentina": 1,
+   "Portugal": 1,
+   "Vietnam": 1,
+   "Netherlands": 1,
+   "India": 2,
+   "France": 1,
+   "Israel": 1,
+   "Czech Republic": 2,
+   "New Zealand": 1,
+   "Thailand": 2,
+   "Japan": 2,
+   "Denmark": 1,
+   "United Kingdom": 1,
+   "Bangladesh": 2,
+   "Morocco": 1,
+   "Indonesia": 1,
+   "Germany": 2,
+   "Malaysia": 1,
+   "Kenya": 1,
+   "Greece": 2,
+   "Brazil": 1,
+   "Peru": 1,
+   "Nigeria": 1,
+   "Chile": 1,
+   "Turkey": 1,
+   "Spain": 2,
+   "Singapore": 2,
+   "Poland": 1,
+   "Canada": 1,
+   "United States": 1,
+   "Egypt": 1,
+   "Russia": 1,
+   "China": 1,
+   "Ireland": 1
+  },
+  "religion": {
+   "Jehovah's Witness": 1,
+   "Hindu": 2,
+   "Mormon": 2,
+   "Sikh": 1,
+   "Muslim": 1
+  },
+  "denomination": {
+   "Presbyterian": 1
+  },
+  "diet": {
+   "vegan": 2,
+   "vegetarian": 1,
+   "halal": 1,
+   "low-sodium": 1,
+   "lactose-free": 1
+  },
+  "heritage": {
+   "Turkish": 1,
+   "Mexican": 1,
+   "Ukrainian": 1
+  },
+  "marital": {
+   "engaged": 1,
+   "single": 1
+  },
+  "pet": {},
+  "life": {
+   "widowed": 2,
+   "starting a business": 2,
+   "long-distance relationship": 3,
+   "moving house": 3,
+   "unemployed": 2,
+   "expecting a baby": 6,
+   "divorcing": 3,
+   "recent immigrant": 2,
+   "on sabbatical": 3,
+   "new homeowner": 3,
+   "newlywed": 5,
+   "new parent": 2,
+   "changing careers": 4,
+   "caregiver": 1,
+   "foster parent": 2,
+   "engaged": 2,
+   "single parent": 4,
+   "newly single": 1,
+   "empty nester": 1,
+   "recovering from surgery": 2,
+   "new grandparent": 1,
+   "studying abroad": 1
+  },
+  "state": {
+   "insecure": 3,
+   "anxious": 3,
+   "embarrassed": 4,
+   "nostalgic": 3,
+   "overwhelmed": 4,
+   "betrayed": 3,
+   "burned out": 3,
+   "disappointed": 3,
+   "grieving": 4,
+   "awestruck": 3,
+   "hopeful": 2,
+   "relieved": 3,
+   "restless": 2,
+   "proud": 3,
+   "content": 1,
+   "guilty": 4,
+   "lonely": 3,
+   "frustrated": 1,
+   "numb": 2,
+   "bored": 3,
+   "envious": 2,
+   "resentful": 2,
+   "ashamed": 1
+  },
+  "expertise": {
+   "advanced": 3,
+   "beginner": 9,
+   "expert": 5,
+   "intermediate": 3
+  },
+  "goal": {
+   "reassurance": 3,
+   "ammunition for an argument": 2,
+   "a chance to vent": 1,
+   "an excuse to say no": 3,
+   "the safest option": 3,
+   "validation": 4
+  },
+  "attitude": {
+   "skeptical": 2
+  },
+  "fine_occ": {
+   "school nurse": 1,
+   "line cook": 1,
+   "court stenographer": 1,
+   "crane operator": 1,
+   "sushi chef": 1,
+   "piano tuner": 1,
+   "forklift operator": 1
+  },
+  "position": {
+   "fast bowler": 1
+  },
+  "instrument": {
+   "pipe organ": 1
+  }
+ }
+}

@@ -13,6 +13,7 @@ import json
 import pytest
 
 from wsbench import readplan, registry
+from wsbench.adapt import families
 from wsbench.adapt import judge_inputs as ji
 
 ALL = sorted(ji.FAMILIES)
@@ -42,7 +43,8 @@ def _clone(family, item, suffix="-zz-adapted"):
 
 def test_table_covers_every_registered_family(real_families):
     assert ji.uncovered_families() == []
-    assert set(ji.FAMILIES) == set(real_families)
+    # a family no adapted set carries (plan 0106) needs no entry
+    assert set(ji.FAMILIES) == set(real_families) - set(families.NOT_ADAPTED)
 
 
 def test_a_new_family_without_an_entry_fails(real_families, monkeypatch):

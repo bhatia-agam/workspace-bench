@@ -218,6 +218,16 @@ def new_fast_rows(
     return {**c, sec: {**c[sec], key: have}}, bad
 
 
+def without_fast(c: Mapping[str, Any]) -> dict[str, Any]:
+    """A family the golden does not have: its ``plan.fast_plan_sha`` rows are left out of what
+    is compared and hashed. Its fast entries are pinned elsewhere (each frozen fast file by its
+    own sha test; its full plan by the ``plan_sha`` row, which stays in)."""
+    sec, key = FAST_ROWS
+    if not isinstance(c.get(sec), Mapping) or key not in c[sec]:
+        return dict(c)
+    return {**c, sec: {k: v for k, v in c[sec].items() if k != key}}
+
+
 def fast_equivalents(golden: Mapping[str, Any], current: Mapping[str, Any]) -> dict[str, Any]:
     """``{family: {new version: {"row": sha, "as": {golden version: sha}}}}``: for each row of
     a fast version the
@@ -285,6 +295,10 @@ def verdict(
     failure, except for a family declared with a NEW BANK (its fast plan may be new too): there
     the row stays in the entry the ledger hash covers.
 
+    A family the golden does not have (plan 0106, ``without_fast``): its ``plan.fast_plan_sha``
+    rows are outside what its entry compares and hashes, so the first fast version cut after its
+    declaration does not stale the entry. Nothing changes for a family the golden has.
+
     A listed tier move (``TIER_MOVES``, ``tier_moved``; plan 0104): the two tier rows of a
     listed family that holds the listed tier are put back to the tier it had before, ahead of
     everything above, so the move is neither a difference from the golden nor a change of a
@@ -307,6 +321,8 @@ def verdict(
         g = gf.get(fam)
         c = tier_moved(fam, cf[fam])
         tiered = c != cf[fam]  # its listed tier move was put back
+        if g is None:  # a new family: a fast version cut later must not stale its entry
+            c = without_fast(c)
         if g is not None and c == g:
             continue
         now, entry = triple(c), ledger.get(fam)
@@ -401,6 +417,8 @@ def declare(
         raise Refused(f"{family}: not a family of this tree's manifest")
     g, prev = golden["families"].get(family), ledger.get(family)
     c = tier_moved(family, current["families"][family])
+    if g is None:  # as `verdict`: a new family's fast rows are outside its entry
+        c = without_fast(c)
     if g is not None:  # the basis `verdict` compares and hashes (acceptable new fast rows aside)
         sec, key = FAST_ROWS
         known = {v for x in golden["families"].values() for v in x.get(sec, {}).get(key, {})}

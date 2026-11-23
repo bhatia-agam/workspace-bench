@@ -99,7 +99,9 @@ def test_the_readme_table_is_the_one_the_registry_gives():
         assert row.startswith(f"| {registry.CATEGORIES[s.group].split(' (')[0]} |"), s.name
         assert ("core" in row.split("|")[3]) == (s.name in tiers.CORE), s.name
         assert ("rule" in row.split("|")[5]) == bool(s.scorer), s.name
-    assert "`group=association` also selects `role_bound_association`" in table
+    # a group is one registry category, with no additions
+    assert "`group=<category>` selects a category by its key" in table
+    assert "also selects" not in table
 
 
 def test_group_membership_matches_registry():

@@ -1016,7 +1016,7 @@ def test_t8_a_bare_key_is_announced_once(bare, monkeypatch, capsys):
 def test_t8_list_shows_the_new_keys_titles_categories_and_tiers(capsys):
     assert main(["list"]) == 0
     rows = {ln.split()[0]: ln for ln in capsys.readouterr().out.splitlines() if ln.strip()}
-    assert set(rows) >= set(registry.FAMILIES) and len(registry.FAMILIES) == 32
+    assert set(rows) >= set(registry.FAMILIES) and len(registry.FAMILIES) == 33
     assert not {"basic_readout_mt", "multihop_mt", "multilingual_mt", "typo_mt"} & set(rows)
     for family in EIGHT:
         assert registry.FAMILIES[family].group == "basic" and " basic " in rows[family]
@@ -1361,5 +1361,5 @@ def test_every_walk_over_the_family_trees_matches_something():
     assert seen >= 10  # the scan itself is not vacuous
     assert not empty, empty
     # the two guards the move would have emptied: they cover the family directories again
-    assert len([registry.family_root(f) / "README.md" for f in registry._layout()]) == 32
+    assert len([registry.family_root(f) / "README.md" for f in registry._layout()]) == 33
     assert sorted(readplan.families()) == sorted(registry.FAMILIES)

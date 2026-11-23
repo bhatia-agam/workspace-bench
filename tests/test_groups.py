@@ -20,7 +20,8 @@ def test_a_group_is_a_registry_category():
 def test_the_named_categories():
     # the association category (the family `association` is in it); role-bound association
     # is in anti-bag-of-features only
-    association = ["association", "conjunctive_association", "user_modeling"]
+    association = ["association", "conjunctive_association", "user_modeling",
+                   "user_modeling_hard"]  # fmt: skip
     assert groups.families("association") == association
     assert groups.families("anti_bag_of_features") == [
         "relational_multihop",

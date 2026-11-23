@@ -715,6 +715,7 @@ class ReportRuns(Command):
         hb_text, hb_json = self._hb_block(results)
         if hb_text:  # after the macro table; a separate number, never in the macro
             table += "\n" + hb_text
+        table += _breakdowns(results)  # plan 0106: "" unless a row carries a breakdown block
         if ati_view:  # a view of the fast run: summary.md stays the fast report
             table = (
                 f"scope: strict ATI view of the fast run ({fast.VERSION}): each family's fast "
@@ -1947,6 +1948,18 @@ def _unknown(name: str) -> int:
     return EXIT_USAGE
 
 
+def _breakdowns(results: list[FamilyResult]) -> str:
+    """Plan 0106 §4.5: a ``## breakdowns`` section with one ``### <family>`` block per row whose
+    extras hold ``breakdown_md`` (a family's own ready markdown tables), in row order; ``""``
+    when no row has one, so every other results directory prints what it printed before."""
+    blocks = [
+        f"\n### {r.family}\n\n{md.strip()}\n"
+        for r in results
+        if isinstance(md := r.extras.get("breakdown_md"), str) and md.strip()
+    ]
+    return "\n## breakdowns\n" + "".join(blocks) if blocks else ""
+
+
 def _write_summary(
     out: Path, results: list[FamilyResult], notes: list[FamilyOutcome] | None = None
 ) -> str:
@@ -1956,6 +1969,7 @@ def _write_summary(
     if notes:
         text += "\n## skipped / failed\n"
         text += "".join(f"- {o.family}: {o.status} — {o.error}\n" for o in notes)
+    text += _breakdowns(results)
     out.mkdir(parents=True, exist_ok=True)
     (out / "summary.md").write_text(text, encoding="utf-8")
     return text

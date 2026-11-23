@@ -75,6 +75,11 @@ def test_non_fast_plan_is_byte_identical_to_pre_0090():
     # the golden is keyed by the families' pre-0101 keys (plan 0101: translated, never rewritten)
     golden = json.loads(GOLDEN.read_text(encoding="utf-8"))
     want = {kind: registry.rekey_pre_0101(by_family) for kind, by_family in golden.items()}
+    # a family registered after plan 0090 has no pre-0090 record (plan 0106); every family of
+    # the golden is still compared in full, and no other family may appear
+    since = {"user_modeling_hard"}
+    assert all(set(by_family) - set(want[kind]) == since for kind, by_family in got.items())
+    got = {k: {f: v for f, v in by.items() if f not in since} for k, by in got.items()}
     assert got == want
 
 
