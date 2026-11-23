@@ -973,7 +973,13 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   samples of the other units (NO version in the stream key), split over the family's strata in
   proportion to each stratum's NON-ATI units by largest remainder, not half of each stratum (`UNITS`
   holds each family's unit, read rows and stratum; `cut` in the file records the counts);
-  full positions everywhere. 1,203 units, 1,441 read items. A strict-ATI family outside the
+  full positions everywhere. 1,203 units, 1,441 read items. Read ids are ROWS, not items:
+  introspection's 250 hold `inject|protocol:trial1|b4|oceans` (the one non-ATI headline item,
+  no unit) because the unit `...|trees`'s cross twin reads that row, so under the fast scope
+  the introspection judge drops inject items that are no unit of the entry
+  (`judge._fast_items`) instead of judging them and asking for their twins' rows, which the
+  fast plan does not hold (`tests/test_fast_core_half.py` dry-runs every family's judge on a
+  file of the fast plan alone: no missing cell). A strict-ATI family outside the
   family list is refused by the cut. The ATI units bias an ATI family's fast value toward
   them (README). `fast.VARIANTS = {"": "fast-v4"}`: **`--fast-safety` / `fast=safety` is
   retired** (`fast.RETIRED_VARIANTS`: `cli._fast_arg` and `fast.select` raise a usage error
