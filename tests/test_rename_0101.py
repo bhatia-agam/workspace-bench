@@ -537,7 +537,11 @@ def test_t1_rule_for_a_reselected_fast_version_and_for_tier_rows(monkeypatch):
     assert list(declared) == ["fam_a"] and not failures
 
     # (2) tier rows: fam_a is the listed family (full -> core), fam_b an unlisted core family
-    assert dec.TIER_MOVES == {"conjunctive_association": ("full", "core")}
+    assert dec.TIER_MOVES == {
+        "conjunctive_association": ("full", "core"),
+        "user_modeling_hard": ("full", "core"),  # plan 0114
+        "association_hard": ("full", "core"),  # plan 0114
+    }
     monkeypatch.setattr(dec, "TIER_MOVES", {"fam_a": ("full", "core")})
 
     def tiered(doc: dict, fam: str, tier: str, core: bool | None = None) -> dict:
@@ -1083,8 +1087,12 @@ FROZEN_FAST_FILES = {
     # plan 0104's first core-half cut, the default until plan 0110 re-cut it as fast-v5 for
     # chain_intermediates' bank v3 (tests/test_fast_core_half.py compares the two files)
     "fast-v4": "e5fba03e6ac2037ced69ed1ee8a581d737f08a878a866dd6cf01cffe23c723ef",
+    # plan 0110's re-cut, the default until plan 0114 re-cut it as fast-v6 when
+    # user_modeling_hard and association_hard joined core
+    "fast-v5": "aa6dc10597ff5028f9719b1fa78067e5392e187c5e2eae8401c47ffe0a4a9825",
 }
-CORE_HALF_RECORDS = {"fast-v4"}  # another selection than the five outcome-selected versions
+# another selection than the five outcome-selected versions
+CORE_HALF_RECORDS = {"fast-v4", "fast-v5"}
 
 
 def test_t10_the_fast_files_are_read_in_todays_keys():
@@ -1101,7 +1109,7 @@ def test_t10_the_fast_files_are_read_in_todays_keys():
 
         assert set(got) == {today(f) for f in raw["families"]}
         # plan 0104: the core-half cuts hold none of the renamed families
-        if version not in ("fast-v4", "fast-v5"):
+        if version not in ("fast-v4", "fast-v5", "fast-v6"):
             assert {"basic_readout", "basic_readout_st", "multihop"} <= set(got)
         assert not {"basic_readout_mt", "multihop_mt"} & set(got)
         for old, entry in raw["families"].items():

@@ -68,7 +68,7 @@ slot lens at 11 layers, one sample per cell, NVIDIA B200 GPUs, a real SGLang ser
 
 | | |
 |---|---|
-| what was read | 16 evals, 1,441 questions, 438,790 cells; 19.5 million readout tokens |
+| what was read | the previous fast selection: 16 evals, 1,441 questions, 438,790 cells; 19.5 million readout tokens |
 | where the cells came from | 425,513 pulled from the dataset; 13,277 captured: the 23 `knowledge_cutoff` questions the dataset leaves out, 23 forward passes |
 | GPU time | 1.52 GPU-hours in all, 80.3 cells per GPU-second end to end |
 | of which the capture container | 148 GPU-seconds: the dataset pull, one load of the 27B model, the 23 forward passes |

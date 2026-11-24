@@ -61,7 +61,8 @@ bank version that differs from the golden's.**
   listed new name and every other row equals the golden's; the same row is set aside when the
   family later declares a stamp change.
 - A tier move is declared by listing it (plan 0104): `manifest_0101_declare.TIER_MOVES` holds
-  `family -> (tier before, tier today)`; today `conjunctive_association: full -> core`. Which
+  `family -> (tier before, tier today)`; today `conjunctive_association`, `user_modeling_hard`
+  and `association_hard`, each `full -> core` (the last two: plan 0114). Which
   tier a family is in changes what a bare `run` judges, never how the family is judged, so
   there is no stamp or bank to bump. For a listed family that holds the listed tier, its two
   tier rows (`list.tier` and its `tiers.CORE` membership) are read as they were before the

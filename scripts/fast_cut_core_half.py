@@ -2,8 +2,8 @@
 family but the two safety ones, ``ceil(n / 2)`` of its scored units, drawn at random with a
 recorded seed, plus the whole strict ATI subset (``ati-subset-v2``), which is never sampled.
 
-    uv run python scripts/fast_cut_core_half.py --version fast-v5 --seed 20261121
-    uv run python scripts/fast_cut_core_half.py --version fast-v5 --seed 20261121 --check
+    uv run python scripts/fast_cut_core_half.py --version fast-v6 --seed 20261121
+    uv run python scripts/fast_cut_core_half.py --version fast-v6 --seed 20261121 --check
 
 Deterministic (two runs are byte-identical): units, strata and read ids come from the
 registered banks and read plans alone. The read plans of nyt_connections and of
@@ -16,7 +16,8 @@ entry gated on another instrument or bank is refused at cut time, never forced s
 frozen file is never edited: an existing target is
 refused (``--check`` compares it byte for byte). After a bank change, or to add a family, cut the
 NEXT version with the same seed (plan 0110: fast-v4 -> fast-v5 after chain_intermediates' bank
-v3); ``evals/fast/README.md`` ("Re-cutting") says what moves.
+v3; plan 0114: fast-v5 -> fast-v6 when user_modeling_hard and association_hard joined core);
+``evals/fast/README.md`` ("Re-cutting") says what moves.
 
 The draw, per family (``draw``): ``random.Random(f"{seed}|{registry.frozen_name(f)}")`` over
 the family's units sorted by id, so one family's draw depends on nothing but the seed, its
@@ -313,7 +314,7 @@ def target_path(version: str) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--version", required=True, help="the new version, e.g. fast-v6")
+    ap.add_argument("--version", required=True, help="the new version, e.g. fast-v7")
     ap.add_argument("--seed", required=True, type=int)
     ap.add_argument("--check", action="store_true", help="compare the existing file instead")
     ap.add_argument("--out", type=Path, default=None, help="write here (a scratch copy)")

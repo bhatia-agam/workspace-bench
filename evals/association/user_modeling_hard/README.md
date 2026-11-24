@@ -27,11 +27,13 @@ build (175 items, 19 of them admitted on a second draw of the label gate), which
 had floors frozen on its branch but was never merged; the owner then dropped those 19, and the
 changed bank took a new version instead of keeping a stamp that has results.
 
-**Status (2026-11-23, plan 0112).** The family is registered and runs by name and in the `full`
-tier, on bank v4, with its floors frozen (`evals/baselines/`: prompt-only summary 0.703,
+**Status (2026-11-23, plans 0112 and 0114).** The family is registered and runs by name and in
+the `core` and `full` tiers, on bank v4, with its floors frozen (`evals/baselines/`: prompt-only summary 0.703,
 logit lens L63 0.019, lucky guessing 0.114 blind, 0.093 described) and the bank's sha256 pinned in the
-tests. It is not in `tiers.CORE` and has no fast-subset entry: joining core and the fast re-cut
-are one separate step. Numbers of the validation run: "Results on bank v4" below.
+tests. Since plan 0114 (2026-11-23, the owner's decision) it is a core family and in the fast
+subset: `fast-v6` holds 78 of the 155 items, a seeded random half
+([the fast subset](../../fast/README.md)); the registered `user_modeling` stays in the full
+tier only. Numbers of the validation run: "Results on bank v4" below.
 
 ## Bank v4: 155 items, 229 parts
 

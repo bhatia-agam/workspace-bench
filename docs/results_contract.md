@@ -23,7 +23,7 @@ name, nor a **retired** family (`registry.RETIRED_FAMILIES`, none today; reason
 dir (reason `removed`; the keys are listed in `registry.REMOVED_FAMILIES`), nor a
 family registered with `not_in_macro` (a hillclimbing family not yet reviewed), listed
 with reason `not in macro` and its stated reason. Under it the **core macro** row
-is the same rule over the rows of the core families only ([Tiers](tiers.md); `N of 18 families`,
+is the same rule over the rows of the core families only ([Tiers](tiers.md); `N of 20 families`,
 with a `Core macro:` line naming its missing and excluded families), drawn when at least one core
 family is averaged and never for fast or ATI results. `run` also writes `run.json` (per-family status, result
 path, spend, the judge overrides in force, `hb_method` when `hb_method=` is passed, and `tier`

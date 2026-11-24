@@ -370,6 +370,28 @@ def _fast_row(version: str | None):
     )
 
 
+def test_a_run_of_the_previous_fast_cut_says_which_families_it_lacks():
+    """Plan 0114: a 16-row fast-v5 run is shown under the default `fast` subset (every row is
+    compatible with fast-v6), so its set note names the two families of the default it has
+    no row for; its subset, its rows' membership and a default run's note do not change."""
+    from wsbench import fast
+
+    kept = sorted(set(fast.subset("fast-v5")))
+    assert len(kept) == 16 and fast.DEFAULT == "fast-v6"
+    old = {fam: _fast_row("fast-v5") for fam in kept}
+    assert wsb.fast_subset_of(old) == "fast"
+    assert wsb.stamp_note(old) == (
+        "scored on fast-v5; 2 families of fast-v6 not in this run: association_hard, "
+        "user_modeling_hard"
+    )
+    assert set(wsb.fast_members(old)) == set(kept)
+    new = {fam: _fast_row(fast.DEFAULT) for fam in fast.subset(fast.DEFAULT)}
+    assert wsb.stamp_note(new) == "scored on fast-v6"
+    assert wsb.stamp_note({f: _fast_row(fast.DEFAULT) for f in kept}) == "scored on fast-v6"
+    assert wsb.stamp_note({"poetry": _fast_row("fast-v3")}) == "scored on fast-v3"
+    assert wsb.stamp_note({"poetry": _fast_row(None)}) == ""
+
+
 def test_the_fast_view_holds_one_selection_only(wsb_run: Path, tmp_path: Path, monkeypatch):
     """`fast` is the DEFAULT selection: a run stamped with the default version, or with one
     whose entry for every family is identical; any other fast run is stored under the version

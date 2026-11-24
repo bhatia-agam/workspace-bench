@@ -24,6 +24,10 @@ CORE: tuple[str, ...] = (
     "chain_intermediates",
     "hinted_cutoff",
     "conjunctive_association",  # Camila, 2026-11-21: "conjunctive association should be in core"
+    # plan 0114 (the owner, 2026-11-23): the two hard banks are core families; the registered
+    # `user_modeling` and `association` stay in full only
+    "user_modeling_hard",
+    "association_hard",
 )
 
 

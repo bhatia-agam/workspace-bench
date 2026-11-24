@@ -224,8 +224,8 @@ def test_core_rows_stored_under_an_earlier_core_list_give_way_to_todays(tmp_path
     _stored_core(root, ("poetry",))  # the tier as it was: one eval short of today's
     core = Store(root).scores("wsb", MODEL, CORE)
     assert RUN in core["role_bound_association"] and core["poetry"][RUN]["value"] == 0.5
-    assert core[query.MACRO][RUN]["n"] == 4 and "of 18 core evals" in core[query.MACRO][RUN]["note"]
-    assert len(tiers.CORE) == 18
+    assert core[query.MACRO][RUN]["n"] == 4 and "of 20 core evals" in core[query.MACRO][RUN]["note"]
+    assert len(tiers.CORE) == 20
     _facts(root, RUN, entry=store.dumps({"families_file": "results/core.txt"}))
     own = Store(root).scores("wsb", MODEL, CORE)
     assert own[query.MACRO][RUN]["n"] == 17 and own["poetry"][RUN]["value"] == pytest.approx(0.7)

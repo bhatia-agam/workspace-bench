@@ -50,7 +50,7 @@ def test_list_prints_every_check_with_its_options(capsys):
 
 def test_fast_subset_passes_and_fails_closed_on_a_changed_bank(monkeypatch, capsys, real_families):
     assert cli.main(["check", "fast_subset"]) == 0
-    assert capsys.readouterr().out.startswith("PASS  fast_subset: 16 bank files match")
+    assert capsys.readouterr().out.startswith("PASS  fast_subset: 18 bank files match")
     monkeypatch.setattr("wsbench.fast.bank_sha", lambda family: "0" * 64)
     assert cli.main(["check", "fast_subset"]) == 1
     out = capsys.readouterr().out

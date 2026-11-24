@@ -163,8 +163,17 @@ def test_the_shipped_map_covers_the_core_set():
         for folder, info in capture["folders"].items():
             assert folder.split("/")[0] in ("full", "fast")
             assert all(len(key) == 24 for key in info["items"].values()), folder
-    # the float32 capture holds a folder for every eval of the core set, by today's name
-    assert {f"full/{name}" for name in tiers.core()} <= set(fp32["folders"])
+    # the float32 capture holds a folder for every eval of the core set, by today's name,
+    # except the ones listed here by name: core evals whose folder the map does not name yet.
+    # `association_hard` joined the core set in plan 0114; the dataset holds it (and its
+    # 99-question bank is offered in the dataset's pull request 1), but this map still pins a
+    # revision from before it. Reads of it run the model until the map follows the dataset.
+    # The second assertion makes the entry leave this list when the map gains the folder.
+    awaiting_capture = {"association_hard"}
+    assert not {f"full/{name}" for name in awaiting_capture} & set(fp32["folders"])
+    assert {f"full/{name}" for name in tiers.core()} - {
+        f"full/{name}" for name in awaiting_capture
+    } <= set(fp32["folders"])
 
 
 def test_source_reads_the_dataset_key(env, tmp_path):

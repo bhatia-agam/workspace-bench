@@ -749,9 +749,16 @@ def fast_subset_of(results: Mapping[str, Any]) -> str:
 
 def stamp_note(results: Mapping[str, Any]) -> str:
     """The fast subset versions a fast run's rows are stamped with, as the note of its set:
-    what tells the page later which subset the rows were scored on."""
+    what tells the page later which subset the rows were scored on. A run of an earlier version
+    that is shown under the default subset (every row ``fast.compatible``) also says which of
+    the default's families it has no row for (``fast.not_in_run``, plan 0114)."""
     stamps = sorted({v for r in results.values() if (v := _stamp(r))}, key=version_key)
-    return f"scored on {', '.join(stamps)}" if stamps else ""
+    if not stamps:
+        return ""
+    absent = ""
+    if fast_subset_of(results) == FAST_SUBSETS[""]:  # filed under the default subset only
+        absent = fast.not_in_run_note({f: _stamp(r) for f, r in results.items()}, fast.DEFAULT)
+    return f"scored on {', '.join(stamps)}" + (f"; {absent}" if absent else "")
 
 
 def fast_set_of(judged: Path) -> str:

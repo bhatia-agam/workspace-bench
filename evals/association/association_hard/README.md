@@ -15,8 +15,9 @@ It is the hard sibling of [`association`](../association/README.md), whose files
 floors and read plan it leaves untouched: a separate package with its own prompts, judge, gate
 and bank.
 
-**Status.** Bank v3 (99 items, plan 0116) is registered, in the `full` tier only: not in core,
-no fast cut, no ATI entry, no adapted set. The prompt-only reader solves nearly every item, so the family separates lenses
+**Status.** Bank v3 (99 items, plan 0116) is registered. A core family since 2026-11-23 (plan
+0114, the owner's decision), and so in the fast subset: `fast-v6` holds 50 of the 99 items, a
+seeded random half ([the fast subset](../../fast/README.md)). No ATI entry, no adapted set. The prompt-only reader solves nearly every item, so the family separates lenses
 from each other (and prose lenses from token lenses); it does not separate a lens from a reader
 of the text.
 

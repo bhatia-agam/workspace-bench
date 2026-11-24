@@ -369,7 +369,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   on a gated gold pick with an inferred basis; its full label, `judge.draw_label`, is a
   diagnostic). Both reuse conjunctive's `draw_key` / `majority` / `n_draws`; draw 0 keeps the
   single-call key.
-  user_modeling_hard (plan 0106; `umh-v3+bank-v4` since plan 0112: judge calls `umh-v3`, bank v4, floors frozen; full tier, core is a separate step)
+  user_modeling_hard (plan 0106; `umh-v3+bank-v4` since plan 0112: judge calls `umh-v3`, bank v4, floors frozen; a core family and a fast family since plan 0114)
   is a SEPARATE package that imports three pure helpers (`user_modeling.judge.decode_choice`,
   `user_modeling.prompts.render_user_turn` / `option_lines`, conjunctive's draw helpers) and no
   prompt: never thread a family parameter through `user_modeling`, whose files, stamps and
@@ -593,7 +593,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   check, 5-draw scene screen). Its ATI entry (full panel, argon via Gemini WIF, 2026-11-01) keeps
   no item under the all-fail rule (plan 0071), so the family is skipped under the flag.
 - association_hard (plan 0108; bank v3 since plan 0116: `assoc-hard-v1+gate-h2+bank-v3`,
-  `items_v3.json`, 99 items = 52 of bank v2 + 47 new; full tier only, not in core, no fast cut) is a SEPARATE package beside `association`, whose files, stamps, cached
+  `items_v3.json`, 99 items = 52 of bank v2 + 47 new; a core family and a fast family since
+  plan 0114, 50 fast items, cut on bank v3) is a SEPARATE package beside `association`, whose files, stamps, cached
   calls, floors and manifest rows must not move: never thread a family or bank parameter
   through `association/judge.py`. It imports pure helpers only (`association.judge.holding_lines`
   / `flat_list_void` / `FLAT_RUN_MIN`, conjunctive's `draw_key` / `majority` / `n_draws`) and no
@@ -1192,7 +1193,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`reselected`, `fast.same_reads`; their shas are pinned in `tests/test_fast_core_half.py`,
   `V4_FAST_PLAN_SHA`), and **a tier move is declared by listing it** in
   `manifest_0101_declare.TIER_MOVES` (`family -> (tier before, tier today)`; today
-  conjunctive_association full -> core): that family's `list.tier` / `tiers.CORE` rows are read
+  conjunctive_association, user_modeling_hard and association_hard, each full -> core): that family's `list.tier` / `tiers.CORE` rows are read
   as before the move, ahead of the comparison and the ledger hash (`tier_moved`), so the move
   needs no ledger entry and stales none, also for a family registered after the golden. Any
   unlisted tier or core-list change fails T1 like any other row; the golden is never
@@ -1205,6 +1206,23 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `fast_version=fast-v4` `fast.entry` fails closed for it. `tests/test_fast_core_half.py` pins
   fast-v5 (`V5_SHA256`, `V5_FAST_PLAN_SHA`, `RECUT`) and the frozen fast-v4 file's sha. Wherever
   this bullet says fast-v4 is the default or the active cut, read fast-v5.
+  **Plan 0114 (2026-11-23): `fast.DEFAULT = "fast-v6"`, the second re-cut** (same command and
+  seed, after user_modeling_hard and association_hard joined core; the easy `user_modeling`
+  and `association` stay full-only and in no core-half cut): `fast_v6.json` differs from
+  `fast_v5.json` in `version` and in the two new entries alone (78 of 155 and 50 of 99 items,
+  `ceil(n / 2)`, no stratum, no ATI id; association_hard was cut on bank v3, plan 0116: the
+  branch's first cut, 28 of bank v2's 56, was never on main and the file was regenerated under
+  the same name), so fast is 18 families, 1,331 units, 1,569 read items,
+  and every fast-v5 row and FAST file of the other 16 stays valid. Both moves are listed in
+  `TIER_MOVES`; the two families' ledger entries are unchanged (`declare` answers "already
+  declared in this state", as designed for a listed move). `tests/test_fast_core_half.py` pins
+  fast-v6 (`V6_SHA256`, `V6_FAST_PLAN_SHA`, `JOINED`), `tests/test_rename_0101.py` the frozen
+  fast-v5 file. Wherever this bullet says fast-v5 is the default, or counts 16 families, read
+  fast-v6 and 18.
+  A fast-v5 run directory has 16 rows that all count under fast-v6 and no stale row, so
+  `fast.not_in_run` / `not_in_run_note` name the default's families such a run cannot hold:
+  `cli.fast_header` prints the line under the scope line (only while the active subset is the
+  default) and the viewer's `stamp_note` appends it; a note only, no row or score changes.
   The cut reads ATI ids through `text_inversion.subset_entry` (stale entry = exit; the one listed exception holds no id and is not a strict-ATI family) and refuses
   `WSB_BANK_ROOT`, a `WSB_BANK_FILE_*` pin of its families, `WSB_NO_NYT` and `WSB_NO_NOCOT`.
   `run --fast` in process mode exits when `fast.VERSION` is not a selectable version (a child
@@ -1255,11 +1273,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 
 ## Tiers and categories (plan 0098)
 - `tiers.py` (imports `registry` and `fast` only; `registry` never imports it): `TIERS = ("fast",
-  "core", "full")`, `DEFAULT = "core"`, `CORE` (18 families: conjunctive_association joined on 2026-11-21, Camila; the registered
-  `user_modeling` bank is NOT core; `association_hard`, plan 0108, is registered in full only;
-  `user_modeling_hard`, plan 0106, is registered in full and
-  joins `CORE` as the 19th in a separate step (its floors are frozen since plan 0112): plan 0106 commit 5, with the fast cut
-  and the final ledger entry),
+  "core", "full")`, `DEFAULT = "core"`, `CORE` (20 families: conjunctive_association joined on 2026-11-21, Camila;
+  `user_modeling_hard`, plan 0106, and `association_hard`, plan 0108, joined on 2026-11-23,
+  plan 0114, the owner's decision, although the prompt-only reader solves association_hard; the
+  registered `user_modeling` and `association` banks are NOT core; a tier move is listed in
+  `manifest_0101_declare.TIER_MOVES` and comes with a fast re-cut),
   `core()` / `full()` / `families(tier)`, `tier_of(name)` (`core` | `full` | `""`), `check()`
   (every `CORE` key registered, not superseded / retired / `not_in_macro`; its static part runs
   at import). `full()` is `registry.drop_superseded(sorted(FAMILIES))`, what `all=True` runs.

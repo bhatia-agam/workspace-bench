@@ -926,11 +926,27 @@ def fast_header(results: Iterable[FamilyResult] = ()) -> str:
     count; the table may list rows of other subsets, which the macro leaves out (plan 0094).
     Plan 0104: a second line per registered version whose rows the active macro leaves out
     names the key that reports them (``fast_version=``; it replaces plan 0095's
-    ``--fast-safety`` hint)."""
+    ``--fast-safety`` hint). Plan 0114: a run made under an earlier version whose rows still
+    count (``fast.compatible``) has no row for a family that joined since; under the default
+    subset a line names those families (``fast.not_in_run``), since nothing else in the table
+    does."""
+    results = list(results)
     head = (
         f"scope: fast subset {fast.VERSION} ({len(fast.subset())} families; not comparable with "
         "full-bench numbers); rows of other subsets are excluded"
     )
+    # only under the default: `fast_version=<v>` reports a directory as it was
+    absent = ""
+    if fast.VERSION == fast.DEFAULT:
+        absent = fast.not_in_run_note(
+            {
+                r.family: r.config.get("fast_subset")
+                for r in results
+                if r.config.get("scope") == fast.SCOPE
+            }
+        )
+    if absent:
+        head += f"\n{absent}"
     stale: dict[str, int] = {}
     for r in results:
         v = r.config.get("fast_subset")

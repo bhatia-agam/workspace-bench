@@ -50,8 +50,18 @@ CORE = {
     "multi_concept_directed_modulation", "wrong_intermediate", "relational_multihop",
     "role_bound_association", "knowledge_cutoff", "model_specific_directed_modulation",
     "model_multihop", "chain_intermediates", "hinted_cutoff", "conjunctive_association",
+    "user_modeling_hard", "association_hard",
 }  # fmt: skip
-N = 18  # 17 until 2026-11-21, when conjunctive_association joined (Camila)
+# 17 until 2026-11-21, when conjunctive_association joined (Camila); 18 until plan 0114
+# (2026-11-23), when the two hard banks joined
+N = 20
+CORE_UNTIL_0114 = (
+    "agentic_misalignment", "jailbreak_recognition", "arithmetic_intermediates", "buggy_code",
+    "nyt_connections", "moral_rationale", "poetry", "introspection",
+    "multi_concept_directed_modulation", "wrong_intermediate", "relational_multihop",
+    "role_bound_association", "knowledge_cutoff", "model_specific_directed_modulation",
+    "model_multihop", "chain_intermediates", "hinted_cutoff", "conjunctive_association",
+)  # fmt: skip
 
 
 # ---------------------------------------------------------------- categories and tiers
@@ -83,8 +93,15 @@ def test_core_and_full_membership(real_families):
     full = tiers.full()
     assert full == registry.drop_superseded(sorted(registry.FAMILIES))
     assert set(tiers.core()) < set(full) and "typo_st" not in full and "jlens_concept_pr" in full
-    # the registered user_modeling bank is in full only (a hard bank is to join core later)
+    # the registered user_modeling bank is in full only (its hard bank is the core family)
     assert "user_modeling" in full and "user_modeling" not in tiers.CORE
+    # plan 0114: the two hard banks joined at the end of the list, every earlier member and
+    # its place kept; their easy siblings are in full only and in no fast subset of today
+    assert tiers.CORE[:18] == CORE_UNTIL_0114
+    assert tiers.CORE[18:] == ("user_modeling_hard", "association_hard")
+    for easy in ("user_modeling", "association"):
+        assert tiers.tier_of(easy) == "full" and easy not in tiers.CORE
+        assert easy not in fast.families() and tiers.tier_of(f"{easy}_hard") == "core"
     assert tiers.families("core") == tiers.core() and tiers.families("full") == full
     assert tiers.families("fast") == fast.families()
     with pytest.raises(ValueError):
@@ -469,4 +486,4 @@ def test_bare_plan_names_its_tier(tmp_path, capsys):
     from wsbench.cli import main
 
     assert main(["plan", f"out={tmp_path / 'p'}", "limit=1"]) == 0
-    assert "tier: core (18 families; --full for all" in capsys.readouterr().err
+    assert "tier: core (20 families; --full for all" in capsys.readouterr().err

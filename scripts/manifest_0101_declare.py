@@ -104,7 +104,13 @@ def paths(a: Any, b: Any, path: str = "") -> list[str]:
 # again gets its pair replaced (before stays what the golden or its ledger entry holds); one
 # that moves back loses its line.
 #   conjunctive_association: full -> core (plan 0104; the owner, 2026-11-21)
-TIER_MOVES = {"conjunctive_association": ("full", "core")}
+#   user_modeling_hard, association_hard: full -> core (plan 0114; the owner, 2026-11-23). Both
+#   were registered after the golden, so "before" is the tier of their ledger entries.
+TIER_MOVES = {
+    "conjunctive_association": ("full", "core"),
+    "user_modeling_hard": ("full", "core"),
+    "association_hard": ("full", "core"),
+}
 TIER_ROW = ("list", "tier")
 CORE_ROW = ("tables", "tiers.CORE")  # present (CORE_MEMBER) iff the family is a core family
 CORE_TIER, CORE_MEMBER = "core", True
