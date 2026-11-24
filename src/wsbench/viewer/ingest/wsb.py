@@ -38,13 +38,17 @@ GOLD_KEYS = (
 )  # fmt: skip
 LAYER_VERDICT_KEYS = ("expressed", "pass", "correct", "hit")  # a native row's per-layer verdict
 GOLD_INDEX_KEYS = ("gold_idx", "gold_position")
-METHODS = ("olens", "nla", "jlens", "logit_lens", "continuation", "other")
+METHODS = ("olens", "nla", "jlens", "jpp_lens", "rlens", "logit_lens", "continuation", "other")
 CORE = "core"
 
 
 def guess_method(lens: str, reader: str | None = None, kind: str | None = None) -> str:
     """The method family of a lens from its names; pass ``method=`` to ingest to override."""
     text = f"{lens} {reader or ''}".lower()
+    if re.search(r"(^|[^a-z])(jpp|j\+\+)", text):
+        return "jpp_lens"
+    if re.search(r"(^|[^a-z])r-?lens([^a-z]|$)", text):
+        return "rlens"
     for needle, method in (("logit", "logit_lens"), ("jlens", "jlens"), ("j-lens", "jlens")):
         if needle in text:
             return method

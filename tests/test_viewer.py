@@ -168,6 +168,22 @@ def test_method_guess():
     assert wsb.guess_method("jlens_j") == "jlens"
     assert wsb.guess_method("mylens.nla.step2000") == "nla"
     assert wsb.guess_method("my-prose-lens.step600") == "olens"
+    assert wsb.guess_method("rlens") == "rlens" and wsb.guess_method("jpp_lens") == "jpp_lens"
+    assert wsb.guess_method("my-olens") == "olens"  # no other name ends a method's
+
+
+def test_the_newer_token_methods_have_their_own_name_and_colour():
+    from wsbench.viewer import meta
+    from wsbench.viewer.ingest import reader
+
+    assert tuple(meta.METHODS) == wsb.METHODS  # one list: what ingest accepts is what is drawn
+    assert meta.METHODS["rlens"][0] == "R-lens" and meta.METHODS["jpp_lens"][0] == "J++ lens"
+    assert len({v[2] for v in meta.METHODS.values()}) == len(meta.METHODS)
+    for given, want in (("rlens", "rlens"), ("jpp_lens", "jpp_lens"), ("J++", "jpp_lens"),
+                        ("R-lens", "rlens"), ("newlens", "other")):  # fmt: skip
+        entry = reader.normalise({"method": given, "lens": "x", "run": "r", "judged": "j"})
+        assert entry["method"] == want
+    assert "--m-rlens:" in meta.palette_css() and ".m-jpp_lens" in meta.palette_css()
 
 
 # ------------------------------------------------------------------ WorkspaceBench ingest

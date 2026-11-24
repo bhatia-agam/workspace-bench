@@ -121,8 +121,8 @@ MANIFEST: dict[str, Any] = {
     },
     "catalog.db": {
         "run": "one ingested lens on one bench and subject model (one per named run when the "
-        "ingest gives a run name); `method` is olens | nla | jlens | logit_lens | "
-        "continuation | other, `source` the judged directory or its volume address, "
+        "ingest gives a run name); `method` is olens | nla | jlens | jpp_lens | rlens | "
+        "logit_lens | continuation | other, `source` the judged directory or its volume address, "
         "`source_sig` its size+mtime signature (ingest skips a run whose signature is "
         "unchanged)",
         "run_facts": "what the runs manifest says about a run, one row per run ingested from a "

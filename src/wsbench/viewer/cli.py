@@ -23,7 +23,7 @@ USAGE = """usage: wsbench viewer <command> [key=value ...] [--show | --help]
 ingest keys
   adapter=wsb   <dir> = a judged run (<family>/results.json) or a lens dir with judged/,
                 judged_ati/, readouts/.  readouts=DIR  lens=NAME  model=qwen3.6-27b
-                method=olens|nla|jlens|logit_lens|other  label=TEXT  items=id1,id2
+                method=olens|nla|jlens|jpp_lens|rlens|logit_lens|other  label=TEXT  items=id1,id2
                 families=a,b
   adapter=hb    <dir> = <out>/<lens> (holds <family>/<judge>/<arm>/cells.jsonl and
                 index/<judge>/index.json).  hb_repo=DIR (bank + README)  lens=  method=  label=

@@ -235,6 +235,8 @@ METHODS: dict[str, tuple[str, str, str]] = {
     "olens": ("O-lens", "O", "#18528b"),
     "nla": ("NLA", "NLA", "#b83514"),
     "jlens": ("J-lens", "J", "#17a173"),
+    "jpp_lens": ("J++ lens", "J++", "#0e8fa8"),
+    "rlens": ("R-lens", "R", "#c2408f"),
     "logit_lens": ("Logit lens", "LL", "#9e75d7"),
     "continuation": ("Model continuation", "Cont", "#b87e0a"),
     "other": ("Other", "Other", "#6b7280"),
