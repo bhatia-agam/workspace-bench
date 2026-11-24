@@ -38,6 +38,13 @@ uv run wsbench viewer ingest <dir> adapter=hb hb_repo=<hallucination-bench check
 uv run wsbench viewer serve
 ```
 
+An eval's questions are the ones its bank file holds in the checkout that ingested last
+(`repo=DIR`, else the checkout the command runs from): every ingest writes the bank of the
+evals it stores. A question an earlier version of the bank held and the current one does
+not leaves the eval's list; it keeps its text and its own page for the runs that were
+judged on it, and such a run carries the mark `earlier questions` beside its score for
+that eval: its score is on an earlier version of the questions.
+
 `adapter=bank` on a workspace-bench checkout adds every subject model's question set
 (`adapted/<model>/`), so the model dropdown lists them. Ingest is idempotent: an unchanged
 source is skipped. `wsbench viewer --help` lists every key.

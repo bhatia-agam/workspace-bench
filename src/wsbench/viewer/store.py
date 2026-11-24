@@ -72,6 +72,9 @@ CREATE TABLE IF NOT EXISTS hb_index (
 """
 # tables that hold one run's rows and are cleared when the run is ingested again
 PER_RUN_TABLES = ("score", "verdict", "layer_stat", "run_set", "run_eval", "hb_index")
+# item.ord of a question an earlier version of its eval's bank held and the current one does
+# not: kept with its text for the runs judged on it, never listed among the eval's questions
+EARLIER_BANK = 200000
 JOINT_LAYER = -2  # hb_index.layer of the index's joint row (layer "all")
 ALIASES = "lens_aliases.json"
 

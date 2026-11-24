@@ -550,3 +550,43 @@ def test_hb_what_it_measures_comes_from_the_column_of_that_name(tmp_path):
     assert "not a description" not in metas["benign_roleplay"].what  # no 'what' column there
     assert metas["main"].prompt_template == "How a readout is cut."
     assert meta.load_hb(None)["story"].what  # the built-in one-liners
+
+
+def test_questions_an_updated_bank_dropped_leave_the_list_and_mark_the_run(
+    wsb_run: Path, tmp_path: Path
+):
+    """A bank that changed after a run was judged: the eval lists the bank's questions as
+    they are now, and the run judged on the earlier ones says so beside its score."""
+    from wsbench import registry
+    from wsbench.viewer.query import EARLIER_BANK
+
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root, build_dir=tmp_path / "build")["run_id"]
+    db = Store(root)
+    before = [i["item"] for i in db.items("wsb", wsb.ORIGINAL, FAM)]
+    assert set(IDS) <= set(before) and db.eval_marks("wsb", wsb.ORIGINAL) == {}
+    # a checkout whose bank no longer holds the second question
+    rel = registry.frozen_bank_path(FAM).relative_to(registry.REPO_ROOT)
+    bank = json.loads((registry.REPO_ROOT / rel).read_text())
+    rows = bank["items"] if isinstance(bank, dict) else bank
+    rows[:] = [r for r in rows if IDS[1] not in (r.get("id"), r.get("name"))]
+    repo = tmp_path / "checkout"
+    (repo / rel).parent.mkdir(parents=True)
+    (repo / rel).write_text(json.dumps(bank))
+    cat = store.catalog(root)
+    wsb.write_bank(cat, repo, wsb.ORIGINAL, families=[FAM])
+    cat.close()
+    db = Store(root)
+    after = [i["item"] for i in db.items("wsb", wsb.ORIGINAL, FAM)]
+    assert after == [i for i in before if i != IDS[1]]  # same order, one question fewer
+    assert db.eval("wsb", wsb.ORIGINAL, FAM)["n_items"] == len(after)
+    label, why = db.eval_marks("wsb", wsb.ORIGINAL)[rid][FAM]
+    assert label == EARLIER_BANK and why.startswith("1 of the questions")
+    assert db.item("wsb", wsb.ORIGINAL, FAM, IDS[1])["prompt"]  # its page keeps its text
+    # the bank holds it again (the first checkout): it is listed where it was, the mark goes
+    cat = store.catalog(root)
+    wsb.write_bank(cat, registry.REPO_ROOT, wsb.ORIGINAL, families=[FAM])
+    cat.close()
+    db = Store(root)
+    assert [i["item"] for i in db.items("wsb", wsb.ORIGINAL, FAM)] == before
+    assert db.eval_marks("wsb", wsb.ORIGINAL) == {}

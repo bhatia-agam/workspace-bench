@@ -30,6 +30,7 @@ OLD_FAST = "fast-"  # a fast run of another version than the default is stored u
 # the view of rows a store holds under ``fast`` that were scored on an earlier fast subset (the
 # store was written while that subset was the default one); never a stored name
 EARLIER_FAST = "fast-earlier"
+EARLIER_BANK = "earlier questions"  # an eval's mark for a run judged on an earlier bank
 SCORED_ON = re.compile(r"\bscored on (fast[\w.-]*)")  # what ingest notes on a fast set
 FAST_STAMP = re.compile(r"\bfast(?:-safety)?-v\d+\b")  # a subset version named in a stored note
 
@@ -644,6 +645,30 @@ class Store:
             (bench, model),
         ):
             out[r["run_id"]][r["eval"]] = (r["integrity"], r["reason"] or "")
+        for rid, evals in self.earlier_bank(bench, model).items():
+            for name, n in evals.items():
+                label, why = out[rid].get(name, ("", ""))
+                note = (
+                    f"{n} of the questions this run was judged on are no longer in the eval's "
+                    "bank: its score is on an earlier version of the questions"
+                )
+                out[rid][name] = (
+                    ", ".join(x for x in (label, EARLIER_BANK) if x),
+                    "; ".join(x for x in (why, note) if x),
+                )
+        return dict(out)
+
+    def earlier_bank(self, bench: str, model: str) -> dict[str, dict[str, int]]:
+        """``{run_id: {eval: n}}``: the runs with verdicts on ``n`` questions that only an
+        earlier version of the eval's bank held."""
+        out: dict[str, dict[str, int]] = defaultdict(dict)
+        for r in self.q(
+            "SELECT v.run_id, v.eval, count(*) n FROM item i JOIN verdict v ON v.eval = i.eval"
+            " AND v.item = i.item JOIN run r ON r.run_id = v.run_id AND r.bench = i.bench AND"
+            " r.model = i.model WHERE i.bench = ? AND i.model = ? AND i.ord >= ? GROUP BY 1, 2",
+            (bench, model, store.EARLIER_BANK),
+        ):
+            out[r["run_id"]][r["eval"]] = r["n"]
         return dict(out)
 
     def _stored_core(self, bench: str, model: str) -> dict[str, list[sqlite3.Row]]:
@@ -847,11 +872,13 @@ class Store:
         return self.private or not row["private"]
 
     def items(self, bench: str, model: str, name: str, subset: str = "full") -> list[dict]:
-        """The eval's questions in bank order with every run's verdict: ``pass`` per run id."""
+        """The eval's questions in bank order with every run's verdict: ``pass`` per run id.
+        A question only an earlier version of the bank held is not listed (``earlier_bank``
+        names the runs judged on such questions); its own page still opens."""
         rows = self.q(
             "SELECT item, expected, intermediates, subfamily, private FROM item WHERE bench = ?"
-            " AND model = ? AND eval = ? ORDER BY ord, item",
-            (bench, model, name),
+            " AND model = ? AND eval = ? AND ord < ? ORDER BY ord, item",
+            (bench, model, name, store.EARLIER_BANK),
         )
         if self._listed(bench, model, subset):
             keep = {

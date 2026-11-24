@@ -32,6 +32,7 @@ LAYER_RE = re.compile(r"(?:^|[|_:])L(-?\d+)")
 POS_RE = re.compile(r"(?:^|[|_])p(-?\d+)")
 MAX_STATEMENTS = 40
 MIN_QUOTE = 8
+EXTRA_ORD = 100000  # item.ord from here on: an id of a run's result rows that no bank lists
 GOLD_KEYS = (
     "gold", "bridge", "target", "targets", "intermediate", "intermediates", "concept", "concepts",
 )  # fmt: skip
@@ -214,6 +215,17 @@ def write_bank(cat, repo: Path, model: str, families: Iterable[str] | None = Non
                 for r in items
             ],
         )  # fmt: skip
+        if items:  # the bank file is the eval's questions: what it no longer holds steps back
+            now = {r["item"] for r in items}
+            old = cat.execute(
+                "SELECT item, ord FROM item WHERE bench = ? AND model = ? AND eval = ? AND ord < ?",
+                (BENCH, model, fam, EXTRA_ORD),
+            ).fetchall()
+            cat.executemany(
+                "UPDATE item SET ord = ? WHERE bench = ? AND model = ? AND eval = ? AND item = ?",
+                [(store.EARLIER_BANK + r["ord"], BENCH, model, fam, r["item"])
+                 for r in old if r["item"] not in now],
+            )  # fmt: skip
         n += len(items)
     cat.commit()
     return n
@@ -996,7 +1008,7 @@ def ingest(
             cat.executemany(
                 "INSERT OR IGNORE INTO item (bench, model, eval, item, ord, prompt, expected,"
                 " intermediates, private, meta) VALUES (?,?,?,?,?,?,'[]','[]',?,'{}')",
-                [(BENCH, model, fam, i, 100000 + n, "", int(i in info["private"]))
+                [(BENCH, model, fam, i, EXTRA_ORD + n, "", int(i in info["private"]))
                  for n, i in enumerate(extra)],
             )  # fmt: skip
             cat.executemany(
