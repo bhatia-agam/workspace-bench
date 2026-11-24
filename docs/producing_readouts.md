@@ -259,7 +259,8 @@ same line as `wsbench capture`, for example `poetry: 3322 cells = 0 from the sto
 pulled from the dataset + 0 captured (0 forward passes)`. Its keys for this are `store=`
 (default `outputs/store`), `dataset=`, `dataset_revision=`, `revision=` and `dtype=`, with the
 meanings they have on `capture`; with a store the model is loaded in the capture's dtype
-(`dtype=fp32` loads it in 32-bit floats, `dtype=bf16` as shipped). The model is still loaded,
+(`dtype=fp32` loads it in 32-bit floats, `dtype=bf16` as shipped; only the `fp32` capture is
+published, so with `bf16` nothing is pulled). The model is still loaded,
 since every bundled method needs its weights to read a vector; the forward passes over the
 prompts are what is skipped. `store=none`, the `text=` form and a `Producer` built without a
 store run one forward pass per prompt and keep nothing.
