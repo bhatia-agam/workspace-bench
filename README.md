@@ -358,6 +358,7 @@ attributes them by their content.
 
 ## More documentation
 
+- [docs/quickstart_fast.md](docs/quickstart_fast.md): one lens on the fast subset, from install to the report.
 - [docs/evals.md](docs/evals.md): every eval with an example and its judging rule.
 - [docs/producing_readouts.md](docs/producing_readouts.md): the read plan, positions, producing readouts with a bundled lens.
 - [docs/fast_path.md](docs/fast_path.md): reading a lens fast with stored activations and a served engine, on your GPUs or on Modal.
@@ -370,6 +371,8 @@ attributes them by their content.
 - [docs/results_contract.md](docs/results_contract.md): the fields of `results.json` and the macro row.
 - [docs/porting.md](docs/porting.md), [AGENTS.md](AGENTS.md), [adapted/README.md](adapted/README.md): running the bench on another model.
 - [docs/hallucinationbench.md](docs/hallucinationbench.md): the HallucinationBench index that `report` shows.
+- [docs/adding_an_eval.md](docs/adding_an_eval.md): every file and shared table a new eval touches, and the tests that say what is missing.
+- [docs/adding_a_readout_method.md](docs/adding_a_readout_method.md): a method of your own in `wsbench produce`.
 - [docs/checks.md](docs/checks.md): the checks and how to add one.
 - [docs/open_work.md](docs/open_work.md): open work.
 - [CLAUDE.md](CLAUDE.md): conventions for contributors and agents.

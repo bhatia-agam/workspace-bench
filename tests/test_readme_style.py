@@ -31,6 +31,9 @@ PAGES = [
             "producing_readouts",
             "read_sites",
             "fast_path",
+            "quickstart_fast",
+            "adding_an_eval",
+            "adding_a_readout_method",
         )
     ),
 ]
