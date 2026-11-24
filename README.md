@@ -34,9 +34,10 @@ reader and your API rate limits. Judging takes most of the wall-clock.
 |---|---|---|---|---|---|
 | The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 20 s | under a minute |
 | Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | 4.5 min |
-| The fast subset (`--fast`), as it was selected before (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 39 min from the first readouts | 52 min |
+| The fast subset as it was before two evals joined it, read only (see below) | 1,441 / 438,790 | 1.52 | 15.3 min on 8 GPUs | not judged | not measured |
+| The fast subset as it was selected before that (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 39 min from the first readouts | 52 min |
 | The core evals (default), without `conjunctive_association` (see below) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | as every eval | as every eval |
-| Every eval (`--full`) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 101 min after the read | 2 h 29 min |
+| Every eval (`--full`), as it was then (see below) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 101 min after the read | 2 h 29 min |
 
 A cell is one (question, layer, position) readout. The core row is the core evals' share of the
 full run; it takes as long as the full run because the two slowest evals to judge are core.
@@ -44,17 +45,22 @@ Reading also needs the model's activations captured once per version of the ques
 0.8 GPU-hours for every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in
 proportion.
 
-Two rows describe an earlier state of the bench and were not measured again:
+Four rows describe an earlier state of the bench and were not measured again:
 
-- **The fast subset row** was measured on the earlier selection of the fast subset: 2,160
+- **The two fast subset rows** were measured on earlier selections of the fast subset. The
+  first is a read with `wsbench read` of the 16 evals the subset had until
+  `user_modeling_hard` and `association_hard` joined it ([The fast path](#the-fast-path));
+  judging it was not timed. The second was measured on the selection before that: 2,160
   questions in 22 evals. The fast subset is now 1,569 questions in 18 evals
-  ([docs/fast_subset.md](docs/fast_subset.md)), a different selection, and has not been timed.
+  ([docs/fast_subset.md](docs/fast_subset.md)) and has not been timed as a whole.
   On the earlier selection, capturing activations took 0.3 GPU-hours, and with the full run
   judged its score took 9 more minutes.
 - **The core row** is the share of the 17 evals that were core when the full run was measured.
   `conjunctive_association` (100 questions), `user_modeling_hard` (155) and `association_hard`
   (99) are core as well now, 20 evals and 4,895 questions in all; their cells are in the row
   for every eval but not in the core row.
+- **The row for every eval** was measured when the bench had 30 evals. It has 33 now, 6,355
+  questions and 3,508,092 cells, and that set has not been timed.
 
 ## Install
 
@@ -130,8 +136,8 @@ score):
 | you pass | what runs |
 |---|---|
 | nothing, or `--core` | The 20 core evals, the set a method is reported on. |
-| `--full` | Every eval: 32. |
-| `--fast` | The fast subset, for quick iteration: 18 core evals (every core eval but the two safety ones), 1,569 of their 4,669 questions read. Each eval that has a strict ATI subset contributes all of it (the questions no text-only reader solved) plus a random draw that brings it up to half of the units it scores; where the ATI subset is already more than half, all of it and nothing else. A scored unit can span several questions (a pair, an injected concept with its controls), so the questions read are not half of each eval's count. Not a random sample, then: a fast score leans toward the ATI questions ([docs/fast_subset.md](docs/fast_subset.md)). Also on `judge` and `report`. |
+| `--full` | Every eval: 33. |
+| `--fast` (the same as `fast=True`) | The fast subset, for quick iteration: 18 core evals (every core eval but the two safety ones), 1,569 of their 4,669 questions read. Each eval that has a strict ATI subset contributes all of it (the questions no text-only reader solved) plus a random draw that brings it up to half of the units it scores; where the ATI subset is already more than half, all of it and nothing else. A scored unit can span several questions (a pair, an injected concept with its controls), so the questions read are not half of each eval's count. Not a random sample, then: a fast score leans toward the ATI questions ([docs/fast_subset.md](docs/fast_subset.md)). Also on `judge` and `report`. |
 | `group=<category>` | The evals of one category from [the table below](#the-evals), for example `group=safety`. `group=association` also takes `role_bound_association`; `--show` prints what a group resolves to. |
 | `families=a,b` | The evals you name. |
 | `items=id1,id2` | Only these questions (on `judge` and `run`). |
@@ -149,8 +155,8 @@ cells came from each.
 
 ```bash
 uv sync --extra dev --extra gpu
-uv run wsbench capture --fast check=True              # where the cells are; no vectors fetched
-uv run wsbench capture --fast store=outputs/store     # pull the fast subset's activations
+uv run wsbench capture fast=True check=True           # where the cells are; no vectors fetched
+uv run wsbench capture fast=True store=outputs/store  # pull the fast subset's activations
 ```
 
 An item is taken from the dataset only when its exact token ids, read positions and layers are
@@ -211,7 +217,7 @@ model), writes one readouts file per eval, and with `judge=True` hands them to `
 ```bash
 uv sync --extra dev --extra gpu && uv pip install "sglang[all]" httpx
 uv run wsbench bundle adapter=<adapter folder> model=<model snapshot folder> out=bundles/my-lens
-uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens judge=True
+uv run wsbench read fast=True lens=bundles/my-lens out=outputs/readouts/my-lens judge=True
 ```
 
 Several GPUs are several processes (`shard=i shards=n`), or `launcher=modal gpus=n` on Modal;

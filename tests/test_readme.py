@@ -104,6 +104,42 @@ def test_the_readme_table_is_the_one_the_registry_gives():
     assert "`group=association` also selects `role_bound_association`" in table
 
 
+def _table_rows() -> dict[str, tuple[str, int]]:
+    """The README's table of evals: name -> (the sets it is in, its questions)."""
+    rows = {}
+    for line in _readme().splitlines():
+        m = re.match(r"\| [^|]+ \| \[`(\w+)`\]\([^)]+\) \| ([^|]+) \| .* \| ([\d,]+) \|$", line)
+        if m:
+            rows[m.group(1)] = (m.group(2), int(m.group(3).replace(",", "")))
+    return rows
+
+
+def test_the_counts_in_the_prose_are_the_registry_s():
+    """How many evals and questions each set has is stated in prose in the README and in
+    docs/tiers.md; the numbers are held to the registry, the tiers and the fast subset."""
+    from wsbench import fast, readplan
+
+    rows = _table_rows()
+    full, core, quick = tiers.full(), tiers.core(), fast.families()
+    assert set(full) <= set(rows)  # the table also lists an eval that is in no set
+    questions = {name: rows[name][1] for name in full}
+    in_fast = sum(len(readplan.plan(name, fast=True)) for name in quick)
+    text = _readme()
+    assert f"| `--full` | Every eval: {len(full)}. |" in text
+    assert f"The {len(core)} core evals, the set a method is reported on." in text
+    assert f"{len(core)} evals and {sum(questions[n] for n in core):,} questions" in text
+    assert f"It has {len(full)} now, {sum(questions.values()):,}\n  questions" in text
+    assert (
+        f"{len(quick)} core evals (every core eval but the two safety ones), "
+        f"{in_fast:,} of their {sum(questions[n] for n in quick):,} questions read"
+    ) in text
+    assert f"The fast subset is now {in_fast:,} questions in {len(quick)} evals\n" in text
+    table = (REPO_ROOT / "docs" / "tiers.md").read_text(encoding="utf-8")
+    for tier, n in (("fast", len(quick)), ("core", len(core)), ("full", len(full))):
+        row = next(ln for ln in table.splitlines() if ln.startswith(f"| `{tier}` |"))
+        assert row.split("|")[4].strip() == str(n), tier
+
+
 def test_group_membership_matches_registry():
     text = _evals()
     by_group = {"basic": "Basic (adapted from the J-lens paper)"}

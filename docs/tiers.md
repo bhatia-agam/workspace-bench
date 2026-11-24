@@ -7,7 +7,7 @@ names them instead (a tier flag together with `families=` is a usage error).
 |---|---|---|---|---|
 | `fast` | `--fast` | the frozen fast subset: a seeded random half of core without the two safety families, the strict ATI subset whole ([Fast subset](fast_subset.md)) | 18 | the fast macro |
 | `core` | none (the default), or `--core` | the core families, each with its full registered bank and its unchanged instrument | 20 | the **core macro**: the mean over the core rows |
-| `full` | `--full` (`all=True` is its synonym) | every family except a superseded or retired one | 32 | the macro over every row |
+| `full` | `--full` (`all=True` is its synonym) | every family except a superseded or retired one | 33 | the macro over every row |
 
 Core, by registry key: `agentic_misalignment`, `jailbreak_recognition`,
 `arithmetic_intermediates`, `buggy_code`, `nyt_connections`, `moral_rationale`, `poetry`,

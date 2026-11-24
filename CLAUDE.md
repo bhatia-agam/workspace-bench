@@ -806,7 +806,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   gate (byte-equal renders for s3d / ML-NLA / NLA; the frozen gw counts for all five readers).
   Adapted sets (plan 0078): `python -m wsbench.adapt model_multihop` (`adapt/mmh.py`) re-gates the
   sha-pinned gw mmh pool on the subject; its literal form tables live in
-  `evals/model_specific/model_multihop/forms.py` (the build script imports them; the registered bank rebuilds
+  `src/wsbench/evals/model_specific/model_multihop/forms.py` (the build script imports them; the
+  registered bank rebuilds
   byte-identical); freeze selects via `mmh.select_rows` (lucky screen, dedupe, 15% bridge cap,
   `refill.TARGET_OVERRIDE` 100, `SHIP_CAP` 283).
 - `opts=key=value,k2=v2` fills `JudgeArgs.extra`; `aux_models` comes from the family `JudgeConfig`.

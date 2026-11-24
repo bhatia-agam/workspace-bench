@@ -121,10 +121,10 @@ uv pip install "sglang[all]" httpx          # the serving stack (not installed b
 uv run wsbench bundle adapter=<adapter folder> model=<model snapshot folder> out=bundles/my-lens
 
 # where are the cells? (no vectors downloaded, no model loaded)
-uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens check=True
+uv run wsbench read fast=True lens=bundles/my-lens out=outputs/readouts/my-lens check=True
 
 # read the fast subset, then judge and report
-uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens judge=True
+uv run wsbench read fast=True lens=bundles/my-lens out=outputs/readouts/my-lens judge=True
 ```
 
 Each eval prints where its cells came from, for example `poetry: 1650 cells = 0 from the store
@@ -148,7 +148,7 @@ is then an error.
 | `method` | `lens` | `lens`: a served lens over stored activations; `model_continuation`: the baseline below |
 | `lens` | required for `method=lens` | the lens bundle folder |
 | `out` | required | the readouts root: `<out>/<eval>.jsonl` with its sidecar |
-| `families`, `--fast`, `plan` | | which evals: a comma list or `all`, the fast subset, or a plan file (below) |
+| `families`, `fast=True`, `plan` | | which evals: a comma list or `all`, the fast subset, or a plan file (below) |
 | `store`, `dataset`, `dataset_revision`, `revision`, `dtype`, `model`, `device` | as on `capture` | where the activations come from |
 | `check` | `False` | only say where each eval's cells are |
 | `capture` | `True` | run `wsbench capture` in its own process first for cells that need the subject model; `False`: such a cell is an error |
@@ -233,7 +233,7 @@ bank, no store), with the lenses' sampling: temperature 1.0, top-k 64 then top-p
 order of `generate`, at most 256 new tokens, one sample.
 
 ```bash
-uv run wsbench read --fast method=model_continuation model_dir=<model snapshot folder> \
+uv run wsbench read fast=True method=model_continuation model_dir=<model snapshot folder> \
     out=outputs/readouts/model_continuation judge=True
 ```
 
