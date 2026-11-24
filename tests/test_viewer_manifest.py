@@ -1214,3 +1214,179 @@ def test_the_hb_adapter_still_reads_a_local_output_directory(tmp_path: Path, fam
     assert scores["overrefusal"][got["run_id"]]["value"] == 0.5
     detail = db.cells(got["run_id"], "benign_roleplay", "br-own")["verdicts"][0]["detail"]
     assert detail["layers"]["20"]["rationale"] == "reason for br-own"
+
+
+# ------------------------------------------------------------------ evals judged again
+
+
+def _update_volume(vol: Path) -> str:
+    """A second run folder that judged poetry again (new questions) and one new eval."""
+    judged = f"out/{RUN}-again/{LENS}/judged"
+    _family(vol, judged, "poetry", 0.75)
+    _family(vol, judged, "association", 0.375)
+    call = {"key": f"{IDS[1]}|L-1", "result": {"choice": "B", "quote": "again"}, "meta": {}}
+    _jsonl(vol / judged / "poetry" / "cells.jsonl", [call])
+    cell = {"id": IDS[1], "layer": 20, "pos": -1, "token": "?", "samples": ["read again"]}
+    _jsonl(vol / f"out/{RUN}-again/{LENS}/merged/poetry.jsonl", [cell])
+    return judged
+
+
+def _update_entry(judged: str, **more) -> dict:
+    return _entry(LENS, "poetry and association at the later commit", run=f"{RUN}-again",
+                  updates=RUN, judged=judged + "/", readouts=f"out/{RUN}-again/{LENS}/",
+                  bench_commit_wsb="def4567 (later)") | more  # fmt: skip
+
+
+def test_an_update_entry_replaces_and_adds_evals_of_its_full_run(
+    tmp_path: Path, sets_volume: Path, capsys
+):
+    judged = _update_volume(sets_volume)
+    _report_file(tmp_path / "results" / "report.json", 0.9)
+    (tmp_path / "results" / "old.json").write_text(json.dumps({"poetry": {"value": 0.25}}))
+    (tmp_path / "results" / "new.json").write_text(json.dumps({"poetry": {"value": 0.75}}))
+    full = _entry(LENS, "full", report="results/report.json", results_file="results/old.json",
+                  bench_commit_wsb="abc1234")  # fmt: skip
+    runs = [full, _entry(LENS, "core"), _update_entry(judged, results_file="results/new.json")]
+    path, root = _write(tmp_path, sets_volume, runs), tmp_path / "store"
+    assert cli.main(["ingest", str(path), "adapter=manifest", f"store={root}"]) == 0
+    text = capsys.readouterr().out
+    assert "its evals (association, poetry) are stored in" in text and "differ" not in text
+    db = Store(root)
+    rid = store.run_id("wsb", wsb.ORIGINAL, LENS, RUN)
+    assert [r["run_id"] for r in db.runs_table("wsb")] == [rid]  # one run, no second one
+    full_scores = db.scores("wsb", wsb.ORIGINAL, "full")
+    assert full_scores["poetry"][rid]["value"] == 0.75  # replaced
+    assert full_scores["association"][rid]["value"] == 0.375  # added
+    assert full_scores[FAM][rid]["value"] == 0.5  # every other eval as the run has it
+    assert db.scores("wsb", wsb.ORIGINAL, "core")["poetry"][rid]["value"] == 0.75
+    # the report's macro was made before the update: it is not the stored one
+    assert full_scores["_macro"][rid]["value"] != 0.9
+    evals = db.run_evals(rid)
+    assert evals["poetry"]["facts"]["update_run"] == f"{RUN}-again"
+    assert evals["poetry"]["facts"]["bench_commit"] == "def4567 (later)"
+    assert "update_run" not in evals[FAM]["facts"]
+    # the updated eval's judge calls and readouts are the update folder's
+    con = sqlite3.connect(store.run_db_path(root, rid))
+    keys = [r[0] for r in con.execute("SELECT key FROM judgment WHERE eval = 'poetry'")]
+    files = "SELECT s.path FROM readout_file f JOIN source s USING (src) WHERE f.eval = 'poetry'"
+    paths = [r[0] for r in con.execute(files)]
+    con.close()
+    assert keys == [f"{IDS[1]}|L-1"] and all(f"{RUN}-again" in p for p in paths) and paths
+    from wsbench.viewer.app import pages
+
+    page = pages.runs_page(db, pages.make_view(db, {}))
+    assert f"poetry judged at def4567 (run {RUN}-again)" in page
+    assert checks.store_scores(root)[rid]["mismatches"] == []
+    # nothing changed: skipped, and the update entry still names its evals
+    out = reader.ingest_manifest(path, root)
+    assert [r["status"] for r in out] == ["unchanged"] * 3 and out[2]["evals"]
+    # without the update entry the run is ingested again as its own folder has it
+    again = _write(tmp_path, sets_volume, runs[:2])
+    assert reader.ingest_manifest(again, root)[0]["status"] == "ingested"
+    assert Store(root).scores("wsb", wsb.ORIGINAL, "full")["poetry"][rid]["value"] == 0.25
+    assert "association" not in Store(root).scores("wsb", wsb.ORIGINAL, "full")  # added by it
+
+
+def test_an_update_entry_waits_for_its_folder_and_needs_its_full_run(
+    tmp_path: Path, sets_volume: Path
+):
+    judged = f"out/{RUN}-again/{LENS}/judged"
+    runs = [_entry(LENS, "full"), _update_entry(judged), _update_entry(judged, updates="nope"),
+            _update_entry(judged, run="later", state="judging")]  # fmt: skip
+    path, root = _write(tmp_path, sets_volume, runs), tmp_path / "store"
+    out = reader.ingest_manifest(path, root)
+    assert [r["status"] for r in out] == ["ingested", "not judged yet", "failed", "in progress"]
+    assert "needs the entry of run nope" in out[2]["why"]
+    rid = out[0]["run_id"]
+    assert Store(root).scores("wsb", wsb.ORIGINAL, "full")["poetry"][rid]["value"] == 0.25
+    _update_volume(sets_volume)  # the folder is judged now: the same command picks it up
+    out = reader.ingest_manifest(path, root)
+    assert [r["status"] for r in out[:2]] == ["ingested", "evals updated"]
+    assert Store(root).scores("wsb", wsb.ORIGINAL, "full")["poetry"][rid]["value"] == 0.75
+
+
+def test_a_record_with_base_and_parts_is_read_as_updates_of_its_base_run(
+    tmp_path: Path, sets_volume: Path
+):
+    """The reader's own record of a run judged at several bench commits: no judged folder,
+    the full run under ``base`` and one ``parts`` row per run folder."""
+    judged = _update_volume(sets_volume)
+    part = {"run": f"{RUN}-again", "bench_commit": "def4567", "families": ["poetry"],
+            "judged": judged + "/", "readouts": f"out/{RUN}-again/{LENS}/"}  # fmt: skip
+    record = {"bench": "wsb", "method": "olens", "lens_id": LENS, "alias": "x", "run": RUN,
+              "state": "done", "base": {"run": RUN, "judged": JUDGED + "/"}, "parts": [part],
+              "values": {"poetry": 0.75}, "value": 0.5}  # fmt: skip
+    # a record may repeat the base run's own folders: it is still no run of its own
+    runs = [_entry(LENS, "full"), record | {"set": "full (later commit)"},
+            record | {"set": "core (later commit)", "judged": JUDGED + "/",
+                      "readouts": f"out/{RUN}/{LENS}/"}]  # fmt: skip
+    path, root = _write(tmp_path, sets_volume, runs), tmp_path / "store"
+    out = reader.ingest_manifest(path, root)
+    # the two records share their part: one update line, and no run of their own
+    assert [(r["run"], r["status"]) for r in out] == [
+        (RUN, "ingested"),
+        (f"{RUN}-again", "evals updated"),
+    ]
+    rid = out[0]["run_id"]
+    db = Store(root)
+    assert [r["run_id"] for r in db.runs_table("wsb")] == [rid]
+    assert db.scores("wsb", wsb.ORIGINAL, "full")["poetry"][rid]["value"] == 0.75
+    assert db.run_evals(rid)["poetry"]["facts"]["bench_commit"] == "def4567"
+    # a part that is still being judged waits; the base run is stored as it is
+    part["state"] = "judging"
+    again = _write(tmp_path, sets_volume, runs)
+    out = reader.ingest_manifest(again, tmp_path / "second")
+    assert [r["status"] for r in out] == ["ingested", "in progress"]
+
+
+def test_a_fast_run_that_stands_alone_takes_updates_too(tmp_path: Path, sets_volume: Path):
+    """A fast run with no full run: one eval was judged again on the current questions in a
+    folder of its own. Listed by a record alone, the record is the run's entry."""
+    base = f"out/{RUN}-fast/{LENS}/judged"
+    part_dir = f"out/{RUN}-fast-again/{LENS}/judged"
+    _family(sets_volume, base, "poetry", 0.25, scope="fast")
+    _family(sets_volume, part_dir, "poetry", 0.75, scope="fast")
+    part = {"run": f"{RUN}-fast-again", "bench_commit": "def4567", "families": ["poetry"],
+            "judged": part_dir + "/", "readouts": f"out/{RUN}-fast-again/{LENS}/"}  # fmt: skip
+    rec = {"bench": "wsb", "method": "olens", "lens_id": LENS, "alias": "x", "state": "done",
+           "set": "the current fast subset, each eval at its own commit", "run": f"{RUN}-fast",
+           "judged": base + "/", "readouts": f"out/{RUN}-fast/{LENS}/",
+           "base": {"run": f"{RUN}-fast"}, "parts": [part]}  # fmt: skip
+    root = tmp_path / "store"
+    out = reader.ingest_manifest(_write(tmp_path, sets_volume, [rec]), root)
+    assert [(r["run"], r["status"]) for r in out] == [
+        (f"{RUN}-fast", "ingested"),
+        (f"{RUN}-fast-again", "evals updated"),
+    ]
+    rid = out[0]["run_id"]
+    got = Store(root).scores("wsb", wsb.ORIGINAL, "fast")
+    assert got["poetry"][rid]["value"] == 0.75 and got[FAM][rid]["value"] == 1.0
+    # rows judged under an earlier subset beside the eval judged again on the current one:
+    # ingest stored the set as the current fast set, and the pages show it as that
+    db = Store(root)
+    assert rid not in db._earlier_fast("wsb", wsb.ORIGINAL)
+    cat = store.catalog(root)
+    cat.execute("UPDATE run_set SET note = ? WHERE run_id = ?",
+                (f"scored on fast-v1, {fast.DEFAULT}", rid))  # fmt: skip
+    cat.commit()
+    cat.close()
+    assert rid not in Store(root)._earlier_fast("wsb", wsb.ORIGINAL)
+    cat = store.catalog(root)
+    cat.execute("UPDATE run_set SET note = 'scored on fast-v1' WHERE run_id = ?", (rid,))
+    cat.commit()
+    cat.close()
+    assert rid in Store(root)._earlier_fast("wsb", wsb.ORIGINAL)  # an earlier subset alone
+    # the same record beside the run's own entry: that entry is the run, the record adds parts
+    plain = _entry(LENS, "an earlier description of this fast run", run=f"{RUN}-fast",
+                   judged=base + "/", readouts=f"out/{RUN}-fast/{LENS}/")  # fmt: skip
+    out = reader.ingest_manifest(_write(tmp_path, sets_volume, [plain, rec]), tmp_path / "two")
+    assert [(r["run"], r["status"]) for r in out] == [
+        (f"{RUN}-fast", "ingested"),
+        (f"{RUN}-fast-again", "evals updated"),
+    ]
+    assert (
+        Store(tmp_path / "two").scores("wsb", wsb.ORIGINAL, "fast")["poetry"][out[0]["run_id"]][
+            "value"
+        ]
+        == 0.75
+    )

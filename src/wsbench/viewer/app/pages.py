@@ -1074,6 +1074,13 @@ def runs_page(db: Store, v: View) -> str:
             for x in r["sets"]
         )
         commit = f.get("bench_commit") or ""
+        # evals taken from an update entry were judged at that entry's bench commit
+        later: dict[str, list[str]] = {}
+        for name, ev in sorted(db.run_evals(r["run_id"]).items()):
+            if ev["facts"].get("update_run"):
+                at = str(ev["facts"].get("bench_commit") or "?").split(" ")[0][:8]
+                later.setdefault(f"{at} (run {ev['facts']['update_run']})", []).append(name)
+        also = "".join(f"; {', '.join(v)} judged at {k}" for k, v in later.items())
         tn = f.get("timing_note") or ""  # the manifest's own words on these numbers
         where, detail = readouts_where(r["readouts"])
         home = url("/", bench=r["bench"], model=r["model"], runs=r["run_id"])
@@ -1095,7 +1102,9 @@ def runs_page(db: Store, v: View) -> str:
             + _num(f.get("total_wall_seconds"), duration(f.get("total_wall_seconds")), tn)
             + f"<td>{esc(f.get('engine') or '—')}</td>"
             + (
-                f'<td title="{esc(commit)}"><code>{esc(commit.split(" ")[0][:8])}</code></td>'
+                f'<td title="{esc(commit + also)}"><code>{esc(commit.split(" ")[0][:8])}</code>'
+                + (f' <span class="tag derived">+{len(later)}</span>' if later else "")
+                + "</td>"
                 if commit
                 else "<td>—</td>"
             )
