@@ -739,6 +739,17 @@ def _updated_evals(cat, rid: str) -> dict[str, list[str]]:
     return out
 
 
+def _replaced_updates(cat, rid: str) -> dict[str, tuple[str, str]]:
+    """``{an update entry's judged folder: (eval, the run whose later entry holds it too)}``:
+    the folder is judged, and a later entry's folder is the one the store took the eval from."""
+    out: dict[str, tuple[str, str]] = {}
+    for r in cat.execute("SELECT eval, facts FROM run_eval WHERE run_id = ? ORDER BY eval", (rid,)):
+        facts = store.loads(r["facts"], {})
+        for folder in facts.get("replaces") or []:
+            out[folder] = (r["eval"], str(facts.get("update_run")))
+    return out
+
+
 def _update_index(cat, rid: str, entry: Mapping[str, Any]) -> dict[str, int]:
     """``{eval: index of the entry's update it is stored from}``."""
     where = {str(u["judged"]).strip("/"): n for n, u in enumerate(entry.get("eval_updates") or [])}
@@ -860,6 +871,7 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
     # evals judged again (or added) in a folder of their own replace the run's, eval by eval,
     # a later entry over an earlier one: their result files, judge calls and readouts
     updated: dict[str, int] = {}  # eval -> the index of the update entry it is taken from
+    replaced: dict[str, list[str]] = {}  # eval -> the earlier entries' folders that hold it too
     ro_updates: dict[str, tuple[list[remote.Entry], str]] = {}
     for n, u in enumerate(entry.get("eval_updates") or []):
         if u.get("state") is not None and not FINISHED.match(u["state"]):
@@ -877,6 +889,9 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
         if not (uro + "/").startswith(ubase + "/"):
             ulisting = ulisting + volume.ls(uro)
         for fam in ufams:
+            if fam in updated:  # an earlier entry's folder holds this eval too: this one wins
+                earlier = entry["eval_updates"][updated[fam]]["judged"].strip("/")
+                replaced.setdefault(fam, []).append(earlier)
             updated[fam] = n
             ro_updates[fam] = (ulisting, uro)
     fams = sorted({r.split("/")[0] for _e, r in main if r.endswith("/results.json")})
@@ -1021,6 +1036,8 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
             u = entry["eval_updates"][updated[fam]]
             facts = facts | {"judged_in": u["judged"].strip("/"), "update_run": u["run"],
                              "bench_commit": u.get("bench_commit")}  # fmt: skip
+            if replaced.get(fam):
+                facts["replaces"] = replaced[fam]
         cat.execute(
             "INSERT OR REPLACE INTO run_eval VALUES (?,?,?,?,?)",
             (rid, fam, label, why, store.dumps(facts)),
@@ -1278,6 +1295,13 @@ def ingest_manifest(
                 if got["status"] in ("ingested", "facts updated", "unchanged") and not evals:
                     status = "not judged yet"
                     why = f"no <eval>/results.json under {entry['judged']}"
+                    cat = store.catalog(store_root, readonly=True)
+                    later = _replaced_updates(cat, rid).get(str(entry["judged"]).strip("/"))
+                    cat.close()
+                    if later:  # judged, and a later entry of the manifest holds the same eval
+                        status = "replaced"
+                        why = (f"{later[0]} is stored from the later entry {later[1]}: of two "
+                               "update entries that hold an eval, the later one wins")  # fmt: skip
                 elif got["status"] == "ingested":
                     status = "evals updated"
                 out.append(head | {"run_id": rid, "status": status, "into": base["run"],

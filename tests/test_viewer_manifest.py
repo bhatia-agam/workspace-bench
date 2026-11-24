@@ -1308,6 +1308,34 @@ def test_an_update_entry_replaces_and_adds_evals_of_its_full_run(
     assert "association" not in Store(root).scores("wsb", wsb.ORIGINAL, "full")  # added by it
 
 
+def test_an_update_entry_a_later_one_replaces_says_so(tmp_path: Path, sets_volume: Path, capsys):
+    """Two update entries hold the same eval: the later one is stored, and the earlier one's
+    line says that, never that its folder is not judged yet (it is)."""
+    first = _update_volume(sets_volume)  # poetry 0.75 and association
+    second = f"out/{RUN}-third/{LENS}/judged"
+    _family(sets_volume, second, "poetry", 0.125)
+    third = _update_entry(second, run=f"{RUN}-third", readouts=f"out/{RUN}-third/{LENS}/")
+    runs = [_entry(LENS, "full"), _update_entry(first), third]
+    path, root = _write(tmp_path, sets_volume, runs), tmp_path / "store"
+    out = reader.ingest_manifest(path, root)
+    assert [r["status"] for r in out] == ["ingested", "evals updated", "evals updated"]
+    assert out[1]["evals"] == ["association"] and out[2]["evals"] == ["poetry"]
+    rid = out[0]["run_id"]
+    assert Store(root).scores("wsb", wsb.ORIGINAL, "full")["poetry"][rid]["value"] == 0.125
+    # an earlier entry all of whose evals a later one holds: judged, replaced, and it says so
+    only = f"out/{RUN}-only/{LENS}/judged"
+    _family(sets_volume, only, "poetry", 0.5)
+    runs.insert(1, _update_entry(only, run=f"{RUN}-only", readouts=f"out/{RUN}-only/{LENS}/"))
+    again = _write(tmp_path, sets_volume, runs)
+    assert cli.main(["ingest", str(again), "adapter=manifest", f"store={root}"]) == 0
+    text = capsys.readouterr().out
+    assert "not judged yet" not in text
+    assert f"{RUN}-only {LENS}" in text and "judged, not stored: poetry is stored from" in text
+    out = reader.ingest_manifest(again, root)  # unchanged now: the line still says replaced
+    assert [r["status"] for r in out] == ["unchanged", "replaced", "unchanged", "unchanged"]
+    assert f"{RUN}-third" in out[1]["why"]
+
+
 def test_an_update_entry_waits_for_its_folder_and_needs_its_full_run(
     tmp_path: Path, sets_volume: Path
 ):

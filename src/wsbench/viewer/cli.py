@@ -240,6 +240,8 @@ def _ingest_manifest(o: Ingest) -> int:
         elif r["status"] == "evals updated":
             print(f"{head}: its evals ({', '.join(r['evals'])}) are stored in {r['run_id']} in "
                   f"place of run {r['into']}'s own")  # fmt: skip
+        elif r["status"] == "replaced":
+            print(f"{head}: judged, not stored: {r.get('why')}")
         elif r["status"] == "unchanged":
             print(f"{head}: unchanged, skipped (force=True re-ingests)")
         elif r["status"] == "failed":

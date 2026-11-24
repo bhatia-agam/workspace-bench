@@ -115,7 +115,8 @@ An entry with `updates` is no run of its own either. Its evals join the run it n
 `full` entry, or the one entry of a run that stands alone, such as a fast run),
 eval by eval: result files, judge calls and readouts of such an eval are read from the
 entry's `judged` and `readouts` folders in place of the run's own (a later entry wins over
-an earlier one), every other eval stays as the run has it. The run then has one row per
+an earlier one; the earlier entry's line then says its eval is stored from the later one,
+not that it is not judged yet), every other eval stays as the run has it. The run then has one row per
 eval whatever folder it was judged in; each updated eval records the entry's run name and
 `bench_commit` (the runs page shows them on the bench commit). The run's `report` was made
 before the update: its floors for the updated evals are dropped and the stored macro is the
