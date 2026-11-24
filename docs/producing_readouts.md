@@ -251,6 +251,19 @@ wsbench produce family=poetry method=logit_lens out=outputs/readouts/mine/poetry
 wsbench produce text="The athlete Muhammad Ali plays the sport of" method=jlens positions=-1 layers=20,36,60
 ```
 
+A method of your own needs no change to this repository. Give its class by import path:
+
+```
+PYTHONPATH=. wsbench produce family=poetry method=my_lens:MyLens out=outputs/readouts/mine/poetry.jsonl
+```
+
+The module must be importable from where the command runs (`PYTHONPATH=.` for a file in the
+current folder). The class follows the `Method` protocol in `src/wsbench/produce/methods.py`:
+`name`, `layers`, `bind(backend)` and `read(h, layer)`. A method that writes sentences also sets
+`sampling_kind = "prose1"` (`"bullet4"` for four separate one-bullet readouts per cell). That is
+the sampling the readouts file declares in its sidecar; without it the file is declared as a
+token list (`tokens10`). In Python, `Producer.load(model, "my_lens:MyLens")` takes the same path.
+
 **Where the activations come from.** `wsbench produce family=<eval>` (and `Producer.load(...,
 store=..., pull=...)` in Python) reads the eval's activations from [the residual
 store](#the-residual-store): what is on disk, then the published residuals, and a forward pass

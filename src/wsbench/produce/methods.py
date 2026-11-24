@@ -2,6 +2,7 @@
 ranked token list for the vector lenses, free text for the verbalizers. All of them share the
 ``Method`` protocol so the producer treats them alike."""
 
+import importlib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
@@ -28,6 +29,9 @@ class Readout:
 
 
 class Method(Protocol):
+    """What the producer needs of a method. A method may also set ``sampling_kind`` (one of
+    ``readouts.SAMPLINGS``): the sampling its readouts file declares, see ``sampling_of``."""
+
     name: str
     layers: list[int] | None  # fixed read layers (a lens trained at one layer), else None
 
@@ -364,9 +368,19 @@ class NLA:
 
 
 def sampling_of(m: Any) -> str:
-    """The sampling kind a producer declares in the readouts sidecar (plan 0032 §2.9.2): a
-    bullet O-lens -> ``bullet4``; every other prose method (the s3d O-lens, NLA) -> ``prose1``;
-    token lenses -> ``tokens10``. Never inferred from the readouts' shape."""
+    """The sampling kind a producer declares in the readouts sidecar (plan 0032 §2.9.2). A
+    method that sets ``sampling_kind`` declares it itself (a value outside
+    ``readouts.SAMPLINGS`` is a ``ValueError``). Without one: a bullet O-lens -> ``bullet4``;
+    every other bundled prose method (the s3d O-lens, NLA) -> ``prose1``; anything else ->
+    ``tokens10``. Never inferred from the readouts' shape."""
+    kind = getattr(m, "sampling_kind", None)
+    if kind is not None:
+        from wsbench.readouts import SAMPLINGS
+
+        if kind not in SAMPLINGS:
+            name = getattr(m, "name", type(m).__name__)
+            raise ValueError(f"method {name!r}: sampling_kind is one of {SAMPLINGS}, got {kind!r}")
+        return kind
     if isinstance(m, OLens):
         return "bullet4" if m.bullet else "prose1"
     if isinstance(m, NLA):
@@ -383,9 +397,34 @@ METHODS: dict[str, type] = {
 }
 
 
+def is_import_path(spec: str) -> bool:
+    """Whether ``spec`` names a method by import path (``package.module:ClassName``) and not by
+    one of the bundled names."""
+    return ":" in spec
+
+
+def load(spec: str) -> Any:
+    """The method class at an import path, ``package.module:ClassName``: a method written
+    outside this package. The module must be importable from where the command runs. Anything
+    that does not resolve to a callable is a ``KeyError`` that says why."""
+    module, _, attr = spec.partition(":")
+    if not module or not attr:
+        raise KeyError(f"method {spec!r}: expected package.module:ClassName")
+    try:
+        found = getattr(importlib.import_module(module), attr)
+    except (ImportError, AttributeError) as e:
+        raise KeyError(f"method {spec!r}: cannot import it ({type(e).__name__}: {e})") from None
+    if not callable(found):
+        raise KeyError(f"method {spec!r}: {attr} is not a class")
+    return found
+
+
 def method(spec: str | Method, **kw: Any) -> Any:
-    """A method instance from its name (``"jlens"``) or an instance passed through."""
+    """A method instance from its bundled name (``"jlens"``), from an import path
+    (``"package.module:ClassName"``), or an instance passed through."""
     if isinstance(spec, str):
+        if is_import_path(spec):
+            return load(spec)(**kw)
         if spec not in METHODS:
             raise KeyError(f"unknown method {spec!r}; known {sorted(METHODS)}")
         return METHODS[spec](**kw)

@@ -1500,7 +1500,7 @@ class Produce(Command):
 
     def __init__(self) -> None:
         super().__init__()
-        self.method = "logit_lens"
+        self.method = "logit_lens"  # a bundled name, or package.module:ClassName for your own
         self.model = "Qwen/Qwen3.6-27B"
         self.family = ""
         self.text = ""
@@ -1558,13 +1558,20 @@ class Produce(Command):
 
     def execute(self) -> int:
         from wsbench.produce import METHODS, Producer, write
+        from wsbench.produce.methods import is_import_path, load
 
         _select_fast(self)
 
         if bool(self.family) == bool(self.text):
             print("give exactly one of family= or text=", file=sys.stderr)
             return EXIT_USAGE
-        if self.method not in METHODS:
+        if is_import_path(self.method):  # a method outside the package: fail before the model
+            try:
+                load(self.method)
+            except KeyError as e:
+                print(e.args[0], file=sys.stderr)
+                return EXIT_USAGE
+        elif self.method not in METHODS:
             print(f"unknown method {self.method!r}; known {sorted(METHODS)}", file=sys.stderr)
             return EXIT_USAGE
         if self.family and self.family not in readplan.families():
@@ -1594,7 +1601,9 @@ class Produce(Command):
             pull=pull,
         )
         if self.family:
-            out = self.out or Path("outputs/readouts") / self.method / f"{self.family}.jsonl"
+            # the default folder is the method's name; for an import path, the instance's name
+            arm = self.method if self.method in METHODS else producer.method.name
+            out = self.out or Path("outputs/readouts") / arm / f"{self.family}.jsonl"
             path = producer.run_family(
                 self.family,
                 out,
