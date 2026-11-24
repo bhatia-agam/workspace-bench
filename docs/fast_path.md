@@ -34,22 +34,22 @@ readouts files that `wsbench run` judges.
 ## What is stored
 
 The 32-bit capture of the reference model, which is what `dtype=fp32` (the default) reads,
-against the read plan at upstream commit `5a5d8376`:
+against the read plan at upstream commit `e0d62fcd`:
 
 | set | evals | cells in the plan | cells stored | not stored |
 |---|---|---|---|---|
-| Every eval | 32 | 3,408,168 | 3,382,285 | 25,883 |
-| The core evals | 18 | 2,906,722 | 2,884,128 | 22,594 |
-| The fast subset | 16 | 438,790 | 425,513 | 13,277 |
+| Every eval | 33 | 3,508,092 | 3,482,209 | 25,883 |
+| The core evals | 20 | 3,148,898 | 3,126,304 | 22,594 |
+| The fast subset | 18 | 559,889 | 546,612 | 13,277 |
 
 Not stored: 39 `knowledge_cutoff` questions (22,594 cells, 13,277 of them in the fast subset),
 left out on purpose, for which `wsbench read` runs the model; and `jlens_concept_pr` (3,289
 cells), which ships no prompts and cannot be read. Every other eval is stored whole. The
-capture is 41.1 GB in `float32-capture/` (31 evals). Its `full/` folders hold every question;
-its `fast/` folders hold an earlier selection of the fast subset, and the store finds today's
-fast questions in `full/` by id and key. The repository root holds an older, partial 16-bit
-capture (28 evals, 1,368,048 cells of this plan, 20.6 GB; neither safety eval, no
-`user_modeling_hard`, 65 of the 102 `directed_modulation` questions), read with `dtype=bf16`.
+capture is 41.3 GB in `float32-capture/` and is the only one the dataset holds: `full/` has
+32 evals, `fast/` the fast subset's questions again. The store looks an item up by id and key
+and takes it from `full/`, so a read of the fast subset needs the model only for the
+`knowledge_cutoff` questions the dataset leaves out. `dtype=bf16` (the model as shipped, a
+16-bit forward pass) has no published capture: it says so and captures every cell.
 An eval's files are downloaded when it is first read. A question bank that changes after this
 commit is not in the dataset until it is captured and uploaded again; `wsbench capture
 families=all check=True` prints the current state per eval, and the model runs for whatever is
