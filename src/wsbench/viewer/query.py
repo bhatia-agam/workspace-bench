@@ -182,7 +182,7 @@ class Store:
         self.lock = threading.RLock()
         self.cat = store.catalog(root, readonly=True)
         self.user = store.user(root)
-        self._runs: dict[str, sqlite3.Connection] = {}
+        self._runs: dict[str, tuple[tuple, sqlite3.Connection]] = {}  # (file stamp, connection)
         self._alias_cache: dict[str, dict[str, str]] = {}
         self._alias_stamp = 0.0
         self._counts: dict[str, tuple[float, tuple[int, int]]] = {}
@@ -194,13 +194,22 @@ class Store:
             return self.cat.execute(sql, args).fetchall()
 
     def run_con(self, rid: str) -> sqlite3.Connection | None:
+        """The run's database. An ingest replaces the file of a run it stores again: the
+        connection is opened anew when the file is another one than the one it was opened on,
+        so a running viewer never reads a replaced run (its cells, judge calls and where its
+        readouts are) beside the catalog's new scores."""
+        path = store.run_db_path(self.root, rid)
         with self.lock:
-            if rid not in self._runs:
-                path = store.run_db_path(self.root, rid)
-                if not path.exists():
-                    return None
-                self._runs[rid] = store.connect(path, readonly=True)
-            return self._runs[rid]
+            try:
+                st = path.stat()
+            except OSError:
+                self._runs.pop(rid, None)
+                return None
+            stamp = (st.st_ino, st.st_mtime_ns, st.st_size)
+            have = self._runs.get(rid)
+            if have is None or have[0] != stamp:
+                self._runs[rid] = have = (stamp, store.connect(path, readonly=True))
+            return have[1]
 
     def _core(self, bench: str) -> set[str]:
         """The core tier's evals; empty for a bench that has no tiers."""
