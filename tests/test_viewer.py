@@ -230,6 +230,44 @@ def test_wsb_ingest_is_idempotent_and_takes_two_questions(wsb_run: Path, tmp_pat
     assert db.cells(one["run_id"], FAM, IDS[0])["cells"] == {}
 
 
+def test_floors_of_the_registered_banks_come_from_the_checkout_not_from_a_run(
+    wsb_run: Path, tmp_path: Path, monkeypatch
+):
+    """A run's report may hold floors measured for earlier questions: the floor columns show
+    the bench's own frozen floors for the questions the checkout holds."""
+    from wsbench.baselines import lucky_guessing, prompt_only
+    from wsbench.viewer import query
+
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root, build_dir=tmp_path / "build")["run_id"]
+    cat = store.catalog(root)
+    for kind in ("prompt_only", "lucky_guess"):  # what an older report left in the store
+        wsb._score(cat, rid, FAM, "full", -1, kind, 0.123, None, 7, "from the run's report")
+    cat.commit()
+    cat.close()
+    query.checkout_floors.cache_clear()
+    frozen = query.checkout_floors()
+    entry = prompt_only.summary_floors()[FAM]
+    assert frozen[FAM]["prompt_only"]["value"] == entry["rate"]
+    assert frozen[FAM]["prompt_only"]["n"] == entry["n_items"]
+    best = lucky_guessing.bar(lucky_guessing.floors()[FAM], FAM)
+    assert frozen[FAM]["lucky_guess"]["value"] == best[0]  # the bench's own bar
+    got = Store(root).scores("wsb", wsb.ORIGINAL, "full")[FAM]
+    assert got["prompt_only"]["value"] == entry["rate"] and got["prompt_only"]["value"] != 0.123
+    assert got["lucky_guess"]["value"] == best[0] and got[rid]["value"] == 0.5
+    assert got["chance"]["value"] == 0.2  # chance is the result's own
+    # an eval the checkout has no live floor for shows none, whatever a run stored
+    monkeypatch.setattr(query, "checkout_floors", lambda: {})
+    got = Store(root).scores("wsb", wsb.ORIGINAL, "full")[FAM]
+    assert "prompt_only" not in got and "lucky_guess" not in got
+    # another subject model's rows keep what their runs stored
+    cat = store.catalog(root)
+    cat.execute("UPDATE run SET model = 'other-model' WHERE run_id = ?", (rid,))
+    cat.commit()
+    cat.close()
+    assert Store(root).scores("wsb", "other-model", "full")[FAM]["prompt_only"]["value"] == 0.123
+
+
 def test_private_items_are_hidden_unless_allowed(wsb_run: Path, tmp_path: Path):
     root = tmp_path / "store"
     out = wsb.ingest(wsb_run, root)

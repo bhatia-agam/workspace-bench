@@ -49,6 +49,12 @@ that eval: its score is on an earlier version of the questions.
 (`adapted/<model>/`), so the model dropdown lists them. Ingest is idempotent: an unchanged
 source is skipped. `wsbench viewer --help` lists every key.
 
+The prompt-only and lucky-guess floors of the registered banks (full and core sets) are
+read from the checkout the viewer runs on (`evals/baselines/prompt_only_summary.json`,
+`lucky_guessing.json`) when the viewer starts, not from a run's report: they are the
+floors of the questions the checkout holds now. An eval whose frozen entry is stale by the
+benchmark's own rule, or not measurable, shows none.
+
 ## Runs manifest
 
 Runs that live on a volume are listed in a manifest and ingested with one command, one lens at
