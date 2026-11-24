@@ -2,6 +2,7 @@
 caches and indexes into a local cache; readout files stay where they are) and ingested with
 the WorkspaceBench and HallucinationBench adapters. The format is in the viewer README."""
 
+import contextlib
 import hashlib
 import json
 import re
@@ -55,6 +56,7 @@ TEXTS = (
     "engine",
     "state",
     "note",
+    "updates",
 )
 FINISHED = re.compile(r"^\s*(done|finished|complete|completed|judged|scored|ok)\b", re.I)
 JUDGED_FILES = ("results.json", "cells.jsonl", "reader_judge.json", "report.json")
@@ -162,6 +164,12 @@ def group(entries: list[dict], problems: Mapping[int, str] | None = None) -> lis
         key = (e["bench"], e["model"], e["lens"], e["run"])
         if e["bench"] != "hb" and set_kind(e) == "full" and key not in full:
             full[key] = e
+    own: dict[tuple, dict] = {}  # the entry that is a run: its full entry, else its first one
+    for e in entries:
+        key = (e["bench"], e["model"], e["lens"], e["run"])
+        if e["bench"] != "hb" and not e.get("updates") and set_kind(e) in (None, "full"):
+            own.setdefault(key, e)
+    own |= full
     out, taken, folded = [], {}, set()
     for e in entries:
         kind = set_kind(e)
@@ -176,6 +184,25 @@ def group(entries: list[dict], problems: Mapping[int, str] | None = None) -> lis
                 at = e["run"].find(suffix + "-")
                 base = full.get((*lens, e["run"][:at])) if at > 0 else None
         plan = {"entry": e, "role": "run", "into": None, "why": ""}
+        if e.get("updates") and e["bench"] != "hb" and id(e) not in problems:
+            # evals judged again in a folder of their own: they join the run they name (its
+            # full entry, or the one entry of a run that stands alone, such as a fast run)
+            base = own.get((*lens, e["updates"]))
+            if base is None or base is e:
+                why = f"an update entry needs the entry of run {e['updates']} of this lens"
+            elif id(base) in problems:
+                why = f"the entry of its run failed: {problems[id(base)]}"
+            elif not is_path(e["judged"]):
+                why = f"its judged value is not a path: {e['judged']!r}"
+            else:
+                why = ""
+                base.setdefault("eval_updates", []).append(
+                    {k: e[k] for k in ("run", "judged", "readouts", "bench_commit", "state")}
+                    | ({"results_file": e["results_file"]} if e.get("results_file") else {})
+                )
+            plan |= {"role": "unplaced", "why": why} if why else {"role": "set", "into": base}
+            out.append(plan)
+            continue
         if id(e) in problems:
             plan |= {"role": "unplaced", "why": problems[id(e)]}
         elif base is not None and base is not e and id(base) in problems:
@@ -231,6 +258,57 @@ def group(entries: list[dict], problems: Mapping[int, str] | None = None) -> lis
     return out
 
 
+PART_KEYS = ("bench", "method", "lens", "lens_id", "label", "alias", "model", "volume",
+             "environment", "state")  # fmt: skip
+
+
+def expand(runs: list[Any]) -> list[Any]:
+    """A runs file may record a run whose evals were judged at several bench commits as one
+    entry with ``base`` (the full run: ``run``) and ``parts`` (one per run folder that judged
+    some evals again or added new ones: ``run``, ``judged``, ``readouts``, ``bench_commit``,
+    ``results_file``, ``families``, ``state``). Where the runs file has no entry of its own for
+    the base run, the record is that entry (its ``judged`` and ``readouts`` are the base
+    run's); else what it repeats from the base run is not read. Each part is
+    read as an ``updates`` entry of the base run; the record itself is no run. A part two
+    records share (the full view and the core view of one run) is read once."""
+
+    def record(r: Any) -> bool:
+        return (isinstance(r, dict) and isinstance(r.get("parts"), list)
+                and isinstance(r.get("base"), dict))  # fmt: skip
+
+    def run_key(r: Mapping[str, Any], run: Any) -> tuple:
+        return (r.get("bench") or "wsb", r.get("lens") or r.get("lens_id"), run)
+
+    listed = {run_key(r, r.get("run")) for r in runs if isinstance(r, dict) and not record(r)}
+    out, seen = [], set()
+    for r in runs:
+        if not record(r):
+            out.append(r)
+            continue
+        base = r["base"].get("run") or r.get("run")
+        if run_key(r, base) not in listed and r.get("judged") and r.get("run") == base:
+            # no entry of its own lists the base run: the record, which names the base
+            # run's folders, is that entry
+            listed.add(run_key(r, base))
+            out.append({k: v for k, v in r.items() if k not in ("base", "parts")})
+        for part in r["parts"]:
+            if not isinstance(part, dict):
+                continue
+            mark = (r.get("bench"), r.get("lens") or r.get("lens_id"), part.get("run"),
+                    str(part.get("judged")).strip("/"))  # fmt: skip
+            if mark in seen:
+                continue
+            seen.add(mark)
+            fams = ", ".join(map(str, part.get("families") or [])) or "its evals"
+            out.append(
+                {k: r[k] for k in PART_KEYS if r.get(k) is not None}
+                | {"set": f"update of run {base}: {fams}", "updates": base}
+                | {k: part[k] for k in ("run", "judged", "readouts", "bench_commit",
+                                        "results_file", "state") if part.get(k) is not None}
+            )  # fmt: skip
+    return out
+
+
 def load(path: Path) -> list[dict]:
     """The runs of a manifest file: a list, or an object with ``runs`` whose other scalar keys
     (``volume``, ``environment``, ``model`` ...) are defaults for every run."""
@@ -242,7 +320,7 @@ def load(path: Path) -> list[dict]:
     if isinstance(raw, dict):
         defaults = {k: v for k, v in raw.items() if k in TEXTS and isinstance(v, str)}
     out = []
-    for n, r in enumerate(runs):
+    for n, r in enumerate(expand(runs)):
         e = normalise(r, defaults)
         missing = [k for k in ("lens", "run", "judged", "volume") if not e[k]]
         if missing:
@@ -391,7 +469,8 @@ def _under(entries: Iterable[remote.Entry], base: str) -> list[tuple[remote.Entr
 
 def _signature(entry: Mapping[str, Any], used: Iterable[remote.Entry], mode: str) -> str:
     # keys added after the first stores were written count only when they say something
-    later = ("families_file", "members", "results_file", "timing_note")
+    later = ("families_file", "members", "results_file", "timing_note", "updates",
+             "eval_updates")  # fmt: skip
     entry = {k: v for k, v in entry.items() if v or k not in later}
     text = json.dumps(entry, sort_keys=True, default=str) + f"|{mode}|{store.SCHEMA}|"
     text += "|".join(sorted(e.sig() for e in used))
@@ -524,31 +603,37 @@ def _families_file(entry: Mapping[str, Any], volume: remote.Volume) -> list[str]
 
 def _differs(
     entry: Mapping[str, Any], headline: Mapping[str, Any], volume,
-    stored: Mapping[str, str] | None = None,
+    stored: Mapping[str, str] | None = None, updated: Mapping[str, int] | None = None,
 ) -> dict[str, list]:  # fmt: skip
     """Per set, the evals whose stored result differs from the run's own ``results_file``
     (``{eval: {"value": ...}}``): a second, independent reference beside the judged folder.
     ``stored`` (``{a set entry's judged folder: its store subset}``) places a fast entry,
-    whose subset is the one its results are stamped with."""
+    whose subset is the one its results are stamped with. ``updated`` (``{eval: index of the
+    update entry it was taken from}``): such an eval is compared with that entry's file."""
     main = next(iter(headline), None)
     stored = stored or {}
-    files = [(main, entry.get("results_file"))] + [
-        (stored.get(str(m["judged"]).strip("/"), m["set"]), m.get("results_file"))
+    files = [(main, entry.get("results_file"), updated or {})] + [
+        (stored.get(str(m["judged"]).strip("/"), m["set"]), m.get("results_file"), {})
         for m in entry.get("members") or []
         if m["set"] != "core"
     ]
+    # an update's own results file speaks for its evals; the run's file no longer does
+    files += [
+        (main, u.get("results_file"), {f: None for f in updated or {} if (updated or {})[f] != n})
+        for n, u in enumerate(entry.get("eval_updates") or [])
+    ]
     out: dict[str, list] = {}
-    for subset, given in files:
+    for subset, given, skip in files:
         if not given or subset not in headline:
             continue
         ref = json.loads(_named_file({"f": given}, "f", volume).read_text(encoding="utf-8"))
         have = headline[subset]
-        out[subset] = [
+        out.setdefault(subset, []).extend(
             f"{fam}: judged folder {have.get(fam)} != {Path(given).name} {v.get('value')}"
             for fam, v in ref.items()
-            if isinstance(v, dict) and v.get("value") is not None
+            if fam not in skip and isinstance(v, dict) and v.get("value") is not None
             and (have.get(fam) is None or abs(have[fam] - v["value"]) > 1e-9)
-        ]  # fmt: skip
+        )  # fmt: skip
     return out
 
 
@@ -558,7 +643,15 @@ def _source_fields(entry: Mapping[str, Any]) -> list:
         (str(d.get("set")), str(d.get("judged")).strip("/"), str(d.get("run")))
         for d in entry.get("derived") or []
     )
-    return [str(entry.get(k) or "").strip("/") for k in SOURCE_KEYS] + [derived]
+    updates = [
+        [str(u.get(k) or "").strip("/") for k in ("run", "judged", "readouts", "state")]
+        for u in entry.get("eval_updates") or []
+    ]
+    return (
+        [str(entry.get(k) or "").strip("/") for k in SOURCE_KEYS]
+        + [derived]
+        + ([updates] if updates else [])
+    )
 
 
 def _refresh(cat, root: Path, cache: Path, rid: str, entry, used, mode: str, sig: str, volume):
@@ -586,7 +679,7 @@ def _refresh(cat, root: Path, cache: Path, rid: str, entry, used, mode: str, sig
             (rid,),
         ).fetchone()
         subset = main["subset"] if main else next(iter(headline), "full")
-        if entry.get("report"):
+        if entry.get("report") and not _updated_evals(cat, rid):
             src = _named_file(entry, "report", volume)
             report = json.loads(src.read_text(encoding="utf-8"))
             macro = report.get("macro") or {}
@@ -630,7 +723,49 @@ def _refresh(cat, root: Path, cache: Path, rid: str, entry, used, mode: str, sig
             placed[str(d["judged"]).strip("/")] = names.pop(0)
     return {"status": "facts updated", "run_id": rid, "changed": changed,
             "sets": sorted({r["subset"] for r in _stored_sets(root, rid)}), "placed": placed,
-            "differs": _differs(entry, headline, volume, placed)}  # fmt: skip
+            "updated": _updated_evals(cat, rid),
+            "differs": _differs(entry, headline, volume, placed,
+                                _update_index(cat, rid, entry))}  # fmt: skip
+
+
+def _updated_evals(cat, rid: str) -> dict[str, list[str]]:
+    """``{an update entry's judged folder: the evals the stored run took from it}``."""
+    out: dict[str, list[str]] = {}
+    for r in cat.execute("SELECT eval, facts FROM run_eval WHERE run_id = ? ORDER BY eval", (rid,)):
+        folder = store.loads(r["facts"], {}).get("judged_in")
+        if folder:
+            out.setdefault(folder, []).append(r["eval"])
+    return out
+
+
+def _update_index(cat, rid: str, entry: Mapping[str, Any]) -> dict[str, int]:
+    """``{eval: index of the entry's update it is stored from}``."""
+    where = {str(u["judged"]).strip("/"): n for n, u in enumerate(entry.get("eval_updates") or [])}
+    return {
+        ev: where[folder]
+        for folder, evs in _updated_evals(cat, rid).items()
+        if folder in where
+        for ev in evs
+    }
+
+
+def _apply_updates(report: Path, results: Iterable[Any], updated: Iterable[str]) -> None:
+    """The run's report.json after evals were replaced or added: its floors for those evals
+    were measured for the earlier questions and go, and its macro gives way to the bench's
+    own rule over the results as they are now (no macro when the rule refuses them: the
+    stored macro is then the plain mean, as for a run without a report)."""
+    names = set(updated)
+    raw = json.loads(report.read_text(encoding="utf-8")) if report.exists() else {}
+    for kind in (raw.get("floors") or {}).values():
+        if isinstance(kind, dict):
+            for fam in names & set(kind):
+                del kind[fam]
+    raw.pop("macro", None)
+    raw.pop("core_macro", None)
+    with contextlib.suppress(SystemExit, KeyError, TypeError, ValueError, AttributeError):
+        raw["macro"] = wsb_results.macro(list(results))
+    raw["updated_evals"] = sorted(names)
+    report.write_text(json.dumps(raw), encoding="utf-8")
 
 
 def _wrong_scope(judged: Path, want: Any, name: str) -> str:
@@ -719,6 +854,30 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
                 if r.rsplit("/", 1)[-1] in JUDGED_FILES and r.count("/") <= 1]  # fmt: skip
 
     main = judged_files(listing, judged)
+    if not any(r.endswith("/results.json") for _e, r in main):
+        return {"status": "not judged yet", "why": f"no <eval>/results.json under {judged}"}
+    # evals judged again (or added) in a folder of their own replace the run's, eval by eval,
+    # a later entry over an earlier one: their result files, judge calls and readouts
+    updated: dict[str, int] = {}  # eval -> the index of the update entry it is taken from
+    ro_updates: dict[str, tuple[list[remote.Entry], str]] = {}
+    for n, u in enumerate(entry.get("eval_updates") or []):
+        if u.get("state") is not None and not FINISHED.match(u["state"]):
+            continue
+        ujudged = u["judged"].strip("/")
+        ubase = ujudged.rsplit("/", 1)[0]
+        ulisting = volume.ls(ubase)
+        ufiles = judged_files(ulisting, ujudged)
+        ufams = {r.split("/")[0] for _e, r in ufiles if r.endswith("/results.json")}
+        if not ufams:
+            continue
+        main = [(e, r) for e, r in main if r.split("/")[0] not in ufams]
+        main += [(e, r) for e, r in ufiles if r.split("/")[0] in ufams]
+        uro = (u.get("readouts") or ubase).strip("/")
+        if not (uro + "/").startswith(ubase + "/"):
+            ulisting = ulisting + volume.ls(uro)
+        for fam in ufams:
+            updated[fam] = n
+            ro_updates[fam] = (ulisting, uro)
     fams = sorted({r.split("/")[0] for _e, r in main if r.endswith("/results.json")})
     if families:
         fams = [f for f in fams if f in families]
@@ -729,6 +888,8 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
         e for e, r in _under(listing, ro_base)
         if r.endswith(".jsonl") and (r.startswith("merged/") or "/" not in r)
     ]  # fmt: skip
+    for fam, (ulisting, uro) in sorted(ro_updates.items()):
+        ro_all += [e for es in _readout_files(volume, ulisting, uro, [fam]).values() for e in es]
     used = [e for e, _r in main + ati_files] + ro_all
     used += [e for d in derived for e, _r in judged_files(derived_files[d["judged"]], d["judged"])]
     sig = _signature(entry, used, readouts)
@@ -738,7 +899,10 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
     old = cat.execute("SELECT set_name FROM run_facts WHERE run_id = ?", (rid,)).fetchone()
     cat.close()
     if same and not force:
-        return {"status": "unchanged", "run_id": rid}
+        cat = store.catalog(root, readonly=True)
+        by_folder = _updated_evals(cat, rid)
+        cat.close()
+        return {"status": "unchanged", "run_id": rid, "updated": by_folder}
     if not same and not force:
         cat = store.catalog(root)
         got = _refresh(cat, root, cache, rid, entry, used, readouts, sig, volume)
@@ -769,10 +933,19 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
         pairs += [(e, work / "derived" / d["dir"] / r)
                   for e, r in judged_files(derived_files[d["judged"]], d["judged"])
                   if not r.endswith("/" + calls)]  # fmt: skip
+    if not families and (work / "judged").is_dir():
+        # an eval folder an earlier ingest left here and no source holds now (an update entry
+        # that was taken out of the runs file) is not one of the run's evals
+        for old in sorted(p for p in (work / "judged").iterdir() if p.is_dir()):
+            if old.name not in fams:
+                shutil.rmtree(old)
     n_got, n_bytes = remote.fetch_all(volume, pairs)
     addresses: dict[str, str] = {}
     lazy: dict[str, list[tuple[str, int]]] = {}
     ro = _readout_files(volume, listing, ro_base, wsb.family_dirs(work / "judged"))
+    for fam, (ulisting, uro) in ro_updates.items():  # an updated eval reads its own folder only
+        ro.pop(fam, None)
+        ro.update(_readout_files(volume, ulisting, uro, [fam]))
     for fam, files in ro.items():
         if readouts != "none" and len(files) == 1:
             dest = work / "readouts" / f"{fam}.jsonl"
@@ -815,6 +988,13 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
                     f"scored on the set {d['subset']!r}: one run holds a set once"}  # fmt: skip
         names[d["subset"]] = d
     report_from = _report(entry, volume, work / "judged")
+    if updated:
+        _apply_updates(
+            work / "judged" / "report.json",
+            (wsb_results.read_results(d) for d in wsb.family_dirs(work / "judged").values()),
+            updated,
+        )
+        report_from = "the bench's macro rule over the run's evals as updated"
     head = wsb_headline(work / "judged")
 
     out = wsb.ingest(
@@ -836,6 +1016,10 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
     ).fetchone()
     headline = {(stored["subset"] if stored else "full"): head["values"]}
     for fam, (label, why, facts) in head["integrity"].items():
+        if fam in updated:  # where and at which bench commit this eval was judged
+            u = entry["eval_updates"][updated[fam]]
+            facts = facts | {"judged_in": u["judged"].strip("/"), "update_run": u["run"],
+                             "bench_commit": u.get("bench_commit")}  # fmt: skip
         cat.execute(
             "INSERT OR REPLACE INTO run_eval VALUES (?,?,?,?,?)",
             (rid, fam, label, why, store.dumps(facts)),
@@ -870,11 +1054,13 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
         if d.get("run") and (r := _remove_folded(cat, root, entry, d, volume.url(d["judged"])))
     ]  # fmt: skip
     _facts(cat, rid, entry, sig, volume.url(ro_base), headline)
+    by_folder = _updated_evals(cat, rid)
     cat.close()
     return {
         "status": "ingested", "run_id": rid, "evals": len(out["families"]),
         "families": out["families"], "report": report_from, "removed": removed,
-        "placed": placed, "differs": _differs(entry, headline, volume, placed),
+        "updated": by_folder,
+        "placed": placed, "differs": _differs(entry, headline, volume, placed, updated),
         "sets": sorted({r["subset"] for r in _stored_sets(root, rid)}),
         "downloaded_files": n_got, "downloaded_bytes": n_bytes,
         "cleaned": (tally["removed"], tally["freed"]),
@@ -1086,6 +1272,16 @@ def ingest_manifest(
             got = done[id(base)]
             status = {"ingested": "set ingested"}.get(got["status"], got["status"])
             why = got.get("why") or ""
+            if entry.get("updates"):
+                evals = (got.get("updated") or {}).get(str(entry["judged"]).strip("/")) or []
+                if got["status"] in ("ingested", "facts updated", "unchanged") and not evals:
+                    status = "not judged yet"
+                    why = f"no <eval>/results.json under {entry['judged']}"
+                elif got["status"] == "ingested":
+                    status = "evals updated"
+                out.append(head | {"run_id": rid, "status": status, "into": base["run"],
+                                   "evals": evals, "why": why})  # fmt: skip
+                continue
             # a fast entry is stored under the subset its results are stamped with
             name = (got.get("placed") or {}).get(str(entry["judged"]).strip("/"), set_kind(entry))
             stored = name in (got.get("sets") or [])

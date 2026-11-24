@@ -245,6 +245,8 @@ class Store:
         in its macro's note); without a stamp, the run is on an earlier subset
         when it scores an eval the current subset does not hold, or when the store's question
         list of one of its evals is not the current subset's."""
+        from wsbench import fast
+
         if bench != "wsb":
             return set()
         evals: dict[str, set[str]] = defaultdict(set)
@@ -275,8 +277,13 @@ class Store:
             stamps += [
                 m.group(0) for text in notes[rid] + said[rid] if (m := FAST_STAMP.search(text))
             ]
+            # a set whose evals were judged under several subsets (an eval judged again on the
+            # current one): ingest stores it under `fast` only when every row is the current
+            # subset's, so its note naming the current subset among them settles it
+            mixed = [s for text in said[rid] if SCORED_ON.search(text)
+                     for s in FAST_STAMP.findall(text)]  # fmt: skip
             if stamps:
-                if not self._is_current_stamp(stamps[0], evals[rid]):
+                if fast.DEFAULT not in mixed and not self._is_current_stamp(stamps[0], evals[rid]):
                     out.add(rid)
             elif current is not None and any(
                 ev not in current or stored.get(ev, current[ev]) != current[ev] for ev in evals[rid]
