@@ -266,6 +266,30 @@ def test_a_modal_address_without_the_command_gives_the_marker(tmp_path: Path, mo
     assert remote.marker(url, "why") == f"[readouts not available here: {url} (why)]"
 
 
+def test_a_mounted_volume_is_read_from_its_directory_without_the_command(
+    tmp_path: Path, monkeypatch
+):
+    """A hosted viewer has the runs' volume mounted and no ``modal`` command or credentials:
+    an address of that volume is read from the mount, another volume's is not."""
+    monkeypatch.setenv(remote.CACHE_ENV, str(tmp_path / "cache"))
+    monkeypatch.setenv("PATH", str(tmp_path))  # no modal command
+    monkeypatch.setenv(remote.MOUNTS_ENV, f"some-volume={tmp_path / 'mnt'}, other = /nowhere")
+    remote._failed.clear()
+    row = {"id": "q1", "layer": 20, "pos": -1, "samples": ["read from the mount"]}
+    _jsonl(tmp_path / "mnt" / "out/run/lens/merged/x.jsonl", [row])
+    url = "modal://some-volume@env/out/run/lens/merged/x.jsonl"
+    volume, path = remote.split(url)
+    assert isinstance(volume, remote.MountedVolume) and volume.url(path) == url  # same address
+    assert [e.path for e in volume.ls("out/run")] == ["out/run/lens/merged/x.jsonl"]
+    assert remote.item_rows([url], "q1") == [row]  # copied into the cache, then read
+    assert remote.exists(url) == (True, "cached")
+    assert isinstance(remote.open_volume("some-volume", "env"), remote.MountedVolume)
+    with pytest.raises(remote.UnavailableError, match="does not exist"):
+        remote.fetch("modal://some-volume@env/out/run/lens/merged/gone.jsonl")
+    with pytest.raises(remote.UnavailableError, match="not installed"):  # not mounted here
+        remote.fetch("modal://unmounted-volume@env/x.jsonl")
+
+
 def test_vanished_local_sources_are_listed_and_show_the_marker(tmp_path: Path, capsys):
     registry.load_all()
     run = tmp_path / "run" / LENS

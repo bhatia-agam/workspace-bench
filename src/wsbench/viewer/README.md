@@ -133,7 +133,9 @@ What ingest does with a run:
   fetches the eval's file into the cache the first time it is opened, then reads it locally.
   Such a run has scores, verdicts, judge calls and digests, the expected-answer and quote
   highlights computed when a question is opened, but no per-layer proxy charts and no readout
-  search. Where the volume cannot be reached (no `modal` command, no credentials, no network)
+  search. A viewer that has the volume mounted as a directory (a hosted one) reads it there:
+  `WSB_VIEWER_VOLUME_MOUNTS=<volume>=<directory>[,<volume>=<directory>]`, no `modal` command
+  and no credentials needed. Where the volume cannot be reached (no `modal` command, no credentials, no network)
   the page shows `[readouts not available here: <address> (<why>)]` in place of the readouts.
   `readouts=index` fetches each eval's readout file once at ingest for the cell index, the
   flags and the proxy charts (text of flagged cells only); `readouts=copy` keeps all text, so

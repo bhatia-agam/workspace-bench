@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 CACHE_ENV = "WSB_VIEWER_CACHE"
+MOUNTS_ENV = "WSB_VIEWER_VOLUME_MOUNTS"  # `<volume>=<directory>[,...]`: volumes mounted here
 DEFAULT_CACHE = "~/.cache/wsbench-viewer"
 MODAL = "modal://"
 FILE = "file://"
@@ -168,6 +169,34 @@ class ModalVolume(Volume):
             raise UnavailableError(f"cannot fetch from volume {self.name}: {_last_line(r.stderr)}")
 
 
+class MountedVolume(LocalVolume):
+    """A Modal volume that is mounted on this machine as a directory (a hosted viewer): its
+    files are read from the mount, with no ``modal`` command and no credentials; an address
+    stays the volume's own."""
+
+    def __init__(self, name: str, environment: str | None, root: str | os.PathLike) -> None:
+        super().__init__(root)
+        self.name = name
+        self.environment = environment or None
+
+    def url(self, path: str) -> str:
+        env = f"@{self.environment}" if self.environment else ""
+        return f"{MODAL}{self.name}{env}/{path.strip('/')}"
+
+
+def mounts() -> dict[str, str]:
+    """``{volume name: directory}`` from ``$WSB_VIEWER_VOLUME_MOUNTS``."""
+    pairs = (x.split("=", 1) for x in os.environ.get(MOUNTS_ENV, "").split(",") if "=" in x)
+    return {name.strip(): root.strip() for name, root in pairs if name.strip() and root.strip()}
+
+
+def modal_volume(name: str, environment: str | None = None) -> Volume:
+    """The Modal volume ``name``: its mount on this machine where there is one, else the
+    ``modal`` command."""
+    root = mounts().get(name)
+    return MountedVolume(name, environment, root) if root else ModalVolume(name, environment)
+
+
 def _last_line(text: str) -> str:
     lines = [x.strip(" │╭╰─╮╯") for x in (text or "").splitlines()]
     lines = [x for x in lines if x]
@@ -192,7 +221,7 @@ def open_volume(spec: str, environment: str | None = None) -> Volume:
             spec, environment = spec.split("@", 1)
     if "/" in spec or Path(spec).expanduser().is_dir():
         return LocalVolume(spec)
-    return ModalVolume(spec, environment)
+    return modal_volume(spec, environment)
 
 
 def split(url: str) -> tuple[Volume, str]:
@@ -200,7 +229,7 @@ def split(url: str) -> tuple[Volume, str]:
     if url.startswith(MODAL):
         head, _, path = url[len(MODAL) :].partition("/")
         name, _, env = head.partition("@")
-        return ModalVolume(name, env or None), path
+        return modal_volume(name, env or None), path
     if url.startswith(FILE):
         p = Path(url[len(FILE) :])
         return LocalVolume(p.parent), p.name
