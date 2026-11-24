@@ -2,6 +2,7 @@
 store's read side and a smoke test of every page."""
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -253,6 +254,36 @@ def test_hb_ingest_scores_and_segments(hb_run: Path, tmp_path: Path):
 
 
 # ------------------------------------------------------------------ the app
+
+
+def test_a_question_opens_with_the_runs_the_other_pages_show(wsb_run: Path, tmp_path: Path):
+    """The question page opens a pane for every default run with a verdict on the question,
+    as the score table and the eval page show them; panes a reader chose earlier are tied to
+    the defaults they were chosen under."""
+    from wsbench.viewer.app import pages
+
+    root = tmp_path / "store"
+    lenses = ("lens-a", "lens-b", "lens-c", "lens-d", "lens-e")
+    rids = [wsb.ingest(wsb_run, root, lens=x, build_dir=tmp_path / "build")["run_id"]
+            for x in lenses]  # fmt: skip
+    (root / store.ALIASES).write_text(
+        json.dumps({x: {"label": x, "default": True} for x in lenses[:4]})
+    )
+    db = Store(root)
+
+    def payload(**q: str) -> dict:
+        page = pages.question_page(db, pages.make_view(db, q), FAM, IDS[0], q)
+        return json.loads(re.search(r'<script[^>]*id="qdata"[^>]*>(.*?)</script>', page, re.S)[1])
+
+    data = payload()
+    assert sorted(data["open"]) == sorted(rids[:4])  # all four defaults, not the first three
+    assert sorted(data["defaults"].split(",")) == sorted(rids[:4])
+    shown, _all = pages.chosen_runs(db, pages.make_view(db, {}))
+    assert [r["run_id"] for r in shown] == data["open"]  # the runs the score table checks
+    picked = payload(runs=rids[4])
+    assert picked["open"] == [rids[4]] and picked["defaults"] == data["defaults"]
+    grid = (Path(pages.__file__).parent.parent / "static" / "grid.js").read_text()
+    assert "kept.defaults === D.defaults" in grid and "defaults: S.D.defaults" in grid
 
 
 def test_every_page_renders(wsb_run: Path, hb_run: Path, tmp_path: Path):
