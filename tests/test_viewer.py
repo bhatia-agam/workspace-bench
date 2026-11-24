@@ -236,6 +236,23 @@ def test_private_items_are_hidden_unless_allowed(wsb_run: Path, tmp_path: Path):
 # ------------------------------------------------------------------ HallucinationBench ingest
 
 
+def test_a_run_ingested_again_is_read_from_its_new_database_by_a_running_viewer(
+    wsb_run: Path, tmp_path: Path
+):
+    """Ingest replaces a run's database file. A viewer that had the run open must read the
+    new file: else it shows the new scores beside the replaced run's cells and readouts."""
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root, build_dir=tmp_path / "build")["run_id"]
+    db = Store(root)  # the running viewer: one Store for its whole life
+    assert db.cells(rid, FAM, IDS[1])["cells"]["20:-1"]["s"] == ["no idea"]
+    path = wsb_run / "readouts" / f"{FAM}.jsonl"
+    path.write_text(path.read_text().replace("no idea", "read again, another answer"))
+    wsb.ingest(wsb_run, root, build_dir=tmp_path / "build", force=True)
+    assert db.cells(rid, FAM, IDS[1])["cells"]["20:-1"]["s"] == ["read again, another answer"]
+    store.run_db_path(root, rid).unlink()  # a run taken out of the store
+    assert db.run_con(rid) is None
+
+
 def test_hb_ingest_scores_and_segments(hb_run: Path, tmp_path: Path):
     root = tmp_path / "store"
     out = hb.ingest(hb_run, root)
