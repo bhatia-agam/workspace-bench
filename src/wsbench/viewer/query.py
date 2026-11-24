@@ -89,6 +89,14 @@ HB_PROBE_FAMILIES = ("sibling",)
 
 REGISTERED = "qwen3.6-27b"  # the subject model of the registered banks (``wsb.ORIGINAL``)
 FLOOR_KINDS = ("prompt_only", "lucky_guess")
+# the lucky-guess column is one guesser for every eval: the one that is shown the option lists
+# and nothing else. The benchmark also freezes guessers that see more; the viewer shows none of
+# them, by value or by name
+LUCKY_GUESSER = "blind"
+LUCKY_NOTE = (
+    "the blind guesser: a model that sees only each question's option list picks one, and "
+    "never sees a readout; the bench's frozen floor for the current questions"
+)
 
 
 @functools.cache
@@ -96,9 +104,9 @@ def checkout_floors() -> dict[str, dict[str, dict]]:
     """``{eval: {floor kind: score row}}`` from the bench checkout's own frozen floor files,
     read once per process: the summary prompt-only entry of each eval
     (``prompt_only_summary.json``; an entry frozen as not measurable gives none) and the
-    highest live options-only guesser
-    (``lucky_guessing.json`` through the bench's own ``floors`` and ``bar``, which drop an
-    entry measured on another instrument than the eval's current one). These are the floors
+    blind guesser of each eval (``LUCKY_GUESSER``; ``lucky_guessing.json`` through the bench's
+    own ``floors``, which drops an entry measured on another instrument than the eval's
+    current one). These are the floors
     of the questions the checkout holds, whatever a run's report said when it was made."""
     from wsbench.baselines import lucky_guessing, prompt_only
 
@@ -120,15 +128,11 @@ def checkout_floors() -> dict[str, dict[str, dict]]:
         out[fam]["prompt_only"] = row("prompt_only", e["rate"], e.get("ci95"), e.get("n_items"),
                                       note)  # fmt: skip
     for fam, entry in lucky_guessing.floors().items():
-        best = lucky_guessing.bar(entry, fam)
-        if best is None:
+        blind = entry.get(LUCKY_GUESSER)
+        if not isinstance(blind, dict) or blind.get("mean") is None:
             continue
-        variant = entry.get(best[1].split(":")[0]) or {}
-        note = (
-            f"best options-only guesser ({best[1]}); the judge never sees a readout; the "
-            "bench's frozen floor for the current questions"
-        )
-        out[fam]["lucky_guess"] = row("lucky_guess", best[0], None, variant.get("n_items"), note)
+        out[fam]["lucky_guess"] = row("lucky_guess", blind["mean"], None, blind.get("n_items"),
+                                      LUCKY_NOTE)  # fmt: skip
     return dict(out)
 
 

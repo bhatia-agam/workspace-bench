@@ -626,15 +626,11 @@ def write_scores(cat, rid: str, judged: Path, results: Mapping[str, Any], subset
         _score(cat, rid, fam, subset, -1, "lens", r.value, r.ci95, r.n_items)
         _score(cat, rid, fam, subset, -1, "chance", r.chance, None, None, r.chance_label)
         lucky = (floors.get("lucky_guessing") or {}).get(fam) or {}
-        best = max(
-            ((v["mean"], k) for k, v in lucky.items()
-             if isinstance(v, dict) and isinstance(v.get("mean"), int | float) and k != "uniform"),
-            default=None,
-        )  # fmt: skip
-        if best and subset == "full":
-            note = f"best options-only guesser ({best[1]}); the judge never sees a readout"
-            _score(cat, rid, fam, subset, -1, "lucky_guess", best[0], None,
-                   lucky[best[1]].get("n_items"), note)  # fmt: skip
+        blind = lucky.get("blind")  # the guesser that sees the option lists and nothing else
+        if isinstance(blind, dict) and blind.get("mean") is not None and subset == "full":
+            note = "the blind guesser: only the option lists; the judge never sees a readout"
+            _score(cat, rid, fam, subset, -1, "lucky_guess", blind["mean"], None,
+                   blind.get("n_items"), note)  # fmt: skip
         po = (floors.get("prompt_only_summary") or {}).get(fam)
         if isinstance(po, dict) and subset == "full" and po.get("rate") is not None:
             try:

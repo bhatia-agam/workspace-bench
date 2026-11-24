@@ -14,6 +14,7 @@ from wsbench.viewer.query import (
     DERIVED,
     EARLIER_FAST,
     FAST,
+    LUCKY_NOTE,
     MACRO,
     METHOD_TITLES,
     SCORED_BY_RULE,
@@ -28,7 +29,12 @@ SUMMARIZER_NOTE = (
     "In summary mode the readouts of every eval, the rule-scored ones included, first pass "
     "through the Claude summarizer."
 )
-FLOORS = (("prompt_only", "Prompt only"), ("lucky_guess", "Lucky guess"), ("chance", "Chance"))
+FLOORS = (
+    ("prompt_only", "Prompt only"),
+    ("lucky_guess", "Lucky guess (options only)"),
+    ("chance", "Chance"),
+)
+FLOOR_HELP = {"lucky_guess": LUCKY_NOTE}  # a floor column's heading, on hover
 FLOOR_COLOR = {"prompt_only": "#64748b", "lucky_guess": "#94a3b8", "chance": "#cbd5e1"}
 LAYER_KINDS = {
     "judge": ("Judge verdict per layer", "exact",
@@ -419,7 +425,10 @@ def scores_page(db: Store, v: View) -> str:
         f"{lens_chip(r, paint[r['run_id']], None if all_derived else derived.get(r['run_id']))}"
         "</th>"
         for r in shown
-    ) + "".join(f'<th class="run floor"><span>{esc(t)}</span></th>' for _k, t in floors)
+    ) + "".join(
+        f'<th class="run floor" title="{esc(FLOOR_HELP.get(k, ""))}"><span>{esc(t)}</span></th>'
+        for k, t in floors
+    )
     rows = []
     macro = scores.get(MACRO)
     span = 3 + len(shown) + len(floors)

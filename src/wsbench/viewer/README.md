@@ -53,7 +53,9 @@ The prompt-only and lucky-guess floors of the registered banks (full and core se
 read from the checkout the viewer runs on (`evals/baselines/prompt_only_summary.json`,
 `lucky_guessing.json`) when the viewer starts, not from a run's report: they are the
 floors of the questions the checkout holds now. An eval whose frozen entry is stale by the
-benchmark's own rule, or not measurable, shows none.
+benchmark's own rule, or not measurable, shows none. The lucky-guess column is the blind
+guesser for every eval (it sees the option lists and nothing else); the benchmark's guessers
+that see more are not shown, by value or by name.
 
 ## Runs manifest
 

@@ -251,11 +251,20 @@ def test_floors_of_the_registered_banks_come_from_the_checkout_not_from_a_run(
     entry = prompt_only.summary_floors()[FAM]
     assert frozen[FAM]["prompt_only"]["value"] == entry["rate"]
     assert frozen[FAM]["prompt_only"]["n"] == entry["n_items"]
-    best = lucky_guessing.bar(lucky_guessing.floors()[FAM], FAM)
-    assert frozen[FAM]["lucky_guess"]["value"] == best[0]  # the bench's own bar
+    blind = lucky_guessing.floors()[FAM]["blind"]["mean"]
+    assert frozen[FAM]["lucky_guess"]["value"] == blind  # the options-only guesser
+    # one guesser for every eval: never a guesser that is shown more than the option lists
+    live = lucky_guessing.floors()
+    for fam, shown in frozen.items():
+        if "lucky_guess" in shown:
+            assert shown["lucky_guess"]["value"] == live[fam]["blind"]["mean"], fam
+            assert "blind guesser" in shown["lucky_guess"]["note"]
+            assert not re.search(r"topic|described|question guesser", shown["lucky_guess"]["note"])
+    assert frozen["poetry"]["lucky_guess"]["value"] < live["poetry"]["topic"]["mean"]
+    assert all("lucky_guess" in frozen[fam] for fam, e in live.items() if "blind" in e)
     got = Store(root).scores("wsb", wsb.ORIGINAL, "full")[FAM]
     assert got["prompt_only"]["value"] == entry["rate"] and got["prompt_only"]["value"] != 0.123
-    assert got["lucky_guess"]["value"] == best[0] and got[rid]["value"] == 0.5
+    assert got["lucky_guess"]["value"] == blind and got[rid]["value"] == 0.5
     assert got["chance"]["value"] == 0.2  # chance is the result's own
     # an eval the checkout has no live floor for shows none, whatever a run stored
     monkeypatch.setattr(query, "checkout_floors", lambda: {})
