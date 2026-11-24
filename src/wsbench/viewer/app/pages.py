@@ -2,7 +2,7 @@
 and the request's view (bench, model, subset, chosen runs) and returns a page body."""
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from wsbench.viewer import meta
@@ -753,6 +753,7 @@ def question_page(db: Store, v: View, name: str, item: str, q: dict[str, str]) -
     if e is None or it is None:
         return nav(v, "scores") + empty(f"No question {item!r} in {name!r}.")
     shown, runs = chosen_runs(db, v)
+    defaults, _all = chosen_runs(db, replace(v, runs=[]))
     items = db.items(v.bench, v.model, name, v.subset)
     if item not in {x["item"] for x in items}:
         items = db.items(v.bench, v.model, name, "full")
@@ -777,9 +778,12 @@ def question_page(db: Store, v: View, name: str, item: str, q: dict[str, str]) -
         "axes": list(meta.HB_SPAN_AXES),
         "scoredBy": e["scored_by"],
         "summaryNote": SUMMARIZER_NOTE if v.bench == "wsb" else "",
-        # open the first three chosen methods that have something on this question
+        # open every chosen run that has something on this question: the runs the score
+        # table and the eval page show. `defaults` names the store's default runs, so panes
+        # a reader chose earlier are kept only while those defaults are the same
         "open": ([r["run_id"] for r in shown if r["run_id"] in verdicts]
-                 or [r["run_id"] for r in shown])[:3],
+                 or [r["run_id"] for r in shown]),
+        "defaults": ",".join(r["run_id"] for r in defaults),
         "layer": q.get("l"), "pos": q.get("p"), "find": q.get("find") or "",
         "judgedBy": e["judged_by"], "gates": gate_cards(e["gates"]),
     }  # fmt: skip
