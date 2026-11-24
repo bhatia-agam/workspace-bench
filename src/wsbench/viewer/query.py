@@ -1,6 +1,7 @@
 """Read side of the store: every question the app asks, as plain dicts and lists. No HTML
 here, and no writes except bookmarks (``user.db``)."""
 
+import functools
 import json
 import re
 import sqlite3
@@ -83,6 +84,51 @@ SCORED_BY_PROBE = "Claude judge and a probe"
 # HallucinationBench families whose label is settled by a probe on the activations after the
 # judge (meta.HB_EVALS: "... then a commitment judge, then a distractor-rank probe")
 HB_PROBE_FAMILIES = ("sibling",)
+
+
+REGISTERED = "qwen3.6-27b"  # the subject model of the registered banks (``wsb.ORIGINAL``)
+FLOOR_KINDS = ("prompt_only", "lucky_guess")
+
+
+@functools.cache
+def checkout_floors() -> dict[str, dict[str, dict]]:
+    """``{eval: {floor kind: score row}}`` from the bench checkout's own frozen floor files,
+    read once per process: the summary prompt-only entry of each eval
+    (``prompt_only_summary.json``; an entry frozen as not measurable gives none) and the
+    highest live options-only guesser
+    (``lucky_guessing.json`` through the bench's own ``floors`` and ``bar``, which drop an
+    entry measured on another instrument than the eval's current one). These are the floors
+    of the questions the checkout holds, whatever a run's report said when it was made."""
+    from wsbench.baselines import lucky_guessing, prompt_only
+
+    registry.load_all()
+    out: dict[str, dict[str, dict]] = defaultdict(dict)
+
+    def row(kind: str, value: float, ci: Any, n: Any, note: str) -> dict:
+        lo, hi = (ci[0], ci[1]) if isinstance(ci, list | tuple) and len(ci) == 2 else (None, None)
+        return {"run_id": "", "kind": kind, "layer": -1, "value": float(value), "ci_lo": lo,
+                "ci_hi": hi, "n": n, "note": note}  # fmt: skip
+
+    for fam, e in prompt_only.summary_floors().items():
+        if e.get("rate") is None or e.get("not_measurable"):
+            continue
+        note = (
+            "a frontier model reads only the prompt text, judged the same way; the bench's "
+            f"frozen floor for the current questions (instrument {e.get('instrument')})"
+        )
+        out[fam]["prompt_only"] = row("prompt_only", e["rate"], e.get("ci95"), e.get("n_items"),
+                                      note)  # fmt: skip
+    for fam, entry in lucky_guessing.floors().items():
+        best = lucky_guessing.bar(entry, fam)
+        if best is None:
+            continue
+        variant = entry.get(best[1].split(":")[0]) or {}
+        note = (
+            f"best options-only guesser ({best[1]}); the judge never sees a readout; the "
+            "bench's frozen floor for the current questions"
+        )
+        out[fam]["lucky_guess"] = row("lucky_guess", best[0], None, variant.get("n_items"), note)
+    return dict(out)
 
 
 def category_title(key: str) -> str:
@@ -716,7 +762,10 @@ class Store:
 
     def scores(self, bench: str, model: str, subset: str) -> dict[str, dict[str, dict]]:
         """``{eval: {run_id | floor kind: score}}`` at the headline layer for one subset. Floors
-        (prompt_only, lucky_guess, chance) are per eval, taken from any run that carries them.
+        (prompt_only, lucky_guess, chance) are per eval, taken from any run that carries them;
+        for the registered banks the prompt-only and lucky-guess floors of the full and core
+        sets are the bench checkout's own frozen ones (``checkout_floors``), never a run's:
+        a run's report may have been made for earlier questions.
         The core set (``wsbench.tiers.CORE``, read now): a run's stored core rows and core macro
         where ingest stored them for today's core list (or for the list the run named itself),
         else the core evals' rows of its full run with their mean as the macro."""
@@ -733,6 +782,12 @@ class Store:
             key = r["run_id"] if r["kind"] == "lens" else r["kind"]
             if key not in out[r["eval"]] or r["kind"] == "lens":
                 out[r["eval"]][key] = dict(r)
+        if bench == "wsb" and model == REGISTERED and subset in ("full", CORE):
+            frozen = checkout_floors()
+            for name, by_key in out.items():
+                for kind in FLOOR_KINDS:
+                    by_key.pop(kind, None)
+                by_key.update(frozen.get(name, {}))
         if subset != CORE:
             return out
         names = self._core(bench)
