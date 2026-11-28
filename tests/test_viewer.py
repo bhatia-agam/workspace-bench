@@ -2,6 +2,7 @@
 store's read side and a smoke test of every page."""
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -168,6 +169,22 @@ def test_method_guess():
     assert wsb.guess_method("jlens_j") == "jlens"
     assert wsb.guess_method("mylens.nla.step2000") == "nla"
     assert wsb.guess_method("my-prose-lens.step600") == "olens"
+    assert wsb.guess_method("rlens") == "rlens" and wsb.guess_method("jpp_lens") == "jpp_lens"
+    assert wsb.guess_method("my-olens") == "olens"  # no other name ends a method's
+
+
+def test_the_newer_token_methods_have_their_own_name_and_colour():
+    from wsbench.viewer import meta
+    from wsbench.viewer.ingest import reader
+
+    assert tuple(meta.METHODS) == wsb.METHODS  # one list: what ingest accepts is what is drawn
+    assert meta.METHODS["rlens"][0] == "R-lens" and meta.METHODS["jpp_lens"][0] == "J++ lens"
+    assert len({v[2] for v in meta.METHODS.values()}) == len(meta.METHODS)
+    for given, want in (("rlens", "rlens"), ("jpp_lens", "jpp_lens"), ("J++", "jpp_lens"),
+                        ("R-lens", "rlens"), ("newlens", "other")):  # fmt: skip
+        entry = reader.normalise({"method": given, "lens": "x", "run": "r", "judged": "j"})
+        assert entry["method"] == want
+    assert "--m-rlens:" in meta.palette_css() and ".m-jpp_lens" in meta.palette_css()
 
 
 # ------------------------------------------------------------------ WorkspaceBench ingest
@@ -214,6 +231,44 @@ def test_wsb_ingest_is_idempotent_and_takes_two_questions(wsb_run: Path, tmp_pat
     assert db.cells(one["run_id"], FAM, IDS[0])["cells"] == {}
 
 
+def test_floors_of_the_registered_banks_come_from_the_checkout_not_from_a_run(
+    wsb_run: Path, tmp_path: Path, monkeypatch
+):
+    """A run's report may hold floors measured for earlier questions: the floor columns show
+    the bench's own frozen floors for the questions the checkout holds."""
+    from wsbench.baselines import lucky_guessing, prompt_only
+    from wsbench.viewer import query
+
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root, build_dir=tmp_path / "build")["run_id"]
+    cat = store.catalog(root)
+    for kind in ("prompt_only", "lucky_guess"):  # what an older report left in the store
+        wsb._score(cat, rid, FAM, "full", -1, kind, 0.123, None, 7, "from the run's report")
+    cat.commit()
+    cat.close()
+    query.checkout_floors.cache_clear()
+    frozen = query.checkout_floors()
+    entry = prompt_only.summary_floors()[FAM]
+    assert frozen[FAM]["prompt_only"]["value"] == entry["rate"]
+    assert frozen[FAM]["prompt_only"]["n"] == entry["n_items"]
+    best = lucky_guessing.bar(lucky_guessing.floors()[FAM], FAM)
+    assert frozen[FAM]["lucky_guess"]["value"] == best[0]  # the bench's own bar
+    got = Store(root).scores("wsb", wsb.ORIGINAL, "full")[FAM]
+    assert got["prompt_only"]["value"] == entry["rate"] and got["prompt_only"]["value"] != 0.123
+    assert got["lucky_guess"]["value"] == best[0] and got[rid]["value"] == 0.5
+    assert got["chance"]["value"] == 0.2  # chance is the result's own
+    # an eval the checkout has no live floor for shows none, whatever a run stored
+    monkeypatch.setattr(query, "checkout_floors", lambda: {})
+    got = Store(root).scores("wsb", wsb.ORIGINAL, "full")[FAM]
+    assert "prompt_only" not in got and "lucky_guess" not in got
+    # another subject model's rows keep what their runs stored
+    cat = store.catalog(root)
+    cat.execute("UPDATE run SET model = 'other-model' WHERE run_id = ?", (rid,))
+    cat.commit()
+    cat.close()
+    assert Store(root).scores("wsb", "other-model", "full")[FAM]["prompt_only"]["value"] == 0.123
+
+
 def test_private_items_are_hidden_unless_allowed(wsb_run: Path, tmp_path: Path):
     root = tmp_path / "store"
     out = wsb.ingest(wsb_run, root)
@@ -236,6 +291,23 @@ def test_private_items_are_hidden_unless_allowed(wsb_run: Path, tmp_path: Path):
 # ------------------------------------------------------------------ HallucinationBench ingest
 
 
+def test_a_run_ingested_again_is_read_from_its_new_database_by_a_running_viewer(
+    wsb_run: Path, tmp_path: Path
+):
+    """Ingest replaces a run's database file. A viewer that had the run open must read the
+    new file: else it shows the new scores beside the replaced run's cells and readouts."""
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root, build_dir=tmp_path / "build")["run_id"]
+    db = Store(root)  # the running viewer: one Store for its whole life
+    assert db.cells(rid, FAM, IDS[1])["cells"]["20:-1"]["s"] == ["no idea"]
+    path = wsb_run / "readouts" / f"{FAM}.jsonl"
+    path.write_text(path.read_text().replace("no idea", "read again, another answer"))
+    wsb.ingest(wsb_run, root, build_dir=tmp_path / "build", force=True)
+    assert db.cells(rid, FAM, IDS[1])["cells"]["20:-1"]["s"] == ["read again, another answer"]
+    store.run_db_path(root, rid).unlink()  # a run taken out of the store
+    assert db.run_con(rid) is None
+
+
 def test_hb_ingest_scores_and_segments(hb_run: Path, tmp_path: Path):
     root = tmp_path / "store"
     out = hb.ingest(hb_run, root)
@@ -253,6 +325,36 @@ def test_hb_ingest_scores_and_segments(hb_run: Path, tmp_path: Path):
 
 
 # ------------------------------------------------------------------ the app
+
+
+def test_a_question_opens_with_the_runs_the_other_pages_show(wsb_run: Path, tmp_path: Path):
+    """The question page opens a pane for every default run with a verdict on the question,
+    as the score table and the eval page show them; panes a reader chose earlier are tied to
+    the defaults they were chosen under."""
+    from wsbench.viewer.app import pages
+
+    root = tmp_path / "store"
+    lenses = ("lens-a", "lens-b", "lens-c", "lens-d", "lens-e")
+    rids = [wsb.ingest(wsb_run, root, lens=x, build_dir=tmp_path / "build")["run_id"]
+            for x in lenses]  # fmt: skip
+    (root / store.ALIASES).write_text(
+        json.dumps({x: {"label": x, "default": True} for x in lenses[:4]})
+    )
+    db = Store(root)
+
+    def payload(**q: str) -> dict:
+        page = pages.question_page(db, pages.make_view(db, q), FAM, IDS[0], q)
+        return json.loads(re.search(r'<script[^>]*id="qdata"[^>]*>(.*?)</script>', page, re.S)[1])
+
+    data = payload()
+    assert sorted(data["open"]) == sorted(rids[:4])  # all four defaults, not the first three
+    assert sorted(data["defaults"].split(",")) == sorted(rids[:4])
+    shown, _all = pages.chosen_runs(db, pages.make_view(db, {}))
+    assert [r["run_id"] for r in shown] == data["open"]  # the runs the score table checks
+    picked = payload(runs=rids[4])
+    assert picked["open"] == [rids[4]] and picked["defaults"] == data["defaults"]
+    grid = (Path(pages.__file__).parent.parent / "static" / "grid.js").read_text()
+    assert "kept.defaults === D.defaults" in grid and "defaults: S.D.defaults" in grid
 
 
 def test_every_page_renders(wsb_run: Path, hb_run: Path, tmp_path: Path):
@@ -550,3 +652,43 @@ def test_hb_what_it_measures_comes_from_the_column_of_that_name(tmp_path):
     assert "not a description" not in metas["benign_roleplay"].what  # no 'what' column there
     assert metas["main"].prompt_template == "How a readout is cut."
     assert meta.load_hb(None)["story"].what  # the built-in one-liners
+
+
+def test_questions_an_updated_bank_dropped_leave_the_list_and_mark_the_run(
+    wsb_run: Path, tmp_path: Path
+):
+    """A bank that changed after a run was judged: the eval lists the bank's questions as
+    they are now, and the run judged on the earlier ones says so beside its score."""
+    from wsbench import registry
+    from wsbench.viewer.query import EARLIER_BANK
+
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root, build_dir=tmp_path / "build")["run_id"]
+    db = Store(root)
+    before = [i["item"] for i in db.items("wsb", wsb.ORIGINAL, FAM)]
+    assert set(IDS) <= set(before) and db.eval_marks("wsb", wsb.ORIGINAL) == {}
+    # a checkout whose bank no longer holds the second question
+    rel = registry.frozen_bank_path(FAM).relative_to(registry.REPO_ROOT)
+    bank = json.loads((registry.REPO_ROOT / rel).read_text())
+    rows = bank["items"] if isinstance(bank, dict) else bank
+    rows[:] = [r for r in rows if IDS[1] not in (r.get("id"), r.get("name"))]
+    repo = tmp_path / "checkout"
+    (repo / rel).parent.mkdir(parents=True)
+    (repo / rel).write_text(json.dumps(bank))
+    cat = store.catalog(root)
+    wsb.write_bank(cat, repo, wsb.ORIGINAL, families=[FAM])
+    cat.close()
+    db = Store(root)
+    after = [i["item"] for i in db.items("wsb", wsb.ORIGINAL, FAM)]
+    assert after == [i for i in before if i != IDS[1]]  # same order, one question fewer
+    assert db.eval("wsb", wsb.ORIGINAL, FAM)["n_items"] == len(after)
+    label, why = db.eval_marks("wsb", wsb.ORIGINAL)[rid][FAM]
+    assert label == EARLIER_BANK and why.startswith("1 of the questions")
+    assert db.item("wsb", wsb.ORIGINAL, FAM, IDS[1])["prompt"]  # its page keeps its text
+    # the bank holds it again (the first checkout): it is listed where it was, the mark goes
+    cat = store.catalog(root)
+    wsb.write_bank(cat, registry.REPO_ROOT, wsb.ORIGINAL, families=[FAM])
+    cat.close()
+    db = Store(root)
+    assert [i["item"] for i in db.items("wsb", wsb.ORIGINAL, FAM)] == before
+    assert db.eval_marks("wsb", wsb.ORIGINAL) == {}

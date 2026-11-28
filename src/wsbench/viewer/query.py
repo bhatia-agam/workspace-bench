@@ -1,6 +1,7 @@
 """Read side of the store: every question the app asks, as plain dicts and lists. No HTML
 here, and no writes except bookmarks (``user.db``)."""
 
+import functools
 import json
 import re
 import sqlite3
@@ -30,6 +31,7 @@ OLD_FAST = "fast-"  # a fast run of another version than the default is stored u
 # the view of rows a store holds under ``fast`` that were scored on an earlier fast subset (the
 # store was written while that subset was the default one); never a stored name
 EARLIER_FAST = "fast-earlier"
+EARLIER_BANK = "earlier questions"  # an eval's mark for a run judged on an earlier bank
 SCORED_ON = re.compile(r"\bscored on (fast[\w.-]*)")  # what ingest notes on a fast set
 FAST_STAMP = re.compile(r"\bfast(?:-safety)?-v\d+\b")  # a subset version named in a stored note
 
@@ -85,6 +87,51 @@ SCORED_BY_PROBE = "Claude judge and a probe"
 HB_PROBE_FAMILIES = ("sibling",)
 
 
+REGISTERED = "qwen3.6-27b"  # the subject model of the registered banks (``wsb.ORIGINAL``)
+FLOOR_KINDS = ("prompt_only", "lucky_guess")
+
+
+@functools.cache
+def checkout_floors() -> dict[str, dict[str, dict]]:
+    """``{eval: {floor kind: score row}}`` from the bench checkout's own frozen floor files,
+    read once per process: the summary prompt-only entry of each eval
+    (``prompt_only_summary.json``; an entry frozen as not measurable gives none) and the
+    highest live options-only guesser
+    (``lucky_guessing.json`` through the bench's own ``floors`` and ``bar``, which drop an
+    entry measured on another instrument than the eval's current one). These are the floors
+    of the questions the checkout holds, whatever a run's report said when it was made."""
+    from wsbench.baselines import lucky_guessing, prompt_only
+
+    registry.load_all()
+    out: dict[str, dict[str, dict]] = defaultdict(dict)
+
+    def row(kind: str, value: float, ci: Any, n: Any, note: str) -> dict:
+        lo, hi = (ci[0], ci[1]) if isinstance(ci, list | tuple) and len(ci) == 2 else (None, None)
+        return {"run_id": "", "kind": kind, "layer": -1, "value": float(value), "ci_lo": lo,
+                "ci_hi": hi, "n": n, "note": note}  # fmt: skip
+
+    for fam, e in prompt_only.summary_floors().items():
+        if e.get("rate") is None or e.get("not_measurable"):
+            continue
+        note = (
+            "a frontier model reads only the prompt text, judged the same way; the bench's "
+            f"frozen floor for the current questions (instrument {e.get('instrument')})"
+        )
+        out[fam]["prompt_only"] = row("prompt_only", e["rate"], e.get("ci95"), e.get("n_items"),
+                                      note)  # fmt: skip
+    for fam, entry in lucky_guessing.floors().items():
+        best = lucky_guessing.bar(entry, fam)
+        if best is None:
+            continue
+        variant = entry.get(best[1].split(":")[0]) or {}
+        note = (
+            f"best options-only guesser ({best[1]}); the judge never sees a readout; the "
+            "bench's frozen floor for the current questions"
+        )
+        out[fam]["lucky_guess"] = row("lucky_guess", best[0], None, variant.get("n_items"), note)
+    return dict(out)
+
+
 def category_title(key: str) -> str:
     """A category's short title, as the README's table of evals writes it: the registry's title
     without its parenthesis."""
@@ -135,7 +182,7 @@ class Store:
         self.lock = threading.RLock()
         self.cat = store.catalog(root, readonly=True)
         self.user = store.user(root)
-        self._runs: dict[str, sqlite3.Connection] = {}
+        self._runs: dict[str, tuple[tuple, sqlite3.Connection]] = {}  # (file stamp, connection)
         self._alias_cache: dict[str, dict[str, str]] = {}
         self._alias_stamp = 0.0
         self._counts: dict[str, tuple[float, tuple[int, int]]] = {}
@@ -147,13 +194,22 @@ class Store:
             return self.cat.execute(sql, args).fetchall()
 
     def run_con(self, rid: str) -> sqlite3.Connection | None:
+        """The run's database. An ingest replaces the file of a run it stores again: the
+        connection is opened anew when the file is another one than the one it was opened on,
+        so a running viewer never reads a replaced run (its cells, judge calls and where its
+        readouts are) beside the catalog's new scores."""
+        path = store.run_db_path(self.root, rid)
         with self.lock:
-            if rid not in self._runs:
-                path = store.run_db_path(self.root, rid)
-                if not path.exists():
-                    return None
-                self._runs[rid] = store.connect(path, readonly=True)
-            return self._runs[rid]
+            try:
+                st = path.stat()
+            except OSError:
+                self._runs.pop(rid, None)
+                return None
+            stamp = (st.st_ino, st.st_mtime_ns, st.st_size)
+            have = self._runs.get(rid)
+            if have is None or have[0] != stamp:
+                self._runs[rid] = have = (stamp, store.connect(path, readonly=True))
+            return have[1]
 
     def _core(self, bench: str) -> set[str]:
         """The core tier's evals; empty for a bench that has no tiers."""
@@ -245,6 +301,8 @@ class Store:
         in its macro's note); without a stamp, the run is on an earlier subset
         when it scores an eval the current subset does not hold, or when the store's question
         list of one of its evals is not the current subset's."""
+        from wsbench import fast
+
         if bench != "wsb":
             return set()
         evals: dict[str, set[str]] = defaultdict(set)
@@ -275,8 +333,13 @@ class Store:
             stamps += [
                 m.group(0) for text in notes[rid] + said[rid] if (m := FAST_STAMP.search(text))
             ]
+            # a set whose evals were judged under several subsets (an eval judged again on the
+            # current one): ingest stores it under `fast` only when every row is the current
+            # subset's, so its note naming the current subset among them settles it
+            mixed = [s for text in said[rid] if SCORED_ON.search(text)
+                     for s in FAST_STAMP.findall(text)]  # fmt: skip
             if stamps:
-                if not self._is_current_stamp(stamps[0], evals[rid]):
+                if fast.DEFAULT not in mixed and not self._is_current_stamp(stamps[0], evals[rid]):
                     out.add(rid)
             elif current is not None and any(
                 ev not in current or stored.get(ev, current[ev]) != current[ev] for ev in evals[rid]
@@ -637,6 +700,30 @@ class Store:
             (bench, model),
         ):
             out[r["run_id"]][r["eval"]] = (r["integrity"], r["reason"] or "")
+        for rid, evals in self.earlier_bank(bench, model).items():
+            for name, n in evals.items():
+                label, why = out[rid].get(name, ("", ""))
+                note = (
+                    f"{n} of the questions this run was judged on are no longer in the eval's "
+                    "bank: its score is on an earlier version of the questions"
+                )
+                out[rid][name] = (
+                    ", ".join(x for x in (label, EARLIER_BANK) if x),
+                    "; ".join(x for x in (why, note) if x),
+                )
+        return dict(out)
+
+    def earlier_bank(self, bench: str, model: str) -> dict[str, dict[str, int]]:
+        """``{run_id: {eval: n}}``: the runs with verdicts on ``n`` questions that only an
+        earlier version of the eval's bank held."""
+        out: dict[str, dict[str, int]] = defaultdict(dict)
+        for r in self.q(
+            "SELECT v.run_id, v.eval, count(*) n FROM item i JOIN verdict v ON v.eval = i.eval"
+            " AND v.item = i.item JOIN run r ON r.run_id = v.run_id AND r.bench = i.bench AND"
+            " r.model = i.model WHERE i.bench = ? AND i.model = ? AND i.ord >= ? GROUP BY 1, 2",
+            (bench, model, store.EARLIER_BANK),
+        ):
+            out[r["run_id"]][r["eval"]] = r["n"]
         return dict(out)
 
     def _stored_core(self, bench: str, model: str) -> dict[str, list[sqlite3.Row]]:
@@ -716,7 +803,10 @@ class Store:
 
     def scores(self, bench: str, model: str, subset: str) -> dict[str, dict[str, dict]]:
         """``{eval: {run_id | floor kind: score}}`` at the headline layer for one subset. Floors
-        (prompt_only, lucky_guess, chance) are per eval, taken from any run that carries them.
+        (prompt_only, lucky_guess, chance) are per eval, taken from any run that carries them;
+        for the registered banks the prompt-only and lucky-guess floors of the full and core
+        sets are the bench checkout's own frozen ones (``checkout_floors``), never a run's:
+        a run's report may have been made for earlier questions.
         The core set (``wsbench.tiers.CORE``, read now): a run's stored core rows and core macro
         where ingest stored them for today's core list (or for the list the run named itself),
         else the core evals' rows of its full run with their mean as the macro."""
@@ -733,6 +823,12 @@ class Store:
             key = r["run_id"] if r["kind"] == "lens" else r["kind"]
             if key not in out[r["eval"]] or r["kind"] == "lens":
                 out[r["eval"]][key] = dict(r)
+        if bench == "wsb" and model == REGISTERED and subset in ("full", CORE):
+            frozen = checkout_floors()
+            for name, by_key in out.items():
+                for kind in FLOOR_KINDS:
+                    by_key.pop(kind, None)
+                by_key.update(frozen.get(name, {}))
         if subset != CORE:
             return out
         names = self._core(bench)
@@ -840,11 +936,13 @@ class Store:
         return self.private or not row["private"]
 
     def items(self, bench: str, model: str, name: str, subset: str = "full") -> list[dict]:
-        """The eval's questions in bank order with every run's verdict: ``pass`` per run id."""
+        """The eval's questions in bank order with every run's verdict: ``pass`` per run id.
+        A question only an earlier version of the bank held is not listed (``earlier_bank``
+        names the runs judged on such questions); its own page still opens."""
         rows = self.q(
             "SELECT item, expected, intermediates, subfamily, private FROM item WHERE bench = ?"
-            " AND model = ? AND eval = ? ORDER BY ord, item",
-            (bench, model, name),
+            " AND model = ? AND eval = ? AND ord < ? ORDER BY ord, item",
+            (bench, model, name, store.EARLIER_BANK),
         )
         if self._listed(bench, model, subset):
             keep = {

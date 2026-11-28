@@ -72,6 +72,9 @@ CREATE TABLE IF NOT EXISTS hb_index (
 """
 # tables that hold one run's rows and are cleared when the run is ingested again
 PER_RUN_TABLES = ("score", "verdict", "layer_stat", "run_set", "run_eval", "hb_index")
+# item.ord of a question an earlier version of its eval's bank held and the current one does
+# not: kept with its text for the runs judged on it, never listed among the eval's questions
+EARLIER_BANK = 200000
 JOINT_LAYER = -2  # hb_index.layer of the index's joint row (layer "all")
 ALIASES = "lens_aliases.json"
 
@@ -118,8 +121,8 @@ MANIFEST: dict[str, Any] = {
     },
     "catalog.db": {
         "run": "one ingested lens on one bench and subject model (one per named run when the "
-        "ingest gives a run name); `method` is olens | nla | jlens | logit_lens | "
-        "continuation | other, `source` the judged directory or its volume address, "
+        "ingest gives a run name); `method` is olens | nla | jlens | jpp_lens | rlens | "
+        "logit_lens | continuation | other, `source` the judged directory or its volume address, "
         "`source_sig` its size+mtime signature (ingest skips a run whose signature is "
         "unchanged)",
         "run_facts": "what the runs manifest says about a run, one row per run ingested from a "

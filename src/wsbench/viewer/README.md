@@ -38,9 +38,22 @@ uv run wsbench viewer ingest <dir> adapter=hb hb_repo=<hallucination-bench check
 uv run wsbench viewer serve
 ```
 
+An eval's questions are the ones its bank file holds in the checkout that ingested last
+(`repo=DIR`, else the checkout the command runs from): every ingest writes the bank of the
+evals it stores. A question an earlier version of the bank held and the current one does
+not leaves the eval's list; it keeps its text and its own page for the runs that were
+judged on it, and such a run carries the mark `earlier questions` beside its score for
+that eval: its score is on an earlier version of the questions.
+
 `adapter=bank` on a workspace-bench checkout adds every subject model's question set
 (`adapted/<model>/`), so the model dropdown lists them. Ingest is idempotent: an unchanged
 source is skipped. `wsbench viewer --help` lists every key.
+
+The prompt-only and lucky-guess floors of the registered banks (full and core sets) are
+read from the checkout the viewer runs on (`evals/baselines/prompt_only_summary.json`,
+`lucky_guessing.json`) when the viewer starts, not from a run's report: they are the
+floors of the questions the checkout holds now. An eval whose frozen entry is stale by the
+benchmark's own rule, or not measurable, shows none.
 
 ## Runs manifest
 
@@ -59,7 +72,7 @@ and `model` are defaults for every run. One run:
 | key | meaning |
 |---|---|
 | `bench` | `wsb` or `hb` |
-| `method` | `olens`, `nla`, `jlens`, `logit_lens`, `continuation` or `other` |
+| `method` | `olens`, `nla`, `jlens`, `jpp_lens`, `rlens`, `logit_lens`, `continuation` or `other` |
 | `lens` (or `lens_id`) | the lens id; with `run` it names the store run `<bench>__<model>__<lens>__<run>` |
 | `label` (or `alias`) | the short name the pages show for this run |
 | `run` | the run's name |
@@ -77,6 +90,7 @@ and `model` are defaults for every run. One run:
 | `cells`, `read_gpu_hours`, `read_wall_seconds`, `judge_wall_seconds`, `judge_calls`, `judge_usd`, `total_usd`, `total_wall_seconds` | numbers from the run's result files; `null` when no file holds one |
 | `integrity` | `{"label": "" / "partial" / "provisional" / "incomplete", "reason": "..."}` as the run's result files say; left out, it is read per eval from the results themselves |
 | `state` | left out = finished. A run whose state does not start with done / finished / complete / judged is skipped with a line saying so; the same command picks it up later |
+| `updates` | the name of the full run (same lens) whose evals this entry's `judged` folder replaces or adds to: evals judged again after the benchmark changed their questions, or new evals, in a run folder of their own |
 | `sources`, `note` | where the numbers came from; free text |
 
 A runs file that names its fields `lens_id`, `alias`, `judge_seconds`, `judge_usd_list`,
@@ -96,6 +110,26 @@ one store run, ingested together:
   with an earlier subset are stored under that subset's name and shown as an earlier fast
   subset. One run can therefore carry both, from two `fast` entries with different `judged`
   folders; two folders scored on the same subset are refused.
+
+An entry with `updates` is no run of its own either. Its evals join the run it names (its
+`full` entry, or the one entry of a run that stands alone, such as a fast run),
+eval by eval: result files, judge calls and readouts of such an eval are read from the
+entry's `judged` and `readouts` folders in place of the run's own (a later entry wins over
+an earlier one), every other eval stays as the run has it. The run then has one row per
+eval whatever folder it was judged in; each updated eval records the entry's run name and
+`bench_commit` (the runs page shows them on the bench commit). The run's `report` was made
+before the update: its floors for the updated evals are dropped and the stored macro is the
+benchmark's own rule over the evals as they are now. An update entry whose folder holds no
+result yet, or whose `state` is not finished, is skipped and picked up by a later ingest.
+
+A runs file may also record such a run as one entry of its own (its own `judged`, if it
+repeats the base run's, is not read):
+`base` (`{"run": <the full run>}`) and `parts`, one per run folder, each with `run`,
+`judged`, `readouts`, `bench_commit`, `results_file` and `state` (the entry's `state` when a
+part has none). Every part is read as an `updates` entry of the base run. Where no entry
+of its own lists the base run, the record is that entry (its `run`, `judged` and `readouts`
+name the base run's folders); the record's own numbers are not stored. A second record over the
+same parts (the core view of the same run) adds nothing.
 
 Only the `full` entry writes the run row, its source, judge and full scores. An entry that
 cannot be placed (a `core` entry without its full run, a second entry for the same run with
@@ -153,6 +187,9 @@ What ingest does with a run:
     one judge call per read cell. An item shows, per layer, the cells judged, the cells whose
     readouts misrepresent the scenario and the judge's reason for each; every cell's own call
     is listed with the cell.
+    As in the benchmark, a flagged cell counts only with a quote located in its readout
+    (the row's `counted`): one without is listed as flagged without a located quote and
+    is not in the rate.
   - over-refusal: `overrefusal/<judge>/offtopic_index/index_counts.jsonl` (decline lines
     and off-topic decline lines per prompt and layer), `sj_records_full.jsonl` (the digest
     lines the strict judge read, its verdict and reason) and `offtopic/<arm>.jsonl` (the

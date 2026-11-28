@@ -26,7 +26,9 @@
     LEAVES = {}; LEAF_INFO = {}; METHODS = {}; AXES = D.axes || [];
     (D.leaves || []).forEach((l) => { LEAVES[l.leaf] = l.title; LEAF_INFO[l.leaf] = l; });
     Object.keys(D.methods || {}).forEach((m) => { METHODS[m] = D.methods[m].title; });
-    const saved = lsGet("bv.open." + D.bench + "." + D.model, null);
+    // panes chosen earlier hold only while the store's default runs are the ones they were chosen under
+    const kept = lsGet("bv.open." + D.bench + "." + D.model, null);
+    const saved = kept && !Array.isArray(kept) && kept.defaults === D.defaults ? kept.open : null;
     const known = new Set(D.runs.map((r) => r.id));
     let open = new URLSearchParams(location.search).get("runs") ? D.open : (saved || D.open);
     open = open.filter((r) => known.has(r));
@@ -565,7 +567,7 @@
     if (sel) sel.onchange = () => { if (sel.value) { S.open.push(sel.value); saveOpen(); loadAll(); } };
   }
 
-  function saveOpen() { lsSet("bv.open." + S.D.bench + "." + S.D.model, S.open); }
+  function saveOpen() { lsSet("bv.open." + S.D.bench + "." + S.D.model, { defaults: S.D.defaults, open: S.open }); }
 
   function countMatches() {
     const el = $("qfindn"), f = S.find.trim().toLowerCase();

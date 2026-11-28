@@ -23,7 +23,7 @@ USAGE = """usage: wsbench viewer <command> [key=value ...] [--show | --help]
 ingest keys
   adapter=wsb   <dir> = a judged run (<family>/results.json) or a lens dir with judged/,
                 judged_ati/, readouts/.  readouts=DIR  lens=NAME  model=qwen3.6-27b
-                method=olens|nla|jlens|logit_lens|other  label=TEXT  items=id1,id2
+                method=olens|nla|jlens|jpp_lens|rlens|logit_lens|other  label=TEXT  items=id1,id2
                 families=a,b
   adapter=hb    <dir> = <out>/<lens> (holds <family>/<judge>/<arm>/cells.jsonl and
                 index/<judge>/index.json).  hb_repo=DIR (bank + README)  lens=  method=  label=
@@ -237,6 +237,9 @@ def _ingest_manifest(o: Ingest) -> int:
             what = r.get("subset") or ""
             note = f" ({subset_title(what)})" if is_earlier_fast(what) else ""
             print(f"{head}: stored as a set of {r['run_id']}{note}")
+        elif r["status"] == "evals updated":
+            print(f"{head}: its evals ({', '.join(r['evals'])}) are stored in {r['run_id']} in "
+                  f"place of run {r['into']}'s own")  # fmt: skip
         elif r["status"] == "unchanged":
             print(f"{head}: unchanged, skipped (force=True re-ingests)")
         elif r["status"] == "failed":
