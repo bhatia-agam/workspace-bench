@@ -57,35 +57,16 @@ Qwen3.6-27B):
 All 19 sites are shipped so the judged grid is the same for every lens; the families'
 `layers=` / `items=` keys still restrict.
 
-Lite (`reads=lite`) reads the final site only (`final_token`, the `\n\n` after `</think>`)
-unless the pre-registered lite-site procedure (`scripts/lite_site_table.py`, gpu runbook R4d)
-has frozen a rule into `evals/<category>/<family>/lite_rule.json`:
-
-- `association`: `same` (`evals/association/association/lite_rule.json`), i.e. lite reads all
-  19 sites like full.
-- `conjunctive_association`: `same` too
-  (`evals/association/conjunctive_association/lite_rule.json`), so a conjunctive lite run judges
-  exactly the full cells.
-- `role_bound_association`: `final_token`, below.
-
 `association_hard` is read at the same 19 sites as `association` (its scene is the item's
-`prompt` too); its lite rule is `same`, set in code (`readplan`), with no `lite_rule.json`.
+`prompt` too).
 
 ## Role-bound
 
 - **Layers:** `readplan.GRID` (20..60 step 4, 11 layers) at the 19 sites.
-  `wsbench plan role_bound_association` emits them as `suffix_text_then_tail`; `reads=full`
+  `wsbench plan role_bound_association` emits them as `suffix_text_then_tail`; the loader
   requires the whole 19-position span per (item, layer) (`min_full_positions = 19`, contiguous,
   ending at the final token). A judge-side story-echo guard refuses (or, under `allow_missing`,
   drops and counts) any cell read before the suffix.
-- **Lite:** `reads=lite` keeps one site per layer: `final_token` (rel 0 above). The
-  pre-registered support-share procedure (`scripts/lite_site_table.py`, gpu runbook R4d) can
-  freeze another rule into `evals/anti_bag_of_features/role_bound_association/lite_rule.json`;
-  that file does not exist, so the rule is `final_token`. The procedure's candidates are
-  `final_token`, the top-3 `offset_from_end` k by pooled support share over the s3d-rl600 /
-  jlens / mlnla-rl2-2000 full all-layer digests, and `offset_from_end k=4` (the `\n` after
-  `assistant`, rel 4 above); the rule switches from `final_token` only on more than 10 points
-  of share, and pass rates are never consulted.
 - **Single-statement rule:** whatever the site, a relation counts only if ONE statement (one
   `- ` bullet of one sample, or one token list) names agent, action and patient.
 
@@ -107,26 +88,23 @@ Read: every position starting after the second sentence, its full stop included,
 "Avery's landlord is Sam. Sam's sibling is Riley. In other words, Riley is Avery's" is read from
 ". In other words, Riley is Avery's".
 
-| reads | rule | positions (Qwen3.6-27B) |
-|---|---|---|
-| `full` (default) | `{"kind": "suffix_text", "text": ". In other words, P3 is P1's"}` | the full stop of sentence two through the possessive blank: 9 (52 items), 10 (36), 11 (6), 12 (6); 966 per layer |
-| `lite` | `{"kind": "final_token"}` | the blank `'s` alone (the span's last position) |
+| rule | positions (Qwen3.6-27B) |
+|---|---|
+| `{"kind": "suffix_text", "text": ". In other words, P3 is P1's"}` | the full stop of sentence two through the possessive blank: 9 (52 items), 10 (36), 11 (6), 12 (6); 966 per layer |
 
 Render `bare`, layers `readplan.GRID` (L20..60 step 4). `rel-s00-a` resolves to indices 12..20 =
 `. ▁In ▁other ▁words , ▁Riley ▁is ▁Avery 's` (the model's `tokenizer.json`). `wsbench plan`
 asserts the anchor `". In other words"` occurs once per stimulus; `adapt` freezing refuses a
-tokenizer whose span does not start on a token ending in `.`; the judge raises if a full run
+tokenizer whose span does not start on a token ending in `.`; the judge raises if a read
 starts elsewhere.
 
 ## moral_rationale
 
-| reads | positions | layers |
-|---|---|---|
-| full (default) | every position of the chat render (`{"kind": "all"}`: user-turn template, stimulus, assistant header) | `readplan.GRID` |
-| lite (`reads=lite`) | the last five (`'\n'` after `assistant`, `<think>`, `'\n\n'`, `</think>`, `'\n\n'`) | all full layers (`lite_layers = None`) |
+| positions | layers |
+|---|---|
+| every position of the chat render (`{"kind": "all"}`: user-turn template, stimulus, assistant header) | `readplan.GRID` |
 
 Render: the chat template with `enable_thinking=False`, the item's `stimulus` as the user turn
-(and its `system` turn when the bank carries one), no prefill. Lite is a subset of full, so one
-GPU read serves both. A full read needs one contiguous run of >= 6 positions per (item, layer)
-ending at the item's last position (`EvalSpec.min_full_positions = 6`), so a tail-5 file judged
-as full exits 2.
+(and its `system` turn when the bank carries one), no prefill. A read needs one contiguous run
+of >= 6 positions per (item, layer) ending at the item's last position
+(`EvalSpec.min_full_positions = 6`), so a file holding only the last five positions exits 2.

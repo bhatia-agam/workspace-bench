@@ -18,16 +18,12 @@ _spec.loader.exec_module(lr)
 
 def _row(i: str, text: str = "x", layers=(8, 10)) -> dict:
     return {"family": "fam", "id": i, "render": "plain", "positions": {"kind": "final_token"},
-            "layers": list(layers), "text": text, "note": "n",
-            "lite_positions": {"kind": "same"}}  # fmt: skip
+            "layers": list(layers), "text": text, "note": "n"}  # fmt: skip
 
 
-def test_row_sha_ignores_lite_and_note_but_tracks_the_read():
+def test_row_sha_ignores_the_note_but_tracks_the_read():
     base = lr.row_sha(_row("a"))
-    assert lr.row_sha({**_row("a"), "note": "other", "lite_positions": {"kind": "x"}}) == base
-    assert lr.row_sha({**_row("a"), "extra": {"reads": "lite"}}) == lr.row_sha(
-        {**_row("a"), "extra": {}}
-    )
+    assert lr.row_sha({**_row("a"), "note": "other"}) == base
     assert lr.row_sha(_row("a", text="y")) != base
     assert lr.row_sha(_row("a", layers=(8,))) != base
 

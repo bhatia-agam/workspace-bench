@@ -4,7 +4,6 @@ from pathlib import Path
 import pytest
 from conftest import tag_of, write_jsonl
 
-from wsbench import reads
 from wsbench.evals.logical_processing.moral_rationale import judge, prompts
 from wsbench.evals.logical_processing.moral_rationale.judge import build_mcs, build_pools
 from wsbench.mc import CANNOT
@@ -60,14 +59,6 @@ def test_rendered_prompt_matches_golden():
     user = prompts.render_user("TOY READOUT", mc.question)
     assert user == (ROOT / "tests/golden/moral_rationale_prompt_v2.txt").read_text()
     assert prompts.PROMPT_VERSION_V1 == "ec-v3.1" and prompts.SCHEMA["name"] == "ec_reason_mc"
-
-
-def test_lite_selects_tail5_on_example(mk_args):
-    # plan 0046 §2.5: the tail-5 cell rule is the reads=lite rule now (reads.load selects it)
-    cells, rep = reads.load(mk_args(EXAMPLE, extra={"reads": "lite"}), "moral_rationale")
-    assert rep.kind == "prose" and rep.n_rows == 24
-    assert len(cells) == 20
-    assert {c.pos for c in cells} == {11, 12, 13, 14, 15}
 
 
 def _scripted(tmp_path):

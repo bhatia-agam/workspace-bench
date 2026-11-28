@@ -4,8 +4,8 @@ true bridge B (contrast, scored as a fail and reported as ``true_bridge_rate``) 
 same-category distractors, plus "cannot tell" last. Options and name forms are frozen in bank v2
 (``scripts/wrong_intermediate_mc_options.py``); nothing is built at judge time.
 
-Summary mode (the default): every loaded cell of an item (every position x layer under
-``reads=full``; the final token under ``reads=lite``) -> one digest -> ONE MC call. Native mode
+Summary mode (the default): every loaded cell of an item (every position x layer)
+-> one digest -> ONE MC call. Native mode
 (``opts=aggregate=native``, the ATI gate): one MC call per (item, layer) over that layer's
 positions; an item passes if any layer is a credited gold pick.
 

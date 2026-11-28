@@ -21,7 +21,6 @@ def spec(item, ids=(10, 11, 12, 13, 14), positions=(1, 3), layers=(2, 5), family
         positions={"kind": "positions", "positions": list(positions)},
         layers=list(layers),
         extra={"input_ids": list(ids)},
-        lite_positions={"kind": "same"},
     )
 
 
@@ -229,7 +228,6 @@ def test_capture_keys_exist_and_an_unknown_key_is_refused(capsys):
         (["families=multihop", "dtype=fp16"], "dtype is fp32 or bf16"),
         (["families=multihop", "model=some/model"], "revision=<sha> is required"),
         (["families=multihop", "shard=2", "shards=2"], "shard=2 is not one of"),
-        (["--fast", "reads=lite"], "drop reads=lite"),
     ],
 )
 def test_capture_usage_errors(argv, message, capsys):

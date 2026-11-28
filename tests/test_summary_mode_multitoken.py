@@ -232,22 +232,6 @@ def test_all_positions_reach_the_digest(tmp_path, monkeypatch):
     assert len(headers) == 6 and "[L20 pos 0]" in headers and "[L36 pos 2]" in headers
 
 
-def test_reads_lite_keeps_final_position(tmp_path, monkeypatch):
-    """A mention at position 0 only passes under reads=full and fails under reads=lite (the
-    final prompt token)."""
-    _unpin(monkeypatch)
-    _register(ML)
-    texts = ["hourglass, written in Arabic", "nothing", "nothing again"]
-    path = _write(tmp_path / "r.jsonl", _positions_rows(HOUR, [20], texts))
-    FakeLLM.install(monkeypatch, _no_judge)
-    full = ML.run(summary_args(path, tmp_path / "f", SCORER_VERSION, items=[HOUR]))
-    lite = ML.run(
-        summary_args(path, tmp_path / "l", SCORER_VERSION, items=[HOUR], extra={"reads": "lite"})
-    )
-    assert full.rows[0]["pass"] is True and lite.rows[0]["pass"] is False
-    assert lite.config["prompt_version"].endswith("+reads-lite")
-
-
 def test_layer_subset_feeds_only_those_layers_to_digest(tmp_path, monkeypatch):
     _unpin(monkeypatch)
     _register(ML)

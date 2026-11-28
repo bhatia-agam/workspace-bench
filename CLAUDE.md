@@ -123,11 +123,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `family.render_bag(tokens)` (no scores); summary mode digests every method the same way.
 - `reads.py` (plan 0032) is THE loader every family calls (`reads.load(args, family, ids=,
   positions=)`, never `load_readouts` directly; `test_no_family_calls_load_readouts_directly`):
-  sidecar `<file>.meta.json` (declared sampling `bullet4|prose1|tokens10`), the `reads=lite`
-  selection (`ReadSpec.lite_positions` / `lite_layers`), the `reads=full` span check
+  sidecar `<file>.meta.json` (declared sampling `bullet4|prose1|tokens10`), the full-span check
   (`EvalSpec.min_full_positions` / `full_contiguous`), the plan-layer and `plan_sha` guards (with a
   sidecar; sidecar-less files are report-only). `base_config` / `runner.finalize_reads` stamp
-  `config.reads/sampling/sampling_source/reader/reads_checked/layers_judged` (+`lite_rule`).
+  `config.reads/sampling/sampling_source/reader/reads_checked/layers_judged`.
   `mc.options_with_cannot` builds every MC list (cannot-tell last); `mc.token_note(flat_types,
   multi_select=)` is THE token-list rule (Q4); `digest.quote_ok` THE quote verifier
   (`statement_lines` for relational content, `number_flood`); `wsbench.numerals` reads numerals in
@@ -478,8 +477,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   change replays every call of a kept item from an earlier run's `cells.jsonl`
   (`scripts/cache_only_run.py` with `opts=aggregate=summary` needs no credential and counts an
   uncached call as unjudged). A partial `freeze kind=prompt_only source=<po-opus run>` rewrites
-  `_source` without its `fallback` block: keep main's file and add the one entry (as plan 0109). It has its own `readplan` branch
-  (`LITE_SAME_FAMILIES` is plan 0061's constant and stays five), is `NOT_GATED` for ATI and
+  `_source` without its `fallback` block: keep main's file and add the one entry (as plan 0109). It has its own `readplan` branch,
+  is `NOT_GATED` for ATI and
   `adapt.families.NOT_ADAPTED` (no adapted set carries it), and `wsbench report` prints its
   `extras.breakdown_md` under `## breakdowns` (`cli._breakdowns`; absent key = unchanged output).
   role-bound judges bank v2 (`items_v2.json`, `read_plan_bank` = items.json): `judge.load_items`
@@ -519,7 +518,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   in the header) into `$WSB_CACHE/nyt/` at plan / judge time; `WSB_NO_NYT=1` drops the family's
   plan rows (in `reads._env_key`); `tests/conftest.py` stubs
   `nyt.puzzles` with synthetic words (offline stub), so tests never fetch. Read: last 12 prompt
-  tokens x GRID, lite = full (`SAME`). Scoring: the v1.1.0 layered digest (the CLI default; the
+  tokens x GRID. Scoring: the v1.1.0 layered digest (the CLI default; the
   family pins no layer mode), then one blind MC per **stable slot** (`cannot tell` last, quote
   gate on `col.evidence`, verbatim-only); **per-slot rows** `id = "cNNNN|sK"`, headline on
   stable slots only (non-stable slots write no rows, only extras), refusal counts in stable
@@ -574,7 +573,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   on every ask, two-level quote gate `quote_ok` + `statement_lines` -> `pick="unverified"`); v1
   (`WSB_BANK_FILE_MORAL_RATIONALE=evals/logical_processing/moral_rationale/items.json`) = legacy `ec-v3.1` (ec-v3
   with a tool-free system opening). Reads:
-  full = every render position (`min_full_positions=6`), lite = the last five. Its ATI entry was
+  every render position (`min_full_positions=6`). Its ATI entry was
   re-gated under ec-v9 in the 2026-11-04 refreeze (all-fail rule, plan 0071: 56/195). Opt-in bank v4 (`items_v4.json`, 53 gate-passing items, `ec-v9-b4`, `scripts/moral_adversarial.py`).
 - association (plan 0039) left the bank judge: bank v2 `evals/association/association/items_v2.json` (93
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
@@ -656,7 +655,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   per-kind target is in authoring order. The concept pool was rebuilt (items added), so no
   judge call of bank v2 replays. `tests/test_association_hard_bank_v3.py` pins the bank's
   sha256 and the rules above. Own `readplan` branch
-  (the association read; `LITE_SITE_FAMILIES` and `frozen_lite_rule` untouched), `NOT_GATED`
+  (the association read), `NOT_GATED`
   for ATI, `adapt.families.NOT_ADAPTED`, validator `NOT_AUTHORABLE`. Its `topic` guesser is
   measured but `lucky_guessing.NOT_A_FLOOR` (owner decision: `mc.category` is close to a
   definition of the gold); the prompt-only reader solves the family (floor above every lens):
@@ -706,8 +705,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   summary stamp (`SUMMARY_STAMP_VERSION`), never in a fingerprint. Call versions
   `am-narrative-v2` / `am-design-v3` / `summ-c3` (tool-free wording, `{read_scope}`, "the act
   within one line" with `digest.statement_lines` splitting the Stage C view per bullet, declared
-  sampling in native `cell_text`). `opts=stride=` is retired (exit 2): positions come from
-  `reads=full|lite` (lite = every 16th + last 8); `min_full_positions = 64`. `wsbench adapt
+  sampling in native `cell_text`). `opts=stride=` is retired (exit 2): every prompt
+  position is read; `min_full_positions = 64`. `wsbench adapt
   agentic` skips twins (adapted banks: headline None). The bank is built by
   `scripts/build_agentic_twins_bank.py` from the reviewed drafts and gate verdicts; gate-4 rows
   for the shared sampler come from `scripts/agentic_twin_gate_modal.py rows`. Summary mode: the
@@ -782,8 +781,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - model_multihop (plan 0076, `mmh-2026-11-06+mmh-forms-v3+bank-v2`, group model_specific, in the macro):
   283 headline items of gw `frozen_v2.json` (invented 255 + cutoff 28), id-keyed (NEVER write
   gw's `name` key: `readplan.bank_file` / `judge_inputs.item_id` switch on it). `captured` render
-  (`input_ids`), read = gw `post` (every position after the entity), lite = gw `tail`
-  (`last_n` 12). Options frozen in `mc` (`order`, `gold` = the bridge NAME, `forms`, optional
+  (`input_ids`), read = gw `post` (every position after the entity). Options frozen in `mc` (`order`, `gold` = the bridge NAME, `forms`, optional
   `exact_case` / `blockers` + `blocker_of`: a blocker hides only the options that list it;
   item flag `answer_names_bridge`, reported as an extras split, never scored), written by `scripts/build_model_multihop_bank.py` from its reviewed
   literal tables (country aliases, cutoff forms); decoys = every item's own gw `foils` (bank v2,

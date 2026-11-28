@@ -16,8 +16,7 @@ it is out of the macro by metric (`results.MACRO_METRICS` holds only `pass_rate`
 that cell's own J-lens top-10, so a cross-layer / cross-position digest has no reference to
 score against. Under the summary default the runner stamps `config.aggregate = "native"` and
 `extras.summary_mode_note`. No prompt-only floor either (`prompt_only.EXCLUDED`): the
-derangement foil is this family's floor. Lite = full by construction (one read position per
-label, `lite_positions = {"kind": "same"}`).
+derangement foil is this family's floor.
 
 **v3 (`jlens-pr-v3`, plan 0042, Camila 2026-10-30).** (1) The Stage-P foil runs by default, and a
 foil precision that was not measured reads `null` / "not measured", never 0.0. (2) Broken-character
@@ -48,7 +47,7 @@ grounding token (`prompts.grounding_void`): (1) a frequency adverb ("often", "ty
 "commonly", "往往", "通常" ...) grounds a concept only when the concept states frequency,
 typicality or invariance ("common", "frequent", "usual", "most", "determinism", "annual" ...),
 and "common" in a shared / vernacular collocation ("common names", "common ground", "common
-sense", "in common" ...) states none: pt-fineweb-0021 lite L24 ("often" partial for "common
+sense", "in common" ...) states none: pt-fineweb-0021 L24 ("often" partial for "common
 names") 0.100 -> 0.067 and L48 (" commonly" 'in' for "common names") 0.071 -> 0.000, the audit's
 hand view ~0.07; (2) an agent noun built on the concept's word for an ACT, the word after an
 article / adjective or after "to" ("a quick read", "chapter to read"), names the doer, not the

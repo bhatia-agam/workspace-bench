@@ -234,22 +234,6 @@ def test_stage_c_failure_is_unjudged_and_cache_is_reused(tmp_path, fakes, sargs)
     assert r2.counts["n_unjudged_cells"] == 0 and r2.extras["design_score"] == 1.0
 
 
-def test_lite_selects_positions_and_every_layer(tmp_path, fakes, sargs):
-    """Plan 0038 §3 (replaces the retired opts=stride= test): reads=lite keeps every 16th
-    position + the last 8 (``every_nth_plus_tail``) and EVERY layer reaches the digest."""
-    fj, _ft = fakes(_c_responder)
-    path = write_jsonl(tmp_path / "r.jsonl", _rows([RH], positions=range(40), layers=(20, 36, 44)))
-    r = judge.run(sargs(path, items=[RH], extra={"reads": "lite"}))
-    # audit F1: one digest call per read layer; together they hold every read cell
-    bundle = "\n".join(u for n, _s, u in fj.calls if n == "digest")
-    want = [0, 16, *range(32, 40)]
-    for pos in range(40):
-        for layer in (20, 36, 44):
-            assert (f"[L{layer} pos {pos}]" in bundle) == (pos in want), (layer, pos)
-    assert r.counts["n_expected_cells"] == 3 * len(want)
-    assert r.rows[0]["n_positions_read"] == len(want) and "stride" not in r.config
-
-
 def test_complete_and_pinned_need_stage_c_pin_and_digest_pin(tmp_path, fakes, sargs):
     bank = load_bank("agentic_misalignment")["items"]
     ids = [it["id"] for it in bank]
@@ -465,8 +449,8 @@ def test_stage_c_view_digest_order_supports_and_context():
 
 
 def test_stage_c_reads_tokens_from_every_row(tmp_path, fakes, sargs):
-    """The read context comes from the rows' ``token`` field, any layer, also at positions the
-    reads=lite selection did not keep; Stage C sees it, the digest call does not."""
+    """The read context comes from the rows' ``token`` field, any layer; Stage C sees it, the
+    digest call does not."""
     rows = []
     for pos in range(30):
         for layer in (20, 36):
@@ -480,9 +464,9 @@ def test_stage_c_reads_tokens_from_every_row(tmp_path, fakes, sargs):
         return {"items": [{"statement": "s", "where": "", "evidence": PLAN}]}
 
     fj, ft = fakes(lambda u, kw: GOOD, dig)
-    judge.run(sargs(write_jsonl(tmp_path / "r.jsonl", rows), items=[RH], extra={"reads": "lite"}))
+    judge.run(sargs(write_jsonl(tmp_path / "r.jsonl", rows), items=[RH]))
     assert "w27" not in fj.calls[0][2]  # the digest bundle never shows read-site tokens
-    ctx = " ".join(f"w{p}" for p in range(5, 29))  # w5..w21 from positions lite did not keep
+    ctx = " ".join(f"w{p}" for p in range(5, 29))
     # digest-v5: the marker is a per-claim count (the fake gives none: the key-word cap, 1)
     assert f"[1 sample] (pos 28; reading: «{ctx}») {PLAN}" in ft.calls[0][0]
 
@@ -545,31 +529,21 @@ def test_agentic_digest_uses_task_note(tmp_path, fakes, sargs, monkeypatch):
     assert seen[0]["task_note"]  # non-empty, no gold (shared test: no answer, no tool name)
 
 
-def test_read_scope_full_vs_lite(tmp_path, fakes, sargs):
-    assert prompts.read_scope("full") == "every token position, at each layer read"
-    lite = "a sample of token positions (every 16th, plus the last 8), at each layer read"
-    assert prompts.read_scope("lite", judge.lite_rule()) == lite
-    assert judge.lite_rule() == {"kind": "every_nth_plus_tail", "n": 16, "tail": 8}
+def test_read_scope_is_every_position(tmp_path, fakes, sargs):
+    assert prompts.READ_SCOPE_FULL == "every token position, at each layer read"
     path = write_jsonl(tmp_path / "r.jsonl", _rows([RH], positions=range(40), text=_plan_text))
     _fj, ft = fakes(lambda u, kw: BENIGN, _digest_for)
     judge.run(sargs(path, items=[RH]))
     assert f"these readouts were taken at {prompts.READ_SCOPE_FULL}." in ft.calls[0][0]
-    _fj, ft = fakes(lambda u, kw: BENIGN, _digest_for)
-    judge.run(sargs(path, items=[RH], out=tmp_path / "lite", extra={"reads": "lite"}))
-    assert f"these readouts were taken at {lite}." in ft.calls[0][0]
     assert "at every token position and layer" not in DESIGN_SCORE_PROMPT_SUMMARY
 
 
-def test_lite_filters_positions_and_stamps_reads(tmp_path, fakes, sargs):
+def test_full_reads_every_position_and_stamps_reads(tmp_path, fakes, sargs):
     path = write_jsonl(tmp_path / "r.jsonl", _rows([RH], positions=range(40)))
     fakes(lambda u, kw: BENIGN)
     full = judge.run(sargs(path, items=[RH]))
-    fakes(lambda u, kw: BENIGN)
-    lite = judge.run(sargs(path, items=[RH], out=tmp_path / "lite", extra={"reads": "lite"}))
     assert full.config["reads"] == "full" and full.config["prompt_version"] == STAMP
-    assert lite.config["reads"] == "lite" and lite.config["prompt_version"] == STAMP + "+reads-lite"
     assert full.rows[0]["n_positions_read"] == 40
-    assert lite.rows[0]["n_positions_read"] == len([0, 16, *range(32, 40)])
 
 
 def test_stage_c_forbids_assembling_act_across_lines():

@@ -172,15 +172,8 @@ def test_plan_every_position_every_grid_layer():
     assert len(plan) == 147 and any(s.extra.get("source") == "nocot" for s in plan)
     for s in plan:
         assert s.positions == {"kind": "all_from_end"} and s.layers == readplan.GRID
-        assert s.lite_positions == {"kind": "final_token"} and s.lite_layers is None
     every = readplan.plan("knowledge_cutoff", layers="all")
     assert every[0].layers == list(range(64))
-    lite = readplan.plan("knowledge_cutoff", reads="lite")
-    assert lite[0].positions == {
-        "kind": "lite_of",
-        "full": {"kind": "all_from_end"},
-        "lite": {"kind": "final_token"},
-    }
 
 
 def test_spec_reads_fields():
@@ -228,7 +221,7 @@ def test_full_requires_contiguous_span(tmp_path, bank, scripted):
     write_sidecar(p3, reads="full", sampling="bullet4", reader="s3d-rl600", layers=[60])
     with pytest.raises(SystemExit):
         judge.run(_args(p3, tmp_path / "o4", ["k1", "k2"], layers=[60]))
-    p4 = write_jsonl(tmp_path / "lite.jsonl", full)
+    p4 = write_jsonl(tmp_path / "declared.jsonl", full)
     write_sidecar(p4, reads="lite", sampling="bullet4", reader="s3d-rl600", layers=[60])
     with pytest.raises(SystemExit):
         judge.run(_args(p4, tmp_path / "o5", ["k1", "k2"], layers=[60]))
@@ -236,15 +229,6 @@ def test_full_requires_contiguous_span(tmp_path, bank, scripted):
     write_sidecar(p5, sampling="bullet4", reader="s3d-rl600", layers=[60], plan_sha="0" * 64)
     with pytest.raises(SystemExit):
         judge.run(_args(p5, tmp_path / "o6", ["k1", "k2"], layers=[60], allow_missing=True))
-
-
-def test_full_on_lite_file_exits_2(tmp_path, bank, scripted):
-    bank(GOLD)
-    p = write_jsonl(tmp_path / "r.jsonl", _span("k1", 60, ["Kirin 9100"]))
-    write_sidecar(p, reads="lite", sampling="prose1", reader="s3d-rl600", layers=[60])
-    with pytest.raises(SystemExit) as e:
-        judge.run(_args(p, tmp_path / "o", ["k1"], layers=[60]))
-    assert e.value.code == 2
 
 
 def test_kc_sidecarless_legacy_file_is_report_only(tmp_path, bank, scripted):
@@ -329,17 +313,6 @@ def test_s3d_prose1_is_one_sample_per_activation(tmp_path, bank):
     lines = digest.native_lines(last)
     assert len(lines) == 1 and lines[0].text.count(digest.BULLET_MARK) == 3
     assert judge.support(last, rules).counts["kirin 9100"] == 1  # one generation counts once
-
-
-def test_reads_lite_selects_reply_start(tmp_path, bank, scripted):
-    bank(GOLD)
-    answers, seen = scripted
-    answers[("k1", 60)] = ("kirin 9100", "Kirin 9100")
-    p = write_jsonl(tmp_path / "r.jsonl", _span("k1", 60, ["Kirin 9100"], filler="Kirin 9020"))
-    r = judge.run(_args(p, tmp_path / "o", ["k1"], layers=[60], extra={"reads": "lite"}))
-    assert seen[0].meta["positions"] == [-1]
-    assert r.config["reads"] == "lite" and r.config["prompt_version"].endswith("+reads-lite")
-    assert _row(r, "k1")["pass"] is True
 
 
 # ---------------------------------------------------------------- C3 / C6 prompts and menu
@@ -761,10 +734,7 @@ def test_prompt_only_file_is_complete_under_full(tmp_path, bank, monkeypatch):
     write_sidecar(p, sampling="prose1", reader="prompt_only:claude-opus-5-5", layers=[44])
     FakeLLM.install(monkeypatch, lambda s, u, sc: None, digest=lambda u: first_lines_digest(u))
     r = judge.run(summary_args(p, tmp_path / "o", PROMPT_VERSION, items=["k1", "k2"]))
-    assert (
-        r.config["reads_checked"] == "prompt_only"
-        and "+reads-lite" not in r.config["prompt_version"]
-    )
+    assert r.config["reads_checked"] == "prompt_only"
     assert not r.extras.get("partial_ids")
 
 

@@ -52,12 +52,12 @@ prompt-only floor depends on the digest mode.
   the family's gate instrument (`text_inversion.gate_instrument`) and its `bank_sha` is the
   registered bank's fingerprint (`text_inversion.bank_fingerprint`), whatever the run's layers
   or digest mode.
-- *Prompt-only* floors are matched per summary row on the summary `prompt_version` (a lite
-  `+reads-` tag aside), the digest settings and the judge model
+- *Prompt-only* floors are matched per summary row on the summary `prompt_version`,
+  the digest settings and the judge model
   (`prompt_only.summary_floor_matches`). A prompt-only readout is one cell per id, so every entry
   carries the single-layer digest instrument (`<stamp>+digest-v5-task-extractive+sj-v10`,
   `layer_mode: union`; chain_intermediates `...-rankties5+sj-v10`). It is drawn beside every
-  single-layer row of its family (`layers=[L]`, full or lite reads), beside an all-layer row run
+  single-layer row of its family (`layers=[L]`), beside an all-layer row run
   with `summ_layers=union`, and beside every row of chain_intermediates and
   arithmetic_intermediates, whose numbers digest never runs layered. A default all-layer row of
   any other family is digested layered (`-layered-v1x4` since v1.1.1, `-layered-v1` in v1.1.0;
@@ -534,7 +534,7 @@ per-draw mean against the per-draw uniform scored the guesser as if deterministi
 draw). A family whose headline is a different rule measures it with guessers that answer in that
 rule's form: conjunctive's sharded +cand3 configs with `variant=blind_cands,described_cands,
 topic_cands,uniform_cands` (one pick + up to 3 candidates a draw, 3 draws per shard for
-`HEADLINE_SHARDS` = all 8 / lite 2 shards; `rule_<config>` against the exact `chance_<config>`).
+`HEADLINE_SHARDS` = all 8 shards; `rule_<config>` against the exact `chance_<config>`).
 A family whose headline unit is a direction pair (`PAIR_RULE_FAMILIES`: role_bound_association
 `pair-v1`, review of #202 round 5) records `family_rule` = the mean over complete pairs of
 `p_ab * p_ba` (each item's share of right draws) and `family_chance` = the product of the two
@@ -548,7 +548,7 @@ averaged over draws with its std, `majority` the per-item plurality vote. Famili
 
 | family | lists per item | options | notes |
 |---|---|---|---|
-| conjunctive_association | 1 | 22-176 | bank v6 (2026-11-21: four copies of bank v4's list, one per value of the cluster's shared part, twins included, so no count separates the original value): `comp-v6+bank-v6`, under the family rule: blind 0.02, described 0.04, topic (topic-v4) 0.06 vs chance 0.0007 (line 0.051; blind and described pass, topic **FAIL**); +cand3 all-layer = lite 0.22 / 0.34 / 0.30 vs 0.063 (line 0.113), all **FAIL** (bank v4, `comp-v5`: 0.06 / 0.06 / 0.10 vs 0.002 and 0.17 / 0.30 / 0.21 vs 0.157). Does NOT meet the standard; the gap and why are in the family README |
+| conjunctive_association | 1 | 22-176 | bank v6 (2026-11-21: four copies of bank v4's list, one per value of the cluster's shared part, twins included, so no count separates the original value): `comp-v6+bank-v6`, under the family rule: blind 0.02, described 0.04, topic (topic-v4) 0.06 vs chance 0.0007 (line 0.051; blind and described pass, topic **FAIL**); +cand3 all-layer 0.22 / 0.34 / 0.30 vs 0.063 (line 0.113), all **FAIL** (bank v4, `comp-v5`: 0.06 / 0.06 / 0.10 vs 0.002 and 0.17 / 0.30 / 0.21 vs 0.157). Does NOT meet the standard; the gap and why are in the family README |
 | role_bound_association | 3 | 5 | agent / action / patient; a people list may repeat a label (the judge's list does); `oa-v3.1` floors per item blind 0.116, described 0.148, topic 0.226 vs uniform 0.008 (fail); the headline is direction pairs (`pair-v1`, review of #202 round 5), so the standard reads `family_rule` = per pair `p_ab * p_ba`: 0.012 / 0.006 / 0.000 vs 0.00006 (line 0.050), **pass** |
 | relational_multihop | 1 | 18 | rel-v3 (#209 round 6): one composed-relation list (12 chains over the two hops + three decoys, 5 singles, 1 near form); rel-v2's 13-option list failed the leakage bar |
 | moral_rationale | 1 or 2 | 5 | committed items one list, deliberative items one per side; single pick (`ec-v9`): question 0.706, described 0.704, blind 0.608 vs chance 0.176, far above the standard (the bank still leaks; see the floors of record) |
@@ -989,7 +989,7 @@ make sure it also undergoes the same judge prompts". The campaign floor is ONE O
 plan row id (twins, controls and paired rows are their own ids; no answer is copied between ids),
 asked the open-model question about the render decoded through the item's LAST full-read site,
 written as one prose cell at that site and layer 44 with the sidecar `reader:
-prompt_only:claude-opus-5-5` (which waives the lite selection and the span checks).
+prompt_only:claude-opus-5-5` (which waives the span checks).
 
 **The reader never sees a reply** (plan 0070; Camila 2026-11-04: "can you ensure that our control
 is NEVER reading a reply, only ever the prompt?"). Since `prompt_cut: reply-free-v2` the input is
@@ -1038,8 +1038,8 @@ Refusals are final; a refused id gets no cell; a family with more than 20% refus
 `not_measurable`. Only jlens_concept_pr is excluded; directed_modulation and MCDM are measured and
 frozen `saturated`. The first Opus freeze archives the stock-Qwen file to
 `archive/prompt_only_summary.qwen-2026-10-29.json`. Each floor carries the single-layer digest
-instrument, so it serves every single-layer config and its lite rows (matched on
-`strip_reads(prompt_version)`) and an all-layer `summ_layers=union` run; a default all-layer run
+instrument, so it serves every single-layer config (matched on
+`prompt_version`) and an all-layer `summ_layers=union` run; a default all-layer run
 of a non-numbers family digests layered and draws no prompt-only floor ("Floors of record", which
 rows a floor is drawn beside).
 

@@ -227,7 +227,7 @@ def _config(*argv: str) -> cli.RunFamilies:
         [],
         ["judge_model=claude-sonnet-5", "layers=20,36", "limit=3", "allow_missing=True"],
         ["layers=20", "items=a,b|c", "concurrency=7", "rpm=11.5", "itpm=1234"],
-        ["opts=aggregate=native,summ_layers=union", "reads=lite", "sampling=prose1", "itpm=0"],
+        ["opts=aggregate=native,summ_layers=union", "reads=full", "sampling=prose1", "itpm=0"],
         ["anti_text_inversion=True", "ati_variant=v", "ati_opt_in=nyt_connections"],
         ["fast=True", "items=a,b", "wait=5", "settle=2", "family_workers=3", "json=True"],
         ["fast=True", "items=a,b", "limit=2"],  # plan 0104: fast=safety is retired

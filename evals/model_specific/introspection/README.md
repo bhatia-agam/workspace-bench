@@ -2,7 +2,7 @@
 
 *Renamed from `introspection_inject` on 2026-10-26. Plan 0045 (2026-10-30, Camila's
 "Introspection" feedback) moved the family to bank v2 (`items_v2.json`): paired controls,
-near-duplicate equivalents, shipped vectors, a stricter judge and a lite site. `items.json` is
+near-duplicate equivalents, shipped vectors and a stricter judge. `items.json` is
 the frozen v1 and stays untouched.*
 
 A concept vector is injected into Qwen3.6-27B's user turn at layer 12; the visible text never
@@ -65,7 +65,7 @@ twin's rate beside the headline.
   reported in `extras` and every other result row carries `excluded_from_rate: true`.
 - `renders`: the 12 distinct renders (`protocol:trial1..8`, `neutral:<key>`), regenerated with
   the source renderer and the `Qwen/Qwen3.6-27B` tokenizer: `input_ids`, `tokens`, `inject_span`,
-  `grid`, `null`, `echo`, and (v2) `lite`, the reads=lite site as absolute positions.
+  `grid`, `null`, `echo`, and (v2) `lite`, one absolute position per render that no judge reads.
 - Items and `beta0_rows` are the source bank (v1 verbatim plus the v2 fields above);
   `largest_class_share`, `agam_reproduction`, `vector_space_check` and the G3 leak lint are the
   source's provenance. The source's pre-grid header keys (`read_layers` [20, 36, 44, 52, 60],
@@ -220,7 +220,7 @@ subject's stack.
 one steered token) are the source's diagnostics; they are never scored and a producer may skip
 them.
 
-## Read grid and lite site
+## Read grid
 
 Every unsteered position from just after the steered span through the last prompt token, × all
 11 layers 20–60: protocol 24 positions (117–140: `<|im_end|>`, the assistant header with its
@@ -229,14 +229,6 @@ positions (the template tokens `<|im_end|>` … final `\n\n`; meeting_note 23–
 Readout ids are the plan row ids; `pos` is the absolute index into `input_ids`. Rows at other
 positions or layers are skipped and counted. Full-read completeness: `min_full_positions = 9`,
 explicit positions (`full_contiguous = False`). Any layer subset works (`layers=`).
-
-**`reads=lite`** reads one position per row at every grid layer, fixed from the bank (never
-chosen by pass rate): protocol `[140]` (the final token, the open quote), neutral `[grid[1]]`
-(the `\n` after `<|im_end|>`, e.g. meeting_note 24). Twins are read at their own render's lite
-site. The neutral site is checked by a support test, no judge outcome:
-`scripts/introspection_offline_evidence.py --lite-support` counts gold-bearing digest evidence
-lines at the final token vs `grid[1]` over the `reads=full` all-layer runs; unless `grid[1]`
-beats the final token by more than 10 points, the neutral rule becomes `final_token`.
 
 ## Scoring
 
@@ -392,7 +384,7 @@ Use a separate `out=` dir per mode.
   `config.aggregate = "summary"`, `config.summarizer`, `config.source_kind` and
   `prompt_version = ii-grid-2026-11-v4+twinrx-v4+jhead-v2+digest-v5-task-extractive-layered-v1x4+sj-v10`
   for a multi-layer run under the defaults (`digest.prompt_version`; no `-layered-v1x4` for one
-  layer; `+reads-lite` on a lite run).
+  layer).
 
 The summary-mode system prompt is `SYSTEM` with its input sentence replaced by `SUMMARY_INPUT`:
 
@@ -458,8 +450,7 @@ the model was given an ordinary short request; its activations may have been ste
 ## Commands
 
 ```bash
-wsbench plan families=introspection out=outputs/plan             # 1,762 steered rows (full)
-wsbench plan families=introspection reads=lite out=outputs/plan  # the same rows, lite sites
+wsbench plan families=introspection out=outputs/plan             # 1,762 steered rows
 wsbench produce family=introspection method=jlens out=R.jsonl    # applies the steer
 wsbench judge family=introspection readouts=R.jsonl out=DIR dry_run=True
 wsbench judge family=introspection readouts=R.jsonl out=DIR opts=scope=headline

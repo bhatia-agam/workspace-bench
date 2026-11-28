@@ -97,7 +97,7 @@ re-stamped (`references/porting.md`).
   (lint requires it, `adapt/lint.py`), leakage-screened on the bank of record
   (`scripts/association_distractors.py`, `scripts/mc_leakage_r4.py`, topic guesser; these write
   `evals/`, never run them for an adapted set); quote gate + pins. Read render `chat_summarize`
-  (19-position suffix span × GRID; lite = all positions), so `eval_render` / `readout` are no longer
+  (19-position suffix span × GRID), so `eval_render` / `readout` are no longer
   needed. The adapt gate's referent question is asked in that render too (plan 0060 D10; records
   gated before it carry no `sampling.gate_render` and `adapt regrade` skips them: regate), and
   regating a v1 association item without `mc` is destructive (lint rejects it, last record wins). 7 v1 ids left the bank: drop them.
@@ -386,8 +386,7 @@ migrated with `scripts/migrate_0101.py set`.
 - The judge-side `cell.layer` must be remapped.
 - **Bank now:** `items_v2.json` (plan 0083, 2026-11-08): the `frac` variant is removed (480 items, 13
   variants); `gen_arith.RETIRED_VARIANTS` keeps it out of generation, select and freeze. Judge plan 0036 (exact small integers, per-layer keys, generic-r7: one generic summary judge, the
-  consensus rules retired; lite =
-  the remapped L56 / L60). No bank edit; re-read.
+  consensus rules retired). No bank edit; re-read.
 
 ### chain_intermediates — values along a chain of operations
 - **Keys:** `depth, steps, start, intermediates, untaken, answer, prompt, prompt_first, literals,
@@ -492,7 +491,7 @@ migrated with `scripts/migrate_0101.py set`.
   under comp-v6: every part of an option required, 2026-11-20), but an adaptation still ports
   `items_v4` (`adapt.store.ADAPT_SOURCE_BANKS`: `twin_of`, `inverted_label`, per-item
   `bank_version: 4`; the Phase B authoring writes no shared-axis distractors yet). All layers,
-  lite = full positions, any-gold-draw. The judge refuses a mixed `bank_version`; a v1 adapted
+  any-gold-draw. The judge refuses a mixed `bank_version`; a v1 adapted
   bank runs without `twin_of` / `inverted_label`, so no inverted-twin diagnostic (the empty
   `bank_stamp` is normal: v4 returns "" too). v5 is opt-in. Adapted sets are judged by comp-v6
   on their own lists; their floors and ATI files stamped comp-v5 are stale until re-measured.
@@ -509,8 +508,7 @@ migrated with `scripts/migrate_0101.py set`.
   (calls `oa-v3.1`, summary `+maj3v`; the oa-v2.4 prompts on the oa-v3.1 lists; plan 0055);
   adapted banks stamp `oa-v3.1`. Role lexicon `roles_v1.json` (out-of-lexicon
   roles handled), quote gate, action gate (judge-side, `evals/anti_bag_of_features/role_bound_association/gate.py`; no
-  subject regate), pins. Under `WSB_BANK_ROOT` the lite rule is
-  `final_token` (`readplan._adapted_offset`).
+  subject regate), pins.
 
 ---
 

@@ -133,10 +133,6 @@ selfdescribe item, 11–33 per synthsys item, 23,232 cells) is a strict subset w
   position (`EvalSpec.min_full_positions = 37`, `full_contiguous = True`, shared
   `reads.check_full`); an old-span file exits 2 (or is `partial` under `allow_missing`). A
   sidecar-less file is report-only (`extras.partial_ids_unenforced`).
-- **Lite (`reads=lite`):** the same positions and layers as full (`lite_positions = {"kind":
-  "same"}`, plan 0061, Camila 2026-11-02), with full's completeness checks; lite rows are stamped
-  `+reads-lite` and never mixed with full. It was the final token (the assistant onset) before;
-  lite results judged before plan 0061 are stale.
 - **Layers:** `layers=all|each|<csv>` (shared).
 
 The bank's own `read` paragraph and per-item `readout.kind` still describe the old span: the bank
@@ -619,7 +615,7 @@ Round-3 refinements of um-v3.3 (review of #200, before any um-v3.3 result was pu
   quote is that line (all-layer continent-12/-15/-09 were echo on the same kind of digest that
   passed continent-13/-14/-11). The echo override still applies to the quote the judge gives.
 - Not changed deterministically: a value attached to a named persona ("a 'President of Costa
-  Rica' named Luna Felicio", um-sd-country-17 lite) stays the judge's call, because the
+  Rica' named Luna Felicio", um-sd-country-17) stays the judge's call, because the
   rubric counts the persona of the infobox written for the user ("a fictional 'Average Guy'
   named John Smith", um-sd-gender-15), and the two shapes cannot be told apart by syntax.
 
@@ -664,7 +660,7 @@ directions.
   death ("partner's life concluded", "spouse death recorded", "the partner passed away"), a
   spouse-death phrase in the quote ("losing a spouse", "the loss of a spouse", "surviving
   spouse") only restates it. That is the rubric's elaboration of a stated fact, so it is an
-  echo (um-ss-maritalstatus-14 L44, -13 all-lite, -15 all-lite). Where the prompt says only
+  echo (um-ss-maritalstatus-14 L44, -13, -15). Where the prompt says only
   "widowed", the phrase is a same-language synonym and stays the judge's call.
 - **Hedge gate** (value gate condition 4): um-sd-occupation-03 prompt-only ("e.g., fisherman,
   sea captain, harbor pilot, …", which inflated the floor), -03 L40, and -08 L32 ("a professional
@@ -684,7 +680,7 @@ directions.
   um-ss-employmentstatus-14 L56 (stay-at-home spouse).
 - **Options** meet the MC leakage standard (see Options above): male / female / nonbinary Gender, Country lists of
   regional triples, a second Occupation neighbour.
-- Not changed deterministically: um-sd-country-17 all-lite (a named "President of Costa Rica")
+- Not changed deterministically: um-sd-country-17 (a named "President of Costa Rica")
   stays the judge's call (see round 3). Neither does um-sd-gender-04 L60 ("these traditional
   'bro' camping trips", where 'bro' describes the trips), which now clears the gate and rests on
   the judge's attribution call.

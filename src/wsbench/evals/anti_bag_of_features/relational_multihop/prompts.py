@@ -26,10 +26,10 @@ CALL_VERSION = "rel-v3"  # every judge call's fingerprint (the prompts below + t
 # instrument and the result stamp only; no call is re-asked
 # relgate-v4 (round 4, re-audit r2 too-strict cases): "legal advisor / counsel" are lawyer forms
 # (s42-b L60); a gold pick failing the order gate (order / two_chains) is asked once more
-# (RETRY_GATE, key ``:R2g``; s28-b all, s41-b / s16-a lite); a judged non-gold answer (cannot
+# (RETRY_GATE, key ``:R2g``; s28-b all, s41-b / s16-a); a judged non-gold answer (cannot
 # tell, or a rival chain read off one line) on an item whose raw statements state one chain
 # DECISIVELY more often than any other is decided by that count (judge.prominence_rescue;
-# s16-a / s00-a / s35-a all, s19-b lite, s07-b L60, s23-b L36)
+# s16-a / s00-a / s35-a all, s19-b, s07-b L60, s23-b L36)
 # relgate-v5 (deterministic, stamp only): the order gate checks the quote's own statement only;
 # its "rival as common" rule (rival_prominent: a rival chain stated in as many raw statements as
 # the gold failed the pick) is removed

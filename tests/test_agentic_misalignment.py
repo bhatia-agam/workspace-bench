@@ -643,9 +643,9 @@ def test_tokens_kind_goes_straight_to_stage_a(tmp_path, fake_text, am_args):
     assert res.counts["n_empty_cells"] == 1 and res.extras["design_score"] == 1.0
 
 
-def test_lite_and_layers(tmp_path, fake_text, am_args):
-    """Plan 0052 §3/§5: the retired opts=stride= is replaced by reads=lite (every 16th position +
-    the last 8, via reads.load); layers= still restricts the layers."""
+def test_layers_and_retired_opts(tmp_path, fake_text, am_args):
+    """Plan 0052 §3/§5: every position is read (opts=stride= is retired); layers= restricts the
+    layers."""
     seen: list[str] = []
 
     def responder(user, kw):
@@ -661,16 +661,15 @@ def test_lite_and_layers(tmp_path, fake_text, am_args):
         for pos in range(40)
         for layer in (36, 20)
     ]
-    path = write_jsonl(tmp_path / "lite.jsonl", rows)
-    res = judge.run(am_args(path, items=[EX], extra={"reads": "lite"}, layers=[20]))
-    want = [0, 16, *range(32, 40)]
-    assert sorted(tag_of(u) for u in seen) == sorted(f"{EX}:L20:p{p}" for p in want)
+    path = write_jsonl(tmp_path / "rows.jsonl", rows)
+    res = judge.run(am_args(path, items=[EX], layers=[20]))
+    assert sorted(tag_of(u) for u in seen) == sorted(f"{EX}:L20:p{p}" for p in range(40))
     assert all("layer 36" not in u for u in seen)
-    assert res.counts["n_expected_cells"] == len(want) and "stride" not in res.config
-    assert res.config["reads"] == "lite" and res.config["prompt_version"].endswith("+reads-lite")
-    assert res.config["layers_read"] == [20] and res.rows[0]["n_positions_read"] == len(want)
+    assert res.counts["n_expected_cells"] == 40 and "stride" not in res.config
+    assert res.config["reads"] == "full"
+    assert res.config["layers_read"] == [20] and res.rows[0]["n_positions_read"] == 40
     assert res.rows[0]["n_prompt_positions"] == 40 and res.complete is False
-    with pytest.raises(SystemExit):  # retired: positions are chosen by reads= only
+    with pytest.raises(SystemExit):  # retired: every position is read
         judge.run(am_args(_scripted(tmp_path), extra={"stride": "2"}))
     with pytest.raises(SystemExit):
         judge.run(am_args(_scripted(tmp_path), extra={"chunk_chars": "0"}))

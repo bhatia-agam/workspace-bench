@@ -499,7 +499,6 @@ def test_plan_of_the_adapted_bank_injects_the_subjects_dose(tmp_path, subject, b
     assert head.extra["input_ids"] == r["input_ids"]
     assert st["token_span"] == [r["inject_span"][0], r["inject_span"][-1]]
     assert head.positions["positions"] == r["grid"]
-    assert head.lite_positions["positions"] == r["lite"]
     sec = by_id["gaussian|protocol:trial1|b2|trumpets"].extra["steering"]
     assert sec["beta"] == cal["secondary_beta"] and sec["type"] == "gaussian"
     b0 = next(s for s in by_id.values() if s.id.startswith("beta0|"))

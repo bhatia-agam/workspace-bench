@@ -345,7 +345,7 @@ def _mh2(iid: str):
 
 
 def test_a_heading_question_masks_only_itself():
-    # fr-family-uncle lite: "uncle _____ Ou simplement : ton **oncle paternel** ### Pourquoi ?"
+    # fr-family-uncle: "uncle _____ Ou simplement : ton **oncle paternel** ### Pourquoi ?"
     t = mcrx.mask_premises("uncle _____ Ou simplement : ton **oncle paternel** ### Pourquoi ?")
     assert "uncle" in t and "Pourquoi" not in t
 

@@ -76,7 +76,7 @@ def _run_one(tmp_path, monkeypatch, iid, samples, quote, choice=None, **kw):
     c = _gold(iid) if choice is None else choice
     fake = FakeLLM.install(monkeypatch, _scripted(lambda u: (c, quote)))
     out = tmp_path / f"o{len(list(tmp_path.glob('o*')))}"
-    res = SPEC.run(_native(path, out, iid, reads="lite"))
+    res = SPEC.run(_native(path, out, iid))
     return res, fake
 
 
@@ -164,7 +164,7 @@ def _span_rows(iid, layers=(20, 36), positions=range(12, 21), first_token="."):
 
 def test_blank_cell_rule_and_token_check(tmp_path):
     cells, _ = load_readouts(EXAMPLE)
-    sel = select_cells(cells, full=True)
+    sel = select_cells(cells)
     last = {(c.id, c.layer): c for c in sorted(sel, key=lambda c: c.pos)}
     assert [(k, c.pos, c.token) for k, c in sorted(last.items())] == [
         ((A, 20), 20, "'s"),
@@ -199,8 +199,7 @@ def test_full_mode_first_token_must_be_full_stop(tmp_path):
     rows = _span_rows(A, layers=(20,), positions=range(13, 21), first_token="ĠIn")
     path = write_jsonl(tmp_path / "r.jsonl", rows)
     with pytest.raises(ValueError, match="full stop"):
-        select_cells(load_readouts(path)[0], full=True)
-    select_cells(load_readouts(path)[0], full=False)  # lite holds the blank only
+        select_cells(load_readouts(path)[0])
 
 
 def _counting_judge(users):
@@ -227,10 +226,6 @@ def test_full_mode_loads_span_via_reads(tmp_path, monkeypatch):
     assert res.complete is False
     with pytest.raises(SystemExit):
         SPEC.run(_native(path, tmp_path / "strict", [A, B]))
-    users.clear()
-    res = SPEC.run(_native(path, tmp_path / "lite", [A, B], reads="lite"))
-    assert len(users) == 22 and all(u.count("[L") == 1 and "pos 20]" in u for u in users)
-    assert res.config["prompt_version"] == "rel-v3+relgate-v6+reads-lite"
     # the same file without a sidecar: judged report-only
     bare = write_jsonl(tmp_path / "bare.jsonl", rows)
     res = SPEC.run(_native(bare, tmp_path / "bare", [A, B]))
@@ -426,11 +421,7 @@ def test_summary_rival_count_never_fails_a_gold_pick(tmp_path, monkeypatch, n_go
         return {"items": top, "rare": rare}
 
     FakeLLM.install(monkeypatch, _scripted(lambda u: (_gold(A), "landlord's sibling")), digest=dig)
-    res = SPEC.run(
-        summary_args(
-            path, tmp_path / "o", prompts.PROMPT_VERSION, items=[A], extra={"reads": "lite"}
-        )
-    )
+    res = SPEC.run(summary_args(path, tmp_path / "o", prompts.PROMPT_VERSION, items=[A]))
     assert res.rows[0]["gate"] == "pass" and res.rows[0]["pass"] is True
 
 
@@ -466,14 +457,14 @@ def test_quote_retry_once(tmp_path, monkeypatch):
     path = _one(tmp_path, A, ["- Riley is Avery's landlord's sibling\n- end"])
     answers = iter([(_gold(A), "the landlords sibling"), (_gold(A), "landlord's sibling")])
     fake = FakeLLM.install(monkeypatch, _scripted(lambda u: next(answers)))
-    res = SPEC.run(_native(path, tmp_path / "o", A, reads="lite"))
+    res = SPEC.run(_native(path, tmp_path / "o", A))
     users = [u for n, _s, u in fake.calls if n == "relation_mc_v2"]
     assert len(users) == 2 and users[1].endswith(prompts.RETRY) and prompts.RETRY not in users[0]
     assert res.rows[0]["pass"] is True and res.rows[0]["retried"] is True
     assert res.extras["n_retried"] == 1
     # a rerun is fully cached (both keys, ":R" and ":R2")
     FakeLLM.install(monkeypatch, lambda s, u, sc: pytest.fail("cached"))
-    assert SPEC.run(_native(path, tmp_path / "o", A, reads="lite")).rows[0]["pass"] is True
+    assert SPEC.run(_native(path, tmp_path / "o", A)).rows[0]["pass"] is True
 
 
 # ---------------------------------------------------------------- C4: tokens, diagnostics
@@ -512,7 +503,7 @@ def test_native_layer_pick_columns(tmp_path, monkeypatch):
         return (_gold(A), "landlord's sibling") if "R:20" in u else (rev, "landlord")
 
     FakeLLM.install(monkeypatch, _scripted(pick))
-    res = SPEC.run(_native(path, tmp_path / "o", A, reads="lite"))
+    res = SPEC.run(_native(path, tmp_path / "o", A))
     assert res.extras["n_items_gold_any_layer"] == 1
     assert res.extras["n_items_distractor_any_layer"] == 1
     assert res.extras["n_items_distractor_majority"] == 1
@@ -536,7 +527,7 @@ def test_extras_pick_classes_and_reversed_diag(tmp_path, monkeypatch):
     FakeLLM.install(
         monkeypatch, _scripted(lambda u: picks[int(u.split("[L", 1)[1].split(" ", 1)[0])])
     )
-    res = SPEC.run(_native(path, tmp_path / "o", A, reads="lite"))
+    res = SPEC.run(_native(path, tmp_path / "o", A))
     e = res.extras
     assert e["pick_classes"]["gold"] == 2 and e["pick_classes"]["reversed"] == 1
     assert e["pick_classes"]["cannot_tell"] == 2 and e["pass_rate_without_order_gate"] == 1.0

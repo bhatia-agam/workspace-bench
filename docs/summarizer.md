@@ -19,7 +19,7 @@ judged digest (see "Per-layer digests" below). Code: `wsbench/digest.py`.
   result stamps `digest.prompt_version(<family PV>, args, family)`: under the defaults
   `<family PV>+digest-v5-task-extractive+sj-v10` (plus `-stride` under the stride ablation,
   `-joint` under the `summ_layers=joint` ablation, `-layered-v1x4` under `summ_layers=layered`,
-  the multi-layer default described below, and `+reads-lite` from `reads.stamp`). Family docs
+  the multi-layer default described below). Family docs
   cite the function's output, never a literal.
 - **All readouts, always.** The summarizer is fed every readout. The default overflow is
   `hierarchical` for every family, under ONE global cap `DEFAULT_TOKEN_CAP = 920_000`: a bundle

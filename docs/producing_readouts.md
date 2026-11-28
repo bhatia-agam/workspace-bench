@@ -21,8 +21,7 @@ render it, which token positions to read, and at which layers:
 {"family": "poetry", "id": "couplet-ahead-head", "render": "plain",
  "positions": {"kind": "line_one_tail"}, "layers": [20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60],
  "text": "A rhyming couplet:\nThe captain pointed at the route ahead,\nAnd told his crew to follow where he'd ",
- "note": "line one's last word through the newline that ends it (never the line-two stub); lite = that newline",
- "lite_positions": {"kind": "final_token"}}
+ "note": "line one's last word through the newline that ends it (never the line-two stub)"}
 ```
 
 | key | meaning |
@@ -30,7 +29,6 @@ render it, which token positions to read, and at which layers:
 | `render` | how to turn the row into a token sequence; the vocabulary is `wsbench.readplan.RENDERS` (`plain`, `chat`, `chat_context`, `chat_prefill`, `chat_dm`, `chat_summarize`, `bare`, `captured`) |
 | `text` / `messages` / `system` / `prefill` / `suffix` / `assistant` | the pieces the render composes; `captured` rows ship `extra.input_ids` instead |
 | `positions` | a rule over the rendered tokens (below); `wsbench.readplan.resolve(rule, tokens)` turns it into indices once you have tokenized the render |
-| `lite_positions` / `lite_layers` | the `reads=lite` site: a rule over the row's FULL positions (`same`, `final_token`, `offset_from_end {k}`, `offsets_from_end {ks}`, `last_n {n}`, `positions {…}`, `every_nth_plus_tail {n, tail}`) and its layers (absent = the full layers). Lite is always a subset of full, so one full read serves both; `wsbench run reads=lite` re-judges the same file. A file produced `reads=lite` (sidecar `reads: "lite"`) already holds only the lite site and is judged as it is: the rule is never applied twice. When every row's rule is `same` at the full layers (association, conjunctive_association, the directed-modulation families, user_modeling, basic_readout_st, user_modeling_hard), a lite run gets the full read's completeness checks, and a declared-lite file with one position per cell exits 2 (it was produced under a superseded lite rule) |
 | `layers` | the decoder layers to read (residual stream after that layer) |
 | `note` | the family's read site in one line; the family README has the rest |
 
@@ -44,8 +42,8 @@ Positions rules, all handled by `resolve`:
 | `all` | every token |
 | `all_from_end` | every token, reported as negative offsets `-n..-1` (arithmetic intermediates: the bank and judge count from the end) |
 | `positions {positions}` | explicit indices (jailbreak, J-lens precision) |
-| `line_one_newline` | the newline token that ends line one (poetry's lite site) |
-| `line_one_tail {anchor?}` | line one's last word through the newline that ends it: the word's tokens, any punctuation after it, and that newline (poetry's full read; `couplet-ahead-head` → `" ahead"`, `","`, `"\n"` = positions 14-16). `anchor: "last_newline"` ends it at the last newline anywhere (adapted `chat_prefill` items) |
+| `line_one_newline` | the newline token that ends line one |
+| `line_one_tail {anchor?}` | line one's last word through the newline that ends it: the word's tokens, any punctuation after it, and that newline (poetry's read; `couplet-ahead-head` → `" ahead"`, `","`, `"\n"` = positions 14-16). `anchor: "last_newline"` ends it at the last newline anywhere (adapted `chat_prefill` items) |
 | `from_token {token}` | from the first token with that text through the end (chain's question span) |
 | `from_text_last_token {text}` | from the LAST token of the (last) occurrence of `text` through the end (chain: "The starting number is 23" reads from the "3") |
 | `from_last_sentence_start` | from the first token of the last user turn's final sentence through the end (user modelling) |
@@ -87,15 +85,15 @@ layer is judged. `wsbench run layers=44` judges one layer (a complete, defined v
 `layers=each` runs the all-layer config plus one sub-run per layer in the file.
 
 **The sidecar.** A producer declares how it sampled, beside the file:
-`<family>.jsonl.meta.json` = `{"reads": "full|lite", "sampling": "bullet4|prose1|tokens10",
+`<family>.jsonl.meta.json` = `{"reads": "full", "sampling": "bullet4|prose1|tokens10",
 "reader": "<method>", "arm": "<arm>", "layers": [...], "plan_sha": "<reads.plan_sha(family)>"}`.
 The rule: a SINGLE-bullet oracle lens (the `*-x4` arms) gets 4 separate
 samples per activation (`bullet4`); every other prose method, the multi-bullet s3d O-lens and NLA
 included, ONE sample per activation (`prose1`); a token lens its top 10 (`tokens10`). The
 sampling is declared, never inferred from bullet shape; `sampling=` on the CLI overrides it.
 `wsbench produce` and the converters (`sampling= arm= plan_sha=`) write the sidecar. With a
-sidecar, `reads.load` enforces the full span (a lite file under `reads=full`, a missing plan
-layer or a different `plan_sha` exits 2); a sidecar-less file is judged as it is, with the
+sidecar, `reads.load` enforces the full span (a truncated span, a missing plan layer or a
+different `plan_sha` exits 2); a sidecar-less file is judged as it is, with the
 same checks reported only (`config.reads_checked = "no_sidecar"`, never a campaign result).
 
 ## 4. Judge
@@ -178,7 +176,7 @@ ones still pending as skipped (exit code 0, as for any skipped family).
   records the top-level `wait` and that family's `waited_s`.
 - Every judge and digest model of the pending families is preflighted before the first call,
   with the ready ones. A family outside the `--fast` subset is skipped at once, never waited
-  for. `wait=` works with `--fast`, `anti_text_inversion=True`, `layers=<list>` and `reads=lite`;
+  for. `wait=` works with `--fast`, `anti_text_inversion=True` and `layers=<list>`;
   it is refused with `dry_run=True` and with `layers=each`.
 
 One command for a read in progress (the reader writes each family's sidecar last and
@@ -222,8 +220,7 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
   the `fast-v6` plan. (Their reduced-position rows, `fast_of` with `last_n` / `punct_special`,
   exist only in those frozen files: `wsbench.readplan.resolve(rule, tokens)` still resolves
   them, on DECODED token strings.) `--fast-safety` is retired.
-- `--fast` takes full reads only (no `reads=lite`), on the registered
-  Qwen3.6-27B banks only.
+- `--fast` runs on the registered Qwen3.6-27B banks only.
 
 ## Or let the repo produce them
 
@@ -319,7 +316,6 @@ passes)`. A second run of the same command makes no forward pass and does not lo
 | `store` | `outputs/store` | the store's root folder |
 | `model`, `revision` | Qwen/Qwen3.6-27B at the revision the banks were built on | the subject; `revision=<sha>` is required for another model |
 | `dtype` | `fp32` | the subject's dtype during capture: `fp32` (the forward runs in float32) or `bf16` (the model as shipped); vectors are stored as bf16 either way |
-| `reads` | `full` | `lite` captures the lite sites only |
 | `limit` | `0` | the first N items of each eval |
 | `shard`, `shards` | `0`, `1` | this process captures every `shards`-th item from `shard` (items sorted by id): one process per GPU |
 | `device` | `cuda` | |
@@ -344,7 +340,7 @@ row gives the exact token ids, the positions and the layers:
 ```json
 {"family": "my_eval", "id": "item-1", "render": "captured",
  "positions": {"kind": "positions", "positions": [3, 7]}, "layers": [20, 44],
- "extra": {"input_ids": [151644, 872, 198]}, "lite_positions": {"kind": "same"}}
+ "extra": {"input_ids": [151644, 872, 198]}}
 ```
 
 A row may also give text to render (`"render": "chat"` with `"text"`, see the table in §1) and

@@ -738,44 +738,28 @@ def _adapted_root(tmp_path, monkeypatch, n_layers=32, **banks):
     return tmp_path
 
 
-def test_buggy_lite_layers_are_remapped_once_on_a_9b_root(tmp_path, monkeypatch):
-    """A1.8: freeze already remaps header.read_cells to the subject's depth; plan() must not
-    remap the read_cells-derived lite layers a second time. Full rows read the remapped GRID."""
+def test_buggy_layers_are_the_remapped_grid_on_a_9b_root(tmp_path, monkeypatch):
+    """A1.8: freeze remaps header.read_cells to the subject's depth; plan() rows read the
+    remapped GRID."""
     import json as _json
 
     from wsbench import readplan
     from wsbench.adapt.run import _post_freeze
-    from wsbench.adapt.subjects import remap_layer
 
     raw = _json.loads(registry.frozen_bank_path("buggy_code").read_text(encoding="utf-8"))
-    qwen_cells = {g: int(c["layer"]) for g, c in raw["read_cells"].items()}
     header = {k: v for k, v in raw.items() if k != "items"}
     _post_freeze("buggy_code", header, raw["items"], 32)  # what adapt freeze ships (9B: 32)
     _adapted_root(tmp_path, monkeypatch, buggy_code={**header, "items": raw["items"]})
     full = readplan.plan("buggy_code")
-    lite = readplan.plan("buggy_code", reads="lite")
     grid = remap_layers(list(readplan.GRID), 32)
     assert all(s.layers == grid for s in full)
-    for s in lite:
-        want = remap_layer(qwen_cells[_lang_group(s.id)], 32)
-        assert s.layers == [want], (s.id, s.layers, want)
-        assert set(s.layers) <= set(grid)
 
 
-def _lang_group(iid):
-    _h, items = original_bank("buggy_code")
-    return next(it["lang_group"] for it in items if str(it.get("id") or it.get("name")) == iid)
-
-
-def test_buggy_lite_layers_unchanged_for_the_registered_bank(monkeypatch):
-    """A1.8 retained: with no adapted root, the lite layer is the bank's read_cells layer."""
+def test_buggy_layers_unchanged_for_the_registered_bank(monkeypatch):
+    """A1.8 retained: with no adapted root, every row reads the registered GRID."""
     from wsbench import readplan
 
     monkeypatch.delenv(registry.BANK_ROOT_ENV, raising=False)
-    header, _items = original_bank("buggy_code")
-    cells = {int(c["layer"]) for c in header["read_cells"].values()}
-    lite = readplan.plan("buggy_code", reads="lite")
-    assert {x for s in lite for x in s.layers} <= cells
     assert all(s.layers == list(readplan.GRID) for s in readplan.plan("buggy_code"))
 
 

@@ -115,11 +115,8 @@ the end. Double it. Add 5. The starting number is 28.` -> intermediate 56, answe
 of the start number (Qwen splits digits, so the "3" of "23", Camila: "We should be able to read
 starting from the "3" in "23"") through the end of the render, 27 positions on Qwen3.6-27B (the
 last start digit, ".", " What", ..., the assistant onset `\n\n`); layers `GRID` (20..60 step 4) or
-any requested set (`layers=all|<csv>`). **Lite** (`reads=lite`): the render's final token (the
-assistant onset after the empty think block) at every requested layer; lite is a subset of full,
-so one read serves both. The full-read guard is shared (`EvalSpec.min_full_positions=20`,
-`full_contiguous=True`, `reads.check_full`): a 1-position file under `reads=full` exits 2 ("looks
-like a lite file"), and a v1 file (25 positions from " What") is refused by its sidecar's
+any requested set (`layers=all|<csv>`). The full-read guard is shared (`EvalSpec.min_full_positions=20`,
+`full_contiguous=True`, `reads.check_full`): a 1-position file exits 2, and a v1 file (25 positions from " What") is refused by its sidecar's
 `plan_sha`, or, sidecar-less, by the missing replacement ids. A bank-v2 file is refused the same
 way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
 
@@ -193,9 +190,9 @@ way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
   12 x2, is a `tie` under heads-v3). Over the 13 final O-lens
   configs 24 cells flip pass -> fail, none fail -> pass; all-layer 0.292 -> 0.233. heads-v2 (round-3 review) stopped
   exempting a zero-head gold whose quote is a bare number token (`18`, `**18**`, `<think>26`):
-  chain-w2-d2p-0100 all (bare 18 vs 16 x4 and 12 x5) and lite (vs 16 x3), chain-w2-d2p-0066 all
+  chain-w2-d2p-0100 all (bare 18 vs 16 x4 and 12 x5) and final-token (vs 16 x3), chain-w2-d2p-0066 all
   (bare 19 vs 10 x4), chain-v2-d2p-0021 L56 (bare 22 vs 25 x2), chain-w2-d2p-0230 L60
-  (`<think>26` vs 17 x1); all-layer 0.233 -> 0.217, lite 0.200 -> 0.192, L56 0.300 -> 0.292,
+  (`<think>26` vs 17 x1); all-layer 0.233 -> 0.217, final-token 0.200 -> 0.192, L56 0.300 -> 0.292,
   L60 0.108 -> 0.100. heads-v3 (round-3 re-review) makes the gate monotone: a gold with no
   counted head is held to the one-head bar, whatever its quote (some distractor heads >= 1
   counted sample -> `tie`), so adding gold evidence can never turn a pass into a fail. heads-v2
@@ -209,7 +206,7 @@ way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
   0.108 (chain-v2-d2p-0030, chain-v2-d2p-0018 and three computed quotes), L48 0.117 -> 0.092
   (chain-w2-d2p-0014 `resulting in 14` vs 12 x2, and two more), L56 0.292 -> 0.250
   (chain-d2p-0298, chain-d3p-0753, chain-d2p-0383 `the result is **13**` vs 6 x1, chain-d2p-0206,
-  chain-v2-d2p-0018); lite, L36, L52, L60 and prompt-only (0.975) unchanged. Rows
+  chain-v2-d2p-0018); final-token, L36, L52, L60 and prompt-only (0.975) unchanged. Rows
   record each slot's option `heads`. `cannot_tell`, `distractor`, `unverified`, `label`,
   `not_key`, `flat` and `tie` are judged negatives; an invalid choice or a failed call is undecided.
 - **Headline: every intermediate.** An item passes only when EVERY slot hits (decision Q3; Camila:
@@ -254,7 +251,7 @@ way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
   digest note of that call.
 - **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3", args, family)`,
   i.e. `chain-mc-2026-10-30+heads-v5+start-op+key-ex2+bank-v3+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (bank v2 and the adapted banks: the same without `+bank-v3`) (judge calls keyed by
-  `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate and the label check re-ask nothing) (`+reads-lite` under lite, `+rule-any`
+  `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate and the label check re-ask nothing) (`+rule-any`
   under `opts=rule=any`); `config.reads`, `sampling`, `sampling_source`, `reader`,
   `reads_checked`, `layers_judged` come from the shared loader.
 - `opts=judge=free` keeps the v1 summary judge (free recall on the digest, any-intermediate rule)
@@ -265,8 +262,7 @@ way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
 
 ## Scoring (native, `opts=aggregate=native`)
 
-- One prompt-blind free-recall call per loaded cell (`reads=full`: every read position;
-  `reads=lite`: the final token per layer), `SYSTEM` / `USER` below. The judge names the
+- One prompt-blind free-recall call per loaded cell (every read position), `SYSTEM` / `USER` below. The judge names the
   number(s) the readout presents as a computed value, ranked, at most three, or none. A token
   list is shown as its bare tokens (no scores).
 - **Verification (Camila's checking-bug fix).** The top value counts when the judge's quote passes
@@ -313,9 +309,8 @@ way (its sidecar's `plan_sha`; sidecar-less, the 66 new ids are missing).
   table records its fingerprint; a pin to another bank exits "re-gate"), the entry gated on another
   bank that holds NO id still means "no ATI item" (`text_inversion.StaleNoItem`), so
   under `anti_text_inversion=True` the family is skipped as before, and `wsbench check
-  ati_subset` passes with a note naming it. The retired `cells=` key: `cells=last` exits 2 ("use
-  reads=lite (final token) or reads=full (every read position)"); `cells=all` is accepted as a
-  spelling of `reads=full`.
+  ati_subset` passes with a note naming it. The retired `cells=` key: `cells=last` exits 2 ("every read
+  position is judged"); `cells=all` is accepted and changes nothing.
 
 ## Cached-run rescore (no calls)
 
@@ -337,7 +332,6 @@ position per layer).
 
 ```
 wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.jsonl out=outputs/<arm>/chain_intermediates limit=3
-wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.jsonl out=outputs/<arm>/chain_intermediates-lite reads=lite
 wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.jsonl out=outputs/<arm>/chain_native opts=aggregate=native
 ```
 

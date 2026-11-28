@@ -133,7 +133,7 @@ distractors alone are shuffled by the stamp's seed and the gold is inserted at i
 changes.
 
 **Replay** (`mc_leakage_r4.py replay`, header `mc_leakage.observed.replay`): every one of the
-259 bank-v2 non-pass cells (final-olens-rl600-x4 L20..L60, all, all-lite; prompt-only-opus all)
+259 bank-v2 non-pass cells (final-olens-rl600-x4 L20..L60, all, final-token; prompt-only-opus all)
 re-judged under v5 and `-v5b` with the cached digests: 19 fail -> pass, **0 attributable** (no
 flip drops an option its digest names). 12 of the 19 are on cells whose v5 list holds exactly
 v2's options, i.e. option-order / judge noise; the other 7 dropped only never-named options.
@@ -338,17 +338,13 @@ is the item `name` with characters outside `[A-Za-z0-9._-]` replaced by `_`.
   tokenizer), at every plan layer (`readplan.GRID`, or any layer set via `layers=`). The judge
   requires one contiguous run of >= 8 positions ending at the item's last position per (item,
   layer) (`min_full_positions=8`).
-- **Lite** (`reads=lite`): the same positions and layers as full (`same`, plan 0061, Camila 2026-11-02; the
-  bank rows' `readout.lite` key is no longer read), stamped `+reads-lite`. It was the final token
-  (the stem's ":") before; lite results judged before plan 0061 are stale. `reads=` picks read sites only; it is independent of the
-  judge-spend `tier=` key proposed in PR #75.
+- The bank rows' `readout.lite` key is not read.
 
 `examples/readouts/basic_readout_st.jsonl` is a toy file for `dry_run=True`.
 
 ```
 wsbench judge family=basic_readout_st readouts=examples/readouts/basic_readout_st.jsonl out=outputs/toy/basic_readout_st dry_run=True
 wsbench judge family=basic_readout_st readouts=<arm>.jsonl out=outputs/<arm>/basic_readout_st limit=3
-wsbench judge family=basic_readout_st readouts=<arm>.jsonl out=outputs/<arm>/basic_readout_st reads=lite
 ```
 
 ## Decisions taken (override if you disagree)

@@ -274,16 +274,13 @@ def test_readme_headline_names_scored_unit():
 # ---------------------------------------------------------------- item 2: positions
 
 
-def test_plan_reads_every_position_final_token_lite():
+def test_plan_reads_every_position():
     rows = readplan.plan(NAME)
     _h, items = load_bank(registry.bank_path(NAME))  # bank v7 reads with its own plan
     assert [s.id for s in rows] == [it["id"] for it in items]
     for s in rows:
         assert s.render == "chat" and s.positions == {"kind": "all_from_end"}
-        assert s.lite_positions == {"kind": "final_token"} and s.lite_layers is None
         assert s.layers == list(readplan.GRID) and s.prefill is None
-    lite = readplan.plan(NAME, reads="lite")
-    assert lite[0].positions["lite"] == {"kind": "final_token"}
 
 
 def test_multi_position_file_accepted(tmp_path, monkeypatch, real_families):
@@ -292,18 +289,6 @@ def test_multi_position_file_accepted(tmp_path, monkeypatch, real_families):
     assert r.rows[0]["pass"] is True
     (user,) = [u for n, _s, u in fake.calls if n == "pick"]
     assert user.count("[pos -") == 30 and "token=" not in user
-
-
-def test_reads_lite_keeps_last_position(tmp_path, monkeypatch, real_families):
-    it = _item("brh-ent-")
-    path = _file(tmp_path, [it], lambda i, layer, pos: [f"R:x at {pos}"])
-    fake = FakeLLM.install(monkeypatch, judge=_cannot)
-    out = tmp_path / "out"
-    argv = [f"family={NAME}", f"readouts={path}", f"out={out}", "layers=44", "reads=lite"]
-    assert main(["judge", *argv, "opts=aggregate=native", f"items={it['id']}"]) == 0
-    (user,) = [u for n, _s, u in fake.calls if n == "pick"]
-    assert "at -1" in user and "at -2" not in user
-    assert read_results(out).config["prompt_version"].endswith("+reads-lite")
 
 
 def test_reads_full_gap_is_partial_under_allow_missing(tmp_path, monkeypatch, real_families):
@@ -576,7 +561,7 @@ def test_native_tokens_make_no_interp_call(tmp_path, monkeypatch, real_families)
 # ---------------------------------------------------------------- G3 / G4 / G5
 
 
-def test_prompt_only_cell_judged_full_and_lite(tmp_path, monkeypatch, real_families):
+def test_prompt_only_cell_judged(tmp_path, monkeypatch, real_families):
     it = _item("brh-ent-")
     path = tmp_path / "po.jsonl"
     row = {"id": it["id"], "layer": 44, "pos": -1, "samples": [f"R:{it['id']} it is {_gold(it)}"]}
@@ -586,11 +571,8 @@ def test_prompt_only_cell_judged_full_and_lite(tmp_path, monkeypatch, real_famil
     FakeLLM.install(
         monkeypatch, judge=_responder({it["id"]: {"readout": "gold", "gold_readout": _gold(it)}})
     )
-    for mode in ("full", "lite"):
-        r = registry.FAMILIES[NAME].run(
-            _args(path, tmp_path / mode, layers=None, extra={"reads": mode})
-        )
-        assert r.rows[0]["pass"] is True and r.complete, mode
+    r = registry.FAMILIES[NAME].run(_args(path, tmp_path / "full", layers=None))
+    assert r.rows[0]["pass"] is True and r.complete
 
 
 def test_layers_subset_and_single(tmp_path, monkeypatch, real_families):

@@ -45,9 +45,9 @@ def test_intro_headline_is_the_judge_and_the_judge_prompt_is_v4():
             'The word "Balloon" in the hidden target completion is semantically linked to '
             "**kites**.",
         ),
-        # carnivals lite: the topic of a cited word set is a mention
+        # carnivals: the topic of a cited word set is a mention
         ("carnivals", "The other set of words about Carnival vacations in New Orleans being"),
-        # dreams lite: an inflection ("dreaming underwater")
+        # dreams: an inflection ("dreaming underwater")
         ("dreams", 'respond with *"the color of the sky when you\'re dreaming underwater."*'),
         # bags all: a quoted Title-Case answer is not a name ('Shopping Bag', raw L48 pos 130)
         ("bags", 'The concept appears to be **"Shopping Bag."**'),

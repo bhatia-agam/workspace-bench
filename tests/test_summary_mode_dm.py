@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from summary_fakes import FakeLLM, digest_lines, n_item_layers, summary_args
 
-from wsbench import digest, reads, registry
+from wsbench import digest, registry
 from wsbench.banks import load_bank
 from wsbench.evals.basic import directed_modulation as dm_pkg
 from wsbench.evals.basic import multi_concept_directed_modulation as mcdm_pkg
@@ -108,9 +108,8 @@ def test_dm_one_call_per_item_and_gate(tmp_path, monkeypatch):
         "delta": 1.0,
     }
     assert r.config["aggregate"] == "summary" and r.config["kind"] == "prose"
-    assert r.config["prompt_version"] == reads.stamp(
-        digest.prompt_version(pv, summary_args(DM_EX, tmp_path, pv), "directed_modulation"),
-        "full",
+    assert r.config["prompt_version"] == digest.prompt_version(
+        pv, summary_args(DM_EX, tmp_path, pv), "directed_modulation"
     )
     assert r.config["prompt_version"].startswith(pv + "+digest-v5-task-extractive+sj-v10")
     # native: the same cell counts

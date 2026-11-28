@@ -163,14 +163,16 @@ same builder (the relatedness groups of the new concepts were added to
 
 `plan_sha_pre_0090.json` pins every family's non-fast read plan as it was before the fast subset
 (plan 0090) touched `readplan.py` / `reads.py`: `plan_sha`, and the sha256 of the written plan
-rows under `reads=full` and `reads=lite`. It was written once, under pytest (the conftest stubs
+rows (`rows`). It was written once, under pytest (the conftest stubs
 set nyt_connections' and knowledge_cutoff's nocot texts), on the pre-0090 code, by
 `tests/test_fast_subset.py` with `WSB_WRITE_GOLDEN_0090=1`. A deliberate plan change (a new bank
 version) regenerates it the same way; `--fast` must never move it.
 Since plan 0101 the writer emits today's family keys while this file keeps the pre-0101 ones, so
-a regeneration takes only the changed family's three values from the writer's output (plan 0109,
+a regeneration takes only the changed family's two values from the writer's output (plan 0109,
 2026-11-20: `directed_modulation`, bank v2's 102-row plan; plan 0110, 2026-11-23:
-`chain_intermediates`, bank v3's 120-row plan; every other row is unchanged).
+`chain_intermediates`, bank v3's 120-row plan; every other row is unchanged). 2026-11-27: `rows`
+was re-recorded for every family when plan rows stopped carrying a second read site (two keys
+gone, notes reworded); no `plan_sha` moved.
 
 ## Pinned-path request pin (plan 0096, 2026-11-18)
 

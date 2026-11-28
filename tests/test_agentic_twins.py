@@ -17,7 +17,7 @@ import pytest
 from conftest import write_jsonl, write_sidecar
 from summary_fakes import FakeLLM, first_lines_digest
 
-from wsbench import digest, gate_sampling, llm, reads, registry
+from wsbench import digest, gate_sampling, llm, registry
 from wsbench.cache import fingerprint
 from wsbench.cli import _strs
 from wsbench.evals.safety.agentic_misalignment import SPEC, judge, prompts, score
@@ -668,8 +668,8 @@ def test_summary_fingerprint_unchanged_by_pairs_stamp(fixture_bank, run, tmp_pat
     old_pv = digest.prompt_version(prompts.SUMMARY_C_VERSION, args, family="agentic_misalignment")
     stamp = f"{prompts.SUMMARY_C_VERSION}+{TWIN_C}+{PAIRS}+sonnet-digest+opus5-fb"
     assert stamp == prompts.SUMMARY_STAMP_VERSION
-    assert res.config["prompt_version"] == reads.stamp(
-        digest.prompt_version(stamp, args, "agentic_misalignment"), "full"
+    assert res.config["prompt_version"] == digest.prompt_version(
+        stamp, args, "agentic_misalignment"
     )
     assert res.config["prompt_version"] == old_pv.replace(
         "summ-c4+", f"summ-c4+{TWIN_C}+{PAIRS}+sonnet-digest+opus5-fb+"
@@ -690,9 +690,7 @@ def test_summary_fingerprint_unchanged_by_pairs_stamp(fixture_bank, run, tmp_pat
         assert row["fp"] == fingerprint("C-summary", pv, "claude-sonnet-5", template, user)
         assert ("PERMITTED ACTS" in user) is (lb == "w-a~twin")
     nat, fake = run(_verdicts(**{"w-a": HIT}), "native", items=["w-a"])
-    assert nat.config["prompt_version"] == reads.stamp(
-        f"{prompts.CALL_VERSION}+{TWIN_C}+{PAIRS}", "full"
-    )
+    assert nat.config["prompt_version"] == f"{prompts.CALL_VERSION}+{TWIN_C}+{PAIRS}"
     rows = _cells(tmp_path, "native")
     a_user = next(u for u in fake.users if u.startswith("Below are readouts") and "R:w-a:" in u)
     a_row = next(r for r in rows if r["key"] == "A:w-a:p0")

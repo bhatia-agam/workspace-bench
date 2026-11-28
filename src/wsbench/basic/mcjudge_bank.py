@@ -615,7 +615,7 @@ def verdict(
         ln.pieces is not None and _holds_other(ln.pieces, others, block) for ln in support
     )
     # round 3: a number bridge quoted only as an atomic number / periodic position, with no
-    # counted mention anywhere in the evidence, reads the answer element back (nhop-* lite)
+    # counted mention anywhere in the evidence, reads the answer element back (nhop-*)
     elem = (
         number
         and bool(support)

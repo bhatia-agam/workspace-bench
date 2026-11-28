@@ -58,7 +58,7 @@ numbers.
   of its gold.
 - **Read plan.** No `read_plan_bank`: bank v5 plans its own 98 rows (plan_sha `3c975160…`). The
   68 kept rows equal bank v3's rows on every hashed field, so their readouts carry over; only the
-  30 new items needed new reads. All 30 new prompts end in a word token (lite `k = 1`).
+  30 new items needed new reads. All 30 new prompts end in a word token.
 - **Side tables.** `derived_forms.json` is `mhforms-v2`: 105 keys for the new items' options (32
   with forms); every earlier entry is unchanged and no new key is an option of banks v1-v4, so no
   earlier verdict moves. The gate version is `bank-gate-r11` (r11, #366: the final answer never names the bridge). `split_subjects.json`
@@ -111,7 +111,7 @@ picked, over all 14 configs and prompt-only, is on the v3 list. Gate tests read 
 bank (`tests/test_multihop.py`, `BANK = BANK_V3`), so a list that loosens a regression fails it.
 Replaying the 14 cached configs' gold picks on v2 vs v3 options: 8 cells flip, all pass -> fail,
 all on re-chosen (leaky-in-v2) items, each because the readouts tie the cue to a NEW option in
-the bridge slot: holiday-halloween-monthnum L20/L24/L28/lite ("Halloween is in month number 11
+the bridge slot: holiday-halloween-monthnum L20/L24/L28/last-word ("Halloween is in month number 11
 ... the month of November", 5 samples at L28), bf-tajmahal-continent L52 ("the country where the
 Taj Mahal is located is Brazil", 4; "... France", 4), half-clock-hours L48/L56/L60 ("on a digital
 clock ... is 8 hours", 4). These were the split rule doing its job on options v2 did not show,
@@ -143,18 +143,12 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
 
 ## Read positions (plan 0048)
 
-- **Full (the default):** every token of the plain render, reported as negative offsets
+- Every token of the plain render, reported as negative offsets
   `-n..-1` (`{"kind": "all_from_end"}`), at every judged layer. The summarizer gets all of an
   item's readouts (every position x every layer) in one digest call.
-- **Lite (`reads=lite`):** the last word of the prompt only (`{"kind": "offset_from_end", "k":
-  K}` with `K = -readout.offsets[0]`, 1 or 2), at every layer. This is the 2026-09-23 site
-  (Camila: "multihop should be read on the second to last token, ie the last word, not the space
-  token"): for 31 of bank v5's 98 prompts the final token is a bare space after the last word,
-  so the read is `-2`; for the other 67 it is the final token. Lite is a subset of full, so one
-  read serves both; a lite run stamps `+reads-lite` on its `prompt_version`.
-- A full run needs one contiguous run of at least 8 positions per (item, layer)
+- A run needs one contiguous run of at least 8 positions per (item, layer)
   (`min_full_positions = 8`; the shortest prompt has more). A last-word file with a sidecar exits
-  2 under `reads=full` ("looks like a lite file"); a sidecar-less file is judged report-only and
+  2; a sidecar-less file is judged report-only and
   lists its short items under `extras.partial_ids_unenforced`.
 
 ## Scoring
@@ -226,9 +220,9 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
   element-index word ("Sodium is 11" cut from "Sodium is 11 on the periodic table"); the count
   rescue is unchanged. Both rules only re-scored cached calls (then `config.gate =
   bank-gate-r4`, outside the stamp; the gate version joins the stamp since `bank-gate-r9`). Replay over all 14
-  cached multihop_st configs: exactly the three nhop-*-element lite cells flip. Round 4 re-check (Camila r2: "We still need to check the numbers
+  cached multihop_st configs: exactly the three nhop-*-element last-word cells flip. Round 4 re-check (Camila r2: "We still need to check the numbers
   thing being too lenient"), current gate over all 14 cached configs (11 single layers, all,
-  lite, prompt-only): the number-flood / element-index fix holds everywhere. The three lite
+  last-word, prompt-only): the number-flood / element-index fix holds everywhere. The three last-word
   cells credited on lists of atomic numbers (nhop-soccer/cube/rainbow-element) fail. Of the 86
   remaining number-bridge passes, the 25 whose quote has an element word or whose support line
   holds 3+ distinct numerals were read by hand: each rests on a sample that ties the gold to its
@@ -285,7 +279,6 @@ replaced by `_` (`wsbench.banks.label_of`); `tokens` rows for a token lens.
 ```
 wsbench judge family=multihop_st readouts=examples/readouts/multihop_st.jsonl out=outputs/toy/multihop_st dry_run=True
 wsbench judge family=multihop_st readouts=<arm>.jsonl out=outputs/<arm>/multihop_st limit=3
-wsbench judge family=multihop_st readouts=<arm>.jsonl out=outputs/<arm>/multihop_st-lite opts=reads=lite
 ```
 
 ## Judge prompts
@@ -295,8 +288,8 @@ prompts unchanged from `bank-mc-2026-10-31`; `+bank-gate-r11`: the deterministic
 r10 reading the derived-forms table `mhforms-v2`, r11 never crediting the item's final answer (or a prefix of it) as the bridge; `+bank-v5`: the 98-item bank; summary mode:
 `digest.prompt_version` of it, by default
 `bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
-multi-layer run (`...+digest-v5-task-extractive+sj-v10` for one layer); `+reads-lite` for a lite
-run). The MC calls are keyed `bank-mc-2026-11-01-v3` (no gate or bank tag), so a gate or bank
+multi-layer run (`...+digest-v5-task-extractive+sj-v10` for one layer)).
+The MC calls are keyed `bank-mc-2026-11-01-v3` (no gate or bank tag), so a gate or bank
 change re-scores cached answers. Judge: the
 repo default (`claude-opus-5-5`), temperature 0. Output schema: `{"choice": str, "quote": str}`
 (a letter; an invalid letter is re-asked once, then unjudged). The prompts below are sent

@@ -68,13 +68,11 @@ single-string tokenization of prompt + carrier on all 98 items, and `suffix_text
 the source's carrier positions (checked with the Qwen3.6-27B tokenizer at port time). Source lens:
 O-lens s3d.rl600, k = 2 samples per cell, T 1.0, top_p 0.95, top_k 64, max_new 256.
 
-**Full read** (`reads=full`, the default): every carrier token, one contiguous run; the shortest
+**Read**: every carrier token, one contiguous run; the shortest
 carrier is 7 Qwen3.6-27B tokens (7..9 over the 98 rows, measured 2026-10-30), so
-`EvalSpec.min_full_positions = 7`. **Lite** (`reads=lite`): the same positions and layers as
-full (`same`, plan 0061, Camila 2026-11-02); a lite run differs from full only in its `+reads-lite` stamp. Before
-plan 0061 lite was the final carrier token alone, which carried no signal (pre-refill s3d: final
-token gold 0.04 vs distractor 0.07, the last 4 tokens 0.22 vs 0.21, the full carrier 0.337 vs
-0.289); lite results judged before plan 0061 are stale.
+`EvalSpec.min_full_positions = 7`. The final carrier token alone carries no signal (pre-refill
+s3d: final token gold 0.04 vs distractor 0.07, the last 4 tokens 0.22 vs 0.21, the full carrier
+0.337 vs 0.289).
 
 Subject prompt (the bank's `contract.prompt`; `{topic}` is e.g. `favorite Middle Eastern spice
 blend`):
@@ -120,7 +118,7 @@ row below is re-read on all 98 items (no cached readout exists for the 32 refill
 pre-refill numbers further down are NOT comparable. **What the 2026-10-30/31 WorkspaceBench
 campaign actually ran on this bank:** the campaign's lens of record, the final O-lens
 (`final-olens-rl600-x4` = agu18dec/final_olens `lens_rl_step600`, single bullet, 4 samples per
-activation; Fable decision Q1), at all 11 layers, every single layer and lite, and the Opus 5.5
+activation; Fable decision Q1), at all 11 layers and every single layer, and the Opus 5.5
 prompt-only floor. Those rows carry measured numbers (bench `ea3b960`, judge and summarizer Opus
 5.5; per-layer values in the campaign's `results/model_specific_directed_modulation.json`). The
 no-think and Alice control readouts were produced for the final O-lens
@@ -131,7 +129,6 @@ campaign: a dash in their rows means "not run", not "a run in progress".
 | arm | sampling | produced by | n | headline | distractor | gold − distractor [CI] | derangement null |
 |---|---|---|---|---|---|---|---|
 | **final O-lens `final-olens-rl600-x4`, all 11 layers (campaign run)** | bullet4 | campaign fan-out, judged at `ea3b960` | 98 | **0.357** [0.265, 0.459] | 0.270 | **+0.087** [0.004, 0.182] | 0.000 |
-| final O-lens, lite (final read site only; campaign run; stale since plan 0061: lite = full) | bullet4 | same run, `reads=lite` | 98 | 0.010 [0.000, 0.031] | — | — | — |
 | O-lens s3d-rl600 (all 11 layers; plus one row per layer) | prose1 | not run in this campaign | 98 | — | — | — | — |
 | J-lens top-10, same regex | tokens10 | not run in this campaign | 98 | — | — | — | — |
 | ML-NLA mlnla-rl2-2000 | prose1 | not run in this campaign | 98 | — | — | — | — |

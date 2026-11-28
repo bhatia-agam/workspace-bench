@@ -147,7 +147,7 @@ def _summary_cfg(pv):
 
 
 def test_uses_same_judge_spec():
-    """The floor's instrument is the lens run's stamp without +reads-lite, and its summarizer key
+    """The floor's instrument is the lens run's stamp, and its summarizer key
     the lens's: one rule (summary_floor_applies) draws it."""
     entry = {
         "instrument": "pv+digest-v4-task-extractive+sj-v9",
@@ -158,15 +158,14 @@ def test_uses_same_judge_spec():
     assert not po.summary_floor_applies(entry, _summary_cfg("pv2+digest-v4-task-extractive+sj-v9"))
 
 
-def test_floor_applies_to_single_layer_and_lite_rows():
+def test_floor_applies_to_single_layer_rows():
     entry = {
         "instrument": "pv+digest-v4-task-extractive+sj-v9",
         "summarizer": po.summarizer_key(_summary_cfg("x")),
         "judge_model": "claude-opus-5-5",
     }
-    lite = _summary_cfg("pv+digest-v4-task-extractive+sj-v9+reads-lite")
     one_layer = {**_summary_cfg("pv+digest-v4-task-extractive+sj-v9"), "layers_judged": [44]}
-    assert po.summary_floor_applies(entry, lite) and po.summary_floor_applies(entry, one_layer)
+    assert po.summary_floor_applies(entry, one_layer)
     assert not po.summary_floor_applies({**entry, "not_measurable": True}, one_layer)
 
 

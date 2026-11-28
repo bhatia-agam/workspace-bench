@@ -200,7 +200,7 @@ shared token rule (`mc.token_note`). buggy_code and agentic_misalignment have su
 adaptations of their own (see their READMEs). Run native and summary
 into separate `out=` dirs (`wsbench run` warns when it overwrites a result of the other mode;
 `run.json` records the mode). `cells=frozen` (arithmetic) needs
-`aggregate=native`: summary mode reads every cell (chain's `cells=last` is retired: use `reads=lite`). Options: `summ_model`, `summ_variant=task|blind`,
+`aggregate=native`: summary mode reads every cell (chain's `cells=last` is retired). Options: `summ_model`, `summ_variant=task|blind`,
 `summ_render=extractive|abstractive`, `summ_effort`, `summ_max`, `summ_token_cap` (ablation),
 `summ_overflow=hierarchical|stride`, `summ_concurrency`, `summ_timeout`,
 `summ_fallback=none|default|default+<model>|none+<model>`, `summ_rare`, `summ_numbers`,

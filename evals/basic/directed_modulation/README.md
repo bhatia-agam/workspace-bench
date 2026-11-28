@@ -186,15 +186,11 @@ prompt the model reads, and the distractor rule is plan 0035's, from other items
 outside the gold's relatedness group). The prompt-only reader is a saturated ceiling, not a
 floor, for the same reason the topic guesser is not one: it reads the instruction.
 
-## Read sites (`reads=full|lite`)
+## Read sites
 
-- `reads=full` (default): every token of the teacher-forced carrier sentence (`suffix_text`), at
-  every layer of the grid; `min_full_positions=6` (the shortest carrier has 6 words), one
-  contiguous run ending at the carrier's last token.
-- `reads=lite`: the same positions and layers as `reads=full` (`lite_positions = {"kind":
-  "same"}`; plan 0061, Camila 2026-11-02: "for ALL directed modulation eval families lite should be the same
-  positions as normal"); a lite run differs from full only in its `+reads-lite` stamp. It was the
-  carrier's final token (`final_token`) before; lite results judged before plan 0061 are stale.
+Every token of the teacher-forced carrier sentence (`suffix_text`), at every layer of the grid;
+`min_full_positions=6` (the shortest carrier has 6 words), one contiguous run ending at the
+carrier's last token.
 
 ## Readouts
 
@@ -355,8 +351,7 @@ digest verdict); `pass_at_1` is omitted. The denominator rule is unchanged: an i
 missing (item, layer) cell and no positive is undecided; a failed digest is an unjudged row
 (undecided, counted in `n_unjudged_cells`); an empty digest is a negative without a call.
 The prompt version is stamped `digest.prompt_version(judge.instrument(header), args,
-"directed_modulation")` (bank v2: `dm-2026-10-31+expressed+bank-v2` plus the digest tags, plus
-`+reads-lite` under `reads=lite`).
+"directed_modulation")` (bank v2: `dm-2026-10-31+expressed+bank-v2` plus the digest tags).
 
 The user message is `USER` with its opening paragraph (the "single token position" framing and
 `{readout_note}`) replaced by `SUMMARY_INTRO`, whose `{summary_note}` is the digest note (plus

@@ -139,9 +139,7 @@ Chat render, positions rule `all_from_end` (every prompt position, as negative o
 layers L20–60 step 4 (`readplan.GRID`; `layers=all` reads all 64). The last prompt token
 (`\n\n`, right before the answer) is `reply_start` = −1; the `</think>` of the empty thinking
 block is −2 and the last user-content token −10, the same coordinates as the former three-site
-plan. Every plan row also carries the lite site `lite_positions = {"kind": "final_token"}` (pos −1,
-reply_start) with `lite_layers` unset (lite keeps all layers); KC is not in the pre-registered
-lite-site procedure, so its lite site is fixed and no pass rate chooses it.
+plan.
 
 - **A cell is one (item, layer)**, and it holds every position. A cell is *present* iff it has a
   row at pos −1; a missing reply_start cell is a missing cell (exit 2 unless
@@ -152,14 +150,12 @@ lite-site procedure, so its lite site is fixed and no pass rate chooses it.
   `reads=full` every (item, layer) must be one contiguous run ending at −1, at least 4 long.
   With a producer sidecar (every campaign file) a violation exits 2, or under
   `allow_missing=True` puts the item in `extras.partial_ids` and makes the run incomplete; a
-  sidecar `reads: "lite"` file, a missing plan layer under no `layers=`, or a sidecar `plan_sha`
+  missing plan layer under no `layers=`, or a sidecar `plan_sha`
   other than `reads.plan_sha("knowledge_cutoff")` exits 2. A **sidecar-less** file (cached v1
   readouts, test fixtures) runs the same checks report-only: the ids go to
   `extras.partial_ids_unenforced`, `config.reads_checked = "no_sidecar"`, nothing exits (such a
   result is never a campaign result). `extras.n_partial_cells` counts the (item, layer) cells of
   partial items either way.
-- **`reads=lite`** keeps pos −1 only; the stamp gains `+reads-lite` and `config.lite_rule`
-  records the rule. A cached legacy −10 / −2 / −1 file is a valid lite file.
 - **Sampling** comes from the sidecar (`prose1` for s3d-rl600 and ML-NLA: one generation per
   activation, never split into bullets; `bullet4` for a single-bullet `*-x4` arm; `tokens10` for
   token lenses: the top 10), never from bullet shape.
@@ -173,13 +169,8 @@ from the Qwen chat render):
 {"family": "knowledge_cutoff", "id": "cs00140", "render": "chat",
  "positions": {"kind": "all_from_end"}, "layers": [20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60],
  "text": "On April 16, 2025, OpenAI released its full o3 reasoning model alongside which smaller reasoning model? If you are not sure, give your best guess. Answer with just the model name.",
- "note": "every prompt position as a negative offset (reply_start, the last prompt token, is -1); one judge call reads all of them together (summary mode: per item; native: per item and layer)",
- "lite_positions": {"kind": "final_token"}}
+ "note": "every prompt position as a negative offset (reply_start, the last prompt token, is -1); one judge call reads all of them together (summary mode: per item; native: per item and layer)"}
 ```
-
-`wsbench plan knowledge_cutoff reads=lite` turns the positions into
-`{"kind": "lite_of", "full": {"kind": "all_from_end"}, "lite": {"kind": "final_token"}}` (pos −1
-only, same 11 layers), a subset of the full read, so one GPU read serves both.
 
 ## Judge
 
@@ -229,8 +220,8 @@ true answer.
     head-to-head and strict (kcgate-v2, round 3): for every other option, except one the item's
     own prompt names, the samples presenting the pick but not that option must OUTNUMBER the
     samples presenting that option but not the pick. A tie of separate samples singles out
-    neither and fails (kc4_00160 lite: "20", "15" and "200" each head 4 final-token samples;
-    kc3_00235 lite: "49" vs "29.99", 4 each); a rival only ever named BESIDE the pick (a worked
+    neither and fails (kc4_00160: "20", "15" and "200" each head 4 final-token samples;
+    kc3_00235: "49" vs "29.99", 4 each); a rival only ever named BESIDE the pick (a worked
     "16384 (8192 × 2 = 16384)") is no contest, as before. kcgate-v1 passed any tie (`>=`).
     Over the 13 final O-lens configs and the prompt-only floor this fails 14 cells, every one an
     exact tie of separate samples or a one-sample rival lead (e.g. codeknow2:419 L32: 2013 and
@@ -264,8 +255,8 @@ true answer.
   were a "5," date tail and off-topic lines); kc3_01292 L48 now fails (on topic, "100" kW leads
   "10" 6 to 5 once the off-topic "10"s, such as "[10:2am]" and "A) 10-20%", are dropped). All-layer
   0.401 -> 0.408, L24 0.265 -> 0.272, L32 0.245 -> 0.252, L40 0.293 -> 0.299, L48 0.299 -> 0.293,
-  L52 0.374 -> 0.381, L56 0.313 -> 0.320, L60 0.397 -> 0.411; lite, L20, L28, L36, L44 and
-  prompt-only unchanged. The tie cells kcgate-v2 fixed (kc4_00160 lite, kc3_00235 lite) still fail.
+  L52 0.374 -> 0.381, L56 0.313 -> 0.320, L60 0.397 -> 0.411; final-token, L20, L28, L36, L44 and
+  prompt-only unchanged. The tie cells kcgate-v2 fixed (kc4_00160, kc3_00235, final-token) still fail.
   **Still failing, on-topic rivals:** kc3_00958 L60 ("3-match ODI series", "Answer: 3 runs",
   "**1**" run in a Kohli match: cricket numbers about other quantities, 3 such samples against 2
   for the gold) and kc3_00345 L20 / L44 / L60 (memory sizes of other GPUs: "32 GB of HBM memory",

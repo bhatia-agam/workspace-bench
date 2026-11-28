@@ -1,7 +1,6 @@
 """moral_rationale: which consideration does the readout show the model weighing (plan 0046).
 
-Reads: every position of the chat render by default; ``reads=lite`` keeps the last five (the
-assistant header), selected by ``reads.load`` from the same file. Options: banks v2+ store each MC
+Reads: every position of the chat render. Options: banks v2+ store each MC
 list (gold + 4 same-topic distractors), shuffled with a seed, ``cannot tell`` last; bank v1 keeps
 the ec-v1/ec-v2 pool draw so it stays judgeable. Instrument: ``ec-v9`` for bank v3 and its
 per-bank stamps for v4 / v5 / v7 (one pick per (item, side), the main reason; code only verifies
@@ -530,7 +529,7 @@ def _run_summary(
     contrast: bool,
 ) -> FamilyResult:
     """Summary mode (the default): EVERY loaded cell of an item (all positions x all judged
-    layers under reads=full; the tail five under reads=lite) -> one digest (``expect_all``
+    layers) -> one digest (``expect_all``
     asserts none is dropped); committed items get one MC on it, deliberative items one per side
     on the same digest. An item with no cells and an empty digest are fails (whole-scope
     denominator, as natively); an unsummarized item (a refused or collapsed digest) is

@@ -53,7 +53,7 @@ def _cell(*samples: str, pos: int = -1) -> Cell:
 
 
 def test_kc_tie_of_separate_samples_fails_g3():
-    # kc4_00160 lite: "20" and "15" each open 3 samples -> a tie singles out neither
+    # kc4_00160: "20" and "15" each open 3 samples -> a tie singles out neither
     r = _rules("20", ["20", "15", "200", "30", "49"])
     cells = [_cell("20 per month", "20", "20 dollars", "15", "15 per month", "15 USD")]
     g = kc.gates("20", kc.support(cells, r), r)

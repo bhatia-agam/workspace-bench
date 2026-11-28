@@ -28,9 +28,9 @@ SPEC = register(
         flat_types=FLAT_TYPES,
         multi_select=MULTI_SELECT,
         calls_per_arm=(
-            "summary (default): 480 digests + 480 judge calls (reads=full or lite); native "
-            "cells=all: ≈ 5.3k batched calls (11 layers, one per item and layer) / ≈ 1k under "
-            "reads=lite; cells=frozen: 480"
+            "summary (default): 480 digests + 480 judge calls; native "
+            "cells=all: ≈ 5.3k batched calls (11 layers, one per item and layer); "
+            "cells=frozen: 480"
         ),
         sources="",
     )

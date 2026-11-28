@@ -239,25 +239,3 @@ def test_flat_run_gets_no_credit_end_to_end(
     assert r2.extras["n_gold_pick_flat_list"] == 0
     picked = json.dumps(r2.rows[0], ensure_ascii=False)
     assert '"correct": true' in picked, picked[:2000]
-
-
-# ---------------------------------------------------------------- reads=lite guard (judge side)
-
-
-def test_lite_rule_that_keeps_nothing_fails_loudly(tmp_path):
-    """The multihop_st toy file holds only pos 14 (the lite site itself, positive index, no
-    sidecar): ``offset_from_end`` k=2 over that one position kept nothing, and the run judged
-    zero cells as n plain negatives. Now it exits 2 naming the fix."""
-    import subprocess
-    import sys
-    from pathlib import Path
-
-    root = Path(__file__).resolve().parents[1]
-    p = subprocess.run(
-        [sys.executable, "-m", "wsbench.cli", "judge", "family=multihop_st",
-         f"readouts={root / 'examples/readouts/multihop_st.jsonl'}", "dry_run=True", "reads=lite",
-         f"out={tmp_path / 'o'}"],
-        capture_output=True, text=True, cwd=root,
-    )  # fmt: skip
-    assert p.returncode == 2, p.stdout + p.stderr
-    assert "reads=lite kept no readout" in p.stderr and "declare reads=lite" in p.stderr

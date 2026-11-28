@@ -46,11 +46,7 @@ unpinned diagnostic.
 ## Read plan
 
 Every prompt position of the plain render (`positions {"kind": "all"}`), layers 20..60 step 4
-(`readplan.GRID`; `layers=all|each|<csv>` work as for every family). `reads=lite` keeps the
-final prompt token only (`lite_positions {"kind": "final_token"}`, `lite_layers` = the full
-layers), a subset of the same full read, so one GPU read serves both; lite results are stamped
-`+reads-lite`. Camila 2026-10-30: "Read on all positions and give all this to the judge (final
-position only for fast/lite)". Every loaded cell goes to the digest. Full mode needs, per
+(`readplan.GRID`; `layers=all|each|<csv>` work as for every family). Every loaded cell goes to the digest. A read needs, per
 (item, layer), one contiguous run of at least `EvalSpec.min_full_positions` = 13
 positions (the shortest item's prompt length); a gap or a short run exits 2, or makes the item
 `partial` under `allow_missing=True` (`reads.check_full`). A file without a `<file>.meta.json`
@@ -172,12 +168,12 @@ Russian sentence"); they are measured in the run phase.
 - 2026-11-01 (round 4, tag `+anchor-support-v1`): the anchored support above. The 13
   too-strict cases of ANSWERS_R2 §8 (every one a naming in the raw samples with one sample per
   layer, dropped by the digest): 7 now pass on cached final-olens-rl600-x4 digests (no new calls)
-  — id-kelembapan and el-aftokinitodromos-2 (all), pl-elektroencefalografia (all-lite),
+  — id-kelembapan and el-aftokinitodromos-2 (all), pl-elektroencefalografia (final-token),
   id-invertebrata (L40), ko-copd (L44), ko-cfrp (L56; prompt-only already passed). The other 6
   stay failing on purpose: their lone naming is of a DIFFERENT word (tr-bagimsizlik 'Türkçesi
   "Uzun süreli"', ru-anticyclone 'слово «морозный»'; ko-artificial-neural-network,
   ru-elektrolobzik, pl-jedwabnictwo, fi-mikroaaltouuni L44 alike), the shape multilingual's
-  too-lenient fix refuses. all 0.68 -> 0.72, all-lite 0.25 -> 0.26, prompt-only 0.76 -> 0.76,
+  too-lenient fix refuses. all 0.68 -> 0.72, final-token 0.25 -> 0.26, prompt-only 0.76 -> 0.76,
   single layers +1 to +5 points, nothing lost.
 - 2026-11-04 (tag `+langleg-v1`): the language unit leaves the per-layer conjunction and is scored by the raw-sample leg above, because an equivalent
   one-sample naming passed or failed by whether the digest kept it (mlt-ar-biruqratiyya,
@@ -209,8 +205,7 @@ Russian sentence"); they are measured in the run phase.
 `dry_run=True`.
 
 ```
-wsbench plan families=multilingual_typo out=outputs/plan                 # full: every position
-wsbench plan families=multilingual_typo reads=lite out=outputs/plan-lite # lite: the final token
+wsbench plan families=multilingual_typo out=outputs/plan                 # every position
 wsbench judge family=multilingual_typo readouts=examples/readouts/multilingual_typo.jsonl out=outputs/toy/multilingual_typo dry_run=True
 wsbench judge family=multilingual_typo readouts=<arm>.jsonl out=outputs/<arm>/multilingual_typo limit=3
 ```

@@ -1315,12 +1315,6 @@ def _row_dict(row: Any) -> dict[str, Any]:
     d.pop("note", None)  # prose written in readplan.py, not bank data
     if isinstance(d.get("family"), str):  # v1.2.0: a renamed family hashes as its former key
         d["family"] = hash_name(d["family"])
-    # plan 0032 §2.6.9: the lite site and the reads flag never enter bank_sha, so a lite-rule
-    # edit (or a reads=lite plan) keeps every untouched family's fingerprint
-    for k in ("lite_positions", "lite_layers", "reads"):
-        d.pop(k, None)
-    if isinstance(d.get("extra"), dict) and "reads" in d["extra"]:
-        d["extra"] = {k: v for k, v in d["extra"].items() if k != "reads"}
     return d
 
 

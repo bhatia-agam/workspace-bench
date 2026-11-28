@@ -666,6 +666,48 @@ def test_t1_the_listed_tier_moves_are_the_real_ones():
     assert set(tiers.CORE) == was_core | {by_frozen[f] for f in moved}
 
 
+def test_t1_the_removed_lite_rows_are_put_back_for_listed_families_only():
+    """``lite_removed``: a listed family's lite rows (its lite table membership, its
+    ``lite_rule.json`` file row, its ``calls_per_arm`` text) are read as the golden has them;
+    any other row, an unlisted family, and a listed family in another state are compared as
+    they are."""
+    dec = _declare_mod()
+    golden = json.loads((REPO / "tests/golden/manifest_0101_pre.json").read_text("utf-8"))
+    gf = golden["families"]
+    for fam, label in dec.LITE_TABLES.items():
+        assert gf[fam]["tables"][label] is True
+    for fam, sha in dec.LITE_FILES.items():
+        assert gf[fam]["files"]["other_files"][dec.LITE_FILE] == sha
+        assert not (REPO / registry.family_rel(fam) / dec.LITE_FILE).exists()
+    for fam, (before, today) in dec.LITE_CALLS.items():
+        assert gf[fam]["list"]["calls_per_arm"] == before != today
+        assert registry.FAMILIES[fam].calls_per_arm == today
+    # a golden family as the tree has it now: the listed rows gone, nothing else
+    g = gf["association"]
+    files = {k: v for k, v in g["files"]["other_files"].items() if k != dec.LITE_FILE}
+    now = {
+        **g,
+        "tables": {k: v for k, v in g["tables"].items() if k != dec.LITE_TABLES["association"]},
+        "files": {**g["files"], "other_files": files, "n_other_files": len(files),
+                  "other_files_sha256": "another hash"},
+    }  # fmt: skip
+    assert dec.lite_removed("association", now) == g
+    assert dec.lite_removed("poetry", now) == now  # an unlisted family
+    # another file of the directory moving still shows in the recomputed hash
+    moved = {**now, "files": {**now["files"], "other_files": {**files, "items.json": "x"}}}
+    assert dec.lite_removed("association", moved)["files"] != g["files"]
+    g = gf["agentic_misalignment"]
+    today = dec.LITE_CALLS["agentic_misalignment"][1]
+    assert (
+        dec.lite_removed(
+            "agentic_misalignment", {**g, "list": {**g["list"], "calls_per_arm": today}}
+        )
+        == g
+    )
+    other = {**g, "list": {**g["list"], "calls_per_arm": "another text"}}
+    assert dec.lite_removed("agentic_misalignment", other) == other
+
+
 def test_t1_declare_command_refuses_without_a_bump(tmp_path, monkeypatch, capsys):
     """The CLI on a synthetic tree: writes an entry after a bump, exit 2 without one."""
     dec = _declare_mod()
@@ -710,7 +752,7 @@ def test_t2_a_pre_0101_results_tree_reads_as_the_families_it_was_written_for(bar
     # before 2026-11-20: `<bare>/` was the single-token family, `<bare>_mt/` the multi-token one
     old_st = _stored(tmp_path, bare, st.judge.prompt_version + "+digest-v5-task-extractive+sj-v10")
     old_mt = _stored(tmp_path, f"{bare}_mt", mt.judge.prompt_version)
-    new_mt = _stored(tmp_path, bare, mt.judge.prompt_version + "+reads-lite")
+    new_mt = _stored(tmp_path, bare, mt.judge.prompt_version + "+fast-last_n")
     assert (old_st.family, old_mt.family, new_mt.family) == (st.name, bare, bare)
     with pytest.raises(RenamedKey):
         _stored(tmp_path, bare, "a-stamp-neither-family-wrote")

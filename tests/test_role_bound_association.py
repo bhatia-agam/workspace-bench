@@ -519,29 +519,12 @@ def test_span_without_story_is_kept(tmp_path, fake_llm, mk_args):
     assert res.extras["n_rows_outside_span"] == 0 and len(res.rows) == 19
 
 
-def test_reads_lite_keeps_one_site_per_layer(tmp_path, fake_llm, mk_args):
-    rows = _span_rows(AB, 20, story=0) + _span_rows(AB, 24, story=0)
-    path = write_jsonl(tmp_path / "s.jsonl", rows)
-    fake = fake_llm(_cannot)
-    res = judge.run(mk_args(path, items=[AB], extra={"aggregate": "native", "reads": "lite"}))
-    assert [(r["layer"], r["pos"]) for r in sorted(res.rows, key=lambda r: r["layer"])] == [
-        (20, 118),
-        (24, 118),
-    ]
-    assert len([u for _s, u in fake.calls if not u.startswith("Return")]) == 2
-    assert res.config["prompt_version"] == reads.stamp(prompts.PROMPT_VERSION, "lite")
-
-
-def test_plan_emits_full_and_lite_sites():
+def test_plan_emits_full_sites():
     full = readplan.plan("role_bound_association")
-    lite = readplan.plan("role_bound_association", reads="lite")
-    assert len(full) == len(lite) == 100
+    assert len(full) == 100
     f = next(s for s in full if s.id == AB)
     assert f.layers == readplan.GRID
     assert f.positions == {"kind": "suffix_text_then_tail", "text": judge.SUFFIX_TEXT}
-    assert f.lite_positions == readplan.frozen_lite_rule("role_bound_association")
-    lt = next(s for s in lite if s.id == AB)
-    assert lt.positions["kind"] == "lite_of" and lt.positions["lite"] == f.lite_positions
 
 
 # ---------------------------------------------------------------- summary mode (C1.5)
@@ -637,9 +620,8 @@ def test_summary_stamp_is_computed(tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, _hug_judge(""))
     args = summary_args(path, tmp_path / "o", prompts.PROMPT_VERSION, items=[HUG])
     r = SPEC.run(args)
-    want = reads.stamp(
-        digest.prompt_version(prompts.PROMPT_VERSION + "+maj3v", args, SPEC.name), reads.mode(args)
-    )  # stamped with bank v2 and the majority of 3 draws' verdicts
+    # stamped with bank v2 and the majority of 3 draws' verdicts
+    want = digest.prompt_version(prompts.PROMPT_VERSION + "+maj3v", args, SPEC.name)
     assert r.config["prompt_version"] == want and want.startswith("oa-v3.1+bank-v2+maj3v+digest-")
     assert r.config["draws"] == 3 and r.rows[0]["draw_picks"] and r.rows[0]["majority"]
     assert r.config["roles_lexicon"] == "roles-v1.5"
@@ -671,15 +653,6 @@ def test_dry_run_prints_and_makes_no_calls(tmp_path, mk_args, capsys, monkeypatc
     out = capsys.readouterr().out
     assert prompts.SYSTEM in out and "Q1. Who performs the action (the agent)?" in out
     assert res.value is None and res.rows == [] and res.n_items == 92  # bank v2
-
-
-def test_adapted_bank_offset_lite_falls_back_to_final_token(monkeypatch, tmp_path):
-    rule = {"kind": "offset_from_end", "k": 4}
-    assert readplan._adapted_offset(rule, {}) is False  # the frozen bank keeps the rule
-    monkeypatch.setenv("WSB_BANK_ROOT", str(tmp_path))
-    assert readplan._adapted_offset(rule, {}) is True
-    assert readplan._adapted_offset(rule, {"readout": {"lite": "k4"}}) is False
-    assert readplan._adapted_offset({"kind": "final_token"}, {}) is False
 
 
 def test_spans_compiled_once_same_matches():

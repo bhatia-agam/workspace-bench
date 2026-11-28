@@ -186,13 +186,12 @@ class Producer:
         limit: int = 0,
         layers: Iterable[int] | str | None = None,
         items: Iterable[str] | None = None,
-        reads: str = "full",
         fast: bool = False,
     ) -> Path:
         """Every item of a family into one readouts JSONL, resumable: an item whose rows are
         already in ``out`` is skipped; each item's rows are written in one call. ``layers``:
         None = the plan's, ``"all"`` = every model layer (one forward captures them all), or a
-        list. ``reads="lite"`` reads only the lite sites. Writes the sidecar
+        list. Writes the sidecar
         ``<out>.meta.json`` declaring reads, sampling, reader and plan_sha (plan 0032 §2.9).
         ``fast=True`` (plan 0090) reads the fast plan (``readplan.plan(family, fast=True)``) and
         declares ``"fast": fast.VERSION`` (the active subset: ``fast.DEFAULT`` unless the
@@ -206,7 +205,7 @@ class Producer:
 
         out = Path(out)
         plan_layers: Any = layers if layers == "all" else None
-        specs = readplan.plan(family, layers=plan_layers, reads=reads, fast=fast)
+        specs = readplan.plan(family, layers=plan_layers, fast=fast)
         if layers is not None and layers != "all":
             specs = [replace(s, layers=list(layers)) for s in specs]  # type: ignore[arg-type]
         if items is not None:
@@ -237,7 +236,7 @@ class Producer:
         name = getattr(self.method, "name", "method")
         write_sidecar(
             out,
-            reads=reads,
+            reads=reads_mod.READS,
             sampling=sampling_of(self.method),
             reader=name,
             arm=name,

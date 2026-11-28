@@ -126,7 +126,6 @@ only, header `version: 2` (stamp `hc-2026-11-04b+bank-v2`, as the registered ban
   The hint tokens themselves are never read positions, but the hint is in context at every read
   position.
 - **Layers:** `GRID` (20..60 step 4). With no `layers=`, the judged layers are the file's.
-- **Lite:** the last 32 read positions.
 
 ## Scoring
 

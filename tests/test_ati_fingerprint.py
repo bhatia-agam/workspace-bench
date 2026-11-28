@@ -1,5 +1,5 @@
-"""Plan 0032 §2.6.9 / §2.13: the lite fields never enter an ATI ``bank_sha``, so a family whose
-bank and full plan are unchanged keeps the fingerprint frozen at cd6b0fa."""
+"""Plan 0032 §2.13: a family whose bank and read plan are unchanged keeps the ATI ``bank_sha``
+frozen at cd6b0fa."""
 
 import json
 
@@ -54,8 +54,8 @@ def test_bank_sha_unchanged_for_untouched_families(family, real_families):
     assert ti.bank_fingerprint(family) == FROZEN[family]["bank_sha"], family
 
 
-def test_row_dict_pops_lite_fields():
+def test_row_dict_pops_layers_and_note():
     s = readplan.plan("moral_rationale")[0]
     d = ti._row_dict(s)
-    assert not {"lite_positions", "lite_layers", "layers", "note"} & set(d)
+    assert not {"layers", "note"} & set(d)
     registry.load_all()

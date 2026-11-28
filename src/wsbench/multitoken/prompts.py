@@ -99,7 +99,7 @@ def mc_system(task: str, question_unit: str, *, read: str = "a question") -> str
 # "[N samples, M layers]" markers, not the retired [many]/[several]/[few]/[one] tags
 # mc-brmt-2026-10-31r (round 3): the judge also returns rival_quote, the strongest line giving a
 # DIFFERENT answer (an option or not), and code fails a pick the rival nearly matches in samples
-# (wsbench.rival; 7 all-lite passes rested on a 1-sample gold line beside 5-13-sample non-option
+# (wsbench.rival; 7 final-token passes rested on a 1-sample gold line beside 5-13-sample non-option
 # answers)
 # +optrv-v1 (round 4): every other listed option is weighed in code (family.contested_verdict);
 # +bank-v3: items_v3.json, the Opus-authored same-topic distractors (MC leakage standard)

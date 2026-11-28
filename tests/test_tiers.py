@@ -363,7 +363,7 @@ def test_core_macro_shares_the_macro_exclusions(clean):
     assert cm["value"] is None and m["families"] == ["multihop_st"]
     # the run-level guards raise for the core macro as for the macro
     mixed = [_res("poetry"), _res("multihop_st", config={"reads": "lite"})]
-    with pytest.raises(SystemExit, match="reads modes"):
+    with pytest.raises(SystemExit, match="only full reads are reported"):
         core_macro(mixed)
     # incomplete and wrong-judge core rows carry the macro's reasons
     results = _core_results(

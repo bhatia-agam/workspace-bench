@@ -54,11 +54,10 @@ def _rows_sha(specs) -> str:
 
 
 def _non_fast_shas() -> dict[str, dict[str, str]]:
-    out: dict[str, dict[str, str]] = {"plan_sha": {}, "rows_full": {}, "rows_lite": {}}
+    out: dict[str, dict[str, str]] = {"plan_sha": {}, "rows": {}}
     for fam in readplan.families():
         out["plan_sha"][fam] = reads.plan_sha(fam)
-        out["rows_full"][fam] = _rows_sha(readplan.plan(fam))
-        out["rows_lite"][fam] = _rows_sha(readplan.plan(fam, reads="lite"))
+        out["rows"][fam] = _rows_sha(readplan.plan(fam))
     return out
 
 
@@ -66,7 +65,7 @@ def _non_fast_shas() -> dict[str, dict[str, str]]:
 
 
 def test_non_fast_plan_is_byte_identical_to_pre_0090():
-    """``plan_sha`` and the written plan rows (full and lite) of every family equal the values
+    """``plan_sha`` and the written plan rows of every family equal the values
     recorded on the code before plan 0090 (under pytest: the conftest stubs set nyt's and
     knowledge_cutoff's texts)."""
     got = _non_fast_shas()
@@ -439,8 +438,6 @@ def test_fast_plan_rows(version, fam, monkeypatch):
 def test_fast_plan_refusals():
     with pytest.raises(fast.NotInFast):
         readplan.plan("multihop_st", fast=True)
-    with pytest.raises(SystemExit, match="drop reads=lite"):
-        readplan.plan("poetry", fast=True, reads="lite")
     assert fast.SCOPE not in json.dumps([s.row() for s in readplan.plan(AM)][:2])
 
 
@@ -473,7 +470,7 @@ def test_full_file_is_narrowed_punct_special(tmp_path, mk_args):
     assert {(x.id, x.pos) for x in cells} == {(a, 102), (a, 103), (a, 104), (b, 102), (c, 100)}
     assert rep.fast_fallback_ids == [b] and rep.n_cells_before_fast == 10
     assert json.loads(rep.fast_rule) == {"kind": "punct_special"}
-    assert rep.reads == "full" and reads.config_stamps(args)["reads"] == "full"
+    assert reads.config_stamps(args)["reads"] == "full"
     assert reads.config_stamps(args)["fast_rule"] == rep.fast_rule
     extras = reads.extras_of(args)
     assert extras["n_cells_before_fast"] == 10 and extras["fast_fallback_ids"] == [b]
@@ -532,11 +529,8 @@ def test_a_family_without_fast_positions_is_only_restricted(tmp_path, mk_args):
         assert not mcjudge.is_subset(plain) and plain.scope == ""
 
 
-def test_fast_load_refuses_lite_and_a_dropped_family(tmp_path, mk_args, capsys):
+def test_fast_load_refuses_a_dropped_family(tmp_path, mk_args):
     path = write_jsonl(tmp_path / "x.jsonl", [_cell("a", 1)])
-    with pytest.raises(SystemExit) as e:
-        reads.load(mk_args(path, scope=fast.SCOPE, extra={"reads": "lite"}), "poetry")
-    assert e.value.code == 2 and "drop reads=lite" in capsys.readouterr().err
     with pytest.raises(fast.NotInFast):
         reads.load(mk_args(path, scope=fast.SCOPE), "multihop_st")
 
@@ -1085,7 +1079,6 @@ def test_cli_plan_fast(tmp_path, capsys):
     assert main(["plan", "--fast", "families=poetry,multihop_st", f"out={tmp_path / 'x'}"]) == 2
     assert "multihop_st: not in fast-v1" in capsys.readouterr().err
     assert not (tmp_path / "x").exists()
-    assert main(["plan", "--fast", "reads=lite", f"out={tmp_path / 'y'}"]) == 2
     # fast=False is the plan of record
     assert main(["plan", "fast=False", "families=poetry", f"out={tmp_path / 'z'}"]) == 0
     assert len((tmp_path / "z/poetry.jsonl").read_text().splitlines()) == len(
@@ -1120,8 +1113,6 @@ def test_cli_judge_fast(toy, tmp_path, capsys):
     "extra",
     [
         ["anti_text_inversion=True"],
-        ["reads=lite"],
-        ["opts=reads=lite"],
         ["layers=each"],
         ["opts=aggregate=native"],
         ["opts=judge=mc"],

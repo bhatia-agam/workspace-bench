@@ -26,13 +26,12 @@ top-k list never states "X's Y"; rank is not order).
   because the full read plan changed). Fields used: `id`, `scene`, `stimulus`, `hop1` (outer),
   `hop2` (inner).
 - **Read sites** (`wsbench plan`; Camila 2026-10-30: "every position starting after the second
-  sentence (including the full stop)"): `reads=full` (default) = every token of
+  sentence (including the full stop)"): every token of
   `". In other words, P3 is P1's"` — the full stop that ends sentence two through the possessive
   blank (`{"kind": "suffix_text", "text": ...}`; 9-12 Qwen3.6-27B tokens: 9 for 52 items, 10 for
-  36, 11 for 6, 12 for 6; 966 positions × 11 layers = 10,626 cells per arm). `reads=lite` = the
-  blank alone (`final_token`, today's read; a subset of the full span). Layers: `readplan.GRID`
+  36, 11 for 6, 12 for 6; 966 positions × 11 layers = 10,626 cells per arm). Layers: `readplan.GRID`
   (L20..60 step 4) or any `layers=` subset (`all`, `each`, a csv).
-- **Cells:** `reads.load` does the layer subset, the sidecar, the lite selection and the full
+- **Cells:** `reads.load` does the layer subset, the sidecar and the full
   span check (`min_full_positions = 8`, contiguous). The family then checks, per (item,
   layer): the last read position is the possessive blank (a row's `token` must be a suffix of
   `'s`; Gemma reads `"s"`), and under `reads=full` a run of 2+ positions starts on a token
@@ -63,8 +62,8 @@ rel-s13-b L56 passed on it). A free-standing underscore run and a bracketed plac
 (`(blank)`, `[___]`) now become a non-relation token that breaks every link. relgate-v3 (round
 3): a run of 2+ underscores is a blank even when it touches a word (`barber's ____child`,
 `cousin's________ coach`, `plumber's _______mother`: relgate-v2 missed these and passed rel-s38-a
-and rel-s15-b all-layer, rel-s26-a and rel-s25-a lite, rel-s07-a L52 and rel-s14-b L60 on them;
-all six now fail, nothing else moves); only a word span wrapped in the SAME 1-3 underscores on
+and rel-s15-b all-layer, rel-s07-a L52 and rel-s14-b L60 on them;
+all now fail, nothing else moves); only a word span wrapped in the SAME 1-3 underscores on
 both sides (`__cousin__`, `___child___`) is emphasis, and a lone `_` counts only when it touches
 no letter or digit (`a_b` stays a word). A chain
 followed by a possessive and a blank (`cousin's boss's ___. Here's why`) is embedded. A statement is scanned into relation
@@ -95,7 +94,7 @@ the new `:R2g` re-asks are new calls. Three changes, each tested both ways in `t
 - **Second ask on an order-gate failure.** A gold pick whose quote verifies but whose line fails
   the order gate as `order` / `two_chains` is asked once more with `RETRY_GATE` (below), as gate-1
   failures already were with `RETRY`: rel-s28-b all ("Robert's child's dentist" -> "Cora's son's
-  plumber"), rel-s16-a lite, and five single-layer cells (s07-b L36 / L40, s23-b / s43-b L44,
+  plumber") and five single-layer cells (s07-b L36 / L40, s23-b / s43-b L44,
   s23-a / s31-a / s45-b L52) now quote a line that states the chain alone.
 - **Decisive raw count** (`judge.prominence_rescue`, since removed by `relgate-v6`; History): a
   judged non-gold answer was decided by a decisive raw statement count when one listed chain was
@@ -107,7 +106,6 @@ Re-scored on the cached final O-lens readouts (first calls cached; only the `:R2
 | config | relgate-v3 | **relgate-v4** | flips (all fail -> pass) |
 |---|---|---|---|
 | all | 0.60 | **0.65** | s00-a, s16-a, s35-a, s47-b (prominence); s28-b (re-ask) |
-| lite | 0.56 | **0.59** | s19-b, s41-b (prominence); s16-a (re-ask) |
 | L36 / L40 / L44 | 0.31 / 0.30 / 0.17 | **0.33 / 0.31 / 0.19** | s07-b, s23-b; s07-b; s23-b, s43-b |
 | L52 / L60 | 0.38 / 0.40 | **0.43 / 0.42** | s16-a, s23-a, s31-a, s38-b, s45-b; s07-b, s42-b |
 | L20 / L24 / L28 / L32 / L48 / L56 | 0.13 / 0.19 / 0.05 / 0.08 / 0.25 / 0.47 | unchanged | none |
@@ -358,7 +356,7 @@ or bullets. Item states: no readouts → rowless fail; unsummarized or failed ca
 `n_unjudged_cells`; empty → fail counted in `n_empty_cells` (both count items).
 `prompt_version = digest.prompt_version("rel-v3+relgate-v6", args, "relational_multihop")`
 (`rel-v3+relgate-v6+digest-v5-task-extractive-layered-v1x4+sj-v10` for the default multi-layer
-run, `...+digest-v5-task-extractive+sj-v10` for one layer), `+reads-lite` under `reads=lite`.
+run, `...+digest-v5-task-extractive+sj-v10` for one layer).
 
 ### `BUNDLE_SUMMARY`
 
@@ -428,9 +426,9 @@ summary failure); an in-scope item with no judged unit is a fail. Verdicts are c
 append-only in `<out>/cells.jsonl`, keyed by the call key and a fingerprint of
 `(prompt_version, judge model, reasoning, system, user)`; a rerun retries only failures.
 
-## Numbers: rel-v1 → rel-v2 on the cached readouts (`reads=lite`, 2026-10-30)
+## Numbers: rel-v1 → rel-v2 on the cached readouts (the blank only, 2026-10-30)
 
-The cached files hold the blank only and carry no sidecar, so they are judged `reads=lite`,
+The cached files hold the blank only and carry no sidecar, so they are judged
 report-only (`config.reads_checked = no_sidecar`); the full-span reads come in the run phase.
 Opus 5.5 judge and summarizer; 100 items.
 
@@ -457,7 +455,6 @@ the same cached readouts (`final-olens-rl600-x4`, `reads=full` unless noted):
 | config | rel-v2+relgate-v4 | **rel-v3+relgate-v4** |
 |---|---|---|
 | all | 0.65 | **0.66** |
-| lite | 0.59 | **0.58** |
 | L20 / L24 / L28 / L32 | 0.13 / 0.19 / 0.05 / 0.08 | **0.14 / 0.18 / 0.05 / 0.08** |
 | L36 / L40 / L44 / L48 | 0.33 / 0.31 / 0.19 / 0.25 | **0.31 / 0.33 / 0.16 / 0.22** |
 | L52 / L56 / L60 | 0.43 / 0.47 / 0.42 | **0.43 / 0.46 / 0.41** |

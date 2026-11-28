@@ -299,8 +299,7 @@ loader refuses a bank with any finding, exit 2):
 ## Read
 
 Render `chat_context` of `messages`; positions: every token (system turn, user turn, assistant
-header, empty think block); layers: the grid 20, 24, ..., 60. `reads=lite` reads the same
-positions at the same layers, so it differs from full only by its stamp. A `reads=full` file
+header, empty think block); layers: the grid 20, 24, ..., 60. A readouts file
 holds, per (item, layer), one contiguous run of at least 85 positions (the bank's shortest
 render, the header's `min_render_tokens`) ending at the item's last token.
 

@@ -381,7 +381,7 @@ _ABOUT_FUNCTION = re.compile(
 # sense-v1 (round-3 review): two deterministic same-sense rules on Stage-P groundings.
 # (1) A frequency adverb ("often", "typically", "往往") grounds a concept only when the concept
 # states frequency or typicality, and "common" in a fixed collocation where it means shared /
-# vernacular ("common names", pt-fineweb-0021 all-lite L24) states neither.
+# vernacular ("common names", pt-fineweb-0021 L24) states neither.
 _FREQ_TOKENS = frozenset(
     {
         *("often", "usually", "frequently", "sometimes", "typically", "generally", "commonly"),

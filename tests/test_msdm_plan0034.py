@@ -1,6 +1,6 @@
 """model_specific_directed_modulation, plan 0034 (Camila's "Directed modulation obscure" section,
 O1-O3, and G8): the rename, the control arms, the derangement null, the joined summary gate, the
-lite read and the unchanged scorer."""
+full carrier span and the unchanged scorer."""
 
 import hashlib
 import json
@@ -76,7 +76,6 @@ def test_dmo_readme_numbers_are_current_bank():
     arms = [
         # round 3 (ROUND3_TODO L180): the campaign's final O-lens rows replace "pending"
         "final O-lens `final-olens-rl600-x4`, all 11 layers",
-        "final O-lens, lite",
         "O-lens s3d-rl600",
         "J-lens top-10",
         "ML-NLA",
@@ -212,9 +211,7 @@ def test_dmo_scorer_unchanged():
 # ---------------------------------------------------------------- G8
 
 
-def test_dmo_lite_same_as_full_span():
-    row = readplan.plan(NAME)[0]
-    assert row.lite_positions == {"kind": "same"} and row.lite_layers is None  # plan 0061
+def test_dmo_full_span():
     assert pkg.SPEC.min_full_positions == judge.MIN_CARRIER_TOKENS == 7
     assert pkg.SPEC.full_contiguous is True
     assert pkg.SPEC.task_note == prompts.DIGEST_TASK_NOTE

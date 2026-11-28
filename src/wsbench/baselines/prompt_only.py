@@ -188,15 +188,13 @@ def entry_of(r: Any, summary: bool) -> dict[str, Any]:
             )
         },
         "judge_model": r.config.get("judge_model"),
-        # plan 0032 §2.11.7: one floor serves full and lite rows (and every layer config)
+        # plan 0032 §2.11.7: one floor serves every layer config
         # a native floor is read back against the family's (registered) stamp, so a re-stamped
         # adapted row (plan 0072 0.2) stores its registered one; a summary floor keeps the row's
-        "instrument": _strip_reads(
-            str(
-                (None if summary else r.config.get("registered_prompt_version"))
-                or r.config.get("prompt_version")
-                or ""
-            )
+        "instrument": str(
+            (None if summary else r.config.get("registered_prompt_version"))
+            or r.config.get("prompt_version")
+            or ""
         ),
         "layers_judged": r.config.get("layers_judged") or r.config.get("layers"),
         "complete": r.complete,
@@ -429,7 +427,7 @@ def summary_floor_matches(entry: dict[str, Any], config: dict[str, Any]) -> bool
     # stamp, so a registered floor is drawn exactly as before the re-stamp and a floor frozen
     # from re-stamped rows matches the re-stamp
     stamps = {
-        _strip_reads(str(config.get(k) or ""))
+        str(config.get(k) or "")
         for k in ("prompt_version", "registered_prompt_version")
         if config.get(k)
     }
@@ -475,12 +473,6 @@ def floor_label(entry: dict[str, Any]) -> str:
         elif isinstance(v, int | float):
             text += f"; Opus alone {float(v):.3f}"
     return text
-
-
-def _strip_reads(pv: str) -> str:
-    from wsbench.reads import strip_reads
-
-    return strip_reads(pv)
 
 
 def archive_qwen_summary() -> bool:

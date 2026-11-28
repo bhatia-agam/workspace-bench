@@ -28,7 +28,7 @@ def test_dory_band_is_the_2_loop_lens_sites_one_per_grid_layer():
     assert len(band) == len(GRID_27B) and not set(band) & EXIT_1 and max(band) < DORY.n_layers
     # the table rule: grid layer i reads band[i], so every site is read once
     assert [remap_layer(g, DORY.n_layers, band) for g in GRID_27B] == list(band)
-    # off-grid layers (lite rows, buggy_code cells) snap into the band, never onto exit 1
+    # off-grid layers (buggy_code cells) snap into the band, never onto exit 1
     off = [remap_layer(x, DORY.n_layers, band) for x in range(64)]
     assert set(off) <= set(band)
     assert remap_layers([56, 60], DORY.n_layers, band) == [59, 63]

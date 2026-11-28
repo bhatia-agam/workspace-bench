@@ -652,15 +652,7 @@ def test_alt_judge_cell_matches_only_the_same_measurement():
     assert alt_judge_cell(pinned, opus).endswith("n=10; 2 cells unjudged or missing; 1 undecided)")
     opus.counts["n_unjudged_cells"] = 0
     opus.extras["n_pairs_undecided"] = 0
-    # the lite row of the same readouts matches its own lite run
-    lite = _result(
-        "jailbreak_recognition", pv + "+reads-lite", judge="claude-sonnet-5", reads="lite"
-    )
-    opus_lite = _result(
-        "jailbreak_recognition", pv + "+reads-lite", judge="claude-opus-5-5", reads="lite"
-    )
-    assert alt_judge_matches(lite, opus_lite)
-    # never: the same judge, another instrument, other layers, another read mode, other
+    # never: the same judge, another instrument, other layers, other
     # digest settings, a subset run, or no row at all
     assert alt_judge_cell(pinned, None) == "—"
     same = _result("jailbreak_recognition", pv, judge="claude-sonnet-5", layers=[44])
@@ -669,7 +661,6 @@ def test_alt_judge_cell_matches_only_the_same_measurement():
         _result("jailbreak_recognition", "jb-v1+digest-v5", judge="claude-opus-5-5", layers=[44]),
         _result("jailbreak_recognition", pv, judge="claude-opus-5-5", layers=[48]),
         _result("jailbreak_recognition", pv, judge="claude-opus-5-5", layers=None),
-        _result("jailbreak_recognition", pv, judge="claude-opus-5-5", layers=[44], reads="lite"),
         _result("jailbreak_recognition", pv, judge="claude-opus-5-5", layers=[44], limit=3),
         _result("jailbreak_recognition", pv, judge="claude-opus-5-5", layers=[44], items=["a"]),
         _result("agentic_misalignment", pv, judge="claude-opus-5-5", layers=[44]),

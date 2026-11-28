@@ -213,7 +213,6 @@ REQUIRED_ITEM_FIELDS: `name`, `prompt`, `mc`.
 | item | `mc.aliases` | yes | silent | build | association/judge.py:80,117 |  |
 | item | `mc.distractor_aliases` | yes | silent | build | association/judge.py:120 | absent: weaker other-option checks in steps 3b / 3c (lenient) |
 | resource | `distractor count` |  | silent | build | association/prompts.py:24 |  (checked) |
-| resource | `evals/association/association/lite_rule.json` |  | - | copy-verbatim | readplan.py:116-127 | family-keyed ({kind: same}) |
 | qwen | `chat_summarize render + SUMMARIZE_SUFFIX` |  | - | subject | readplan.py:23, 925-941 | positions from the subject's own render (suffix_text_then_tail) |
 | qwen | `min_full_positions=19` |  | - | subject | association/__init__.py:27 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
@@ -236,7 +235,7 @@ Header: `contract.multi_token`, `contract.include_target`, `contract.native_lang
 | qwen | `LANGUAGE_NAMES {en,zh,ja,ko}` |  | - | hazard | multitoken/prompts.py:30 | any other native code is rendered as the raw ISO code in the judge prompt |
 | item | `probe_token_lens` | yes | exit | subject | multitoken/regex.py:346-360 | Qwen token counts per form; restamped on the subject (adapt/run.py:358-386) |
 | item | `eval_render` | yes | fallback | copy-verbatim | readplan.py:707-731 | not 'chat': per-item v1 plain final-token read (checked) |
-| item | `readout` | yes | silent | copy-verbatim | readplan.py:707-731 | readout.lite; absent = final_token lite (readplan.py:725) |
+| item | `readout` | yes | silent | copy-verbatim | readplan.py:707-731 |  |
 | item | `mc.readout` | yes | fallback | build | multitoken/options.py:207-212 |  |
 | item | `name_forms.readout` | yes | silent | build | multitoken/family.py:1273-1280 | absent: the unit's own forms (no zh, no aliases) |
 | item | `lang` |  | exit | build | multitoken/options.py:13-26 | L2 items only |
@@ -290,7 +289,7 @@ Header: `read_cells`.
 | item | `bug_line` |  | silent | build | buggy_code/prompts.py:162-163 | buggy items |
 | item | `language` |  | silent | copy-verbatim | buggy_code/prompts.py:167 | absent = '?' |
 | item | `verified` |  | silent | build | buggy_code/prompts.py:169 | absent = '?' |
-| header | `read_cells` | yes | exit | subject | buggy_code/judge.py:268-276; readplan.py:992 | subject layers; lite_layers double-remapped by plan() (A1.8) |
+| header | `read_cells` | yes | exit | subject | buggy_code/judge.py:268-276; readplan.py:992 | subject layers |
 | id_rule | `-au- / -au-clean- twin ids` |  | - | build | adapt/author.py:308; adapt/run.py:271-273 | adapt tooling only; the judge pairs by `twin` |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
@@ -522,7 +521,6 @@ SUBJECT_FIELDS: `stimulus`, `reason_class`, `options`, `gate_pass`, `look_for_re
 | item | `look_for_reasons` |  | - | subject | moral_rationale/judge.py:123-167 | v1 only |
 | item | `reasons` |  | - | subject | moral_rationale/judge.py:248-261 | v1 path only; the subject's distilled reasons (rekey / adopt) |
 | item | `subject_answer` |  | - | subject | - | adapt-time (SUBJECT_FIELDS) |
-| qwen | `lite last_n 5 = Qwen assistant header` |  | - | subject | readplan.py:888-893 |  |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
 ### multi_concept_directed_modulation
@@ -594,7 +592,7 @@ SUBJECT_FIELDS: `readout`.
 | item | `mc.bridge_type` | yes | silent | build | basic/mcjudge_bank.py:236,529,545,681 | absent: a number bridge is matched as text (flood / element rules off) |
 | item | `mc.aliases` | yes | silent | build | basic/mcjudge_bank.py:449 |  |
 | item | `mc.distractor_aliases` | yes | silent | build | basic/mcjudge_bank.py:251,454 |  |
-| item | `readout.offsets` | yes | silent | subject | readplan.py:527-541 | lite last-word offset in the subject's tokens; absent = [-1] |
+| item | `readout.offsets` | yes | silent | subject | readplan.py:527-541 | last-word offset in the subject's tokens; absent = [-1] |
 | resource | `evals/basic/multihop_st/derived_forms.json` |  | silent | build | basic/mcjudge_bank.py:430-449 | keyed by option value; a set's own WSB_BANK_ROOT/multihop_st/derived_forms.json adds forms for new values; a value in neither has no derived forms (name and aliases) |
 | id_rule | `^nhop-.+-element$` |  | silent | hazard | basic/mcjudge_bank.py:336-344,560 | element-index widening keyed on the id (checked) |
 | qwen | `zh forms in mc.aliases` |  | - | subject | evals/basic/multihop_st/items_v3.json |  |

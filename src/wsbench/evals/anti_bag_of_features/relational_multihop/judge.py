@@ -152,11 +152,11 @@ def pick_class(choice: object, opts: Options) -> str:
     return opts.classes[choice - 1]
 
 
-def select_cells(cells: list[Cell], *, full: bool = False, reader: str = "") -> list[Cell]:
-    """The family content checks on what ``reads.load`` returned (it does the lite selection and
-    the span check). Per (id, layer): the max-pos row is the possessive blank (a row carrying a
-    ``token`` must be a suffix of ``'s``; Gemma reads ``"s"``); under ``reads=full`` a run of
-    two or more positions starts on a token ending in the full stop of sentence two. Raises
+def select_cells(cells: list[Cell], *, reader: str = "") -> list[Cell]:
+    """The family content checks on what ``reads.load`` returned (it does the span check). Per
+    (id, layer): the max-pos row is the possessive blank (a row carrying a ``token`` must be a
+    suffix of ``'s``; Gemma reads ``"s"``); a run of two or more positions starts on a token
+    ending in the full stop of sentence two. Raises
     otherwise. A ``prompt_only:`` reader (one cell per item) is waived."""
     if reads.is_prompt_only(reader):
         return list(cells)
@@ -173,8 +173,7 @@ def select_cells(cells: list[Cell], *, full: bool = False, reader: str = "") -> 
             )
         first = min(cs, key=lambda c: c.pos)
         if (
-            full
-            and len(cs) > 1
+            len(cs) > 1
             and first.token is not None
             and not _clean(first.token).strip().endswith(".")
         ):
@@ -353,7 +352,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     scope = item_scope(bank, args)
     opts = {it["id"]: build_options(it["id"], it["hop1"], it["hop2"]) for it in scope}
     cells, rep = reads.load(args, FAMILY, ids=[it["id"] for it in scope])
-    cells = select_cells(cells, full=reads.mode(args) == "full", reader=rep.reader)
+    cells = select_cells(cells, reader=rep.reader)
     if digest.summary_mode(args):
         return _extras_of_load(args, _run_summary(args, bank, scope, opts, cells, rep))
     groups: dict[tuple[str, int], list[Cell]] = defaultdict(list)

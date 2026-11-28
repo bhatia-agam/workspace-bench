@@ -196,7 +196,7 @@ def test_item_shape_invariants(tmp_model):
     # invariant 1: one question; the entity only inside it
     assert it["text"].startswith("What is ") and "Gruta do Zorvan" in it["text"]
     assert it["text"].endswith(SFX.format(t={h: t for h, _p, t in mmh.HOPS}[it["hop"]]))
-    # invariant 2: post = every position after the entity, contiguous; lite = last 12
+    # invariant 2: post = every position after the entity, contiguous; tail = last 12
     decoded = "".join(chr(i) for i in it["input_ids"])
     ent = "".join(chr(it["input_ids"][p]) for p in it["spans"]["entity"])
     assert ent == it["entity"] == "the Gruta do Zorvan" or ent == "Gruta do Zorvan"

@@ -79,20 +79,17 @@ def answer(choice: int, quote: str):
     return lambda s, u, sc: {"choice": choice, "quote": quote}
 
 
-# ---------------------------------------------------------------- W1: every token; lite = final
+# ---------------------------------------------------------------- W1: every token
 
 
-def test_plan_reads_every_token_and_lite_reads_final():
+def test_plan_reads_every_token():
     rows = readplan.plan("wrong_intermediate")
     assert len(rows) == 100
     for s in rows:
         assert s.positions == {"kind": "all"}
-        assert s.lite_positions == {"kind": "final_token"} and s.lite_layers is None
         assert s.layers == readplan.GRID and s.render == "plain"
     toks = [f"t{i}" for i in range(17)]
-    full = readplan.resolve(rows[0].positions, toks)
-    assert full == list(range(17))
-    assert readplan.lite_select(full, rows[0].lite_positions) == [16]
+    assert readplan.resolve(rows[0].positions, toks) == list(range(17))
 
 
 def test_full_plan_rows_have_min_positions():
@@ -150,28 +147,10 @@ def test_full_summary_gets_every_position_and_layer(tmp_path, monkeypatch):
     keys = {(c.layer, c.pos) for c in got["cells"]}
     assert len(got["cells"]) == 42 and keys == {(L, p) for L in (20, 44, 60) for p in range(14)}
     assert sorted((c.layer, c.pos) for c in got["expect_all"]) == sorted(keys)
-    assert r.config["reads"] == "full" and not r.config["prompt_version"].endswith("+reads-lite")
+    assert r.config["reads"] == "full"
     assert r.config["prompt_version"] == digest.prompt_version(
         wp.PROMPT_VERSION, summary_args(tmp_path, tmp_path, "x"), "wrong_intermediate"
     )
-
-
-def test_lite_summary_gets_final_position_only(tmp_path, monkeypatch):
-    got = {}
-    real = digest.collapse
-
-    def spy(name, cells_by_item, **kw):
-        got["cells"] = [c for cs in cells_by_item.values() for c in cs]
-        return real(name, cells_by_item, **kw)
-
-    monkeypatch.setattr(digest, "collapse", spy)
-    FakeLLM.install(monkeypatch, judge=answer(7, ""))
-    r = run_items(tmp_path, toy_file(tmp_path), [BEETHOVEN], extra={"reads": "lite"})
-    assert len(got["cells"]) == 3 and {c.pos for c in got["cells"]} == {13}
-    assert r.config["prompt_version"].endswith("+reads-lite")
-    assert json.loads(r.config["lite_rule"]) == [
-        {"layers": None, "positions": {"kind": "final_token"}}
-    ]
 
 
 def test_one_position_full_file_with_sidecar_exits(tmp_path, monkeypatch):

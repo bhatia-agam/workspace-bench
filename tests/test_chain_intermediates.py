@@ -957,9 +957,7 @@ def test_prompt_only_file_judged_like_a_lens(tmp_path, monkeypatch, toy_v2):
     b = spec_run(summary_args(p_lens, tmp_path / "o2", cp.PROMPT_VERSION, items=ids))
     assert systems == {cp.SYSTEM_MC} and fake.n("digest") == 4
     assert a.config["reads_checked"] == "prompt_only"
-    assert reads.strip_reads(a.config["prompt_version"]) == reads.strip_reads(
-        b.config["prompt_version"]
-    )
+    assert a.config["prompt_version"] == b.config["prompt_version"]
 
 
 def test_summary_gets_every_position_and_layer(tmp_path, monkeypatch, toy_v2):
@@ -1062,30 +1060,9 @@ def test_chain_quote_across_bullet_mark_verifies():
 
 def test_cells_last_is_retired(tmp_path, toy_v2):
     path = write_jsonl(tmp_path / "r.jsonl", _cell_rows("chain-t-d2-0002", {}))
-    for extra in ({"cells": "last"}, {"cells": "all", "reads": "lite"}):
-        with pytest.raises(SystemExit) as e:
-            spec_run(summary_args(path, tmp_path / "o", cp.PROMPT_VERSION, extra=extra))
-        assert e.value.code == 2
-
-
-def test_native_lite_judges_final_token_per_layer(tmp_path, monkeypatch, toy_v2):
-    rows = _cell_rows("chain-t-d2-0002", {(20, 49): "the value is 12"})
-    path = write_jsonl(tmp_path / "r.jsonl", rows)
-    seen = []
-
-    def fake_run_calls(calls, **kw):
-        seen.extend(calls)
-        return {c.key: _res([12], "12") if "12" in c.user else _res([]) for c in calls}
-
-    monkeypatch.setattr(judge, "run_calls", fake_run_calls)
-    args = native_args(readouts=path, out=tmp_path / "o",
-                       judge=resolve(JudgeConfig(prompt_version=PROMPT_VERSION)), layers=None,
-                       items=["chain-t-d2-0002"], limit=0, allow_missing=False, concurrency=1,
-                       rpm=1.0, dry_run=False, extra={"reads": "lite"})  # fmt: skip
-    r = judge.run(args)
-    assert {(c.meta["layer"], c.meta["pos"]) for c in seen} == {(20, 49), (24, 49)}
-    assert r.value == 1.0 and r.config["prompt_version"] == cp.NATIVE_PROMPT_VERSION + "+reads-lite"
-    assert "null_perm_any_cell" in r.extras and "net" in r.extras
+    with pytest.raises(SystemExit) as e:
+        spec_run(summary_args(path, tmp_path / "o", cp.PROMPT_VERSION, extra={"cells": "last"}))
+    assert e.value.code == 2
 
 
 def test_key_examples_show_how_the_lens_states_each_key():

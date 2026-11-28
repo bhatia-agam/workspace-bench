@@ -32,7 +32,6 @@ import os
 from pathlib import Path
 from typing import Any
 
-from wsbench import reads
 from wsbench.baselines import prompt_only_opus as po
 from wsbench.baselines import text_inversion as ti
 
@@ -142,7 +141,7 @@ def record(results: list[Any], tag_list: list[str]) -> dict[str, dict[str, Any]]
     draw is listed under ``undecided`` (it is never a fail-by-default pass of the gate)."""
     out: dict[str, dict[str, Any]] = {}
     for t, r in zip(tag_list, results, strict=True):
-        inst = reads.strip_reads(str(r.config.get("prompt_version", "")))
+        inst = str(r.config.get("prompt_version", ""))
         for row in r.rows:
             e = out.setdefault(row["id"], {"draws": 0, "picked_gold": 0, "kinds": {},
                                            "undecided": [], "instrument": inst})  # fmt: skip

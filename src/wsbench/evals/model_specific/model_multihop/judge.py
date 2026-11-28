@@ -524,10 +524,6 @@ def run(args: JudgeArgs) -> FamilyResult:
     positions = {it["id"]: [int(p) for p in it["positions"]] for it in scope}
     cells, rep = reads.load(args, NAME, ids=ids, positions=positions)
     layers = sorted(args.layers) if args.layers is not None else list(rep.layers)
-    if reads.mode(args) == "lite":
-        positions = {
-            i: sorted({c.pos for c in cells if c.id == i}) or ps for i, ps in positions.items()
-        }
     expected = expected_cells(positions, layers)
     if rep.reads_checked == "prompt_only":
         # a prompt_only: reader is waived from the span checks: its expected cells are the ones

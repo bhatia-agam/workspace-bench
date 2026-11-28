@@ -132,8 +132,6 @@ indices; the family is model-specific (README "Porting"), with no adapt builder.
   answer suffix and the assistant header; the bridge's own question text is 1–3 tokens of it).
 - **layers** `GRID` (L20–60 step 4). A single-layer reader is judged with an explicit layer and
   a sidecar that declares it: `layers=42` (NLA), `layers=63` (logit lens).
-- **lite** = gw `tail`: the last 12 positions (`last_n` 12; s3d names the bridge in 24% of its
-  readouts there).
 - `min_full_positions` 16, contiguous.
 
 ## Scoring

@@ -38,7 +38,7 @@ class RefusedError(Exception):
 
 
 def _strip_layered_pv(pv: str) -> str:
-    return _LAYERED.sub("", po._strip_reads(pv))
+    return _LAYERED.sub("", pv)
 
 
 def _no_layer_mode(summ: object) -> object:

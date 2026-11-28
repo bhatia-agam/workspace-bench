@@ -187,7 +187,7 @@ def test_jlens_concept_about_a_function_word_keeps_its_grade():
 
 
 def test_jlens_frequency_adverb_needs_a_frequency_concept():
-    # pt-fineweb-0021 all-lite L24: "often" for "common names" (common = vernacular) is out
+    # pt-fineweb-0021 L24: "often" for "common names" (common = vernacular) is out
     assert jp.grounding_void("often", "common names")
     assert jp.grounding_void(" commonly", "common names")
     # frequency / typicality concepts keep the grade

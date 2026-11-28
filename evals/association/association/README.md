@@ -162,17 +162,8 @@ decision (gate or separately score the stereotype items, or neutral topic lines)
 `enable_thinking=False`; the user turn is the scene + `"\n\nSummarize the preceding story in one
 sentence."`), positions rule `suffix_text_then_tail` = the 19 tokens from `Sum` through the final
 `\n\n` after `</think>` (story positions are never read; the conjunctive / role-bound sites
-exactly, `docs/read_sites.md`), layers `readplan.GRID` (20..60 step 4). `reads=full` needs every
-(item, layer) to hold one contiguous run of 19 positions (`min_full_positions = 19`).
-`reads=lite` reads **every** full site: the lite rule is `same` (`evals/association/association/lite_rule.json`;
-Camila r2, 2026-11-01: "Make lite subset all positions"), so for association lite selects exactly
-the `reads=full` cells (all 19 positions of the summary request x every grid layer) and a lite
-run differs from the full run only in its `+reads-lite` stamp; the lite number equals the full
-number up to judge sampling. The round-3 single site (`offset_from_end k=7`, the `<|im_start|>`
-of the assistant header, chosen by the support-share procedure `scripts/lite_site_table.py`:
-26.5% of the gold-bearing all-layer digest lines vs 7.5% at the final token) is superseded; its
-measurement table stays in `lite_rule.json` as the record. Lite is a subset of the full
-positions (here: all of them), so no re-read.
+exactly, `docs/read_sites.md`), layers `readplan.GRID` (20..60 step 4). Every
+(item, layer) must hold one contiguous run of 19 positions (`min_full_positions = 19`).
 `layers=all|each|<csv>` work as for every family.
 
 ## Scoring
@@ -264,8 +255,7 @@ form rule for `HOMOGRAPH_GOLDS` and no raw-sample out-naming guard) and the bank
 `bank-v5`: bank v3 minus two items), so cached answers re-score with no new call. Summary runs
 stamp `digest.prompt_version(PROMPT_VERSION, ...)`:
 `assoc-mc-2026-11-01-v3+gate-a2+bank-v5+digest-v5-task-extractive-layered-v1x4+sj-v10` for the
-default multi-layer run, `...+digest-v5-task-extractive+sj-v10` for a single layer; lite runs add
-`+reads-lite`. Judge: the
+default multi-layer run, `...+digest-v5-task-extractive+sj-v10` for a single layer. Judge: the
 repo default (`claude-opus-5-5`). Output schema `readout_mc` / `quote_mc`:
 `{"choice": int, "quote": str}`. Option order: `mc.seeded_shuffle(gold + distractors,
 "assoc-v2-20261030:<id>")`, then `"cannot tell from the readout"` last.

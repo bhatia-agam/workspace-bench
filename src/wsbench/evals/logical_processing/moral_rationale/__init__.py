@@ -48,7 +48,7 @@ SPEC = register(
         run=judge.run,
         task_note=_prompts.DIGEST_TASK_NOTE,
         # plan 0046 §2.5: a full read is every render position (>= 30), one contiguous run; 6 is
-        # the smallest count a tail-5 (lite) file cannot satisfy
+        # the smallest count a tail-5 file cannot satisfy
         min_full_positions=6,
         full_contiguous=True,
         flat_types=(),

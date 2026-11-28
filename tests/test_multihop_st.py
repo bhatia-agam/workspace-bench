@@ -1,4 +1,4 @@
-"""multihop_st (plan 0048): bank v2 with frozen MC options, the blind bank MC judge, full/lite
+"""multihop_st (plan 0048): bank v2 with frozen MC options, the blind bank MC judge, full
 reads, out of ATI. No API calls: every judge answer is scripted."""
 
 import json
@@ -116,7 +116,7 @@ def test_not_in_ati(tmp_path, real_families):
     assert rc == 0
 
 
-# ---------------------------------------------------------------- C2: full and lite reads
+# ---------------------------------------------------------------- C2: full reads
 
 
 def test_bank_v2_header_and_rekey():
@@ -163,48 +163,13 @@ def _cannot_judge(seen: list[str]):
     return judge
 
 
-def test_lite_selects_last_word(tmp_path, monkeypatch):
-    _spec()
-    # atomic-26-symbol: k=2 (prompt ends in a bare space); bf-eiffel-currency: k=1
-    path = write_jsonl(
-        tmp_path / "r.jsonl",
-        _rows({"atomic-26-symbol": [-3, -2, -1]}, readplan.GRID)
-        + _rows({"bf-eiffel-currency": list(range(6))}, readplan.GRID),
-    )
-    seen: list[str] = []
-    FakeLLM.install(monkeypatch, judge=_cannot_judge(seen))
-    args = native_args(
-        readouts=path,
-        out=tmp_path / "o",
-        judge=resolve(JudgeConfig(prompt_version="pv")),
-        layers=None,
-        items=None,
-        limit=0,
-        allow_missing=True,
-        concurrency=1,
-        rpm=1.0,
-        dry_run=False,
-        extra={"reads": "lite"},
-    )
-    res = _spec().run(args)
-    assert len(seen) == 2 * len(readplan.GRID)
-    for u in seen:
-        blocks = [ln for ln in u.splitlines() if ln.startswith("[position ")]
-        if "atomic-26-symbol" in u:
-            assert blocks == ["[position -2]"]
-        else:
-            assert blocks == ["[position 5]"]
-    assert res.config["prompt_version"].endswith("+reads-lite")
-    assert res.config["reads"] == "lite"
-
-
 def _all_items_one_pos(tmp_path) -> Path:
     rows = [
         {"id": i, "layer": L, "pos": -1, "samples": ["R:x"]}
         for i in {**_items(), **_items(REGISTERED)}
         for L in readplan.GRID
     ]
-    return write_jsonl(tmp_path / "lite.jsonl", rows)
+    return write_jsonl(tmp_path / "one_pos.jsonl", rows)
 
 
 def _args(path, out, **kw):
@@ -224,7 +189,7 @@ def _args(path, out, **kw):
     )
 
 
-def test_full_on_lite_file_exits_2(tmp_path, monkeypatch):
+def test_full_on_one_position_file_exits_2(tmp_path, monkeypatch):
     spec = _spec()
     path = _all_items_one_pos(tmp_path)
     write_sidecar(path, reads="full", sampling="prose1", reader="test", arm="t", layers=None)
@@ -242,7 +207,7 @@ def test_full_on_lite_file_exits_2(tmp_path, monkeypatch):
 
 def test_full_on_partial_file_allow_missing_is_incomplete(tmp_path, monkeypatch):
     spec = _spec()
-    # 3 positions per cell: more than one (not "a lite file"), fewer than min_full_positions
+    # 3 positions per cell: more than one, fewer than min_full_positions
     rows = [
         {"id": i, "layer": L, "pos": p, "samples": ["R:x"]}
         for i in _items(REGISTERED)
@@ -613,7 +578,7 @@ SODIUM = (
 
 
 def test_r3_atomic_number_quote_is_not_the_bridge():
-    """Too lenient before (nhop-soccer/cube/rainbow-element at lite): the quote names the gold
+    """Too lenient before (nhop-soccer/cube/rainbow-element): the quote names the gold
     number only as the answer element's atomic number / periodic position."""
     v = _pick_c("nhop-soccer-element", [SODIUM], "Sodium\u2019s atomic number is **11**")
     assert v["element_index"] and not v["correct"]

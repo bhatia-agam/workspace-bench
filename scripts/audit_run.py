@@ -1,4 +1,4 @@
-"""Mechanical audit of a judged run (gpu.md G9; plan 0032 late fix 2: the frozen lite rule).
+"""Mechanical audit of a judged run (gpu.md G9).
 
     python scripts/audit_run.py --judged <run dir> [--json]
 
@@ -6,16 +6,14 @@ Per ``<run dir>/<family>/results.json`` it checks, and prints a table:
 - ``config.aggregate == "summary"`` (``jlens_concept_pr``: native);
 - ``config.sampling_source == "declared"`` and ``config.reads_checked`` is ``sidecar`` (or
   ``prompt_only`` for the floor run); a ``-dmo-*`` dir is a diagnostic control arm, exempt;
-- ``prompt_version`` equals ``digest.prompt_version(<registry PV>, …)`` plus ``+reads-lite`` for
-  a lite run (a superseded instrument never reaches the site);
-- a lite run's ``config.lite_rule`` equals the frozen lite rule of the plan (``reads.lite_rule_of``
-  over ``reads.specs``; ``scripts/lite_site_table.py --write`` freezes it);
+- ``prompt_version`` equals ``digest.prompt_version(<registry PV>, …)`` (a superseded
+  instrument never reaches the site);
 - ``n_readouts_in == n_readouts_bundled`` and ``n_truncated_items == 0`` (no readout dropped);
 - ``complete`` for a ``layers=<L>`` run.
 It prints ``extras.digest_served_by``, ``n_unverified_bullet`` and ``n_bare_mention_pass``, and
 (round 3; plan 0046 moral) the two instrument matches, reported, never failed (a PV change after
 gpu R6 / R8 means "no floor" / "re-gate", not a broken run): ``floor`` = whether the frozen
-summary prompt-only floor's ``instrument`` equals ``strip_reads(prompt_version)``
+summary prompt-only floor's ``instrument`` equals ``prompt_version``
 (``prompt_only.summary_floor_applies``), ``ati`` = whether a native row's ``prompt_version``
 equals the frozen ATI entry's ``instrument``.
 Exit 1 when any check fails."""
@@ -51,7 +49,7 @@ def _probe(cfg: dict[str, Any]) -> Any:
 
 
 def audit_family(fam_dir: Path) -> dict[str, Any]:
-    from wsbench import digest, reads, registry
+    from wsbench import digest, registry
 
     res = json.loads((fam_dir / "results.json").read_text(encoding="utf-8"))
     cfg = res.get("config", {})
@@ -64,7 +62,6 @@ def audit_family(fam_dir: Path) -> dict[str, Any]:
         spec = registry._spec_for_bank(family)  # also with an emptied registry
     except SystemExit:
         spec = None
-    mode = cfg.get("reads", "full")
     if family not in NATIVE and cfg.get("aggregate") != "summary":
         problems.append(f"aggregate={cfg.get('aggregate')!r}")
     if not diag:
@@ -73,22 +70,13 @@ def audit_family(fam_dir: Path) -> dict[str, Any]:
         if cfg.get("sampling_source") != "declared" and cfg.get("reads_checked") != "prompt_only":
             problems.append(f"sampling_source={cfg.get('sampling_source')!r}")
     if spec is not None and cfg.get("aggregate") == "summary":
-        want = reads.stamp(digest.prompt_version(spec.judge.prompt_version, _probe(cfg)), mode)
+        want = digest.prompt_version(spec.judge.prompt_version, _probe(cfg))
         # an adapted set's re-stamped row (plan 0072 0.2): audit its registered stamp
         got_pv = cfg.get("registered_prompt_version") or cfg.get("prompt_version", "")
         if not str(got_pv).startswith(spec.judge.prompt_version):
             problems.append(f"prompt_version {cfg.get('prompt_version')!r} != registry")
         elif got_pv != want:
             problems.append(f"prompt_version {cfg.get('prompt_version')!r} != {want!r}")
-    if mode == "lite":
-        want_rule = reads.lite_rule_of(reads.specs(family))
-        got = cfg.get("lite_rule")
-        if got is None:
-            problems.append("lite run without config.lite_rule")
-        elif json.loads(got) and not set(map(json.dumps, json.loads(got))) <= set(
-            map(json.dumps, json.loads(want_rule))
-        ):
-            problems.append(f"lite_rule {got} is not the frozen plan rule {want_rule}")
     if isinstance(summ, dict) and "n_readouts_in" in summ:
         if summ["n_readouts_in"] != summ.get("n_readouts_bundled"):
             problems.append("readouts dropped from the digest")
@@ -116,7 +104,6 @@ def audit_family(fam_dir: Path) -> dict[str, Any]:
 def _instrument_matches(family: str, cfg: dict[str, Any]) -> tuple[str, str]:
     """(floor, ati) status strings: ``applies`` / ``no floor (<instrument>)`` / ``none`` for a
     summary row; ``ok`` / ``re-gate (<instrument>)`` / ``none`` for a native row's ATI entry."""
-    from wsbench import reads
     from wsbench.baselines import prompt_only, text_inversion
 
     pv = str(cfg.get("prompt_version") or "")
@@ -128,7 +115,7 @@ def _instrument_matches(family: str, cfg: dict[str, Any]) -> tuple[str, str]:
         elif prompt_only.summary_floor_applies(e, cfg):
             floor = "applies"
         else:
-            floor = f"no floor ({e.get('instrument')} != {reads.strip_reads(pv)})"
+            floor = f"no floor ({e.get('instrument')} != {pv})"
     else:
         frozen = json.loads(text_inversion.FROZEN.read_text(encoding="utf-8"))
         e = frozen.get(family) if isinstance(frozen.get(family), dict) else None

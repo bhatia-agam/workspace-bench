@@ -97,7 +97,7 @@ def test_spouse_death_phrase_restating_the_prompt_is_an_echo():
         "bereavement. Being a widow"
     )
     assert stem_echo(quote, "widowed", _prompt("um-ss-maritalstatus-14"))
-    # maritalstatus-13 all-lite and -15 all-lite: the same shape on the other widowed prompts
+    # maritalstatus-13 and -15: the same shape on the other widowed prompts
     quote13 = "Creating a budget after losing a spouse is often less about numbers"
     assert stem_echo(quote13, "widowed", _prompt("um-ss-maritalstatus-13"))
     quote15 = "Designing a library after the loss of a spouse is a deeply personal project"

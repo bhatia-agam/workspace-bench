@@ -4,7 +4,6 @@ summary gate and its matcher (containment), the score, and registry membership."
 import copy
 import hashlib
 import json
-import re
 from pathlib import Path
 
 import pytest
@@ -114,7 +113,6 @@ def test_read_plan_is_the_captured_post_span():
         it = items[r.id]
         assert r.render == "captured" and r.extra["input_ids"] == it["input_ids"]
         assert r.positions == {"kind": "positions", "positions": it["positions"]}
-        assert r.lite_positions == {"kind": "last_n", "n": 12}
 
 
 def test_example_readouts_sit_at_read_positions():
@@ -604,29 +602,6 @@ def test_missing_cells_under_allow_missing(tmp_path, monkeypatch, real_families)
     monkeypatch.setattr(judge, "run_calls", _native_fake(items, pick_bridge=True))
     r = judge.run(_args(p, tmp_path / "o2", items=ids, allow_missing=True))
     assert {row["id"]: row["pass"] for row in r.rows} == {"r15iv2891": True, "r13co0078": True}
-
-
-def test_lite_reads_the_last_twelve_positions(tmp_path, monkeypatch, real_families):
-    items = _items()
-    p = _toy(tmp_path, monkeypatch, layers=(44,))
-    seen: dict[str, str] = {}
-
-    def fake(calls, **kw):
-        out = _native_fake(items, pick_bridge=True)(calls, **kw)
-        for c in calls:
-            if c.key.endswith("|summ"):
-                seen[c.key.split("|")[0]] = c.user
-        return out
-
-    monkeypatch.setattr(judge, "run_calls", fake)
-    ids = ["r15iv2891", "r13co0078"]
-    r = judge.run(_args(p, tmp_path / "o", items=ids, extra={"reads": "lite"}))
-    assert r.value == 1.0 and r.counts["n_missing_cells"] == 0
-    for i in ids:
-        tail = items[i]["positions"][-12:]
-        got = [int(x) for x in re.findall(r"^\[p(\d+)\]", seen[i], flags=re.M)]
-        assert got == tail, (i, got)
-    assert r.config["prompt_version"].endswith("+reads-lite")
 
 
 # ------------------------------------------------------------------ mmh-forms-v3 (second review)

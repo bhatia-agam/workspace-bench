@@ -232,7 +232,7 @@ def test_poetry_stages_end_to_end_with_fakes(adapted, monkeypatch):
         rows_ = [json.loads(x) for x in (Path(root) / "poetry.jsonl").read_text().splitlines()]
         assert json.loads(Path(bank).read_text())["items"][0]["adapt"]["model"] == MODEL
         return SimpleNamespace(
-            config={"prompt_version": "poetry-free-x+reads-lite"},
+            config={"prompt_version": "poetry-free-x"},
             rows=[{"id": r["id"], "pass": r["id"] == ids[0] and Path(root).name == "gate1",
                    "kind": "cannot"} for r in rows_],
         )  # fmt: skip

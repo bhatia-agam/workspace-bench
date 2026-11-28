@@ -141,8 +141,8 @@ def test_frozen_ati_entry_is_live_at_rel_v3(tmp_path):
 
 def test_frozen_prompt_only_floor_is_drawn_beside_rel_v3_rows_only():
     """The prompt-only floor is judged on the rel-v3 list under the current gate (2026-11-04
-    refreeze: relgate-v6, 1.00, saturated) and is drawn beside a rel-v3 summary row (full or
-    lite); a row still at rel-v2, or at the older relgate-v4, does not get it."""
+    refreeze: relgate-v6, 1.00, saturated) and is drawn beside a rel-v3 summary row; a
+    row still at rel-v2, or at the older relgate-v4, does not get it."""
     from wsbench.baselines import prompt_only as po
 
     e = po.summary_floors()["relational_multihop"]
@@ -150,7 +150,7 @@ def test_frozen_prompt_only_floor_is_drawn_beside_rel_v3_rows_only():
     assert prompts.GATE_VERSION == "relgate-v6" and e["rate"] == 1.0 and e["saturated"]
     cfg = {
         "aggregate": "summary",
-        "prompt_version": e["instrument"] + "+reads-lite",
+        "prompt_version": e["instrument"],
         "summarizer": e["summarizer"],
         "judge_model": e["judge_model"],
     }

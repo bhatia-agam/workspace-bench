@@ -1,6 +1,6 @@
 """multi_concept_directed_modulation, plan 0034 (Camila's MCDM section, M1-M7, and the campaign
 decisions G1-G7): cannot-tell, rare mentions, direction in one statement, any-context credit,
-relation distractors, the entity items, close relatives, lite / prompt-only reads, bank v2."""
+relation distractors, the entity items, close relatives, prompt-only reads, bank v2."""
 
 import re
 from pathlib import Path
@@ -659,17 +659,16 @@ def test_mcdm_spec_is_multi_select(tmp_path, monkeypatch):
     assert "singles out none" not in prompts.SYSTEM
 
 
-# ---------------------------------------------------------------- G1 lite / prompt-only, G2 layers
+# ---------------------------------------------------------------- G1 prompt-only, G2 layers
 
 
-def test_readplan_mcdm_lite_row():
+def test_readplan_mcdm_row():
     row = readplan.plan(NAME)[0]
-    assert row.lite_positions == {"kind": "same"} and row.lite_layers is None  # plan 0061
     assert row.layers == readplan.GRID and len(readplan.plan(NAME)) == 116
 
 
-def test_mcdm_lite_matches_full(tmp_path, monkeypatch, capsys):
-    """Plan 0061: reads=lite judges the 12 sentence cells, with write compliance, as full does."""
+def test_mcdm_judges_the_sentence_cells(tmp_path, monkeypatch):
+    """Plan 0061: the 12 sentence cells are judged; a file declared reads=lite is refused."""
     path = write_jsonl(
         tmp_path / "r.jsonl",
         _rows(
@@ -677,15 +676,8 @@ def test_mcdm_lite_matches_full(tmp_path, monkeypatch, capsys):
         ),
     )
     seen = _fake(monkeypatch, lambda c: {"picks": []})
-    r = judge.run(_args(path, tmp_path / "lite", items=["d-lion"], extra={"reads": "lite"}))
-    lite_pos = sorted(c.meta["pos"] for c in seen)
-    seen.clear()
-    full = judge.run(_args(path, tmp_path / "full", items=["d-lion"]))
-    assert lite_pos == sorted(c.meta["pos"] for c in seen) == list(range(-12, 0))
-    assert r.rows == full.rows and r.value == full.value
-    assert r.config["prompt_version"].endswith("+reads-lite")
-    assert not full.config["prompt_version"].endswith("+reads-lite")
-    # a declared-lite file with one cell per layer (the superseded ' to' site) exits 2
+    judge.run(_args(path, tmp_path / "full", items=["d-lion"]))
+    assert sorted(c.meta["pos"] for c in seen) == list(range(-12, 0))
     bad = write_jsonl(
         tmp_path / "b.jsonl",
         [
@@ -695,9 +687,8 @@ def test_mcdm_lite_matches_full(tmp_path, monkeypatch, capsys):
     )
     write_sidecar(bad, reads="lite", reader="t")
     with pytest.raises(SystemExit) as e:
-        judge.run(_args(bad, tmp_path / "b", items=["d-lion"], extra={"reads": "lite"}))
-    assert e.value.code == 2
-    assert "lite rule is `same`" in capsys.readouterr().err
+        judge.run(_args(bad, tmp_path / "b", items=["d-lion"]))
+    assert "full is the only reads mode" in str(e.value)
 
 
 def test_mcdm_prompt_only_skips_compliance(tmp_path, monkeypatch):

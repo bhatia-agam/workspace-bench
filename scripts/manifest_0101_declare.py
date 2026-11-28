@@ -39,6 +39,10 @@ read as they were before the move, before the comparison and before the ledger h
 (``tier_moved``). So the move needs no ledger entry of its own and stales none, for a golden
 family, for one already declared and for a family registered after the golden alike; every
 other family's tier rows are compared like any other row.
+
+The removal of the ``reads=lite`` mode is declared the same way (``LITE_TABLES``, ``LITE_FILES``,
+``LITE_CALLS``, ``lite_removed``): the rows that only recorded the mode are listed with the
+value each had and are read as they were, for the listed families only.
 """
 
 import argparse
@@ -139,6 +143,79 @@ def tier_moved(fam: str, c: Mapping[str, Any]) -> dict[str, Any]:
         rows[tk] = CORE_MEMBER
     if rows or ts in c:
         out[ts] = rows
+    return out
+
+
+# The `reads=lite` mode is removed: `reads=` has one value, full. Lite was a second way to SELECT
+# cells of a full read; it had its own stamp suffix and never entered a full run's plan_sha,
+# stamp, call keys or fingerprints, so removing it leaves nothing to bump. What the manifest
+# recorded of it is listed here, the listing being the declaration (as TIER_MOVES): a family's
+# membership in the three lite tables of `readplan`, the `lite_rule.json` of two family
+# directories (its sha256), and the two `calls_per_arm` texts that priced a lite run (before,
+# today). `lite_removed` puts exactly these rows back before the comparison and before the
+# ledger hash, so every other row of these families is compared as ever, and a declared family's
+# hash does not move.
+LITE_TABLES = {
+    "association": "readplan.LITE_SITE_FAMILIES",
+    "conjunctive_association": "readplan.LITE_SITE_FAMILIES",
+    "role_bound_association": "readplan.LITE_SITE_FAMILIES",
+    "basic_readout": "readplan.LITE_SAME_FAMILIES",
+    "directed_modulation": "readplan.LITE_SAME_FAMILIES",
+    "model_specific_directed_modulation": "readplan.LITE_SAME_FAMILIES",
+    "multi_concept_directed_modulation": "readplan.LITE_SAME_FAMILIES",
+    "user_modeling": "readplan.LITE_SAME_FAMILIES",
+    "buggy_code": "readplan.LITE_BANK_LAYERS",
+}
+LITE_FILE = "lite_rule.json"
+LITE_FILES = {
+    "association": "2e998c7c859b868876f335d6531c03bc38cafdec249d866b7b18158d4bafdfb2",
+    "conjunctive_association": "1134f897ba0065dadc76701ebb1674de2e52f24ca3873c9f099882f7a3eb3830",
+}
+LITE_CALLS = {
+    "agentic_misalignment": (
+        "≈ 85k native full, ≈ 6k native lite, ≈ 110 summary",
+        "≈ 85k native, ≈ 110 summary",
+    ),
+    "arithmetic_intermediates": (
+        "summary (default): 480 digests + 480 judge calls (reads=full or lite); native "
+        "cells=all: ≈ 5.3k batched calls (11 layers, one per item and layer) / ≈ 1k under "
+        "reads=lite; cells=frozen: 480",
+        "summary (default): 480 digests + 480 judge calls; native "
+        "cells=all: ≈ 5.3k batched calls (11 layers, one per item and layer); "
+        "cells=frozen: 480",
+    ),
+}
+
+
+def lite_removed(fam: str, c: Mapping[str, Any]) -> dict[str, Any]:
+    """The family's rows ``c`` with its LISTED lite rows put back (``LITE_TABLES``,
+    ``LITE_FILES``, ``LITE_CALLS``): the table membership when the table row is absent, the
+    ``lite_rule.json`` file row when the file is absent (with the file count and the hash over
+    the file rows recomputed as ``manifest_0101.file_entry`` computes them, so any other file
+    moving still shows), and the ``calls_per_arm`` text when it holds exactly the listed text
+    of today. An unlisted family, and a listed one whose rows are not in the listed state, come
+    back unchanged. What this returns is what ``verdict`` compares and ``rows_sha256`` hashes."""
+    out = dict(c)
+    label = LITE_TABLES.get(fam)
+    tables = c.get("tables")
+    if label is not None and isinstance(tables, Mapping) and label not in tables:
+        out["tables"] = {**tables, label: True}
+    sha = LITE_FILES.get(fam)
+    files = c.get("files")
+    listed = files.get("other_files") if isinstance(files, Mapping) else None
+    if sha is not None and isinstance(listed, Mapping) and LITE_FILE not in listed:
+        back = dict(sorted({**listed, LITE_FILE: sha}.items()))
+        text = json.dumps(back, sort_keys=True, ensure_ascii=False)
+        out["files"] = {
+            **files,
+            "n_other_files": len(back),
+            "other_files_sha256": hashlib.sha256(text.encode("utf-8", "surrogatepass")).hexdigest(),
+            "other_files": back,
+        }
+    calls = LITE_CALLS.get(fam)
+    lst = c.get("list")
+    if calls is not None and isinstance(lst, Mapping) and lst.get("calls_per_arm") == calls[1]:
+        out["list"] = {**lst, "calls_per_arm": calls[0]}
     return out
 
 
@@ -318,6 +395,9 @@ def verdict(
     declared family's hash. An unlisted family's tier rows are rows like any other: under an
     unchanged stamp and bank they fail ("instrument moved without a stamp or bank change").
 
+    The removed ``reads=lite`` mode (``lite_removed``): the listed lite rows of a listed family
+    are put back first of all, on the same terms.
+
     Outside ``families`` every section must equal the golden's, except ``shared.n_families``
     (the golden's count plus the families it does not have) and, when ``script_sha256`` is
     given, the manifest's own ``script_sha256``, which must then equal that value (T1 pins the
@@ -332,8 +412,8 @@ def verdict(
             failures.append(f"/families/{fam}: in the golden, not in this tree")
             continue
         g = gf.get(fam)
-        c = tier_moved(fam, cf[fam])
-        tiered = c != cf[fam]  # its listed tier move was put back
+        c = tier_moved(fam, lite_removed(fam, cf[fam]))
+        tiered = c != lite_removed(fam, cf[fam])  # its listed tier move was put back
         if g is None:  # a new family: a fast version cut later must not stale its entry
             c = without_fast(c)
         if g is not None and c == g:
@@ -429,7 +509,7 @@ def declare(
     if family not in current["families"]:
         raise Refused(f"{family}: not a family of this tree's manifest")
     g, prev = golden["families"].get(family), ledger.get(family)
-    c = tier_moved(family, current["families"][family])
+    c = tier_moved(family, lite_removed(family, current["families"][family]))
     if g is None:  # as `verdict`: a new family's fast rows are outside its entry
         c = without_fast(c)
     if g is not None:  # the basis `verdict` compares and hashes (acceptable new fast rows aside)

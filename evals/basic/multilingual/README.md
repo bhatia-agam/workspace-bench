@@ -52,11 +52,7 @@ tonsils, "bademcik" in Turkish' missed "palatine tonsil" / "tonsil gland" for th
 ## Read plan
 
 Every prompt position of the plain render (`positions {"kind": "all"}`), layers 20..60 step 4
-(`readplan.GRID`; `layers=all|each|<csv>` work as for every family). `reads=lite` keeps the
-final prompt token only (`lite_positions {"kind": "final_token"}`, `lite_layers` = the full
-layers), a subset of the same full read, so one GPU read serves both; lite results are stamped
-`+reads-lite`. Camila 2026-10-30: "Read on all positions and give all this to the judge (final
-position only for fast/lite)". Every loaded cell goes to the digest. Full mode needs, per
+(`readplan.GRID`; `layers=all|each|<csv>` work as for every family). Every loaded cell goes to the digest. A read needs, per
 (item, layer), one contiguous run of at least `EvalSpec.min_full_positions` = 16
 positions (the shortest item's prompt length); a gap or a short run exits 2, or makes the item
 `partial` under `allow_missing=True` (`reads.check_full`). A file without a `<file>.meta.json`
@@ -165,7 +161,7 @@ Russian sentence"); they are measured in the run phase.
 - 2026-11-01 (round 4, tag `+same-sample-v1+bank-v3`): the same-sample rule (concept and naming in one sample;
   replaced 2026-11-04) replaces the
   round-3 anchoring, and bank v3 adds "tonsil" / "tonsils" to mlh-tr-bademcik. Cached
-  final-olens-rl600-x4 digests re-scored (no new calls): all 0.83 -> 0.70, all-lite 0.56 ->
+  final-olens-rl600-x4 digests re-scored (no new calls): all 0.83 -> 0.70, final-token 0.56 ->
   0.50, prompt-only 0.96 -> 0.97 (bademcik now passes), single layers 5 to 16 points lower
   (L20 0.19 -> 0.08 ... L60 0.42 -> 0.33). Every lost pass rests on a language naming whose
   sample holds the passage-language word but not the English / Chinese concept ("Magyarul ez a
@@ -200,8 +196,7 @@ Russian sentence"); they are measured in the run phase.
 `dry_run=True`.
 
 ```
-wsbench plan families=multilingual out=outputs/plan                 # full: every position
-wsbench plan families=multilingual reads=lite out=outputs/plan-lite # lite: the final token
+wsbench plan families=multilingual out=outputs/plan                 # every position
 wsbench judge family=multilingual readouts=examples/readouts/multilingual.jsonl out=outputs/toy/multilingual dry_run=True
 wsbench judge family=multilingual readouts=<arm>.jsonl out=outputs/<arm>/multilingual limit=3
 ```

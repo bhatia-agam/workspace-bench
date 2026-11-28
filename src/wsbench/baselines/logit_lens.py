@@ -82,7 +82,7 @@ def live_config(family: str) -> dict[str, Any]:
 
 def live_instrument(family: str) -> str:
     """The full summary ``prompt_version`` of :func:`live_config`, as a floor entry stores it."""
-    return prompt_only._strip_reads(str(live_config(family).get("prompt_version") or ""))
+    return str(live_config(family).get("prompt_version") or "")
 
 
 def _check(r: Any, path: Path, *, ati: bool) -> None:
@@ -116,7 +116,7 @@ def _check(r: Any, path: Path, *, ati: bool) -> None:
         raise ValueError(f"freeze: {path} is a subset run, not a baseline")
     if r.value is None:
         raise ValueError(f"freeze: {path} has no value")
-    pv = prompt_only._strip_reads(str(cfg.get("prompt_version") or ""))
+    pv = str(cfg.get("prompt_version") or "")
     try:
         live = live_instrument(r.family)
     except (KeyError, SystemExit) as e:

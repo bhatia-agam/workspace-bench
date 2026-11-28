@@ -150,7 +150,6 @@ _PATH = re.compile(r"(?<![\w./-])evals/[\w./*<>{}\[\]|$-]+")
 _SKILL_AUDITS = {"SKILL_AUDIT.md", "SKILL_AUDIT_RESPONSE.md"}
 # a file a README says does NOT exist; bank versions and directories tests assert are gone
 ABSENT_ON_PURPOSE = (
-    "evals/anti_bag_of_features/role_bound_association/lite_rule.json",
     "evals/basic/basic_readout/hidden_rivals.json",
     "evals/basic/basic_readout/items_v5.json",
     "evals/basic/multihop_st/items_v4.json",
@@ -331,11 +330,11 @@ def test_repo_path():
     assert registry.LEGACY_FAMILY_CATEGORIES == {"association": "basic"}
     for stored, rest in (
         ("evals/basic/association/items_v5.json", "items_v5.json"),
-        ("evals/basic/association/lite_rule.json", "lite_rule.json"),
+        ("evals/basic/association/distractor_screen_v2.json", "distractor_screen_v2.json"),
         ("evals/basic/association", ""),
-        ("evals/association/lite_rule.json", "lite_rule.json"),  # pre-0101
+        ("evals/association/items_v4.json", "items_v4.json"),  # pre-0101
         ("evals/association", ""),  # pre-0101: the bare name was the family's directory
-        ("evals/association/association/lite_rule.json", "lite_rule.json"),  # today
+        ("evals/association/association/items_v4.json", "items_v4.json"),  # today
     ):
         assert registry.repo_path(stored) == (doubled / rest if rest else doubled), stored
         assert registry.repo_path(stored).exists(), stored

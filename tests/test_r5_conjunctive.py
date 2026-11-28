@@ -2,8 +2,7 @@
 
 The guessers' picks concentrate on the stereotyped relation ("her spouse", "himself"); v5 adds
 two relation values as typical as spouse (Camila's example: "spouse vs partner") to the
-spouse-led clusters, plus q06's four content values. v4 stays frozen byte for byte. The lite
-rule (lite = the same positions as full) is tested in test_conjunctive_association.py.
+spouse-led clusters, plus q06's four content values. v4 stays frozen byte for byte.
 """
 
 import importlib.util

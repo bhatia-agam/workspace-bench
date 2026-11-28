@@ -10,7 +10,7 @@ import pytest
 from conftest import write_jsonl
 from summary_fakes import FakeLLM, summary_args
 
-from wsbench import digest, llm, mc, reads, registry
+from wsbench import digest, llm, mc, registry
 from wsbench.banks import load_bank
 from wsbench.cli import main
 from wsbench.evals.basic.directed_modulation import judge, prompts, score
@@ -695,13 +695,11 @@ def test_dm_gate_uses_quote_ok():
         assert v["evidence_verified"], q
 
 
-def test_dm_lite_judges_full_carrier(tmp_path, monkeypatch, family):
-    """Plan 0061: reads=lite judges the same carrier cells as reads=full (lite rule `same`); the
-    stamp ends +reads-lite; the plan row carries the full carrier span."""
+def test_dm_judges_full_carrier(tmp_path, monkeypatch, family):
+    """Plan 0061: the plan row carries the full carrier span, and every carrier cell is judged."""
     from wsbench import readplan
 
     spec = next(s for s in readplan.plan("directed_modulation") if s.id == "dm-pair-00-pos")
-    assert spec.lite_positions == {"kind": "same"} and spec.lite_layers is None
     assert spec.positions["kind"] == "suffix_text"
     assert family.min_full_positions == 6 and family.full_contiguous
     rows = [
@@ -709,17 +707,6 @@ def test_dm_lite_judges_full_carrier(tmp_path, monkeypatch, family):
     ]
     path = write_jsonl(tmp_path / "r.jsonl", rows)
     fake = FakeLLM.install(monkeypatch, lambda sy, u, sc: _dm_answer(6))
-    args = summary_args(
-        path,
-        tmp_path / "o",
-        prompts.PROMPT_VERSION,
-        items=["dm-pair-00-pos"],
-        extra={"aggregate": "native", "reads": "lite"},
-    )
-    r = family.run(args)
-    assert {v["pos"] for v in r.rows} == {38, 39, 40} and len(fake.calls) == 3
-    assert r.config["prompt_version"].endswith("+reads-lite")
-    assert reads.mode(args) == "lite"
     full = family.run(
         summary_args(
             path,
@@ -729,6 +716,4 @@ def test_dm_lite_judges_full_carrier(tmp_path, monkeypatch, family):
             extra={"aggregate": "native"},
         )
     )
-    assert {v["pos"] for v in full.rows} == {v["pos"] for v in r.rows}
-    assert full.value == r.value
-    assert not full.config["prompt_version"].endswith("+reads-lite")
+    assert {v["pos"] for v in full.rows} == {38, 39, 40} and len(fake.calls) == 3

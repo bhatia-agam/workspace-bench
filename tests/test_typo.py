@@ -1,5 +1,5 @@
 """typo (plan 0033): the v2 bank (arith items dropped), the read site (every token of the
-misspelled word; lite = its final token), split-word pooling within a layer, the reads guards,
+misspelled word), split-word pooling within a layer, the reads guards,
 and the option sets of the optional MC judge (``opts=judge=mc``). The regex contract itself is
 tested in ``test_mt_regex.py``."""
 
@@ -158,27 +158,21 @@ def test_v1_readouts_with_arith_rows_judge_85_items(tmp_path, real_families):
 # ---------------------------------------------------------------- M3: the read site
 
 
-def test_typo_mt_full_reads_the_misspelled_word_lite_the_last_token():
+def test_typo_mt_full_reads_the_misspelled_word():
     specs = reads.specs("typo")
     assert len(specs) == 85
     hand = specs[HAND]
     assert hand.positions == {"kind": "suffix_text", "text": "interpretibility", "from_char": 9}
-    assert hand.lite_positions == {"kind": "final_token"} and hand.lite_layers is None
     assert hand.layers == readplan.GRID and hand.render == "plain"
     toks = ["There", "'s", " a", " really", " cool", " field", " in", " AI", " safety"]
     toks += [" research", " called", " mechan", "istic", " interpret", "ibility"]
     # ' interpret' (13) ends before the misspelled 'i' (char 9): the model has seen only a
     # correct prefix there, so reading it would score prediction, not correction
-    full = readplan.resolve(hand.positions, toks)
-    assert full == [14]
-    assert readplan.lite_select(full, hand.lite_positions) == [14]
-    lite_row = next(s for s in readplan.plan("typo", reads="lite") if s.id == HAND)
-    assert readplan.resolve(lite_row.positions, toks) == [14]
-    one = specs["tyh-real-deference"]  # a one-token misspelling: full == lite
+    assert readplan.resolve(hand.positions, toks) == [14]
+    one = specs["tyh-real-deference"]  # a one-token misspelling
     toks1 = ["I", " defer", " to", " your", " reference"]
     assert one.positions == {"kind": "suffix_text", "text": "reference", "from_char": 0}
     assert readplan.resolve(one.positions, toks1) == [4]
-    assert readplan.lite_select([4], one.lite_positions) == [4]
 
 
 def test_typo_mt_full_span_starts_at_the_first_misspelled_character():
@@ -198,7 +192,7 @@ def test_typo_mt_full_span_starts_at_the_first_misspelled_character():
     assert readplan.resolve(mid, toks) == [2, 3, 4]
     assert readplan.first_diff("Interpretibility", "interpretability") == 9  # case-insensitive
     assert readplan.first_diff("abc", "abcd") == 2  # a prefix of the target: its last char
-    for s in specs.values():  # lite (the final token) stays inside every full span
+    for s in specs.values():  # the first misspelled character is inside the word
         assert s.positions["from_char"] < len(s.positions["text"])
 
 
@@ -272,23 +266,6 @@ def test_summary_split_word_quote_hits_as_its_plain_word(tmp_path, monkeypatch, 
     assert fake2.n("digest") == 1 and r2.rows[0]["pass"] is False
 
 
-def test_reads_lite_uses_shared_select(tmp_path, real_families):
-    cells = [(44, 13, {"samples": ["interpretability"]}), (44, 14, {"samples": ["nothing"]})]
-    path = write_jsonl(tmp_path / "r.jsonl", _hand_rows(cells))
-    full = fam.run_regex(_args(path, tmp_path / "f", items=[HAND], layers=[44]), name="typo")
-    assert full.rows[0]["pass"] is True
-    lite_args = _args(path, tmp_path / "l", items=[HAND], layers=[44], extra={"reads": "lite"})
-    lite = fam.run_regex(lite_args, name="typo")
-    loaded, _rep = reads.load(
-        _args(path, tmp_path / "x", items=[HAND], layers=[44]), "typo", ids=[HAND]
-    )
-    kept = reads.select(loaded, reads.specs("typo"), "lite")
-    assert [(c.layer, c.pos) for c in kept] == [(44, 14)]
-    assert lite.rows[0]["pass"] is False  # only the final token is judged
-    assert lite.config["prompt_version"].endswith("+reads-lite")
-    assert not full.config["prompt_version"].endswith("+reads-lite")
-
-
 def test_full_partial_span_is_flagged(tmp_path, capsys, real_families):
     """A gap inside a full span (13, 15: position 14 missing) is partial."""
     cells = [(44, 13, {"samples": ["x"]}), (44, 15, {"samples": ["interpretability"]})]
@@ -307,16 +284,10 @@ def test_full_partial_span_is_flagged(tmp_path, capsys, real_families):
     assert part.extras["partial_ids"] == [HAND] and part.config["reads_checked"] == "sidecar"
 
 
-def test_lite_sidecar_file_refused_under_full(tmp_path, capsys, real_families):
+def test_lite_sidecar_file_is_refused(tmp_path, real_families):
     path = write_jsonl(
         tmp_path / "r.jsonl", _hand_rows([(44, 14, {"samples": ["interpretability"]})])
     )
     write_sidecar(path, reads="lite", sampling="prose1")
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit, match="full is the only reads mode"):
         fam.run_regex(_args(path, tmp_path / "f", items=[HAND], layers=[44]), name="typo")
-    assert "judge it with reads=lite" in capsys.readouterr().err
-    lite = fam.run_regex(
-        _args(path, tmp_path / "l", items=[HAND], layers=[44], extra={"reads": "lite"}),
-        name="typo",
-    )
-    assert lite.rows[0]["pass"] is True and lite.config["reads_checked"] == "sidecar"
