@@ -13,54 +13,18 @@ readouts, and what a reader gets from the prompt alone. The macro is the mean ov
 Write-up: [WorkspaceBench: Evaluating Interpretability Methods for the Global Workspace](https://www.lesswrong.com/posts/Zeg2JztbdhguL48uH/workspacebench-evaluating-interpretability-methods-for-the).
 This README says "eval" for what the code calls a family.
 
-## Requirements
+To judge you need Python 3.12 or newer, [`uv`](https://docs.astral.sh/uv/) and an Anthropic
+credential; no GPU. What producing readouts needs, and how long each kind of run takes:
+[Requirements](#requirements) and [Time](#time).
 
-| | what you need |
+| I want to | go to |
 |---|---|
-| Software | Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/). |
-| Judge access | An Anthropic credential: `ANTHROPIC_API_KEY`, or `ANTHROPIC_PROFILE=<name>` (an `ant auth login` profile), or `ANTHROPIC_AUTH_TOKEN` (an OAuth bearer token). The judges are `claude-opus-5-5` and, for the two safety evals, `claude-sonnet-5` ([docs/judges.md](docs/judges.md)). Nothing else is needed to judge. |
-| Hardware to judge | None beyond a laptop: judging is API calls. |
-| Hardware to produce readouts | Only if you run a lens here. The reference model's activations are already stored: the residual store is the public Hugging Face dataset [agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), and `wsbench capture` fills a local copy from it by download, on any machine, running the model only for the cells the dataset does not hold ([Stored activations](#stored-activations)). The reference model is Qwen3.6-27B. The runs below served the lens on NVIDIA B200 GPUs (183 GiB each), where the served reader used 174 GiB at 768 requests in flight, in containers with 128 GiB of memory; a smaller GPU needs fewer requests in flight and was not measured. Capturing activations holds the model at 32-bit precision, about 110 GB of weights (estimate). |
-| Disk | 0.8 GB for the checkout. Readouts and judge caches of a full run were not measured; plan for tens of GB. |
-| Network | The Anthropic API. Two evals fetch pinned public data: `nyt_connections` its puzzles when it plans or judges, `knowledge_cutoff` part of its questions when it plans. The stored activations come from Hugging Face ([agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), 41 GB in all; an eval's files are fetched when it is first read). The model itself is downloaded to capture cells the dataset does not hold, and by `wsbench produce`, whose bundled methods need its weights to turn a stored vector into a readout. |
-
-## Time
-
-One prose lens on the reference model at 11 layers, one sample per cell, measured on NVIDIA B200
-GPUs with a served reader and up to 352 judge calls in flight. Your numbers depend on your
-reader and your API rate limits. Judging takes most of the wall-clock.
-
-| what you run | questions / cells | GPU-hours to read | wall-clock to read | judge wall-clock | start to score |
-|---|---|---|---|---|---|
-| The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 20 s | under a minute |
-| Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | 4.5 min |
-| The fast subset as it was before two evals joined it, read only (see below) | 1,441 / 438,790 | 1.52 | 15.3 min on 8 GPUs | not judged | not measured |
-| The fast subset as it was selected before that (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 39 min from the first readouts | 52 min |
-| The core evals (default), without `conjunctive_association` (see below) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | as every eval | as every eval |
-| Every eval (`--full`), as it was then (see below) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 101 min after the read | 2 h 29 min |
-
-A cell is one (question, layer, position) readout. The core row is the core evals' share of the
-full run; it takes as long as the full run because the two slowest evals to judge are core.
-Reading also needs the model's activations captured once per version of the question banks:
-0.8 GPU-hours for every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in
-proportion.
-
-Four rows describe an earlier state of the bench and were not measured again:
-
-- **The two fast subset rows** were measured on earlier selections of the fast subset. The
-  first is a read with `wsbench read` of the 16 evals the subset had until
-  `user_modeling_hard` and `association_hard` joined it ([The fast path](#the-fast-path));
-  judging it was not timed. The second was measured on the selection before that: 2,160
-  questions in 22 evals. The fast subset is now 1,569 questions in 18 evals
-  ([docs/fast_subset.md](docs/fast_subset.md)) and has not been timed as a whole.
-  On the earlier selection, capturing activations took 0.3 GPU-hours, and with the full run
-  judged its score took 9 more minutes.
-- **The core row** is the share of the 17 evals that were core when the full run was measured.
-  `conjunctive_association` (100 questions), `user_modeling_hard` (155) and `association_hard`
-  (99) are core as well now, 20 evals and 4,895 questions in all; their cells are in the row
-  for every eval but not in the core row.
-- **The row for every eval** was measured when the bench had 30 evals. It has 33 now, 6,355
-  questions and 3,508,092 cells, and that set has not been timed.
+| See it work in a minute | [Try it on two questions](#try-it-on-two-questions) |
+| Score my lens | [Run it](#run-it), then [Where outputs go](#where-outputs-go) |
+| Know what each eval tests | [The evals](#the-evals) |
+| Find a page of the docs | [docs/README.md](docs/README.md) |
+| Find a file or directory | [docs/repository_layout.md](docs/repository_layout.md) |
+| Change or add an eval | [CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ## Install
 
@@ -351,7 +315,58 @@ apply a rule after the judge ([docs/judges.md](docs/judges.md)).
 Results and readouts written under another name of an eval are read as well: `wsbench`
 attributes them by their content.
 
+## Requirements
+
+| | what you need |
+|---|---|
+| Software | Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/). |
+| Judge access | An Anthropic credential: `ANTHROPIC_API_KEY`, or `ANTHROPIC_PROFILE=<name>` (an `ant auth login` profile), or `ANTHROPIC_AUTH_TOKEN` (an OAuth bearer token). The judges are `claude-opus-5-5` and, for the two safety evals, `claude-sonnet-5` ([docs/judges.md](docs/judges.md)). Nothing else is needed to judge. |
+| Hardware to judge | None beyond a laptop: judging is API calls. |
+| Hardware to produce readouts | Only if you run a lens here. The reference model's activations are already stored: the residual store is the public Hugging Face dataset [agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), and `wsbench capture` fills a local copy from it by download, on any machine, running the model only for the cells the dataset does not hold ([Stored activations](#stored-activations)). The reference model is Qwen3.6-27B. The runs below served the lens on NVIDIA B200 GPUs (183 GiB each), where the served reader used 174 GiB at 768 requests in flight, in containers with 128 GiB of memory; a smaller GPU needs fewer requests in flight and was not measured. Capturing activations holds the model at 32-bit precision, about 110 GB of weights (estimate). |
+| Disk | 0.8 GB for the checkout. Readouts and judge caches of a full run were not measured; plan for tens of GB. |
+| Network | The Anthropic API. Two evals fetch pinned public data: `nyt_connections` its puzzles when it plans or judges, `knowledge_cutoff` part of its questions when it plans. The stored activations come from Hugging Face ([agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals), 41 GB in all; an eval's files are fetched when it is first read). The model itself is downloaded to capture cells the dataset does not hold, and by `wsbench produce`, whose bundled methods need its weights to turn a stored vector into a readout. |
+
+## Time
+
+One prose lens on the reference model at 11 layers, one sample per cell, measured on NVIDIA B200
+GPUs with a served reader and up to 352 judge calls in flight. Your numbers depend on your
+reader and your API rate limits. Judging takes most of the wall-clock.
+
+| what you run | questions / cells | GPU-hours to read | wall-clock to read | judge wall-clock | start to score |
+|---|---|---|---|---|---|
+| The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 20 s | under a minute |
+| Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | 4.5 min |
+| The fast subset as it was before two evals joined it, read only (see below) | 1,441 / 438,790 | 1.52 | 15.3 min on 8 GPUs | not judged | not measured |
+| The fast subset as it was selected before that (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 39 min from the first readouts | 52 min |
+| The core evals (default), without `conjunctive_association` (see below) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | as every eval | as every eval |
+| Every eval (`--full`), as it was then (see below) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 101 min after the read | 2 h 29 min |
+
+A cell is one (question, layer, position) readout. The core row is the core evals' share of the
+full run; it takes as long as the full run because the two slowest evals to judge are core.
+Reading also needs the model's activations captured once per version of the question banks:
+0.8 GPU-hours for every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in
+proportion.
+
+Four rows describe an earlier state of the bench and were not measured again:
+
+- **The two fast subset rows** were measured on earlier selections of the fast subset. The
+  first is a read with `wsbench read` of the 16 evals the subset had until
+  `user_modeling_hard` and `association_hard` joined it ([The fast path](#the-fast-path));
+  judging it was not timed. The second was measured on the selection before that: 2,160
+  questions in 22 evals. The fast subset is now 1,569 questions in 18 evals
+  ([docs/fast_subset.md](docs/fast_subset.md)) and has not been timed as a whole.
+  On the earlier selection, capturing activations took 0.3 GPU-hours, and with the full run
+  judged its score took 9 more minutes.
+- **The core row** is the share of the 17 evals that were core when the full run was measured.
+  `conjunctive_association` (100 questions), `user_modeling_hard` (155) and `association_hard`
+  (99) are core as well now, 20 evals and 4,895 questions in all; their cells are in the row
+  for every eval but not in the core row.
+- **The row for every eval** was measured when the bench had 30 evals. It has 33 now, 6,355
+  questions and 3,508,092 cells, and that set has not been timed.
+
 ## More documentation
+
+The index of every page is [docs/README.md](docs/README.md). The ones most often needed:
 
 - [docs/evals.md](docs/evals.md): every eval with an example and its judging rule.
 - [docs/producing_readouts.md](docs/producing_readouts.md): the read plan, positions, producing readouts with a bundled lens.
@@ -367,7 +382,14 @@ attributes them by their content.
 - [docs/hallucinationbench.md](docs/hallucinationbench.md): the HallucinationBench index that `report` shows.
 - [docs/checks.md](docs/checks.md): the checks and how to add one.
 - [docs/open_work.md](docs/open_work.md): open work.
-- [CLAUDE.md](CLAUDE.md): conventions for contributors and agents.
+- [docs/repository_layout.md](docs/repository_layout.md): what lives where.
+
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md) says how to change or add an eval (bank, prompts, stamps,
+floors, tests) and what a pull request needs. Each eval's page follows
+[docs/eval_readme_template.md](docs/eval_readme_template.md) as it is revised.
+[CLAUDE.md](CLAUDE.md) holds the code conventions for contributors and coding agents.
 
 ## Credits
 
