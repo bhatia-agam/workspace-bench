@@ -364,7 +364,7 @@ attributes them by their content.
 - [docs/judge_backends.md](docs/judge_backends.md): live calls or Message Batches, sizing concurrency.
 - [docs/results_contract.md](docs/results_contract.md): the fields of `results.json` and the macro row.
 - [docs/porting.md](docs/porting.md), [AGENTS.md](AGENTS.md), [adapted/README.md](adapted/README.md): running the bench on another model.
-- [docs/hallucinationbench.md](docs/hallucinationbench.md): the HallucinationBench index that `report` shows.
+- [docs/hallucinationbench.md](docs/hallucinationbench.md): HallucinationBench, the hallucination evals in `src/wsbench/hb` (`wsbench hb`), and its index that `report` shows.
 - [docs/checks.md](docs/checks.md): the checks and how to add one.
 - [docs/open_work.md](docs/open_work.md): open work.
 - [CLAUDE.md](CLAUDE.md): conventions for contributors and agents.

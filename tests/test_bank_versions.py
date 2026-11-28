@@ -53,6 +53,8 @@ def test_no_hardcoded_items_json():
         rel = str(f.relative_to(SRC))
         if rel in ALLOWED_LITERALS or (rel.startswith("evals/") and rel.endswith("__init__.py")):
             continue
+        if rel.startswith("hb/"):  # HallucinationBench's own banks, not registry families (0120)
+            continue
         for node in ast.walk(ast.parse(f.read_text(encoding="utf-8"))):
             if (
                 isinstance(node, ast.Constant)

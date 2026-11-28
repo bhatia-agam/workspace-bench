@@ -1,0 +1,84 @@
+"""External locations (plan 0012 D3): each is an ``HBENCH_*`` environment variable whose default is
+the dev-box path, so nothing changes there and another machine sets the variables it needs.
+
+Paths inside this repo are not here: use ``wsbench.hb.REPO_ROOT`` / ``DATA``. Shell
+scripts read the same variables as ``${HBENCH_X:-<default>}``."""
+
+import os
+from pathlib import Path
+
+
+def _env_path(var: str, default: str) -> Path:
+    return Path(os.environ.get(var) or default)
+
+
+# WorkspaceBench paper readouts: <root>/<arm>/{hallucination,agentic_misalignment}.jsonl
+READOUTS_ROOT = _env_path("HBENCH_READOUTS_ROOT", "/workspace/wsbench-paper-data/readouts")
+# a workspace-bench (github.com/camilablank/workspace-bench) checkout: items, judge prompts
+WSBENCH_PUB = _env_path("HBENCH_WSBENCH_PUB", "/workspace/root/wsbench-pub")
+# the DeepSeek-V4-Flash copy of workspace-bench (V4 readouts under outputs/readouts/<arm>/)
+WSBENCH_PUB_V4 = _env_path("HBENCH_WSBENCH_PUB_V4", "/workspace/root/wsbench-pub-v4-opus")
+# a global-workspace checkout (hallucination_creative bank for the story eval)
+GLOBAL_WORKSPACE = _env_path("HBENCH_GLOBAL_WORKSPACE", "/workspace/global-workspace")
+# the checkout that ran plans 0003-0005 stage 1 (gitignored outputs/ the UM ladder reads)
+SIBLING_SRC_ROOT = _env_path("HBENCH_SIBLING_SRC_ROOT", "/workspace/hb-sibling-probes")
+# a global-workspace checkout with the Ali probe bank (plan 0005)
+ALI_PROBE_ROOT = _env_path("HBENCH_ALI_PROBE_ROOT", "/workspace/gw-ali-probe")
+# WorkspaceBench combo-arm readouts (plan 0005 bank build)
+COMBOS_READOUTS = _env_path(
+    "HBENCH_COMBOS_READOUTS", "/workspace/gw-wsb-combos/outputs/wsbench_combos/readouts"
+)
+# report outputs of the overrefusal eval (plan 0015); the index (plan 0019) reads OR's
+# index_counts.jsonl only when the variable is SET (opt-in)
+SAFETY_OR_OUT = _env_path(
+    "HBENCH_SAFETY_OR_OUT", "/workspace/hb-overrefusal/outputs/overrefusal/claude-sonnet-5-5"
+)
+
+# plan 0019: the overrefusal outputs root (caches, cells, reports, index_counts) and the 11-layer
+# readouts root (4-layer v2 + the 7 new layers)
+OR_OUT = _env_path("HBENCH_OR_OUT", "/workspace/hb-overrefusal/outputs")
+OR_READOUTS_V3 = _env_path("HBENCH_OR_READOUTS_V3", "/workspace/hb-readouts-overrefusal-v3")
+# the default of `overrefusal`'s --readouts-root, after $HBENCH_OR_READOUTS (read at call time)
+OR_READOUTS_V2_DEFAULT = "/workspace/hb-readouts-overrefusal-v2"
+
+# plan 0023 benign_roleplay: the WSB fix campaign's judged dirs (reused, never re-judged) and its
+# readouts root (<root>/<arm>/jailbreak_recognition.jsonl, <root>/<arm>/hb_only/...)
+BR_CAMPAIGN = _env_path("HBENCH_BR_CAMPAIGN", "/workspace/root/wsb-bp/runs/judged")
+BR_READOUTS = _env_path("HBENCH_BR_READOUTS", "/workspace/root/wsb-bp/runs/outputs/readouts")
+# plan 0027: the final O-lens arm's benign_roleplay summary (0024), the dev-box export check
+BR_FINAL_OLENS_SUMMARY = _env_path(
+    "HBENCH_BR_FINAL_OLENS_SUMMARY",
+    "/workspace/root/wsb-bp/hb/br_out_e8615c4/benign_roleplay/claude-sonnet-5/summary.json",
+)
+# plan 0028: the main bank's old 11-layer readouts (<root>/<arm>/hallucination.jsonl; the
+# official main arms s3d-rl600, s3d-rl600-all11, mlnla-rl600-all11, jlens) and the official
+# J-lens main output root (interp-v1 summaries in <root>/jlens/cache.jsonl)
+EXTRA_READOUTS = _env_path("HBENCH_EXTRA_READOUTS", "/workspace/hb-readouts")
+MAIN_OUT = _env_path(
+    "HBENCH_MAIN_OUT", "/workspace/hb-taxonomy-v2/outputs/wsbench_chat/claude-opus-5-5"
+)
+# plan 0028: the 3x bank's merged readouts (local until frozen)
+X3_READOUTS = _env_path("HBENCH_X3_READOUTS", "/root/tmp/hb28-readouts")
+# plan 0028: per-batch converted new readouts (<root>/<tag>/<reader>/hallucination.jsonl)
+X3_NEW_READOUTS = _env_path("HBENCH_X3_NEW_READOUTS", "/root/tmp/hb28-readouts-new")
+
+__all__ = [
+    "ALI_PROBE_ROOT",
+    "BR_CAMPAIGN",
+    "BR_FINAL_OLENS_SUMMARY",
+    "BR_READOUTS",
+    "COMBOS_READOUTS",
+    "EXTRA_READOUTS",
+    "GLOBAL_WORKSPACE",
+    "MAIN_OUT",
+    "OR_OUT",
+    "OR_READOUTS_V2_DEFAULT",
+    "OR_READOUTS_V3",
+    "READOUTS_ROOT",
+    "SAFETY_OR_OUT",
+    "SIBLING_SRC_ROOT",
+    "WSBENCH_PUB",
+    "WSBENCH_PUB_V4",
+    "X3_NEW_READOUTS",
+    "X3_READOUTS",
+]

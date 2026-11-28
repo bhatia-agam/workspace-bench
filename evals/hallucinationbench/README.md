@@ -1,9 +1,17 @@
-# HallucinationBench index (vendored)
+# HallucinationBench: the vendored index and the banks
 
 The `hallucination` family left WorkspaceBench on 2026-10-30 (plan
 [`0040`](../../plans/0040-hallucination-to-hb.md)). It was replaced by
 [HallucinationBench](https://github.com/camila-blank/hallucination-bench) (HB). WSB reports
 HB's index instead, from a frozen copy in this directory.
+
+Since plan [`0120`](../../plans/0120-hallucinationbench-into-wsb.md) HB's code lives in this
+repository (`src/wsbench/hb`, command `wsbench hb`; runbook
+[`src/wsbench/hb/CLAUDE.md`](../../src/wsbench/hb/CLAUDE.md)) and its banks in this directory
+(see [Banks and index inputs](#banks-and-index-inputs-moved-from-hb)). That did not change the
+index: **the vendored `index.json` below is still the index of record, written only by
+`scripts/vendor_hb_index.py` and pinned to one HB sha, an arm is never aliased to a method, and
+the index never enters the WSB macro, a tier or the fast subset.**
 
 **What the index is.** The weighted share of a lens's claims that are hallucinated: claims the
 model's own computation contradicts. Lower is better. It is one number per (method, layer).
@@ -26,8 +34,9 @@ excused literal continuations decided by the verifier `cverify-v1`). am_claims c
 claims; am_situation counts cells whose readouts misrepresent the scenario as a whole. Sibling
 counts committed, probe-testable units. Overrefusal counts refusal claims whose declined subject
 is not in the prompt. benign_roleplay counts harmless role-play prompts with a claimed jailbreak
-recognition. Main runs on HB plan 0028's 3x bank. HB's `docs/results/0029_index_v8.md` gives the
-details and the numbers.
+recognition. Main runs on HB plan 0028's 3x bank (`wsbench_chat_x3/`).
+[`docs/hb/results/0029_index_v8.md`](../../docs/hb/results/0029_index_v8.md) gives the details and
+the numbers.
 
 **Excluded cells.** HB plan 0029 Amendment 4 excludes cells that stay failed after the retries:
 both judge models refused, or an invalid answer. They are counted and reported; the vendored
@@ -76,6 +85,35 @@ They are not per-layer rows, and `wsbench report` does not show them.
   - `mlnla-rl2-2000` (`mlnla:/ckpts/rl2/iter_002000`) is not verified identical to any HB NLA
     method (`mlnla-rl600`, `mlnla64-rl2k-all11`, `mlnla-ck2000-all11`). It reports "not
     measured on HallucinationBench" and is never aliased.
+
+## Banks and index inputs (moved from HB)
+
+HB's `data/` directory at `ecfae41`, bytes unchanged (`scripts/hb/import_from_hb.py <hb checkout>
+--check` compares them). `wsbench.hb.DATA` is this directory. The banks are frozen: never edit
+one in place; a change to a bank is a new index version.
+
+| directory | what |
+|---|---|
+| `wsbench_chat/` | the chat items and capture rows copied from WorkspaceBench, the frozen span-judge prompt |
+| `wsbench_chat_x3/` | the main bank of `hindex-v8` (HB plan 0028; pinned by its `MANIFEST.sha256`) |
+| `story/` | 20 story items |
+| `agentic_misalignment/` | 32 agentic-misalignment items, capture rows, intent overrides |
+| `sibling_probe/` | the user-modelling ladder's data and the frozen pilot record (`pilot/`, not linted) |
+| `overrefusal/` | OR-Bench candidates, labels, items, probes, calibration |
+| `benign_roleplay/` | the harmless role-play items and the bank file its pinned WorkspaceBench judge reads |
+| `calibration/` | claim-map calibration cases (its README: who may read or write the held-out files) |
+| `index/` | `v8_manifest.json` (the judged files `wsbench hb final` builds `hindex-v8` from, each with its sha256), `v8_persistent_failures.json` (the excluded cells), `methods.json` |
+
+Each bank directory's own README gives the schema and provenance, with paths as
+they were in HB (`data/<eval>/...` = this directory's `<eval>/...`).
+
+**Two files are named `methods.json`, in opposite directions.** `index/methods.json` is HB's:
+index method -> the arm of each family (what `wsbench hb index` / `final` read). `methods.json`
+beside this README is WSB's: readouts-root basename (a WSB arm) -> index method (what `wsbench
+report` reads, next section).
+
+The manifest names its persistent-failure list as `data/index/v8_persistent_failures.json`; that
+string is kept (the manifest's sha256 is recorded in the index) and resolves to `index/` here.
 
 ## How `wsbench report` shows it
 
