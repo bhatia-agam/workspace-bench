@@ -1,0 +1,843 @@
+"""``hbench run|calibrate|report|consistency-v2|pilot-dump|pilot-dump-v2|units-v2``."""
+
+# The shared commands and helpers live here. An eval with its own subcommands keeps them in
+# ``evals/<eval>/cli.py`` (``register(sub)``, listed in EVAL_CLIS); an eval with its own driver
+# behind ``run|report --eval`` keeps that in ``evals/<eval>/cli.py`` too (plan 0012 D2).
+
+import argparse
+import importlib
+import json
+import sys
+from pathlib import Path
+
+from wsbench.hb import DATA, paths
+from wsbench.hb.llm import DEFAULT_EFFORT, JudgeConfigError
+
+DEFAULT_MODEL = "claude-opus-5-5"
+INDEX_METHODS = DATA / "index" / "methods.json"  # plan 0013: method <-> arm mapping
+READOUTS_FILE = "hallucination.jsonl"
+AM_EVAL = "agentic_misalignment"  # plan 0008: its own driver (dispatched first in run / report)
+# modules exposing ``register(sub)``: their subcommands follow the shared ones, in this order
+EVAL_CLIS: list[str] = [
+    "wsbench.hb.evals.overrefusal.cli",  # plan 0015
+    "wsbench.hb.evals.benign_roleplay.cli",  # plan 0023
+]
+
+
+def _layers(s: str | None) -> list[int] | None:
+    return [int(x) for x in s.split(",") if x.strip()] if s else None
+
+
+def _effort(s: str) -> str | None:
+    return None if s in ("", "none", "default") else s
+
+
+def resolve_arms(args: argparse.Namespace) -> list[tuple[str, Path]]:
+    arms: list[tuple[str, Path]] = []
+    for a in args.arm or []:
+        if "=" not in a:
+            raise SystemExit(f"--arm expects name=path, got {a!r}")
+        name, path = a.split("=", 1)
+        arms.append((name, Path(path)))
+    if args.readouts_root:
+        root = Path(args.readouts_root)
+        for d in sorted(p for p in root.iterdir() if p.is_dir()):
+            f = d / READOUTS_FILE
+            if f.exists():
+                arms.append((d.name, f))
+    if args.arms:
+        keep = set(args.arms.split(","))
+        unknown = keep - {n for n, _ in arms}
+        if unknown:
+            raise SystemExit(f"--arms names not found: {sorted(unknown)}")
+        arms = [(n, p) for n, p in arms if n in keep]
+    names = [n for n, _ in arms]
+    if len(set(names)) != len(names):
+        raise SystemExit(f"duplicate arm names: {names}")
+    if not arms:
+        raise SystemExit("no arms: pass --arm name=path and/or --readouts-root DIR")
+    for n, p in arms:
+        if not p.exists():
+            raise SystemExit(f"[{n}] readouts file not found: {p}")
+    return arms
+
+
+def _excuse_verifier(args: argparse.Namespace, map_prompt: str) -> str | None:
+    """Plan 0029 Amendment 2: ``--excuse-verifier`` (default: ``cverify-v1`` for single-call
+    claimmap-v2.9 roots, off otherwise, including any ``--anchor v5c`` run; ``off`` disables it
+    for diagnostics). An explicit verifier with ``--anchor v5c`` is refused by
+    ``check_verifier`` (exit 3). Rebuild / report replay the arm dir's recorded setting whatever
+    this says; a judge run that differs exits 3."""
+    from wsbench.hb.judges import claimmap_v2 as cm
+    from wsbench.hb.judges import continuation_verifier as cv
+
+    flag = getattr(args, "excuse_verifier", None)
+    if flag == "off":
+        return None
+    v29 = cm.is_v29(map_prompt) if map_prompt in cm.VERSIONS else False
+    anchored = (getattr(args, "anchor", None) or "none") != "none"
+    if flag is None:
+        return cv.VERSION if v29 and not anchored else None
+    if not v29:
+        raise SystemExit(f"--excuse-verifier {flag} needs --map-prompt claimmap-v2.9")
+    return flag
+
+
+def _models(args: argparse.Namespace):
+    from wsbench.hb.evals.wsbench_chat.run import Models
+
+    map_prompt = getattr(args, "map_prompt", None) or "claimmap-v2.7"
+    return Models(
+        judge=args.judge_model,
+        summarizer=args.summarizer_model,
+        classifier=args.classifier_model,
+        effort=_effort(args.effort),
+        map_model=getattr(args, "map_model", None),
+        map_anchor=getattr(args, "anchor", None) or "none",
+        eval=getattr(args, "eval", None) or "wsbench_chat",
+        map_prompt=map_prompt,
+        situation_model=getattr(args, "situation_model", None),
+        excuse_verifier=_excuse_verifier(args, map_prompt),
+    )
+
+
+def _stages(args: argparse.Namespace) -> list[str]:
+    """``--stages`` (default: every stage); ``--skip-classify`` keeps its plan-0001 meaning
+    (summary, span and verify only) when ``--stages`` is not given."""
+    from wsbench.hb.evals.wsbench_chat.run import EXTRA_STAGES, STAGES, expand_stages
+
+    if args.stages:
+        sel = [x.strip() for x in args.stages.split(",") if x.strip()]
+    elif args.skip_classify:
+        sel = ["summary", "span", "verify"]
+    else:
+        sel = [*STAGES, *EXTRA_STAGES]  # cverify: a no-op unless the verifier is on
+    try:
+        expand_stages(sel, anchor=getattr(args, "anchor", None) or "none")
+    except ValueError as e:
+        raise SystemExit(str(e)) from None
+    return sel
+
+
+def _items(s: str | None) -> list[str] | None:
+    return [x.strip() for x in s.split(",") if x.strip()] if s else None
+
+
+def _apply_bank(args: argparse.Namespace, *, readouts: bool = False) -> None:
+    """``--bank`` (plans 0028 / 0029): point the wsbench_chat bank at a named bank; with
+    ``readouts`` (``run``), ``--bank x3`` and neither ``--arm`` nor ``--readouts-root``, the
+    readouts default to ``paths.X3_READOUTS`` ($HBENCH_X3_READOUTS). An x3 run records the bank
+    in ``arm.json``; judging into an arm dir recorded on another bank exits 3, and rebuild /
+    report replay the recorded bank when ``--bank`` is omitted (``run.check_bank`` /
+    ``run.replay_bank``)."""
+    name = getattr(args, "bank", None)
+    if not name:
+        return
+    if (getattr(args, "eval", None) or "wsbench_chat") != "wsbench_chat":
+        raise SystemExit("--bank is a wsbench_chat (main eval) option")
+    from wsbench.hb.evals.wsbench_chat import bank
+
+    bank.use_bank(name)
+    if readouts and name == "x3" and not args.readouts_root and not args.arm:
+        args.readouts_root = str(paths.X3_READOUTS)
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    _apply_bank(args, readouts=True)
+    if getattr(args, "eval", None) == AM_EVAL:
+        from wsbench.hb.evals.agentic_misalignment import cli as amcli
+
+        return amcli.run(args)
+    if getattr(args, "items", None):
+        raise SystemExit("--items is an agentic_misalignment option")
+    from wsbench.hb.evals.wsbench_chat import run as wrun
+
+    arms = resolve_arms(args)
+    models = _models(args)
+    out = Path(args.out)
+    if getattr(args, "joint", False):
+        return _cmd_run_joint(args, arms, models, out)
+    if args.rebuild:
+        for n, p in arms:
+            s = wrun.rebuild_arm(n, p, out, models)
+            _print_summary(n, s)
+        return 0
+    summaries = wrun.run_arms(
+        arms,
+        out,
+        models,
+        layers=_layers(args.layers),
+        limit=args.limit,
+        rpm=args.rpm,
+        concurrency=args.concurrency,
+        allow_missing=args.allow_missing,
+        classify=not args.skip_classify,
+        show_prompts=args.show_prompts,
+        stages=_stages(args),
+        sample_seed=args.sample_seed,
+    )
+    for n, s in summaries.items():
+        _print_summary(n, s)
+    # Failed calls are cached as failures and re-queued by the next run; a non-zero exit lets
+    # the driver re-run the stage instead of moving on.
+    n_failed = sum(
+        v for s in summaries.values() for k, v in s["health"].items() if k.startswith("n_failed_")
+    )
+    if n_failed:
+        print(f"{n_failed} failed calls remain; re-run to retry them", file=sys.stderr)
+        return 4
+    return 0
+
+
+def _cmd_run_joint(args: argparse.Namespace, arms: list, models, out: Path) -> int:
+    """Plan 0029 §3.7: ``hbench run --joint``: the joint 11-layer cells of each ``--arms``
+    target (sources: ``--joint-from`` in precedence order, default the arm itself)."""
+    from wsbench.hb.evals.wsbench_chat import run as wrun
+    from wsbench.hb.judges.claimmap_v2 import JOINT_LAYERS
+
+    paths = dict(arms)
+    if args.joint_from:
+        if len(arms) != 1:
+            raise SystemExit("--joint-from needs exactly one target arm (--arms)")
+        src_names = [x.strip() for x in args.joint_from.split(",") if x.strip()]
+        args2 = argparse.Namespace(**{**vars(args), "arms": ",".join(src_names)})
+        paths |= dict(resolve_arms(args2))
+    rc = 0
+    for name, _p in arms:
+        names = [x.strip() for x in args.joint_from.split(",")] if args.joint_from else [name]
+        sources = [(n, paths[n]) for n in names]
+        if args.rebuild:
+            import asyncio
+
+            s2 = asyncio.run(wrun.rebuild_joint_async(name, out, models))
+        else:
+            s2 = wrun.run_joint(
+                name,
+                sources,
+                out,
+                models,
+                layers=_layers(args.layers) or JOINT_LAYERS,
+                limit=args.limit,
+                rpm=args.rpm,
+                concurrency=args.concurrency,
+                show_prompts=args.show_prompts,
+                sample_seed=args.sample_seed,
+            )
+        h = s2["health"]
+        print(
+            f"[{name}] joint map ok={h['n_map_ok']} failed={h['n_map_failed']} "
+            f"pending={h['n_map_pending']}",
+            flush=True,
+        )
+        # plan 0029 Amendment 2: failed verifier calls are failed rows too (re-asked next run)
+        if (h["n_map_failed"] or h.get("n_verifier_failed", 0)) and not args.rebuild:
+            rc = 4
+    return rc
+
+
+def _print_summary(name: str, s: dict) -> None:
+    r = s["overall"]["rates"]
+    h = s["health"]
+
+    def f(k: str) -> str:
+        v = r.get(k)
+        return "—" if v is None else f"{v:.3f}"
+
+    failed = {k: h[f"n_failed_{k}"] for k in ("summary", "span", "verify", "classify", "map")}
+    print(
+        f"[{name}] layers={s['config']['judged_layers']} judged={h['n_judged_cells']} "
+        f"pending={h['n_pending_cells']} failed={failed} "
+        f"| v5c={f('hallucination_rate')} concept={f('concept_rate')} detail={f('detail_rate')} "
+        f"strict={f('strict_hallucination_rate')} unsupported={f('unsupported_rate')} "
+        f"unclassified_spans={h['n_unclassified']} spend_total=${s['spend']['total_usd']:.2f}",
+        flush=True,
+    )
+
+
+def cmd_calibrate(args: argparse.Namespace) -> int:
+    from wsbench.hb import calibrate
+
+    if args.taxonomy == "v2":
+        return _calibrate_v2(args)
+    model = args.classifier_model or args.judge_model
+    res = calibrate.run(
+        args.split,
+        model=model,
+        effort=_effort(args.effort),
+        out_root=Path(args.out),
+        repeats=args.repeats,
+        rpm=args.rpm,
+        concurrency=args.concurrency,
+        cases_path=Path(args.cases) if args.cases else None,
+    )
+    print(calibrate.render_markdown(res))
+    sp = res["spend_this_run"]
+    print(f"\nspend this run: ${sp['usd']:.4f} ({sp['calls']} calls)")
+    if args.split == "heldout":
+        print(f"GATE {'PASSED' if res['gate_passed'] else 'FAILED'}")
+    return 0
+
+
+def _calibrate_v2(args: argparse.Namespace) -> int:
+    from wsbench.hb import calibrate_v2
+
+    res = calibrate_v2.run(
+        args.split,
+        model=args.map_model or args.judge_model,
+        effort=_effort(args.effort),
+        out_root=Path(args.out),
+        repeats=args.repeats,
+        rpm=args.rpm,
+        concurrency=args.concurrency,
+        cases_file=Path(args.cases) if args.cases else None,
+        anchor=args.anchor,
+        prompt=args.prompt,
+    )
+    print(calibrate_v2.render_markdown(res))
+    sp = res["spend_this_run"]
+    print(f"\ncoverage: {json.dumps(res['coverage'])}")
+    print(f"spend this run: ${sp['usd']:.4f} ({sp['calls']} calls)")
+    if args.split == "heldout":
+        print(f"GATE {'PASSED' if res['gate_passed'] else 'FAILED'}")
+    return 0
+
+
+def _index_dest(out: Path, judge_model: str) -> Path:
+    from wsbench.hb.evals.wsbench_chat.run import model_slug
+
+    return out / "index" / model_slug(judge_model)
+
+
+def cmd_index(args: argparse.Namespace) -> int:
+    from wsbench.hb import index
+
+    out = Path(args.out)
+    sources = index.default_sources(out, args.judge_model, args.version)
+    for fam, flag, roots in (
+        (index.MAIN, "--main-root", args.main_root),
+        (index.AM_CLAIMS, "--am-root", args.am_root),
+        (index.AM_SITUATION, "--am-situation-root", args.am_situation_root),
+        (index.SIBLING, "--um-root", args.um_root),
+        (index.STORY, "--story-root", args.story_root),
+        (index.OVERREFUSAL, "--overrefusal-root", args.overrefusal_root),
+        (index.BENIGN_ROLEPLAY, "--benign-roleplay-root", args.benign_roleplay_root),
+    ):
+        if roots:
+            if missing := [r for r in roots if not Path(r).is_dir()]:
+                raise SystemExit(f"{flag}: not a directory: {missing}")
+            sources[fam] = [Path(r) for r in roots]
+    if args.am_root and not args.am_situation_root:  # default: the AM root
+        sources[index.AM_SITUATION] = list(sources[index.AM_CLAIMS])
+    # an opted-in safety root must hold its counts, else the family (and full / matched)
+    # silently vanishes
+    for fam in index.safety_families(args.version):
+        if gone := [
+            str(r) for r in sources.get(fam, []) if not (r / index.SAFETY_COUNTS).is_file()
+        ]:
+            raise SystemExit(f"{fam}: no {index.SAFETY_COUNTS} in {gone}")
+    if not sources.get(index.BENIGN_ROLEPLAY):
+        print(
+            f"warning: hindex-{args.version} without a benign_roleplay root "
+            "(--benign-roleplay-root or $HBENCH_SAFETY_BR_OUT): the family, and so full / "
+            "matched, are absent",
+            file=sys.stderr,
+        )
+    try:  # plan 0022's unit guard, after the checks above (build_index repeats it)
+        index.check_safety_units(sources, args.version)
+    except ValueError as e:
+        raise SystemExit(str(e)) from None
+    try:
+        built = index.build_index(
+            sources, index.load_methods(Path(args.methods)), args.workers, version=args.version
+        )
+    except (ValueError, OSError) as e:  # bad config (incl. JSONDecodeError) / unreadable file
+        raise SystemExit(str(e)) from None
+    dest = Path(args.dest) if args.dest else _index_dest(out, args.judge_model)
+    js, md = index.write_index(built, dest)
+    print(index.render_md(built))
+    print(f"wrote {js}, {md}")
+    return 0
+
+
+def _cmd_report(args: argparse.Namespace) -> int:
+    _apply_bank(args)
+    if getattr(args, "eval", None) == AM_EVAL:
+        from wsbench.hb.evals.agentic_misalignment import cli as amcli
+
+        return amcli.report(args)
+    from wsbench.hb import report
+
+    if args.view == "v2":
+        from wsbench.hb import report_v2
+
+        root = report_v2.report(
+            Path(args.out),
+            args.judge_model,
+            rebuild=not args.no_rebuild,
+            audit_n=args.audit_n if args.audit_n is not None else 10,
+            seed=args.seed,
+            verdict_n=args.audit_verdict_n,
+            eval_name=args.eval,
+        )
+        print(
+            f"wrote {root / 'report_v2.md'}, {root / 'report_v2.json'}, "
+            f"{root / 'probe_candidates.jsonl'}, {root / 'audit_samples_v2.md'}"
+        )
+        return 0
+
+    root = report.report(
+        Path(args.out),
+        args.judge_model,
+        rebuild=not args.no_rebuild,
+        audit_n=args.audit_n if args.audit_n is not None else 15,
+        seed=args.seed,
+        eval_name=args.eval,
+    )
+    print(f"wrote {root / 'report.md'}, {root / 'report.json'}, {root / 'audit_samples.md'}")
+    return 0
+
+
+def cmd_consistency_v2(args: argparse.Namespace) -> int:
+    from wsbench.hb import consistency_v2
+
+    if args.rescore:
+        res = consistency_v2.rescore(Path(args.out), args.map_model or args.judge_model)
+        print(consistency_v2.render_markdown(res))
+        print("\nre-scored from the cached r0/r1 cells: no API calls")
+        return 0
+    if not args.arms:
+        raise SystemExit("--arms is required unless --rescore")
+    res = consistency_v2.run(
+        args.arms,
+        readouts_root=Path(args.readouts_root),
+        out_root=Path(args.out),
+        models=_models(args),
+        n=args.n,
+        seed=args.seed,
+        rpm=args.rpm,
+        concurrency=args.concurrency,
+    )
+    print(consistency_v2.render_markdown(res))
+    sp = res["spend_this_run"]
+    print(f"\nspend this run: ${sp['usd']:.4f} ({sp['calls']} calls)")
+    return 0
+
+
+def cmd_pilot_dump(args: argparse.Namespace) -> int:
+    from wsbench.hb import report
+    from wsbench.hb.calibrate import validate_case
+
+    cases = report.pilot_dump(
+        Path(args.out),
+        args.judge_model,
+        args.arms.split(","),
+        per_stratum=args.per_stratum,
+        seed=args.seed,
+        layers=_layers(args.layers),
+    )
+    errs = [e for c in cases for e in validate_case(c, require_gold=False)]
+    if errs:
+        print("warning: " + "; ".join(errs[:10]), file=sys.stderr)
+    dest = Path(args.dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with dest.open("w", encoding="utf-8") as fh:
+        for c in cases:
+            fh.write(json.dumps(c, ensure_ascii=False) + "\n")
+    n_sp = sum(len(c["spans"]) for c in cases)
+    n_sampled = sum(s["sampled"] for c in cases for s in c["spans"])
+    print(f"wrote {len(cases)} cases ({n_sampled} sampled spans, {n_sp} spans total) to {dest}")
+    return 0
+
+
+def cmd_pilot_dump_v2(args: argparse.Namespace) -> int:
+    from wsbench.hb import report_v2
+    from wsbench.hb.calibrate_v2 import validate_case
+
+    cases = report_v2.pilot_dump_v2(
+        Path(args.out),
+        args.judge_model,
+        args.arms.split(","),
+        per_stratum=args.per_stratum,
+        seed=args.seed,
+        layers=_layers(args.layers),
+    )
+    errs = [e for c in cases for e in validate_case(c, require_gold=False)]
+    if errs:
+        print("warning: " + "; ".join(errs[:10]), file=sys.stderr)
+    _write_jsonl(Path(args.dest), cases)
+    n_units = sum(len(c["gold"]["units"]) for c in cases)
+    print(f"wrote {len(cases)} cells ({n_units} units to label) to {args.dest}")
+    return 0
+
+
+def cmd_units_v2(args: argparse.Namespace) -> int:
+    """Fill each case's ``gold.units`` with the production units (leaf null) for labelling."""
+    from wsbench.hb.calibrate_v2 import skeleton
+
+    src = Path(args.cases)
+    cases = [json.loads(x) for x in src.read_text(encoding="utf-8").splitlines() if x.strip()]
+    out = [skeleton(c) for c in cases]
+    _write_jsonl(Path(args.dest), out)
+    print(f"wrote {len(out)} cases ({sum(len(c['gold']['units']) for c in out)} units)")
+    return 0
+
+
+def _write_jsonl(dest: Path, rows: list[dict]) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with dest.open("w", encoding="utf-8") as fh:
+        for c in rows:
+            fh.write(json.dumps(c, ensure_ascii=False) + "\n")
+
+
+def _common(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--out", default="outputs", help="output root (default: outputs)")
+    p.add_argument("--judge-model", default=DEFAULT_MODEL)
+    p.add_argument(
+        "--effort",
+        default=DEFAULT_EFFORT,
+        help="Anthropic output_config.effort (default low; 'none' omits)",
+    )
+    p.add_argument("--rpm", type=float, default=1500.0)
+    p.add_argument("--concurrency", type=int, default=64)
+
+
+def _eval(p: argparse.ArgumentParser) -> None:
+    from wsbench.hb.evals import EVALS
+
+    p.add_argument(
+        "--eval",
+        choices=sorted(EVALS),
+        default="wsbench_chat",
+        help="which bank / output root <out>/<eval>/ (story: plan 0007; agentic_misalignment: "
+        "plan 0008, its own driver; default wsbench_chat)",
+    )
+
+
+def _bank(p: argparse.ArgumentParser) -> None:
+    p.add_argument(
+        "--bank",
+        choices=("wsb", "x3"),
+        default=None,
+        help="wsbench_chat only: wsb = the WSB 149 x 8 bank; x3 = plan 0028's 3x bank "
+        "($HBENCH_X3_BANK/items.json, default data/wsbench_chat_x3; run: readouts default "
+        f"{paths.X3_READOUTS} = $HBENCH_X3_READOUTS). Default: the WSB bank, or "
+        "$HBENCH_WSBENCH_CHAT_ITEMS when set",
+    )
+
+
+def _prompt_choices() -> list[str]:
+    from wsbench.hb.judges.claimmap_v2 import VERSIONS
+
+    return list(VERSIONS)
+
+
+def _map_prompt(p: argparse.ArgumentParser) -> None:
+    p.add_argument(
+        "--map-prompt",
+        choices=_prompt_choices(),
+        default="claimmap-v2.7",
+        help="claim-map prompt version (plan 0029; default claimmap-v2.7; recorded in arm.json, "
+        "a run that differs from an arm dir's record is refused; agentic_misalignment maps "
+        "claimmap-v2.8 / -v2.9 to their +am3 versions; v8 roots use claimmap-v2.9, plan 0029 "
+        "amendment)",
+    )
+
+
+def _excuse_verifier_flag(p: argparse.ArgumentParser) -> None:
+    from wsbench.hb.judges import continuation_verifier as cv
+
+    p.add_argument(
+        "--excuse-verifier",
+        choices=(*cv.VERSIONS, "off"),
+        default=None,
+        help="plan 0029 amendment 2: the continuation verifier that decides the "
+        "continuation_miss excuse (default: cverify-v1 for claimmap-v2.9 roots, off otherwise "
+        "and under --anchor v5c, which refuses an explicit verifier with exit 3; "
+        "'off' = the v2.9 judge-tag rule, diagnostics only; recorded in arm.json, a run that "
+        "differs from an arm dir's record exits 3; hbench final requires cverify-v1)",
+    )
+
+
+def _anchor(p: argparse.ArgumentParser) -> None:
+    p.add_argument(
+        "--anchor",
+        choices=("none", "v5c"),
+        default="none",
+        help="claim map: none = single-call (default; no established spans, no verify); "
+        "v5c = plan rev 12 (v5c wrong spans passed as ESTABLISHED units)",
+    )
+
+
+def build_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser(prog="wsbench hb", description=__doc__)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    r = sub.add_parser("run", help="judge arms (summarise -> span -> verify -> map -> classify)")
+    _common(r)
+    r.add_argument("--arm", action="append", help="name=path/to/hallucination.jsonl (repeatable)")
+    r.add_argument(
+        "--readouts-root",
+        help="DIR with <arm>/hallucination.jsonl subdirectories (agentic_misalignment: "
+        f"<arm>/agentic_misalignment.jsonl, default {paths.READOUTS_ROOT})",
+    )
+    r.add_argument("--arms", help="comma-separated arm names to keep")
+    r.add_argument("--layers", help="comma-separated layers (each arm judges those it has)")
+    r.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="judge only the first N non-empty cells per arm x layer (smoke); "
+        "agentic_misalignment map: N mapped cells per layer, drawn among the detection "
+        "positives",
+    )
+    r.add_argument(
+        "--sample-seed",
+        type=int,
+        default=None,
+        help="with --limit: draw the N cells per arm x layer by a seeded shuffle instead of the "
+        "first N (plan 0029 pilots: seeded, stratified by layer)",
+    )
+    r.add_argument(
+        "--items",
+        default=None,
+        help="agentic_misalignment only: comma-separated item ids to judge (pilot)",
+    )
+    r.add_argument("--summarizer-model", default=None)
+    r.add_argument("--classifier-model", default=None)
+    r.add_argument("--map-model", default=None, help="claim-map (:M) judge (default: judge)")
+    _map_prompt(r)
+    _excuse_verifier_flag(r)
+    r.add_argument(
+        "--situation-model",
+        default=None,
+        help="agentic_misalignment, v8 roots: the amsit-v2 situation judge (--stages situation; "
+        "default claude-sonnet-5-5)",
+    )
+    r.add_argument(
+        "--joint",
+        action="store_true",
+        help="plan 0029: judge the joint 11-layer cells (sample 0 of every layer in one call; "
+        "needs --map-prompt claimmap-v2.8 or later (v8: claimmap-v2.9); agentic_misalignment: "
+        "same as --stages joint)",
+    )
+    r.add_argument(
+        "--joint-from",
+        default=None,
+        help="with --joint (chat / story): the source arms in precedence order (each layer "
+        "from the first that has it, the index's rule); default the target arm itself",
+    )
+    _anchor(r)
+    _eval(r)
+    _bank(r)
+    r.add_argument(
+        "--stages",
+        default=None,
+        help="comma-separated stages that may call the API: summary,span,verify,classify,map,"
+        "cverify (default: all; dependencies are added: map runs summary first if missing, and "
+        "span only under --anchor v5c; cverify = the continuation verifier after map, v2.9 "
+        "verifier roots only; single-call map also calls span on a seeded 10%% item "
+        "subsample for the v5c comparison). agentic_misalignment: detect,summ,verify,map,intent,"
+        "cverify (verify = Stage H, the headline verifier; default all; no dependencies are "
+        "added, unselected stages are cache-only)",
+    )
+    r.add_argument("--allow-missing", action="store_true")
+    r.add_argument(
+        "--rebuild",
+        action="store_true",
+        help="regenerate cells.jsonl/summary.json from the cache (no API calls)",
+    )
+    r.add_argument(
+        "--skip-classify",
+        action="store_true",
+        help="summary + span + verify only (pilot); ignored when --stages is given",
+    )
+    r.add_argument(
+        "--show-prompts",
+        type=int,
+        default=0,
+        metavar="K",
+        help="write the prompts of the first K cells per arm x layer to <arm>/prompts_sample.txt",
+    )
+    r.set_defaults(fn=cmd_run)
+
+    c = sub.add_parser("calibrate", help="score the classifier on calibration cases")
+    _common(c)
+    c.add_argument("--split", choices=("dev", "heldout"), required=True)
+    c.add_argument(
+        "--taxonomy",
+        choices=("v1", "v2"),
+        default="v1",
+        help="v1: the taxonomy-v1 classifier on {split}.jsonl; v2: the claim map on "
+        "{split}_v2.jsonl",
+    )
+    c.add_argument("--classifier-model", default=None)
+    c.add_argument("--map-model", default=None)
+    c.add_argument(
+        "--prompt",
+        choices=_prompt_choices(),
+        default="claimmap-v2.7",
+        help="--taxonomy v2: the claim-map prompt version (plan 0029)",
+    )
+    _anchor(c)
+    c.add_argument("--repeats", type=int, default=2)
+    c.add_argument("--cases", default=None, help="override the cases file")
+    c.set_defaults(fn=cmd_calibrate)
+
+    rp = sub.add_parser("report", help="cross-arm report + audit samples")
+    rp.add_argument("--out", default="outputs")
+    rp.add_argument("--judge-model", default=DEFAULT_MODEL)
+    rp.add_argument("--no-rebuild", action="store_true")
+    rp.add_argument(
+        "--view", choices=("v1", "v2"), default="v1", help="v2: the claim-map report (plan 0002)"
+    )
+    rp.add_argument("--audit-n", type=int, default=None, help="per leaf; default 15 (v1) / 10 (v2)")
+    rp.add_argument("--audit-verdict-n", type=int, default=20, help="v2: audit samples per verdict")
+    rp.add_argument("--seed", type=int, default=0)
+    rp.add_argument(
+        "--readouts-root",
+        default=None,
+        help="agentic_misalignment only: DIR with <arm>/agentic_misalignment.jsonl (default "
+        f"{paths.READOUTS_ROOT}); ignored by the other evals",
+    )
+    _eval(rp)
+    _bank(rp)
+    rp.set_defaults(fn=_cmd_report)
+
+    cs = sub.add_parser(
+        "consistency-v2", help="claim-map judge consistency: two fresh :M calls per sampled cell"
+    )
+    _common(cs)
+    cs.add_argument("--arms", default=None, help="arm:layer,... e.g. s3d-rl600:44,jlens:44")
+    cs.add_argument(
+        "--rescore",
+        action="store_true",
+        help="re-score the cached r0/r1 cells of this prompt version (no API calls)",
+    )
+    cs.add_argument("--n", type=int, default=50, help="cells per arm:layer (default 50)")
+    cs.add_argument("--seed", type=int, default=0)
+    cs.add_argument(
+        "--readouts-root",
+        default=str(paths.READOUTS_ROOT),
+        help="DIR with <arm>/hallucination.jsonl",
+    )
+    cs.add_argument("--summarizer-model", default=None)
+    cs.add_argument("--classifier-model", default=None)
+    cs.add_argument("--map-model", default=None)
+    cs.set_defaults(fn=cmd_consistency_v2)
+
+    pd = sub.add_parser("pilot-dump", help="sample pilot spans as unlabelled calibration cases")
+    pd.add_argument("--out", default="outputs")
+    pd.add_argument("--judge-model", default=DEFAULT_MODEL)
+    pd.add_argument("--arms", required=True)
+    pd.add_argument("--layers", default=None)
+    pd.add_argument("--per-stratum", type=int, default=5, help="spans per arm x grounding")
+    pd.add_argument("--seed", type=int, default=0)
+    pd.add_argument("--dest", required=True)
+    pd.set_defaults(fn=cmd_pilot_dump)
+
+    p2 = sub.add_parser(
+        "pilot-dump-v2", help="dump real cells with production units for v2 hand-labelling"
+    )
+    p2.add_argument("--out", default="outputs")
+    p2.add_argument("--judge-model", default=DEFAULT_MODEL)
+    p2.add_argument("--arms", required=True)
+    p2.add_argument("--layers", default=None)
+    p2.add_argument("--per-stratum", type=int, default=3, help="cells per arm x v5c cell class")
+    p2.add_argument("--seed", type=int, default=0)
+    p2.add_argument("--dest", required=True)
+    p2.set_defaults(fn=cmd_pilot_dump_v2)
+
+    u2 = sub.add_parser(
+        "units-v2", help="fill v2 cases' gold.units with the production unit split (leaf null)"
+    )
+    u2.add_argument("--cases", required=True)
+    u2.add_argument("--dest", required=True)
+    u2.set_defaults(fn=cmd_units_v2)
+
+    ix = sub.add_parser(
+        "index",
+        help="the hallucination index (hindex-v8, plan 0029; the only version): one row per "
+        "(method, layer)",
+    )
+    ix.add_argument("--out", default="outputs", help="output root of the default sources")
+    ix.add_argument("--judge-model", default=DEFAULT_MODEL)
+    for flag, default in (
+        ("--main-root", "<out>/wsbench_chat/<model>"),
+        ("--story-root", "<out>/story/<model>"),
+        ("--am-root", "<out>/agentic_misalignment/<model>"),
+        ("--um-root", "<out>/sibling/um (country at label/, others at <domain>/label/)"),
+    ):
+        ix.add_argument(flag, action="append", help=f"repeatable; replaces the default {default}")
+    ix.add_argument(
+        "--am-situation-root",
+        action="append",
+        help="repeatable; AM v8 root(s) whose arm dirs hold situation.jsonl "
+        "(default: the --am-root / <out>/agentic_misalignment/<model>)",
+    )
+    for flag, var in (
+        ("--overrefusal-root", "HBENCH_SAFETY_OR_OUT"),
+        ("--benign-roleplay-root", "HBENCH_SAFETY_BR_OUT"),
+    ):
+        ix.add_argument(
+            flag,
+            action="append",
+            help=f"repeatable; a dir holding index_counts.jsonl (+ index_meta.json); default: "
+            f"${var} only when set (opt-in, plan 0019), else the family is absent",
+        )
+    ix.add_argument(
+        "--version",
+        choices=("v8",),
+        default="v8",
+        help="v8 (default and the only version): hindex-v8 (plan 0029: main 9, am_claims 3, "
+        "am_situation 3, sibling 1, story 1, "
+        "overrefusal 1, benign_roleplay 2 (no cheating: archived, plan 0029 amendment 3); "
+        "per-layer rows + a joint row; "
+        "claimmap-v2.8+ roots, claimmap-v2.9 for the final run; needs a `refusal_claims` "
+        "--overrefusal-root (offtopic_index/, plan 0022) and a `prompts` "
+        "--benign-roleplay-root (`hbench benign-roleplay index-export`, plan 0027))",
+    )
+    ix.add_argument("--methods", default=str(INDEX_METHODS), help="method <-> arm mapping")
+    ix.add_argument("--dest", default=None, help="default <out>/index/<model>/")
+    ix.add_argument("--workers", type=int, default=8, help="processes over arm dirs")
+    ix.set_defaults(fn=cmd_index)
+
+    fn = sub.add_parser(
+        "final",
+        help="plan 0029: check the v8 manifest (sha256s, completeness, one prompt version), "
+        "build hindex-v8 from exactly its roots and draw the final plots",
+    )
+    fn.add_argument("--manifest", required=True, help="data/index/v8_manifest.json")
+    fn.add_argument("--out", default="outputs/final", help="index.json / index.md destination")
+    fn.add_argument("--plots", default="plots/final", help="plot destination")
+    fn.add_argument("--methods", default=str(INDEX_METHODS), help="method <-> arm mapping")
+    fn.add_argument("--workers", type=int, default=8)
+    fn.set_defaults(fn=cmd_final)
+
+    for mod in EVAL_CLIS:
+        importlib.import_module(mod).register(sub)
+    return ap
+
+
+def cmd_final(args: argparse.Namespace) -> int:
+    from wsbench.hb import final
+
+    return final.main(
+        Path(args.manifest),
+        out=Path(args.out),
+        plots=Path(args.plots),
+        methods=Path(args.methods),
+        workers=args.workers,
+    )
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        return args.fn(args)
+    except JudgeConfigError as e:
+        print(f"JUDGE CONFIG ERROR: {e}", file=sys.stderr)
+        return 3
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

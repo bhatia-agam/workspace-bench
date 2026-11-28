@@ -21,6 +21,8 @@ def test_no_module_imports_interp():
     assert importlib.util.find_spec("wsbench.summarizer") is None
     bad = []
     for f in SRC.rglob("*.py"):
+        if SRC / "hb" in f.parents:  # HallucinationBench's own summarizer and cache keys (0120)
+            continue
         text = f.read_text(encoding="utf-8")
         tree = ast.parse(text)
         for node in ast.walk(tree):

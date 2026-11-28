@@ -2674,7 +2674,8 @@ def _usage() -> str:
         "usage: wsbench <" + "|".join([*COMMANDS, "viewer"]) + "> [key=value ...] "
         "[--show | --help]\n"
         "tiers of run / plan: --fast (the frozen fast subset) | --core (the default) | --full "
-        "(every family; all=True)"
+        "(every family; all=True)\n"
+        "HallucinationBench: wsbench hb <command> [options] (its own commands: wsbench hb --help)"
     )
 
 
@@ -2696,6 +2697,11 @@ def main(argv: list[str] | None = None) -> int:
 
         registry.load_all()
         return viewer_main(argv[1:])
+    if argv and argv[0] == "hb":  # `wsbench hb ...`: HallucinationBench's own argparse CLI
+        # registers no family and loads no registry: the index stays out of every macro and tier
+        from wsbench.hb.cli import main as hb_main
+
+        return hb_main(argv[1:])
     if not argv or argv[0] not in COMMANDS:
         print(_usage(), file=sys.stderr)
         return EXIT_USAGE

@@ -18,7 +18,13 @@ NAMES = sorted(
     key=lambda n: (-len(n), n),
 )
 FAMILY_PATH = re.compile(rf"^evals/({'|'.join(map(re.escape, NAMES))})(/|$)")
-EXEMPT = {REPO / "src/wsbench/registry.py"}
+EXEMPT = {
+    REPO / "src/wsbench/registry.py",
+    # HallucinationBench (plan 0120), imported unchanged: each builds a path inside ANOTHER
+    # WorkspaceBench checkout (its pinned one, in the pre-0101 layout)
+    REPO / "src/wsbench/hb/evals/benign_roleplay/bank.py",
+    REPO / "src/wsbench/hb/evals/sibling_probe/bank.py",
+}
 
 
 def code_files() -> list[Path]:
@@ -197,7 +203,9 @@ def doc_files() -> list[Path]:
     out.append(REPO / "docs/adapt_judge_inputs.md")
     out += [f for f in (REPO / ".claude/skills").rglob("*.md") if f.name not in _SKILL_AUDITS]
     out += [registry.family_root(f) / "README.md" for f in registry._layout()]
-    out += sorted((REPO / "tests").rglob("*.py"))
+    # tests/hb (HallucinationBench's suite, plan 0120) writes paths of ANOTHER checkout: skipped
+    hb = REPO / "tests" / "hb"
+    out += sorted(f for f in (REPO / "tests").rglob("*.py") if hb not in f.parents)
     return [f for f in out if f.is_file()]
 
 

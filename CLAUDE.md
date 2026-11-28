@@ -1483,3 +1483,37 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   `/workspace`).
 - `wsbench viewer ingest|serve` (`viewer/`, `src/wsbench/viewer/README.md`): the results
   viewer; needs the `viewer` extra.
+
+## HallucinationBench (`wsbench hb`, plan 0120)
+
+HallucinationBench's code, banks and tests live here since plan 0120, moved unchanged from
+`camila-blank/hallucination-bench` @ `ecfae41`: package `src/wsbench/hb/` (command `wsbench hb
+<command>`, HB's own argparse CLI, dispatched in `cli.main` before `COMMANDS` like `viewer`),
+banks `evals/hallucinationbench/<eval>/` and `evals/hallucinationbench/index/`
+(`wsbench.hb.DATA`; bytes unchanged), tests `tests/hb/` (a package), scripts `scripts/hb/`,
+HB's plans `plans/hb/`, docs `docs/hb/`. **Its runbook is `src/wsbench/hb/CLAUDE.md`: read it
+before touching anything there.** What this file needs to say:
+
+- **It is a sub-package, not families.** `wsbench hb` registers no `EvalSpec`, tier, fast entry
+  or `COMMANDS` entry and never calls `registry.load_all()`; the index never enters a macro
+  (`in_macro: false`), and `REMOVED_FAMILIES["hallucination"]` stays. The bullet "HallucinationBench
+  index (plan 0040)" above still holds: the vendored `evals/hallucinationbench/index.json` is the
+  index of record, written only by `scripts/vendor_hb_index.py`, and an arm is never aliased.
+  `evals/hallucinationbench/index/methods.json` (HB's: index method -> arm per family) is the
+  opposite direction of `evals/hallucinationbench/methods.json` (WSB arm -> index method).
+- **No behaviour changed in the move, and none may change without a new index version**: HB's
+  prompts, banks, cache keys (`summ:...` among them), fingerprints, scoring rules and weights.
+  WSB's style rules are not applied there (ruff per-file ignores in `pyproject.toml`; its
+  `from __future__ import annotations` lines stay), and the scan tests exempt it by path
+  (`test_no_token_interpreter.py`, `test_bank_versions.py`, `test_family_paths.py`). The import
+  is reproducible: `uv run python scripts/hb/import_from_hb.py <hb checkout> --check` rebuilds it
+  and prints the residual, which must be only the named hand edits (`HAND_EDITS` there).
+- **benign_roleplay is judged in a separate pinned WorkspaceBench checkout**
+  (`$HBENCH_WSBENCH_PUB` at `wsb.WSB_SHA`), never with this checkout's `jailbreak_recognition`.
+  Its subprocesses take `wsb.pinned_env()` (no `PYTHONPATH`, `UV_PROJECT_ENVIRONMENT`, `WSB_*`,
+  `WSBENCH_*`): with this checkout's `PYTHONPATH` the pinned checkout would import THIS code
+  while its pin check still passes.
+- `uv sync --extra dev --extra hb` adds the tokenizer the sibling eval's tests need (they skip
+  without it; CI installs `dev` only). `wsbench hb final` reproduces the vendored numbers from
+  the frozen judged outputs; an index built here carries this repository's `git_sha`, which
+  `vendor_hb_index.py` refuses. The viewer still reads HB from an HB checkout (`hb_repo=`).
