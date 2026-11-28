@@ -2,7 +2,7 @@
 and the request's view (bench, model, subset, chosen runs) and returns a page body."""
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from wsbench.viewer import meta
@@ -753,6 +753,7 @@ def question_page(db: Store, v: View, name: str, item: str, q: dict[str, str]) -
     if e is None or it is None:
         return nav(v, "scores") + empty(f"No question {item!r} in {name!r}.")
     shown, runs = chosen_runs(db, v)
+    defaults, _all = chosen_runs(db, replace(v, runs=[]))
     items = db.items(v.bench, v.model, name, v.subset)
     if item not in {x["item"] for x in items}:
         items = db.items(v.bench, v.model, name, "full")
@@ -777,9 +778,12 @@ def question_page(db: Store, v: View, name: str, item: str, q: dict[str, str]) -
         "axes": list(meta.HB_SPAN_AXES),
         "scoredBy": e["scored_by"],
         "summaryNote": SUMMARIZER_NOTE if v.bench == "wsb" else "",
-        # open the first three chosen methods that have something on this question
+        # open every chosen run that has something on this question: the runs the score
+        # table and the eval page show. `defaults` names the store's default runs, so panes
+        # a reader chose earlier are kept only while those defaults are the same
         "open": ([r["run_id"] for r in shown if r["run_id"] in verdicts]
-                 or [r["run_id"] for r in shown])[:3],
+                 or [r["run_id"] for r in shown]),
+        "defaults": ",".join(r["run_id"] for r in defaults),
         "layer": q.get("l"), "pos": q.get("p"), "find": q.get("find") or "",
         "judgedBy": e["judged_by"], "gates": gate_cards(e["gates"]),
     }  # fmt: skip
@@ -1074,6 +1078,13 @@ def runs_page(db: Store, v: View) -> str:
             for x in r["sets"]
         )
         commit = f.get("bench_commit") or ""
+        # evals taken from an update entry were judged at that entry's bench commit
+        later: dict[str, list[str]] = {}
+        for name, ev in sorted(db.run_evals(r["run_id"]).items()):
+            if ev["facts"].get("update_run"):
+                at = str(ev["facts"].get("bench_commit") or "?").split(" ")[0][:8]
+                later.setdefault(f"{at} (run {ev['facts']['update_run']})", []).append(name)
+        also = "".join(f"; {', '.join(v)} judged at {k}" for k, v in later.items())
         tn = f.get("timing_note") or ""  # the manifest's own words on these numbers
         where, detail = readouts_where(r["readouts"])
         home = url("/", bench=r["bench"], model=r["model"], runs=r["run_id"])
@@ -1095,7 +1106,9 @@ def runs_page(db: Store, v: View) -> str:
             + _num(f.get("total_wall_seconds"), duration(f.get("total_wall_seconds")), tn)
             + f"<td>{esc(f.get('engine') or '—')}</td>"
             + (
-                f'<td title="{esc(commit)}"><code>{esc(commit.split(" ")[0][:8])}</code></td>'
+                f'<td title="{esc(commit + also)}"><code>{esc(commit.split(" ")[0][:8])}</code>'
+                + (f' <span class="tag derived">+{len(later)}</span>' if later else "")
+                + "</td>"
                 if commit
                 else "<td>—</td>"
             )

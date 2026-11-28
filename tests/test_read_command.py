@@ -641,6 +641,7 @@ def test_every_read_command_of_the_guide_parses():
     commands = guide_commands()
     assert len(commands) >= 6 and any("launcher=modal" in c for c in commands)
     for command in commands:
+        assert "--" not in command, command  # the guide writes keys as key=value
         cmd = cli.Read()
         pydra.apply_overrides(cmd, fill(command))  # finalize runs: a usage error would raise
 
