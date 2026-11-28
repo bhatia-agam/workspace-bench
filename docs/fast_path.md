@@ -34,22 +34,22 @@ readouts files that `wsbench run` judges.
 ## What is stored
 
 The 32-bit capture of the reference model, which is what `dtype=fp32` (the default) reads,
-against the read plan at upstream commit `5a5d8376`:
+against the read plan at upstream commit `e0d62fcd`:
 
 | set | evals | cells in the plan | cells stored | not stored |
 |---|---|---|---|---|
-| Every eval | 32 | 3,408,168 | 3,382,285 | 25,883 |
-| The core evals | 18 | 2,906,722 | 2,884,128 | 22,594 |
-| The fast subset | 16 | 438,790 | 425,513 | 13,277 |
+| Every eval | 33 | 3,508,092 | 3,482,209 | 25,883 |
+| The core evals | 20 | 3,148,898 | 3,126,304 | 22,594 |
+| The fast subset | 18 | 559,889 | 546,612 | 13,277 |
 
 Not stored: 39 `knowledge_cutoff` questions (22,594 cells, 13,277 of them in the fast subset),
 left out on purpose, for which `wsbench read` runs the model; and `jlens_concept_pr` (3,289
 cells), which ships no prompts and cannot be read. Every other eval is stored whole. The
-capture is 41.1 GB in `float32-capture/` (31 evals). Its `full/` folders hold every question;
-its `fast/` folders hold an earlier selection of the fast subset, and the store finds today's
-fast questions in `full/` by id and key. The repository root holds an older, partial 16-bit
-capture (28 evals, 1,368,048 cells of this plan, 20.6 GB; neither safety eval, no
-`user_modeling_hard`, 65 of the 102 `directed_modulation` questions), read with `dtype=bf16`.
+capture is 41.3 GB in `float32-capture/` and is the only one the dataset holds: `full/` has
+32 evals, `fast/` the fast subset's questions again. The store looks an item up by id and key
+and takes it from `full/`, so a read of the fast subset needs the model only for the
+`knowledge_cutoff` questions the dataset leaves out. `dtype=bf16` (the model as shipped, a
+16-bit forward pass) has no published capture: it says so and captures every cell.
 An eval's files are downloaded when it is first read. A question bank that changes after this
 commit is not in the dataset until it is captured and uploaded again; `wsbench capture
 families=all check=True` prints the current state per eval, and the model runs for whatever is
@@ -121,10 +121,10 @@ uv pip install "sglang[all]" httpx          # the serving stack (not installed b
 uv run wsbench bundle adapter=<adapter folder> model=<model snapshot folder> out=bundles/my-lens
 
 # where are the cells? (no vectors downloaded, no model loaded)
-uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens check=True
+uv run wsbench read fast=True lens=bundles/my-lens out=outputs/readouts/my-lens check=True
 
 # read the fast subset, then judge and report
-uv run wsbench read --fast lens=bundles/my-lens out=outputs/readouts/my-lens judge=True
+uv run wsbench read fast=True lens=bundles/my-lens out=outputs/readouts/my-lens judge=True
 ```
 
 Each eval prints where its cells came from, for example `poetry: 1650 cells = 0 from the store
@@ -148,7 +148,7 @@ is then an error.
 | `method` | `lens` | `lens`: a served lens over stored activations; `model_continuation`: the baseline below |
 | `lens` | required for `method=lens` | the lens bundle folder |
 | `out` | required | the readouts root: `<out>/<eval>.jsonl` with its sidecar |
-| `families`, `--fast`, `plan` | | which evals: a comma list or `all`, the fast subset, or a plan file (below) |
+| `families`, `fast=True`, `plan` | | which evals: a comma list or `all`, the fast subset, or a plan file (below) |
 | `store`, `dataset`, `dataset_revision`, `revision`, `dtype`, `model`, `device` | as on `capture` | where the activations come from |
 | `check` | `False` | only say where each eval's cells are |
 | `capture` | `True` | run `wsbench capture` in its own process first for cells that need the subject model; `False`: such a cell is an error |
@@ -233,7 +233,7 @@ bank, no store), with the lenses' sampling: temperature 1.0, top-k 64 then top-p
 order of `generate`, at most 256 new tokens, one sample.
 
 ```bash
-uv run wsbench read --fast method=model_continuation model_dir=<model snapshot folder> \
+uv run wsbench read fast=True method=model_continuation model_dir=<model snapshot folder> \
     out=outputs/readouts/model_continuation judge=True
 ```
 

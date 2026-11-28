@@ -156,24 +156,33 @@ def test_the_map_script_and_the_store_compute_the_same_key(env):
 def test_the_shipped_map_covers_the_core_set():
     m = ds.load_map()
     assert m["repo"] == ds.REPO and len(m["revision"]) == 40
-    fp32, bf16 = m["captures"]["fp32"], m["captures"]["bf16"]
-    assert fp32["subdir"] == "float32-capture" and bf16["subdir"] == ""
-    assert fp32["model_revision"] == bf16["model_revision"]
-    for capture in (fp32, bf16):
-        for folder, info in capture["folders"].items():
-            assert folder.split("/")[0] in ("full", "fast")
-            assert all(len(key) == 24 for key in info["items"].values()), folder
-    # the float32 capture holds a folder for every eval of the core set, by today's name,
-    # except the ones listed here by name: core evals whose folder the map does not name yet.
-    # `association_hard` joined the core set in plan 0114; the dataset holds it (and its
-    # 99-question bank is offered in the dataset's pull request 1), but this map still pins a
-    # revision from before it. Reads of it run the model until the map follows the dataset.
-    # The second assertion makes the entry leave this list when the map gains the folder.
-    awaiting_capture = {"association_hard"}
-    assert not {f"full/{name}" for name in awaiting_capture} & set(fp32["folders"])
-    assert {f"full/{name}" for name in tiers.core()} - {
-        f"full/{name}" for name in awaiting_capture
-    } <= set(fp32["folders"])
+    assert sorted(m["captures"]) == ["fp32"]  # the one capture the dataset holds
+    fp32 = m["captures"]["fp32"]
+    assert fp32["subdir"] == "float32-capture" and len(fp32["model_revision"]) == 40
+    for folder, info in fp32["folders"].items():
+        assert folder.split("/")[0] in ("full", "fast")
+        assert all(len(key) == 24 for key in info["items"].values()), folder
+    # the capture holds a folder for every eval of the core set, by today's name
+    assert {f"full/{name}" for name in tiers.core()} <= set(fp32["folders"])
+
+
+def test_a_dtype_the_dataset_does_not_hold_says_so_and_captures(env, tmp_path, monkeypatch, capsys):
+    st, where, _ = env
+    subject = Subject()
+    monkeypatch.setattr(st, "Subject", lambda *a, **k: subject)
+    plan = tmp_path / "plan.jsonl"
+    plan.write_text(json.dumps(spec("a").row()) + "\n")
+    argv = ["capture", f"plan={plan}", f"store={where.root}", "model=m"]
+    revision = ds.load_map()["captures"]["fp32"]["model_revision"]
+    assert cli.main([*argv, f"revision={revision}", "dtype=bf16", "dataset=someone/residuals"]) == 0
+    got = capsys.readouterr()
+    assert "holds no bf16 capture for model revision" in got.err and "published: fp32" in got.err
+    assert "0 pulled from the dataset + 4 captured (1 forward passes)" in got.out
+    # the published dtype for that revision, and no dataset at all, say nothing
+    for more in (["dtype=fp32", "dataset=someone/residuals", "check=True"], ["dataset=none"]):
+        assert cli.main([*argv, f"revision={revision}", *more]) == 0
+        assert "note:" not in capsys.readouterr().err
+    assert cli.Capture().to_dict()["dtype"] == "fp32"  # the default is the published capture
 
 
 def test_source_reads_the_dataset_key(env, tmp_path):
@@ -267,10 +276,16 @@ def test_splice_replaces_and_adds_folders_and_leaves_the_rest(tmp_path):
         module.splice(map_path, part_path, "newrev")
 
 
-def test_the_shipped_map_has_the_two_folders_keyed_at_their_own_commit():
-    fp32 = ds.load_map()["captures"]["fp32"]["folders"]
-    assert len(fp32["full/user_modeling_hard"]["items"]) == 111
-    assert len(fp32["full/directed_modulation"]["items"]) == 102
-    for folder in ("full/user_modeling_hard", "full/directed_modulation"):
-        assert fp32[folder]["bench_commit"].startswith("5a5d8376")
-    assert "bench_commit" not in fp32["full/poetry"]
+def test_the_shipped_map_is_keyed_at_one_commit_and_names_each_item_once():
+    capture = ds.load_map()["captures"]["fp32"]
+    folders = capture["folders"]
+    assert len(capture["bench_commit"]) == 40
+    # every folder's keys were built at the capture's commit: none carries its own
+    assert not [name for name, info in folders.items() if "bench_commit" in info]
+    # the dataset's fast/ folders repeat questions of full/: the map names full/ only
+    assert not [name for name in folders if not name.startswith("full/")]
+    sizes = {"association_hard": 99, "chain_intermediates": 120, "user_modeling_hard": 155}
+    for name, n in sizes.items():
+        assert len(folders[f"full/{name}"]["items"]) == n
+    # the questions the dataset leaves out on purpose are not in the map
+    assert len(folders["full/knowledge_cutoff"]["items"]) == 108

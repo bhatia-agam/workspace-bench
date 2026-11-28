@@ -17,7 +17,7 @@ from wsbench.viewer.query import BENCH_TITLES, Store
 
 # FastHTML serves static extensions (css, js) relative to static_path: /static/app.css
 STATIC = Path(__file__).resolve().parents[1] / "static"
-ASSET_VERSION = "9"
+ASSET_VERSION = "10"
 
 
 COOKIE = "bench_viewer_key"
