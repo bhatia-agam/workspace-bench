@@ -7,6 +7,7 @@ and a full run. The pages here go deeper. The docs say "eval" for what the code 
 
 | page | read it when you want to |
 |---|---|
+| [quickstart_fast.md](quickstart_fast.md) | Take one lens through the fast subset, from install to the report. |
 | [evals.md](evals.md) | See every eval with one example and its judging rule. |
 | [producing_readouts.md](producing_readouts.md) | Know what to read (the read plan, positions, layers) and how to write a readouts file, or produce one with a bundled lens. |
 | [running.md](running.md) | Look up every option of `judge` and `run`, throughput settings, and how to judge while a producer is still writing. |
@@ -42,6 +43,8 @@ and a full run. The pages here go deeper. The docs say "eval" for what the code 
 | page | read it when you want to |
 |---|---|
 | [../CONTRIBUTING.md](../CONTRIBUTING.md) | Change or add an eval, and open a pull request. |
+| [adding_an_eval.md](adding_an_eval.md) | See every file and shared table a new eval touches, and the tests that say what is missing. |
+| [adding_a_readout_method.md](adding_a_readout_method.md) | Add a readout method of your own to `wsbench produce`. |
 | [repository_layout.md](repository_layout.md) | Find what lives where. |
 | [eval_readme_template.md](eval_readme_template.md) | Write or revise an eval's page. |
 | [../CLAUDE.md](../CLAUDE.md) | Follow the code conventions; also the per-eval change log, for contributors and coding agents. |

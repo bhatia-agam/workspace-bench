@@ -73,7 +73,9 @@ Everything above, plus: the package under `src/wsbench/evals/<category>/<family>
 [docs/evals.md](docs/evals.md) and the row in [docs/judges.md](docs/judges.md), and a credit in
 the README and `NOTICE.md` if the questions come from an external source. A new eval implements
 summary mode (the default) or is listed in `digest.NATIVE_ONLY` with the reason.
-[CLAUDE.md](CLAUDE.md) has the code conventions.
+[docs/adding_an_eval.md](docs/adding_an_eval.md) lists every file and shared table a new eval
+touches, with the test that fails until each is filled. [CLAUDE.md](CLAUDE.md) has the code
+conventions.
 
 ## Pull request checklist
 
