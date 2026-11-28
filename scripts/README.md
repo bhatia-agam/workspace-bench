@@ -181,6 +181,38 @@ that starts a remote job says "on Modal".
 | `summary_mode_compare.py` | Native against summary mode for one method: paired rates and a bootstrap interval. |
 | `summary_mode_v2v3.py` | Two summary-mode runs of one method, paired by item. |
 
+## HallucinationBench (`hb/`)
+
+The scripts of HallucinationBench, which lives in `src/wsbench/hb/` (`wsbench hb`). They moved
+here with it; the usage lines in their docstrings still give the paths of its former repository.
+
+| script | what it does |
+|---|---|
+| `hb/import_from_hb.py` | Imports HallucinationBench from its former repository into this one; `--check` rebuilds the import and prints what differs. |
+| `hb/build_dev_v2.py` | Builds the calibration dev split from hand-written cases and their labels. |
+| `hb/build_story_bank.py` | Builds the story bank from the frozen creative bank, eight read sites per item. |
+| `hb/build_am_bank.py` | Builds the agentic-misalignment bank of HallucinationBench from the frozen `agentic_misalignment` items. |
+| `hb/am_audit.py` | Audit tooling for the agentic-misalignment detector: hand-read sheets, the screen, the summary-only estimate. |
+| `hb/am_merge_labels.py` | Merges label files into the audit sheets and reports rows left without a label. |
+| `hb/benign_roleplay/import_bank.py` | Imports the benign-roleplay bank from a pinned WorkspaceBench checkout. |
+| `hb/main_x3/build_seeds.py` | Screens the seed prompts of the three-times main bank from the chat bank's sources. |
+| `hb/main_x3/gen_modal.py` | Generates the model's replies to the new seeds, on Modal. |
+| `hb/main_x3/build_bank.py` | Builds the three-times main bank from the existing items and the new replies. |
+| `hb/main_x3/merge_readouts.py` | Checks the grid of the new readouts and merges old and new readouts onto the three-times bank. |
+| `hb/main_x3/seed_summaries.py` | Copies the existing token-list summaries into the new output root, so only new cells are summarized. |
+| `hb/main_x3/joint_bundle.py` | Writes the all-layer readout bundle per item and site, one file per index method. |
+| `hb/overrefusal/sample_modal.py` | Samples the model's replies to the overrefusal candidates, on Modal. |
+| `hb/overrefusal/probe_modal.py` | Fits the refusal probes and scores every read site, on Modal. |
+| `hb/overrefusal/sj_run.py` | Runs the digest, the strict judge and the off-topic judge over every reader, item and layer. |
+| `hb/overrefusal/sj_report.py` | Computes the overrefusal metrics and recall diagnostics of a full run and exports its index counts. |
+| `hb/sibling_probe/gen_items.py` | Generates the sibling-probe bank and the probe texts. |
+| `hb/sibling_probe/um_ladder.py` | Drives the user-modelling sibling ladder, one stage per call. |
+| `hb/sibling_probe/um_lexicons.py` | Builds the lexicons of the capital-city and holiday concepts. |
+| `hb/sibling_probe/um_probes_modal.py` | Fits and scores the two probe types per layer for the country concepts, on Modal. |
+| `hb/v8/seed_am_root.py` | Seeds an agentic-misalignment output root of index version 8 from the version 7 one. |
+| `hb/v8/persistent_failures.py` | Writes the list of persistent judge failures that `wsbench hb final` excludes. |
+| `hb/v8/or_common.py` | Reports overrefusal on the items no method failed, beside the headline. |
+
 ## The rename of eval folders
 
 | file | what it is |
