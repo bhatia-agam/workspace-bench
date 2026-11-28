@@ -14,6 +14,7 @@ from wsbench.produce.methods import Readout
 class MyLens:
     name = "my_lens"  # written to the readouts sidecar as reader and arm
     layers = None  # or [42]: a lens trained at one layer reads there, whatever the plan lists
+    sampling_kind = "prose1"  # what the readouts file declares; see "The sampling label"
 
     def bind(self, backend):  # once, after the model is loaded
         self.backend = backend  # .model, .tokenizer, .device, .unembed, .final_norm
@@ -26,15 +27,16 @@ p = Producer.load("Qwen/Qwen3.6-27B", MyLens())  # an instance goes where a bund
 p.run_family("poetry", "outputs/readouts/my_lens/poetry.jsonl", limit=10)
 ```
 
-**From the shell**, `method=` takes the names in the `METHODS` table of `methods.py`.
-Add `"my_lens": MyLens` there, then
-`uv run wsbench produce family=poetry method=my_lens limit=10 out=outputs/readouts/my_lens/poetry.jsonl`.
+**From the shell**, `method=` takes a bundled name or the class by import path, so no file of
+this repository changes. With the class in `my_lens.py` in the current folder:
+`PYTHONPATH=. uv run wsbench produce family=poetry method=my_lens:MyLens limit=10 out=outputs/readouts/my_lens/poetry.jsonl`.
+`Producer.load(model, "my_lens:MyLens")` takes the same path in Python.
 
 **The sampling label.** The sidecar of a readouts file declares how it was sampled: `tokens10`,
-`prose1`, or `bullet4` for four separate one-bullet readouts per cell. `sampling_of` in
-`methods.py` decides it from the method, and a class it does not know gets `tokens10`. For a
-method that writes sentences, check what `sampling_of(MyLens())` returns and make it return
-`prose1` or `bullet4`: a wrong label tells the judge that sentences are a token list.
+`prose1`, or `bullet4` for four separate one-bullet readouts per cell. A method states its own
+with `sampling_kind`; a class that does not set it and is not a bundled one is declared
+`tokens10`. A method that writes sentences must set `prose1` or `bullet4`: a wrong label tells
+the judge that sentences are a token list.
 
 **Check it** after the ten-question run: `sampling` in `poetry.jsonl.meta.json`, then
 `uv run wsbench check readouts_contract readouts=outputs/readouts/my_lens/poetry.jsonl family=poetry`.
