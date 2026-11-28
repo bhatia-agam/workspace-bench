@@ -1,5 +1,5 @@
-"""`scripts/README.md` has one row for every file under `scripts/` (the archive has its own page),
-and names no file that is not there."""
+"""`scripts/README.md` has one row for every file under `scripts/` and names no file that is not
+there."""
 
 import re
 from pathlib import Path
@@ -11,7 +11,7 @@ KINDS = {".py", ".sh", ".json", ".txt"}
 def on_disk() -> set[str]:
     files = (p for p in SCRIPTS.rglob("*") if p.is_file() and p.suffix in KINDS)
     rel = {p.relative_to(SCRIPTS).as_posix() for p in files}
-    return {r for r in rel if not r.startswith("archive/") and "__pycache__" not in r}
+    return {r for r in rel if "__pycache__" not in r}
 
 
 def rows() -> list[str]:

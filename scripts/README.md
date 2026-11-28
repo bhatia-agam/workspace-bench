@@ -4,13 +4,12 @@ What each script here is for. These are the builders of the question banks, the 
 the floors, and the checks that were run on results. They are not part of the `wsbench`
 package: nothing in `wsbench run` needs them.
 
-Three things to know before moving or deleting one:
+Two things to know before moving or deleting one:
 
 - Many are loaded by tests by their path, and some by `src/wsbench/adapt/`. Search for the
   script's name over the whole repository, `evals/` and `adapted/` included, before you move it.
 - A builder is the record of how a frozen bank was made. It stays even when the bank will never
   be built again; the eval's page under `evals/` links to it.
-- Scripts whose job is done and that nothing names live in [`archive/`](archive/README.md).
 
 Every script has a row below; `tests/test_scripts_index.py` fails when one is missing. A script
 that starts a remote job says "on Modal".
@@ -181,7 +180,6 @@ that starts a remote job says "on Modal".
 | `summary_mode_dev.py` | Writes the development slice of summary mode and scores its fidelity checks. |
 | `summary_mode_compare.py` | Native against summary mode for one method: paired rates and a bootstrap interval. |
 | `summary_mode_v2v3.py` | Two summary-mode runs of one method, paired by item. |
-| `lite_site_table.py` | The support table behind the `reads=lite` sites of the three association evals. |
 
 ## The rename of eval folders
 
