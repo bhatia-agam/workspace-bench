@@ -199,6 +199,25 @@ def _raise_fd_limit() -> None:
         pass
 
 
+def _published(cmd: Any) -> Any:
+    """The published residuals for a command's `dataset=`, `dtype=` and `revision=` (the pull
+    of the residual store), or None for `dataset=none`. When the dataset holds no capture of
+    that dtype for that model revision, one line says so: nothing can be pulled, and every
+    cell that is not in the local store needs the subject model."""
+    from wsbench.produce import dataset
+
+    pull = dataset.source(cmd.dataset, cmd.dataset_revision, cmd.dtype, cmd.revision)
+    if pull is not None and pull.capture is None:
+        have = sorted(pull.map.get("captures", {}))
+        print(
+            f"note: the dataset {cmd.dataset} holds no {cmd.dtype} capture for model revision "
+            f"{cmd.revision[:12]} (published: {', '.join(have) or 'none'}); nothing will be "
+            "pulled, and cells that are not in the local store are captured with the model",
+            file=sys.stderr,
+        )
+    return pull
+
+
 def _capture_process(argv: list[str]) -> int:
     """Run `wsbench capture <argv>` as a child process and return its exit code."""
     import subprocess
@@ -1578,10 +1597,10 @@ class Produce(Command):
                 return EXIT_USAGE
         where = pull = None
         if self.family and self.store is not None:
-            from wsbench.produce import dataset, store
+            from wsbench.produce import store
 
             where = store.Store(self.store, self.revision, self.dtype)
-            pull = dataset.source(self.dataset, self.dataset_revision, self.dtype, self.revision)
+            pull = _published(self)
         producer = Producer.load(
             self.model,
             self.method,
@@ -1716,11 +1735,10 @@ class Capture(Command):
         plans = self.plans()
         if plans is None:
             return EXIT_USAGE
-        from wsbench.produce import dataset
 
         subject = store.Subject(self.model, self.revision, self.dtype, self.device)
         where = store.Store(self.store, self.revision, self.dtype)
-        pull = dataset.source(self.dataset, self.dataset_revision, self.dtype, self.revision)
+        pull = _published(self)
         total = store.Counts()
         for family, specs in plans.items():
             part = store.shard(specs, self.shard, self.shards)[: self.limit or None]
@@ -1998,7 +2016,7 @@ class Read(Capture):
         return argv
 
     def execute(self) -> int:
-        from wsbench.produce import dataset, read, store
+        from wsbench.produce import read, store
 
         if self.launcher == "modal":
             from wsbench.produce import modal_launch
@@ -2075,7 +2093,7 @@ class Read(Capture):
         subject = store.Subject(self.model, self.revision, self.dtype, self.device)
         tokenizer = getattr(engine, "tok", None) or subject.tokenizer
         where = store.Store(self.store, self.revision, self.dtype)
-        pull = dataset.source(self.dataset, self.dataset_revision, self.dtype, self.revision)
+        pull = _published(self)
         if self.check:
             for j in jobs:
                 part = store.shard(j.specs, self.shard, self.shards)[: self.limit or None]

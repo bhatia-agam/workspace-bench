@@ -32,18 +32,23 @@ LAYER_RE = re.compile(r"(?:^|[|_:])L(-?\d+)")
 POS_RE = re.compile(r"(?:^|[|_])p(-?\d+)")
 MAX_STATEMENTS = 40
 MIN_QUOTE = 8
+EXTRA_ORD = 100000  # item.ord from here on: an id of a run's result rows that no bank lists
 GOLD_KEYS = (
     "gold", "bridge", "target", "targets", "intermediate", "intermediates", "concept", "concepts",
 )  # fmt: skip
 LAYER_VERDICT_KEYS = ("expressed", "pass", "correct", "hit")  # a native row's per-layer verdict
 GOLD_INDEX_KEYS = ("gold_idx", "gold_position")
-METHODS = ("olens", "nla", "jlens", "logit_lens", "continuation", "other")
+METHODS = ("olens", "nla", "jlens", "jpp_lens", "rlens", "logit_lens", "continuation", "other")
 CORE = "core"
 
 
 def guess_method(lens: str, reader: str | None = None, kind: str | None = None) -> str:
     """The method family of a lens from its names; pass ``method=`` to ingest to override."""
     text = f"{lens} {reader or ''}".lower()
+    if re.search(r"(^|[^a-z])(jpp|j\+\+)", text):
+        return "jpp_lens"
+    if re.search(r"(^|[^a-z])r-?lens([^a-z]|$)", text):
+        return "rlens"
     for needle, method in (("logit", "logit_lens"), ("jlens", "jlens"), ("j-lens", "jlens")):
         if needle in text:
             return method
@@ -214,6 +219,17 @@ def write_bank(cat, repo: Path, model: str, families: Iterable[str] | None = Non
                 for r in items
             ],
         )  # fmt: skip
+        if items:  # the bank file is the eval's questions: what it no longer holds steps back
+            now = {r["item"] for r in items}
+            old = cat.execute(
+                "SELECT item, ord FROM item WHERE bench = ? AND model = ? AND eval = ? AND ord < ?",
+                (BENCH, model, fam, EXTRA_ORD),
+            ).fetchall()
+            cat.executemany(
+                "UPDATE item SET ord = ? WHERE bench = ? AND model = ? AND eval = ? AND item = ?",
+                [(store.EARLIER_BANK + r["ord"], BENCH, model, fam, r["item"])
+                 for r in old if r["item"] not in now],
+            )  # fmt: skip
         n += len(items)
     cat.commit()
     return n
@@ -996,7 +1012,7 @@ def ingest(
             cat.executemany(
                 "INSERT OR IGNORE INTO item (bench, model, eval, item, ord, prompt, expected,"
                 " intermediates, private, meta) VALUES (?,?,?,?,?,?,'[]','[]',?,'{}')",
-                [(BENCH, model, fam, i, 100000 + n, "", int(i in info["private"]))
+                [(BENCH, model, fam, i, EXTRA_ORD + n, "", int(i in info["private"]))
                  for n, i in enumerate(extra)],
             )  # fmt: skip
             cat.executemany(
