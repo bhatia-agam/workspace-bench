@@ -65,9 +65,9 @@ def test_v2_reads_its_own_plan(monkeypatch):
     rows = readplan.plan("buggy_code")
     assert [s.id for s in rows] == [it["id"] for it in load_bank(V2)[1]]
     assert reads.plan_sha("buggy_code") == PLAN_SHA_V2
-    for s in rows:  # the EOF cell at every GRID layer; lite = the bank layer
+    for s in rows:  # the EOF cell at every GRID layer
         assert s.render == "bare" and s.positions == {"kind": "final_token"}
-        assert s.lite_layers in ([56], [60]) and s.layers == readplan.GRID
+        assert s.layers == readplan.GRID
     # the 63 kept rows equal items.json's: their reads serve bank v2
     v2_rows = {s.id: s.row() for s in rows}
     monkeypatch.setenv("WSB_BANK_FILE_BUGGY_CODE", str(V1))

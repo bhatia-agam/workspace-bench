@@ -121,7 +121,7 @@ def bank_version(name: str) -> int:
 
 
 # the opts=judge=regex diagnostic of an mc+regex family (plan 0054 B5, review r4 item 2): its own
-# stamp, so floor / ATI matching (strip_reads(pv) + judge model) never mistakes it for the
+# stamp, so floor / ATI matching (prompt_version + judge model) never mistakes it for the
 # family's mc+regex instrument of record
 REGEX_LEG_VERSION = f"{SCORER_VERSION}+leg-regex"
 

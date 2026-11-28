@@ -160,10 +160,8 @@ bank.
 ## Read plan
 
 `wsbench plan family=nyt_connections`: one row per puzzle, chat render (thinking off, no system
-prompt), positions `{"kind": "last_n", "n": 12}` (the last 12 tokens of the rendered prompt), layers `GRID` (20..60 step 4, 11 layers) or any requested set. **Lite
-= full** (`lite_positions = SAME`, the plan-0061 invariant): a lite run differs from full only by
-its `+reads-lite` stamp. The family is not in `readplan.LITE_SAME_FAMILIES` (that set is pinned to
-plan 0061's five). `min_full_positions=12`, `full_contiguous=True` (`reads.check_full`).
+prompt), positions `{"kind": "last_n", "n": 12}` (the last 12 tokens of the rendered prompt), layers `GRID` (20..60 step 4, 11 layers) or any requested set.
+`min_full_positions=12`, `full_contiguous=True` (`reads.check_full`).
 
 Readouts of record: `final-olens-rl600-x4` at GRID. The pilot's bench-producer readouts (same
 render, positions and tokens; layers 0–63) may be cut to GRID and converted only if
@@ -229,7 +227,7 @@ The chain_intermediates per-slot MC pattern on the bench's v1.1.0 layered digest
 
 Provenance: `prompt_version = digest.prompt_version("nyt-mc-2026-11-20", args, family)`, i.e.
 `nyt-mc-2026-11-20+digest-v5-task-extractive-layered-v1x4+sj-v10` for the all-layer headline
-since bench v1.1.1 (`-layered-v1` for `summ_layered_x=2`, the v1.1.0 default; `-layered-v1x<k>` otherwise; `+reads-lite` under lite).
+since bench v1.1.1 (`-layered-v1` for `summ_layered_x=2`, the v1.1.0 default; `-layered-v1x<k>` otherwise).
 An MC call cached under `nyt-mc-2026-11-02` can never answer the new prompt: the call fingerprint
 (`mcjudge.run_calls`) is `(prompt_version, model, reasoning, temperature, system, user)`, and the
 stamp, the system text and the user text's closing question all changed

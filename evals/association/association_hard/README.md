@@ -500,7 +500,7 @@ of the first bullet were left as they are:
 The same read as `association` (`docs/read_sites.md`): render `chat_summarize` (the scene, then
 "Summarize the preceding story in one sentence.", thinking off), read at the 19 summarize-suffix
 and chat-tail tokens, one contiguous run ending at the final token; scene positions are never
-read. Layers 20, 24, ..., 60. `reads=lite` reads the same sites. 100 x 19 x 11 = 20900
+read. Layers 20, 24, ..., 60. 100 x 19 x 11 = 20900
 cells per 11-layer arm.
 
 ## Scoring

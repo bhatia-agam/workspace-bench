@@ -386,7 +386,7 @@ def _load(args: JudgeArgs) -> tuple[list[dict], dict[str, dict], list[Cell], Loa
     scope = scope_of(args, bank)
     by_id = {it["id"]: it for it in scope}
     # opts=read=punct: the plan-0012 cheap regime (a native diagnostic, a post-load filter; the
-    # loader, the full-read check and the lite rule are the shared ones)
+    # loader and the full-read check are the shared ones)
     regime = args.extra.get("read", "span")
     if regime not in ("span", "punct"):
         fail(f"{FAMILY}: opts=read= must be span or punct (got {regime!r})")

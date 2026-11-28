@@ -1,16 +1,14 @@
 """The ONE loading entry point of every family (plan 0032 §2.0, §2.6): readouts + the producer's
-sidecar, the declared sampling rule, the layer-presence check, the ``reads=lite`` selection and
-the ``reads=full`` span check.
+sidecar, the declared sampling rule, the layer-presence check and the full-span check.
 
 ``reads.load(args, family)`` replaces every direct ``load_readouts`` call in a family judge. In
 this order it: loads the file (``ids`` / ``layers`` / ``positions`` filters); reads the sidecar
 ``<file>.meta.json``; applies the declared sampling (``readouts.normalize``); checks that every
-requested layer is present; applies the lite selection under ``reads=lite``; and under
-``reads=full`` checks every (item, layer) holds the family's full span. With a sidecar the
-checks enforce (exit 2, or ``partial`` items under ``allow_missing``); a sidecar-less file (test
-fixtures, cached v1 readouts) gets the same checks in report-only mode
+requested layer is present; and checks every (item, layer) holds the family's full span. With a
+sidecar the checks enforce (exit 2, or ``partial`` items under ``allow_missing``); a sidecar-less
+file (test fixtures, cached v1 readouts) gets the same checks in report-only mode
 (``extras.partial_ids_unenforced``, ``config.reads_checked = "no_sidecar"``). A ``prompt_only:``
-reader (one cell per item) waives the selection, the span check and the plan guards."""
+reader (one cell per item) waives the span check and the plan guards."""
 
 import functools
 import hashlib
@@ -25,7 +23,7 @@ from typing import Any
 from wsbench import fast, readplan, registry
 from wsbench.nyt import NO_NYT_ENV
 from wsbench.readouts import Cell, LoadReport, load_readouts, normalize, read_sidecar
-from wsbench.readplan import FINAL, ReadSpec, lite_select
+from wsbench.readplan import ReadSpec
 from wsbench.registry import (
     BANK_FILE_ENV_PREFIX,
     BANK_ROOT_ENV,
@@ -34,13 +32,12 @@ from wsbench.registry import (
     hash_name,
 )
 
-READS = ("full", "lite")
-LITE_STAMP = "+reads-lite"
+READS = "full"  # the one reads mode: every position and layer of the plan
 PROMPT_ONLY_PREFIX = "prompt_only:"
-# keys never hashed into plan_sha: the lite site, the reads flag, the note, and (critique fix,
-# 2026-10-30) the layers, so a file read at more layers than the plan (layers=all) is judged —
-# guard (ii) checks the plan's layers are present instead
-PLAN_SHA_EXCLUDE = ("lite_positions", "lite_layers", "reads", "note", "layers")
+# keys never hashed into plan_sha: the note, and (critique fix, 2026-10-30) the layers, so a
+# file read at more layers than the plan (layers=all) is judged — guard (ii) checks the plan's
+# layers are present instead
+PLAN_SHA_EXCLUDE = ("note", "layers")
 
 
 def fail(msg: str) -> Any:
@@ -50,24 +47,17 @@ def fail(msg: str) -> Any:
     raise SystemExit(2)
 
 
-def mode(args: JudgeArgs) -> str:
-    """``reads=full|lite`` from ``args.extra["reads"]`` (default ``full``); a bad value exits 2."""
-    m = args.extra.get("reads", "full")
-    if m not in READS:
-        fail(f"reads={m!r}: expected full or lite")
-    return m
+def mode_error(value: object) -> str | None:
+    """The message for a ``reads=`` value other than ``full`` (None when it is ``full``)."""
+    if value == READS:
+        return None
+    return f"reads={value!r}: full is the only reads mode (every read site of the plan)"
 
 
-def stamp(pv: str, m: str) -> str:
-    """``pv + "+reads-lite"`` for a lite run (once), ``pv`` unchanged for full."""
-    if m == "lite" and not pv.endswith(LITE_STAMP):
-        return pv + LITE_STAMP
-    return pv
-
-
-def strip_reads(pv: str) -> str:
-    """``pv`` without a trailing ``+reads-lite`` (prompt-only floors serve full and lite rows)."""
-    return pv[: -len(LITE_STAMP)] if pv.endswith(LITE_STAMP) else pv
+def check_mode(args: JudgeArgs) -> None:
+    """``args.extra["reads"]`` (default ``full``) must be ``full``; anything else exits 2."""
+    if msg := mode_error(args.extra.get("reads", READS)):
+        fail(msg)
 
 
 def _env_key() -> tuple[tuple[str, str], ...]:
@@ -96,10 +86,6 @@ def _clean_row(row: Mapping[str, Any]) -> dict[str, Any]:
     d = {k: v for k, v in row.items() if k not in PLAN_SHA_EXCLUDE}
     if isinstance(d.get("family"), str):  # v1.2.0: a renamed family hashes as its former key
         d["family"] = hash_name(d["family"])
-    if isinstance(d.get("extra"), dict):
-        d["extra"] = {k: v for k, v in d["extra"].items() if k != "reads"}
-        if not d["extra"]:
-            d.pop("extra")
     return d
 
 
@@ -267,7 +253,7 @@ def lineage_drops(family: str, have: str, want: str) -> list[str] | None:
     return None
 
 
-# ---------------------------------------------------------------- selection and span check
+# ---------------------------------------------------------------- span check
 
 
 def _by_item_layer(cells: Iterable[Cell]) -> dict[tuple[str, int], list[Cell]]:
@@ -279,33 +265,6 @@ def _by_item_layer(cells: Iterable[Cell]) -> dict[tuple[str, int], list[Cell]]:
 
 def is_prompt_only(reader: str) -> bool:
     return reader.startswith(PROMPT_ONLY_PREFIX)
-
-
-def select(
-    cells: Sequence[Cell],
-    specs: Mapping[str, ReadSpec],
-    mode: str,
-    *,
-    reader: str = "",
-    declared: str | None = None,
-) -> list[Cell]:
-    """The cells a ``reads`` mode judges: identity under ``full`` (and for a ``prompt_only:``
-    reader); under ``lite`` each item's ``lite_positions`` rule over its positions at each layer,
-    at its ``lite_layers`` (an item without a plan row: ``final_token``). Identity, too, for a
-    file whose sidecar declares ``reads=lite`` (``declared``): the producer already applied the
-    rule, and the rule is not idempotent (``offset_from_end`` over its own single output keeps
-    nothing), so it is never applied twice (review of PR #140)."""
-    if mode == "full" or is_prompt_only(reader) or declared == "lite":
-        return list(cells)
-    keep: set[tuple[str, int, int]] = set()
-    for (iid, layer), cs in _by_item_layer(cells).items():
-        sp = specs.get(iid)
-        rule = sp.lite_positions if sp is not None else FINAL
-        if sp is not None and sp.lite_layers is not None and layer not in sp.lite_layers:
-            continue
-        for p in lite_select([c.pos for c in cs], rule):
-            keep.add((iid, layer, p))
-    return [c for c in cells if (c.id, c.layer, c.pos) in keep]
 
 
 def _span_ok(positions: Sequence[int], min_positions: int, contiguous: bool) -> bool:
@@ -324,10 +283,10 @@ def check_full(
     allow_missing: bool,
     reader: str = "",
 ) -> set[str]:
-    """The partial item ids of a ``reads=full`` run. Per (item, layer) the positions must be ONE
+    """The partial item ids of a run. Per (item, layer) the positions must be ONE
     contiguous run (ending at the item's max position) of length >= ``min_positions``
     (``contiguous=False``: just the count). A file whose every (item, layer) holds exactly one
-    position, for a family that needs more, exits 2 (it looks like a lite file). Any other
+    position, for a family that needs more, exits 2 (a single-site file). Any other
     violation exits 2 naming the first offender unless ``allow_missing`` (then those items are
     returned as partial). A ``prompt_only:`` reader is waived (empty set)."""
     if is_prompt_only(reader) or not cells:
@@ -335,8 +294,8 @@ def check_full(
     groups = _by_item_layer(cells)
     if min_positions > 1 and all(len({c.pos for c in cs}) == 1 for cs in groups.values()):
         fail(
-            "reads=full but the file has 1 position per cell; this looks like a lite file — "
-            "use reads=lite"
+            f"the file has 1 position per cell, but the read plan has >= {min_positions} per "
+            "(item, layer); re-produce it from `wsbench plan`"
         )
     bad: set[str] = set()
     first: tuple[str, int] | None = None
@@ -354,35 +313,10 @@ def check_full(
     return bad
 
 
-def lite_rule_of(specs: Mapping[str, ReadSpec], ids: Collection[str] | None = None) -> str:
-    """The lite rule(s) of the plan rows (of ``ids``), as one canonical JSON string: what a
-    ``reads=lite`` result stamps as ``config.lite_rule`` (late fix 2026-10-30: the frozen lite
-    rule is part of the lite instrument, and ``scripts/audit_run.py`` checks it)."""
-    rules = {
-        json.dumps({"positions": sp.lite_positions, "layers": sp.lite_layers}, sort_keys=True)
-        for iid, sp in specs.items()
-        if ids is None or iid in ids
-    }
-    return json.dumps([json.loads(r) for r in sorted(rules)], sort_keys=True)
-
-
-def lite_is_full(specs: Mapping[str, ReadSpec], ids: Collection[str]) -> bool:
-    """Every item of ``ids`` has a plan row whose lite rule is ``same`` at the full layers
-    (``lite_layers is None``): ``reads=lite`` then judges exactly the ``reads=full`` cells
-    (association, conjunctive_association, plan 0061's families), so it gets full's completeness
-    checks. An item without a plan row is lite-read at ``final_token`` (``select``), never full."""
-    return bool(ids) and all(
-        iid in specs
-        and specs[iid].lite_positions.get("kind") == "same"
-        and specs[iid].lite_layers is None
-        for iid in ids
-    )
-
-
 def plan_layers_missing(
-    cells: Sequence[Cell], specs: Mapping[str, ReadSpec], mode: str
+    cells: Sequence[Cell], specs: Mapping[str, ReadSpec]
 ) -> dict[str, list[int]]:
-    """Guard (ii): per item, the plan layers (``lite_layers`` under lite) absent from the file.
+    """Guard (ii): per item, the plan layers absent from the file.
     Layers beyond the plan are fine (every present layer is judged)."""
     have: dict[str, set[int]] = defaultdict(set)
     for c in cells:
@@ -392,8 +326,7 @@ def plan_layers_missing(
         sp = specs.get(iid)
         if sp is None:
             continue
-        want = sp.lite_layers if mode == "lite" and sp.lite_layers is not None else sp.layers
-        miss = sorted(set(want) - got)
+        miss = sorted(set(sp.layers) - got)
         if miss:
             out[iid] = miss
     return out
@@ -403,7 +336,7 @@ def plan_layers_missing(
 
 
 def min_full_positions(family: str, default: int) -> int:
-    """The family's ``reads=full`` minimum span, lowered (never raised) by an ADAPTED bank's
+    """The family's minimum span per (item, layer), lowered (never raised) by an ADAPTED bank's
     ``adapt.min_grid_positions`` (a bare-list bank: the set's ``report.json`` entry, under
     ``$WSB_BANK_ROOT`` only): a subject whose template gives a render fewer read positions
     than the 27B's (introspection's neutral grid, ``wsbench.adapt.introspection``). Consulted
@@ -463,13 +396,11 @@ def load(
     (``report_of(args)``) so ``mcjudge.base_config`` and the runner stamp ``config.reads``,
     ``sampling``, ``sampling_source``, ``reader``, ``reads_checked`` and ``layers_judged``."""
     path = Path(path or args.readouts)
-    m = mode(args)
+    check_mode(args)
     # plan 0090: the fast flag is JudgeArgs.scope (set by the runner), never an opts= key
     fast_entry = fast.entry(family) if args.scope == fast.SCOPE else None
     fast_ids: set[str] = set()
     if fast_entry is not None:
-        if m == "lite":
-            fail(f"{path}: --fast judges the fast subset's full reads; drop reads=lite")
         fast_ids = set(fast_entry["read_ids"])
         if ids is not None:
             fast_ids &= set(ids)
@@ -494,7 +425,6 @@ def load(
                 f"judge it with family={other}"
             )
     rep.meta = meta
-    rep.reads = m
     rep.layers_requested = None if args.layers is None else sorted(set(args.layers))
     reader = str((meta or {}).get("reader") or "")
     rep.reader = reader
@@ -517,9 +447,6 @@ def load(
     rep.n_packed_ambiguous = diag["n_packed_ambiguous"]
     rep.n_cells_short = diag["n_cells_short"]
     prompt_only = is_prompt_only(reader)
-    # guard (i): a declared lite file under a full run
-    if meta is not None and meta.get("reads") == "lite" and m == "full":
-        fail(f"{path}: file was produced reads=lite; judge it with reads=lite")
     # plan 0090: a file produced from the fast plan holds only the fast reads
     declared_fast = meta.get("fast") if meta is not None else None
     if declared_fast is not None and fast_entry is None:
@@ -619,52 +546,22 @@ def load(
     except (SystemExit, KeyError, OSError, ValueError):
         sp = {}
     enforce = meta is not None
-    if m == "lite":
-        rep.lite_rule = lite_rule_of(sp, {c.id for c in cells})
-    declared = str(meta.get("reads") or "") if meta is not None else None
-    for c in cells:  # before the selection: lite keeps every position's token for context
+    for c in cells:  # before the fast narrowing: every position's token, for context
         if c.token is not None:
             rep.site_tokens.setdefault(c.id, {}).setdefault(c.pos, c.token)
-    lite_full = m == "lite" and lite_is_full(sp, {c.id for c in cells})
-    if (
-        lite_full
-        and meta is not None
-        and min_pos > 1
-        and cells
-        and all(len({c.pos for c in cs}) == 1 for cs in _by_item_layer(cells).values())
-    ):
-        # plan 0061: a file produced under a superseded single-site lite rule (final token,
-        # MCDM's ' to') would otherwise be judged as the `same` instrument (any sidecar file:
-        # check_full's own 1-position message would say "use reads=lite" to a lite run)
-        fail(
-            f"{path}: reads=lite with 1 position per cell, but this family's lite rule is `same` "
-            "(lite = the full positions); a lite-site file (a superseded lite rule) or a "
-            "truncated read — re-produce it, or judge the full file with reads=lite"
+    partial: set[str] = (
+        check_full(
+            cells,
+            sp,
+            min_positions=min_pos,
+            contiguous=contiguous,
+            allow_missing=args.allow_missing or not enforce,
         )
-    before = cells
-    cells = select(cells, sp, m, reader=reader, declared=declared)
-    if m == "lite" and before and not cells:
-        # the rule kept nothing: a file that holds only the lite site, undeclared (a sidecar-less
-        # toy file), would otherwise judge zero cells and report n items as plain negatives
-        fail(
-            f"{path}: reads=lite kept no readout (lite rule {rep.lite_rule!r} over the file's "
-            "positions); a file produced at the lite site must declare reads=lite in its sidecar"
-        )
-    partial: set[str] = set()
-    if m == "full" or lite_full:
-        partial |= (
-            check_full(
-                cells,
-                sp,
-                min_positions=min_pos,
-                contiguous=contiguous,
-                allow_missing=args.allow_missing or not enforce,
-            )
-            if enforce
-            else _report_only(cells, sp, min_pos, contiguous)
-        )
+        if enforce
+        else _report_only(cells, sp, min_pos, contiguous)
+    )
     if args.layers is None:
-        gaps = plan_layers_missing(cells, sp, m)
+        gaps = plan_layers_missing(cells, sp)
         if gaps and enforce and not args.allow_missing:
             iid = sorted(gaps)[0]
             fail(
@@ -759,17 +656,15 @@ def config_stamps(args: JudgeArgs) -> dict[str, Any]:
     """The ``config`` keys a result carries from its load (``mcjudge.base_config`` and the
     runner call this)."""
     rep = report_of(args)
-    m = mode(args)
     if rep is None:
-        return {"reads": m, "layers_judged": args.layers}
+        return {"reads": READS, "layers_judged": args.layers}
     return {
-        "reads": m,
+        "reads": READS,
         "sampling": rep.sampling,
         "sampling_source": rep.sampling_source,
         "reader": rep.reader,
         "reads_checked": rep.reads_checked,
         "layers_judged": rep.layers_requested if rep.layers_requested is not None else rep.layers,
-        **({"lite_rule": rep.lite_rule} if m == "lite" else {}),
         **({"fast_rule": rep.fast_rule} if rep.fast_rule else {}),
         **({"plan_lineage": rep.plan_lineage} if rep.plan_lineage else {}),
     }

@@ -788,12 +788,11 @@ def record(results: list[Any], tag_list: list[str], ids: list[str]) -> dict[str,
     """Per id: ``{draws, picked_gold, kinds, undecided, instrument, gate_tags}`` (the bank's
     ``prompt_only_opus`` shape). A draw is a pick when the item PASSES the instrument; an
     unjudged or refused draw is ``undecided``."""
-    from wsbench import reads
 
     out = {i: {"draws": 0, "picked_gold": 0, "kinds": {}, "undecided": [], "instrument": "",
                "gate_tags": list(tag_list)} for i in ids}  # fmt: skip
     for t, r in zip(tag_list, results, strict=True):
-        inst = reads.strip_reads(str(r.config.get("prompt_version", "")))
+        inst = str(r.config.get("prompt_version", ""))
         seen = set()
         for row in r.rows:
             e = out.get(row["id"])

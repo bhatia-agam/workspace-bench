@@ -5,7 +5,7 @@
    cached readouts call the cheating overcharging) or "billed" (oa-mechanic-driver-bill).
 2. conjunctive_association: a guesser's ``family_rule`` (majority of 3 draws, inverted-twin
    veto) is read against uniform chance under the SAME rule (``family_chance``, ~0.007), never
-   against the per-draw uniform (0.048); the sharded all-layer / lite rule (+cand3) is measured
+   against the per-draw uniform (0.048); the sharded all-layer rule (+cand3) is measured
    with candidate-list guessers (``*_cands``) against its exact chance.
 3. The conjunctive topic guesser reads a per-item line written from the STORY (topic-v4), not
    topic-v3's option-shared line, which told it nothing the options-only guesser lacked.
@@ -260,25 +260,21 @@ def test_frozen_conjunctive_floors_are_read_under_the_rule():
 def test_frozen_conjunctive_floors_are_bank_v4_and_record_the_gap():
     """Round 4, last step (Fable on #202: widen the lists): the frozen floors were measured on
     the registered bank's instrument (comp-v5, bank v4), and the README's verdict is the
-    standard's own: only the options-only +cand3 rows pass. Round 5 (Camila r3, lite = the
-    same positions as full): the lite rows are the all-layer rows (8 shards, same chance), so
-    the options-only lite row now passes with the all-layer one and 7 of 9 rows fail."""
+    standard's own."""
     e = lg.floors()["conjunctive_association"]
     # 2026-11-21: re-measured on bank v6 as rebuilt with the variants' twins (fresh draws, comp-v6
     # stamp). Single pick: options-only 0.02 and described 0.04 pass the 0.051 line, topic 0.06
     # does not. +cand3: 0.22 / 0.34 / 0.30 against a 0.113 line (the first v6, whose variants
     # could be counted away: 0.32 / 0.35 / 0.36 against 0.129; bank v4: 0.17 / 0.30 / 0.21
-    # against 0.207), so no +cand3 row passes. 7 of 9 rows fail
+    # against 0.207), so no +cand3 row passes. 4 of 6 rows fail
     assert {v["instrument"] for v in e.values() if isinstance(v, dict)} == {
         cp.PROMPT_VERSION + "+bank-v6"
     }
     assert cp.PROMPT_VERSION == "comp-v6"
-    for v in ("blind_cands", "described_cands", "topic_cands", "uniform_cands"):
-        assert e[v]["rule_lite"] == e[v]["rule_all"] and e[v]["chance_lite"] == e[v]["chance_all"]
     rows = lg.standard("conjunctive_association", e)
     passing = {(r["variant"], r["rule"]) for r in rows if r["pass"]}
     assert passing == {("blind", "family_rule"), ("described", "family_rule")}
-    assert len(rows) - len(passing) == 7
+    assert len(rows) - len(passing) == 4
 
 
 # ---------------------------------------------------------------- 3. topic-v4

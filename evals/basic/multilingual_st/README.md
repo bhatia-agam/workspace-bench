@@ -90,11 +90,7 @@ pass natively (cached v1 readouts, judge test only; offline, no calls).
 ## Read plan
 
 Every prompt position of the plain render (`positions {"kind": "all"}`), layers 20..60 step 4
-(`readplan.GRID`; `layers=all|each|<csv>` work as for every family). `reads=lite` keeps the
-final prompt token only (`lite_positions {"kind": "final_token"}`, `lite_layers` = the full
-layers), a subset of the same full read, so one GPU read serves both; lite results are stamped
-`+reads-lite`. Camila 2026-10-30: "Read on all positions and give all this to the judge (final
-position only for fast/lite)". Every loaded cell goes to the digest. Full mode needs, per
+(`readplan.GRID`; `layers=all|each|<csv>` work as for every family). Every loaded cell goes to the digest. A read needs, per
 (item, layer), one contiguous run of at least `EvalSpec.min_full_positions` = 4
 positions (the shortest item's prompt length); a gap or a short run exits 2, or makes the item
 `partial` under `allow_missing=True` (`reads.check_full`). A file without a `<file>.meta.json`
@@ -252,8 +248,7 @@ Spanish, Portuguese, Italian, not among Catalan and Galician.
 `dry_run=True`.
 
 ```
-wsbench plan families=multilingual_st out=outputs/plan                 # full: every position
-wsbench plan families=multilingual_st reads=lite out=outputs/plan-lite # lite: the final token
+wsbench plan families=multilingual_st out=outputs/plan                 # every position
 wsbench judge family=multilingual_st readouts=examples/readouts/multilingual_st.jsonl out=outputs/toy/multilingual_st dry_run=True
 wsbench judge family=multilingual_st readouts=<arm>.jsonl out=outputs/<arm>/multilingual_st limit=3
 ```

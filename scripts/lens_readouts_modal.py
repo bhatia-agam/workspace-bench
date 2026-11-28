@@ -72,7 +72,7 @@ ARM_LABEL = {"jlens-base": "jlens (base-model lens: fitted on Qwen3.5-9B-Base)"}
 SAMPLING = {"temperature": 1.0, "top_p": 0.95, "top_k": 64, "max_new_tokens": 256, "k": 1}
 # plan rows whose read needs something this producer does not do
 UNSUPPORTED = ("introspection", "jlens_concept_pr")
-ROW_SHA_EXCLUDE = ("lite_positions", "lite_layers", "reads", "note")
+ROW_SHA_EXCLUDE = ("note",)
 # plan 0079 §2: each subject's even lens band (the README's inverter bands, olens.json read.layers);
 # a subject is read and judged at the plan's own layers inside it (a subset, never a snap)
 BAND: dict[str, tuple[int, ...]] = {
@@ -99,7 +99,7 @@ def in_band(row: dict[str, Any], subject: str) -> dict[str, Any]:
 
 
 def row_sha(row: dict[str, Any]) -> str:
-    """sha256 of one plan row as ``wsbench plan`` writes it, minus the lite / note keys (layers
+    """sha256 of one plan row as ``wsbench plan`` writes it, minus the note (layers
     kept: a changed layer list is a changed read). The row's ``family`` is hashed as its
     pre-0101 key (``registry.frozen_name``, plan 0101 F14): a renamed family's stored cells
     keep their ``row_sha``."""

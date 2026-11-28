@@ -23,8 +23,8 @@ of the misspelled word that ends the prompt from the one holding the first chara
 `typo_word` differs from `target` (case-insensitive) on (`suffix_text` of `typo_word` with
 `from_char`: 1-4 tokens, 133 positions over the 85 items) and nothing earlier — an earlier
 position, including a correct prefix of the word (` interpret` in `interpretibility`, ` acc` and
-`iac` in `acciacatura`), would credit the lens for predicting the word, not correcting it;
-`reads=lite` reads its final token (the pre-2026-10-30 site). Every item was gated on Qwen3.6-27B (greedy-verified, then >= 8/10 at temperature 0.7);
+`iac` in `acciacatura`), would credit the lens for predicting the word, not correcting it.
+Every item was gated on Qwen3.6-27B (greedy-verified, then >= 8/10 at temperature 0.7);
 dropping other items does not touch that gate.
 
 Example: "There's a really cool field in AI safety research called mechanistic interpretibility"
@@ -90,9 +90,9 @@ The bank file is a frozen copy of the source repo's hard-tier bank; its `contrac
 - **Item rule:** an item whose every expected layer is scored and never passes fails; a cell whose
   samples are all blank is a negative at that layer; an item with a MISSING (item, layer) cell and
   no pass is undecided (`extras.n_items_undecided`). Every read position of a layer is pooled
-  (the one-position refusal is gone, plan 0032 §2.16). Under `reads=full` a sidecar'd file must
+  (the one-position refusal is gone, plan 0032 §2.16). A sidecar'd file must
   hold, per (item, layer), one contiguous run of positions (`min_full_positions=1`: the 16
-  one-token misspellings have one), may not declare `reads: lite`, and must match
+  one-token misspellings have one) and must match
   `reads.plan_sha("typo")` — else exit 2; a sidecar-less file is report-only
   (`extras.partial_ids_unenforced`). Missing cells are fatal (exit 2) unless
   `allow_missing=True`; `layers=` restricts the grid and counts as a subset.
@@ -159,7 +159,7 @@ would otherwise pick up a summary result.
   so a multi-word form stays reachable on a token lens). `judge_model` is the digest model,
   `pinned_instrument` follows the digest, and `prompt_version` is
   `digest.prompt_version("mt-regex-2026-10-30+typo-v2", args, "typo")` (defaults:
-  `mt-regex-2026-10-30+typo-v2+digest-v4-task-extractive+sj-v9`; `+reads-lite` under lite).
+  `mt-regex-2026-10-30+typo-v2+digest-v4-task-extractive+sj-v9`).
   A word the summarizer only infers (in a statement) never hits: evidence spans only; a
   `quote_ok`-verified split word of adjacent positions hits as its plain word.
 - **Same-layer conjunction is relaxed by design.** "Every required unit hits at one layer" becomes

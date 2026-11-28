@@ -276,7 +276,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     read_layer = {it["id"]: int(header["read_cells"][it["lang_group"]]["layer"]) for it in scope}
     cells, rep = reads.load(args, NAME, ids=ids)
     # plan 0032 §2.1.4: the read span is the EOF anchor (each layer's max-pos row) at EVERY layer
-    # in the file (or of layers=); under reads=lite reads.load keeps only the bank layer.
+    # in the file (or of layers=).
     # layer_of is the item's anchor layer of record (its bank layer, or a single layers=).
     layer_of = {
         i: (args.layers[0] if args.layers and len(args.layers) == 1 else read_layer[i]) for i in ids

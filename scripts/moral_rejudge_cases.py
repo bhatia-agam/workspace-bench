@@ -88,7 +88,7 @@ def _args(path: Path, out: Path, extra: dict[str, str]) -> JudgeArgs:
         concurrency=8,
         rpm=1000.0,
         dry_run=False,
-        extra={"aggregate": "native", "reads": "lite", **extra},
+        extra={"aggregate": "native", **extra},
     )
 
 

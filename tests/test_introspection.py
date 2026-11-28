@@ -122,7 +122,6 @@ def test_plan_rows():
     g = by_id[GAUSS].extra["steering"]
     assert g["vector_file"] == "evals/introspection/vectors/gaussian_vectors_L12.npy"
     assert g["vector_row"] == 0
-    assert h.lite_positions == {"kind": "positions", "positions": [140]}
     assert by_id[B0].extra["steering"] == {"type": "none", "beta": 0.0}
     assert sum(ati_scored(s) for s in specs) == 125
     assert all(s.extra["ati_scored"] is False for s in specs if not ati_scored(s))
@@ -462,24 +461,17 @@ def test_regex_forms_irregular_and_zh():
 
 
 def test_twin_is_judged_on_the_same_cells_as_the_hit(tmp_path, monkeypatch):
-    """The twin's judge reads the cells the run reads for the hit (same layers=, same
-    reads= site); its regex diagnostic reads the same cells."""
+    """The twin's judge reads the cells the run reads for the hit (same layers=); its regex
+    diagnostic reads the same cells."""
     rows = [
         _cell_rows(HEAD, 44, 140, "trumpets"),
         _cell_rows(GAUSS, 44, 140, "nothing"),
-        _cell_rows(GAUSS, 44, 139, "trumpets"),  # not the lite site
-        _cell_rows(GAUSS, 48, 140, "trumpets"),  # not a requested layer
+        _cell_rows(GAUSS, 44, 139, "trumpets"),
+        _cell_rows(GAUSS, 48, 140, "trumpets"),
+        _cell_rows(HEAD, 48, 140, "x"),
     ]
     pol = _quote_policy({"trumpets": "trumpets"})
-    _r, by = _run_rows(
-        tmp_path, monkeypatch, rows, pol, [HEAD], layers=[44], extra={"reads": "lite"}
-    )
-    assert by[GAUSS]["n_cells_judged"] == 1 and by[GAUSS]["pass_unpaired"] is False
-    assert by[HEAD]["twin_hits"]["gaussian"]["judge"] is False and by[HEAD]["pass"] is True
-    assert by[HEAD]["rx_twin_quote"] is None
-    full_rows = [*rows, _cell_rows(HEAD, 48, 140, "x")]
-    (tmp_path / "f").mkdir()
-    _r2, by2 = _run_rows(tmp_path / "f", monkeypatch, full_rows, pol, [HEAD], layers=[44, 48])
+    _r2, by2 = _run_rows(tmp_path, monkeypatch, rows, pol, [HEAD], layers=[44, 48])
     assert by2[GAUSS]["hit_cells"] == [[44, 139], [48, 140]]
     assert by2[HEAD]["twin_hits"]["gaussian"]["judge"] is True and by2[HEAD]["pass"] is False
     assert by2[HEAD]["rx_twin_quote"] == "trumpets" and by2[HEAD]["rx_pass"] is False
@@ -748,23 +740,6 @@ def test_spec_token_note_fields():
     assert notes["inject|neutral:meeting_note|b4|trumpets"] != notes[HEAD]
 
 
-def test_lite_selects_bank_positions_for_units_and_twins():
-    from wsbench import reads
-
-    bank = judge.load()
-    specs = reads.specs("introspection")
-    for iid, want in ((HEAD, 140), (GAUSS, 140), (B0, 140)):
-        assert specs[iid].lite_positions == {"kind": "positions", "positions": [want]}
-    nm = "inject|neutral:meeting_note|b4|trumpets"
-    grid = bank["renders"]["neutral:meeting_note"]["grid"]
-    assert specs[nm].lite_positions["positions"] == [grid[1]] == [24]
-    twin = _item(bank, nm)["twins"]["gaussian"]
-    tgrid = bank["renders"][judge.render_key(_item(bank, twin))]["grid"]
-    assert specs[twin].lite_positions["positions"] == [tgrid[1]]
-    cells = [Cell(nm, 44, p, ("s",), None, None) for p in grid]
-    assert [c.pos for c in reads.select(cells, specs, "lite")] == [24]
-
-
 def test_single_layer_digest_tag(tmp_path, monkeypatch):
     from summary_fakes import FakeLLM, first_lines_digest, summary_args
 
@@ -1011,32 +986,3 @@ def test_quote_across_bullet_mark_verifies():
     assert digest.BULLET_MARK in ln[0].text
     assert judge.quote_verified("brass section trumpets", ln)
     assert judge.quote_verified("trumpets playing", ln)
-
-
-def _evidence_script():
-    import importlib.util
-
-    path = REPO / "scripts/introspection_offline_evidence.py"
-    spec = importlib.util.spec_from_file_location("introspection_offline_evidence", path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)  # type: ignore[union-attr]
-    return mod
-
-
-def test_lite_support_table_uses_no_verdicts():
-    ev = _evidence_script()
-    rid = "inject|neutral:meeting_note|b4|trumpets"
-    lines = [
-        ("trumpets", "[L44 pos 31]"),
-        ("brass trumpets", "[L48 pos 24]"),
-        ("x", "[L44 pos 24]"),
-    ]
-    t = ev.lite_support_table({rid: lines}, {rid: ["trumpets"]}, {rid: (31, 24)})
-    assert t == {"n_gold_lines": 2, "final_token": 1, "grid1": 1}
-    assert ev.choose({"a": t})["neutral_lite_rule"] == "final_token"  # no >10-point win
-    win = ev.choose({"a": {"n_gold_lines": 10, "final_token": 1, "grid1": 5}})
-    assert win["neutral_lite_rule"] == "grid[1] (bank)"
-    with pytest.raises(TypeError):  # a judged row is refused: no verdict enters the choice
-        ev.lite_support_table({rid: {"pass": True, "summary_evidence": []}}, {}, {})
-    with pytest.raises(TypeError):
-        ev.lite_support_table({rid: [{"pass": True}]}, {}, {})

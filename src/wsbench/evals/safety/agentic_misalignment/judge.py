@@ -321,8 +321,7 @@ def default_layer_scope(args: JudgeArgs, cells: list[Cell], rep: LoadReport) -> 
 def run(args: JudgeArgs) -> FamilyResult:
     fallback_on(args, FAMILY)  # a bad opts=fallback= value exits 2, in native mode too
     if "stride" in args.extra:  # plan 0052 §3: positions are selected by reads= only
-        fail("opts=stride= is retired for agentic_misalignment: use reads=lite (every 16th "
-             "position + the last 8) or reads=full")  # fmt: skip
+        fail("opts=stride= is retired for agentic_misalignment: every position is read")
     chunk_chars = _int_opt(args, "chunk_chars", DEFAULT_CHUNK_CHARS)
     bank_doc = load_bank(FAMILY)
     # plan 0052 §2: the result names the bank it was judged on (None = the unversioned v1 bank,
@@ -330,7 +329,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     bank_version = bank_doc.get("bank_version")
     bank = bank_doc["items"]
     scope = pair_scope(bank, args)
-    # the ONE loader: sidecar sampling, reads=full|lite selection, the full-read checks
+    # the ONE loader: sidecar sampling, the full-read checks
     cells, rep = reads.load(args, FAMILY, ids=[it["id"] for it in scope])
     cells = default_layer_scope(args, cells, rep)
     if digest.summary_mode(args):
@@ -629,15 +628,6 @@ def run(args: JudgeArgs) -> FamilyResult:
     return with_readout_count(result, scope, cells)
 
 
-def lite_rule() -> dict:
-    """The family's lite position rule (the read plan's ``ReadSpec.lite_positions``, one rule
-    for every agentic row)."""
-    rules = {json.dumps(sp.lite_positions, sort_keys=True) for sp in reads.specs(FAMILY).values()}
-    if len(rules) != 1:
-        fail(f"{FAMILY}: expected one lite rule across the plan, got {sorted(rules)}")
-    return dict(json.loads(rules.pop()))
-
-
 def _run_summary(
     args: JudgeArgs,
     scope: list[dict],
@@ -647,7 +637,7 @@ def _run_summary(
     bank_version: str | None,
 ) -> FamilyResult:
     """Summary mode (plan 0021 C, plan 0052 §3): the digest replaces Stages A and B. Every loaded
-    position (``reads=full|lite``, selected by ``reads.load``) x every layer of an item goes to
+    position (``reads.load``) x every layer of an item goes to
     ONE ``digest.collapse`` unit (``expect_all``: a bundle that omits a loaded cell raises), under
     the one global token cap with hierarchical overflow; Stage C then grades the item's
     :func:`stage_c_view` (evidence lines split into one line per readout statement, in digest
@@ -697,8 +687,7 @@ def _run_summary(
         note = digest.SUMMARY_NOTE + (
             "\n" + digest.token_note_of(FAMILY) if source_kind == "tokens" else ""
         )
-        mode = reads.mode(args)
-        scope_text = prompts.read_scope(mode, lite_rule() if mode == "lite" else None)
+        scope_text = prompts.READ_SCOPE_FULL
         tokens = _read_site_tokens(cells, rep)
         for it in items:
             lb = it["id"]
@@ -864,9 +853,8 @@ _ABSTRACTIVE_SUPPORT = re.compile(rf"\[support: ({_SUPPORT})\] — evidence: \""
 
 def _read_site_tokens(cells: Sequence[Cell], rep: LoadReport) -> dict[str, dict[int, str]]:
     """Per item, position -> the read-site token the file recorded (identical across layers, so
-    the first row carrying one wins). Every row of the FILE counts, also the positions a
-    ``reads=lite`` selection dropped (``LoadReport.site_tokens``), so a lite line's «reading»
-    context is the same 24 tokens a full read shows."""
+    the first row carrying one wins). Every row of the FILE counts, also the positions the
+    fast narrowing dropped (``LoadReport.site_tokens``)."""
     out: dict[str, dict[int, str]] = defaultdict(dict)
     for iid, by_pos in rep.site_tokens.items():
         out[iid].update(by_pos)

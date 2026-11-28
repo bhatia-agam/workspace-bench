@@ -68,12 +68,10 @@ class LoadReport:
     partial_ids_unenforced: list[str] = field(default_factory=list)
     layers_missing: list[int] = field(default_factory=list)
     reads_checked: str = ""  # sidecar | no_sidecar | prompt_only
-    reads: str = "full"
     sampling: str = ""
     sampling_source: str = ""  # declared | override | default
     reader: str = ""
     layers_requested: list[int] | None = None
-    lite_rule: str = ""  # reads=lite: the frozen lite rule(s) the selection applied (json)
     # plan 0090 (a --fast load of a family whose fast entry reduces the positions)
     fast_rule: str = ""  # the fast positions rule the load applied (json)
     n_cells_before_fast: int = 0  # cells of the fast read ids before that narrowing
@@ -84,7 +82,7 @@ class LoadReport:
     n_packed_ambiguous: int = 0
     n_cells_short: int = 0
     # reads.load: item -> pos -> the read-site token of EVERY loaded row, recorded before the
-    # reads=lite selection (a judge's read-context window spans unselected positions too)
+    # fast narrowing (a judge's read-context window spans unselected positions too)
     site_tokens: dict[str, dict[int, str]] = field(default_factory=dict)
 
 
@@ -366,8 +364,11 @@ def read_sidecar(path: Path) -> dict[str, Any] | None:
         raise SystemExit(f"{p}: the sidecar must be a JSON object")
     if meta.get("sampling") not in (None, *SAMPLINGS):
         raise SystemExit(f"{p}: sampling={meta.get('sampling')!r}; expected one of {SAMPLINGS}")
-    if meta.get("reads") not in (None, "full", "lite"):
-        raise SystemExit(f"{p}: reads={meta.get('reads')!r}; expected full or lite")
+    if meta.get("reads") not in (None, "full"):
+        raise SystemExit(
+            f"{p}: reads={meta.get('reads')!r}: full is the only reads mode (re-produce the file "
+            "from `wsbench plan`)"
+        )
     return meta
 
 

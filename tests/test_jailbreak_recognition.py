@@ -1477,20 +1477,9 @@ def test_all_layer_producer_file_is_judged(tmp_path, monkeypatch):
     assert fake.n("item_recognition") == 2 * prompts.N_DRAWS
 
 
-def test_lite_reads_turn_end_only(tmp_path, monkeypatch):
+def test_plan_reads_the_grid_layers():
     it = _items()[0]
-    cells = [
-        Cell(it["id"], L, p, samples=("x",), tokens=None, scores=None)
-        for L in (20, 44)
-        for p in grid_positions(it["read"])
-    ]
-    kept = reads.select(cells, reads.specs("jailbreak_recognition"), "lite")
-    assert {(c.layer, c.pos) for c in kept} == {
-        (20, it["read"]["turn_end"]),
-        (44, it["read"]["turn_end"]),
-    }
     spec = next(s for s in readplan.plan("jailbreak_recognition") if s.id == it["id"])
-    assert spec.lite_positions == {"kind": "final_token"} and spec.lite_layers is None
     assert spec.layers == readplan.GRID
 
 

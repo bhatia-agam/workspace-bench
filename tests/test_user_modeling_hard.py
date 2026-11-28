@@ -207,17 +207,14 @@ def test_easy_family_is_untouched(real_families):
     assert up.render_user_turn is easy_prompts.render_user_turn
 
 
-def test_read_plan_is_every_token_and_lite_is_the_same(real_families):
+def test_read_plan_is_every_token(real_families):
     from wsbench import readplan
 
     rows = readplan.plan(FAMILY)
     assert len(rows) == 155 and len({r.id for r in rows}) == 155
     r = rows[0]
     assert (r.render, r.positions, r.layers) == ("chat_context", {"kind": "all"}, readplan.GRID)
-    assert r.lite_positions == readplan.SAME and r.lite_layers is None
     assert [m["role"] for m in r.messages] == ["system", "user"]
-    # plan 0061's constant is not widened: the new branch sets the `same` rule itself
-    assert FAMILY not in readplan.LITE_SAME_FAMILIES and len(readplan.LITE_SAME_FAMILIES) == 5
 
 
 # ---------------------------------------------------------------- prompts

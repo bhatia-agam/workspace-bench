@@ -206,9 +206,8 @@ def test_read_plan_rows_and_offline_escape(monkeypatch):
     assert [r.id for r in rows] == [it["id"] for it in ITEMS]
     r = rows[0]
     assert r.render == "chat" and r.positions == {"kind": "last_n", "n": 12}
-    assert r.layers == readplan.GRID and r.lite_positions == readplan.SAME
+    assert r.layers == readplan.GRID
     assert r.text == nyt.render(ITEMS[0]["nyt_id"])
-    assert "nyt_connections" not in readplan.LITE_SAME_FAMILIES
     monkeypatch.setenv(nyt.NO_NYT_ENV, "1")
     assert readplan.plan("nyt_connections") == []
     from wsbench import reads
@@ -485,7 +484,7 @@ def _bar_inputs():
     pv = "nyt-mc-2026-11-02+digest-v5-task-extractive+sj-v10"
     config = {
         "aggregate": "summary",
-        "prompt_version": pv.replace("extractive+", "extractive-layered-v1x4+") + "+reads-lite",
+        "prompt_version": pv.replace("extractive+", "extractive-layered-v1x4+"),
         "judge_model": "claude-opus-5-5",
         "summarizer": {
             **summ,

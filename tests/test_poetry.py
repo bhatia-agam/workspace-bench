@@ -275,7 +275,7 @@ def test_bank_v2_opus_gate_recorded():
                        extra={"aggregate": "summary"})  # fmt: skip
     # bank v5 is frozen: its per-item records stay under the MC instrument they were written by;
     # the headline (free-response) re-verification is evals/basic/poetry/opus_gate_free.json
-    want = reads.strip_reads(digest.prompt_version(pp.BANK_GATE_INSTRUMENT, args, "poetry"))
+    want = digest.prompt_version(pp.BANK_GATE_INSTRUMENT, args, "poetry")
     for it in items:
         rec = it["prompt_only_opus"]
         assert rec["draws"] == 3 and rec["picked_gold"] == 0, it["id"]
@@ -729,7 +729,7 @@ def test_summary_stamp_is_computed(bank, tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, judge=_picker("CANNOT", ""))
     args = _summary(tmp_path, rows)
     r = pj.run_family(args)
-    want = reads.stamp(digest.prompt_version(pp.PROMPT_VERSION, args, "poetry"), "full")
+    want = digest.prompt_version(pp.PROMPT_VERSION, args, "poetry")
     assert r.config["prompt_version"] == want
 
 
@@ -816,15 +816,6 @@ def test_arbitrary_layers(bank, tmp_path, monkeypatch):
     assert r.config["layers_judged"] == [63] and r.rows[0]["pass"] is False
 
 
-def test_lite_reads_the_line_one_newline(bank, tmp_path, monkeypatch):
-    rows = _rows({(20, 14): ["a"], (20, 15): ["b"], (20, 16): ["c"]})
-    fake = FakeLLM.install(monkeypatch, judge=_picker("CANNOT", ""))
-    r = pj.run_family(_summary(tmp_path, rows, extra={"reads": "lite"}))
-    (dig,) = [c[2] for c in fake.calls if c[0] == "digest"]
-    assert "[L20 pos 16]" in dig and "pos 14" not in dig and "pos 15" not in dig
-    assert r.config["prompt_version"].endswith("+reads-lite")
-
-
 def test_all_layer_producer_file_is_judged(bank, tmp_path, monkeypatch):
     """Late critique fix (1), held for poetry: ``plan_sha`` never hashes layers, so a file read
     at all 64 layers (sidecar plan_sha = the GRID plan's) is judged."""
@@ -847,16 +838,13 @@ def test_prompt_only_rows_use_same_instrument(bank, tmp_path, monkeypatch):
     f = write_jsonl(tmp_path / "b" / "poetry.jsonl", po_rows)
     write_sidecar(f, reader=pop.READER, layers=[44], protocol=pop.PROTOCOL)
     r_po = pj.run_family(summary_args(f, tmp_path / "b" / "out", pp.PROMPT_VERSION))
-    assert reads.strip_reads(r_po.config["prompt_version"]) == reads.strip_reads(
-        r_lens.config["prompt_version"]
-    )
+    assert r_po.config["prompt_version"] == r_lens.config["prompt_version"]
     assert r_po.config["reads_checked"] == "prompt_only" and r_po.rows[0]["kind"] == "none"
 
 
-def test_poetry_plan_emits_full_and_lite():
+def test_poetry_plan_emits_full():
     rows = readplan.plan("poetry")
     assert rows and all(r.positions["kind"] == "line_one_tail" for r in rows)
-    assert all(r.lite_positions == {"kind": "final_token"} and r.lite_layers is None for r in rows)
     assert all(r.layers == readplan.GRID for r in rows)
 
 

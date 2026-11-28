@@ -120,8 +120,7 @@ earns no credit; the floors stand beside the headline (`evals/baselines/README.m
 
 Every position of the chat render (rule `all_from_end`: the user question plus the template tail;
 `-1` is the assistant onset), at the 11 grid layers L20-L60 (`layers=` / `layers=all` read any
-other set). `reads=lite` keeps the final render token at every layer (Camila: "lite/fast should
-just be last token"); lite is a subset of full, so one read serves both. Under `reads=full` a file
+other set). A file
 with a sidecar must hold >= 8 contiguous positions ending at `-1` per item and layer
 (`min_full_positions=8`).
 
@@ -318,8 +317,7 @@ lens), every position as a negative offset, with the producer's sidecar
 `examples/readouts/basic_readout.jsonl` is a toy file for `dry_run=True`.
 
 ```
-wsbench plan families=basic_readout out=outputs/plan             # full read sites
-wsbench plan families=basic_readout reads=lite out=outputs/plan   # lite: the final token
+wsbench plan families=basic_readout out=outputs/plan             # the read sites
 wsbench judge family=basic_readout readouts=examples/readouts/basic_readout.jsonl out=outputs/toy/basic_readout dry_run=True
 wsbench judge family=basic_readout readouts=<arm>.jsonl out=outputs/<arm>/basic_readout limit=3
 ```

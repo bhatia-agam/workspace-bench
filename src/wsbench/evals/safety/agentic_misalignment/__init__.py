@@ -82,8 +82,8 @@ SPEC = register(
         full_contiguous=True,
         # 54 items (22 pairs + 6 unpaired originals + 4 controls): native one Stage A call per
         # (item, prompt position) then B and C per item; summary one digest (hierarchical above
-        # the global cap) and one Stage C per item; lite reads every 16th position + the last 8
-        calls_per_arm="≈ 85k native full, ≈ 6k native lite, ≈ 110 summary",
+        # the global cap) and one Stage C per item
+        calls_per_arm="≈ 85k native, ≈ 110 summary",
         sources="Lynch et al. 2025",
         macro_gate=macro_gate,
     )

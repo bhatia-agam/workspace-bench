@@ -338,17 +338,13 @@ is the item `name` with characters outside `[A-Za-z0-9._-]` replaced by `_`.
   tokenizer), at every plan layer (`readplan.GRID`, or any layer set via `layers=`). The judge
   requires one contiguous run of >= 8 positions ending at the item's last position per (item,
   layer) (`min_full_positions=8`).
-- **Lite** (`reads=lite`): the same positions and layers as full (`same`, plan 0061, Camila 2026-11-02; the
-  bank rows' `readout.lite` key is no longer read), stamped `+reads-lite`. It was the final token
-  (the stem's ":") before; lite results judged before plan 0061 are stale. `reads=` picks read sites only; it is independent of the
-  judge-spend `tier=` key proposed in PR #75.
+- The bank rows' `readout.lite` key is not read.
 
 `examples/readouts/basic_readout_st.jsonl` is a toy file for `dry_run=True`.
 
 ```
 wsbench judge family=basic_readout_st readouts=examples/readouts/basic_readout_st.jsonl out=outputs/toy/basic_readout_st dry_run=True
 wsbench judge family=basic_readout_st readouts=<arm>.jsonl out=outputs/<arm>/basic_readout_st limit=3
-wsbench judge family=basic_readout_st readouts=<arm>.jsonl out=outputs/<arm>/basic_readout_st reads=lite
 ```
 
 ## Decisions taken (override if you disagree)

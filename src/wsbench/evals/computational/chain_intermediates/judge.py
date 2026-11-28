@@ -74,7 +74,7 @@ PERM_SEED = "chain-perm"
 NULL_SEED = "chain-null"
 SIZE_BUCKETS = (("1-9", 1, 9), ("10-19", 10, 19), ("20+", 20, 10**9))
 SLOT_NAMES = ("first", "second")
-CELLS_RETIRED = "use reads=lite (final token) or reads=full (every read position)"
+CELLS_RETIRED = "every read position is judged"
 CHANCE_LABEL = (
     "no analytic floor (free recall); the floor is the item-level any-cell permutation null "
     "(extras.null_perm_any_cell, net = value - null) and the prompt-only baseline; "
@@ -126,12 +126,12 @@ def instrument(header: dict[str, Any] | None = None) -> str:
 
 
 def _check_cells_opt(args: JudgeArgs) -> None:
-    """The retired ``cells=`` key: ``last`` exits 2 with the ``reads=`` hint; ``all`` is kept
-    only as a spelling of ``reads=full`` (a native run of every cell)."""
+    """The retired ``cells=`` key: ``last`` exits 2; ``all`` is accepted and changes nothing
+    (a native run judges every cell)."""
     if "cells" not in args.extra:
         return
     v = args.extra["cells"]
-    if v != "all" or reads.mode(args) != "full":
+    if v != "all":
         fail(f"{NAME}: cells={v} is retired; {CELLS_RETIRED}")
 
 
@@ -321,7 +321,7 @@ def _item_row(
     slots = slot_hits(gold, judged)
     passed = all(slots) if rule == "all" else any(slots)
     last_by_layer: dict[int, dict[str, Any]] = {}
-    for v in mine:  # the final read position per layer (the lite cell)
+    for v in mine:  # the final read position per layer
         last_by_layer[v["layer"]] = v
     return {
         "id": item_id,
@@ -511,8 +511,7 @@ def _run_native(
     rule: str,
     tag: str,
 ) -> FamilyResult:
-    """One free-recall call per loaded cell (``reads=full``: every read position; ``reads=lite``:
-    the final token per layer, selected by ``reads.load``)."""
+    """One free-recall call per loaded cell (every read position)."""
     ids = [it["id"] for it in scope]
     pv = rule_stamp(NATIVE_PROMPT_VERSION, rule)
     texts: dict[tuple[str, int, int], str] = {}

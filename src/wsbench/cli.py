@@ -127,9 +127,12 @@ def _layers_arg(v: object) -> list[int] | str | None:
 
 
 def _reads_arg(v: object) -> str:
-    m = str(v or "full")
-    if m not in ("full", "lite"):
-        raise ValueError(f"reads must be full or lite, got {v!r}")
+    """``reads=``: ``full``, the only mode (the key is checked so another value says why)."""
+    from wsbench import reads
+
+    m = str(v or reads.READS)
+    if msg := reads.mode_error(m):
+        raise ValueError(msg)
     return m
 
 
@@ -272,7 +275,7 @@ class JudgeOptions(Command):
         self.ati_opt_in = None  # plan 0088: comma list of text_inversion.OPT_IN_ENTRIES families
         self.opts = None  # comma list of KEY=VALUE family options; a value cannot hold a comma
         self.opt: list[str] = []  # the parsed pairs; filled by finalize
-        self.reads = ""  # full | lite (plan 0032 §2.6.7); alias opts=reads=lite
+        self.reads = ""  # full, the only mode; alias opts=reads=full
         self.sampling = ""  # bullet4 | prose1 | tokens10: overrides the sidecar (§2.9.2)
         self.each = False  # layers=each: set by finalize
         # --fast: the frozen fast subset (plan 0090, evals/fast); the retired fast=safety is refused
@@ -319,6 +322,9 @@ class JudgeOptions(Command):
             raise ValueError(f"ati_opt_in: {bad} cannot be opted in (only {only})")
         self.opt = _strs(self.opts) or []
         self.opts = None
+        for pair in self.opt:
+            if pair.split("=", 1)[0].strip() == "reads":
+                _reads_arg(pair.split("=", 1)[-1])
         if self.reads:
             self.opt.append(f"reads={_reads_arg(self.reads)}")
         if self.sampling:
@@ -341,8 +347,6 @@ class JudgeOptions(Command):
         keys = {p.split("=", 1)[0].strip(): p.split("=", 1)[-1] for p in self.opt}
         if self.anti_text_inversion:
             raise ValueError("--fast and anti_text_inversion=True are separate scopes; pick one")
-        if keys.get("reads") == "lite":
-            raise ValueError("--fast judges the fast subset's full reads; drop reads=lite")
         if self.each:
             raise ValueError("--fast does not take layers=each")
         if keys.get("aggregate") == "native":
@@ -632,8 +636,8 @@ class ReportRuns(Command):
         self.dir = pydra.REQUIRED
         self.json = False
         self.floors = True  # the frozen lucky-guessing floors (evals/baselines) beside each family
-        self.reads = ""  # full | lite: keep that mode only (a table never mixes modes)
-        # plan 0090, tri-state like reads: "" = unset, True = fast rows only, False = the rest;
+        self.reads = ""  # full, the only mode
+        # plan 0090, tri-state: "" = unset, True = fast rows only, False = the rest;
         # the retired `safety` value is a usage error (plan 0104)
         self.fast = ""
         self.fast_variant = ""  # set by finalize from fast=, never a key
@@ -687,11 +691,11 @@ class ReportRuns(Command):
         except ValueError as e:
             print(f"unreadable results: {e}", file=sys.stderr)
             return EXIT_USAGE
-        if self.reads:
-            results = [r for r in results if r.config.get("reads", "full") == self.reads]
-        modes = sorted({str(r.config.get("reads", "full")) for r in results})
-        if len(modes) > 1:  # plan 0032 §2.6.8: one table never mixes read modes
-            print(f"report: results mix reads modes {modes}; pass reads=full|lite", file=sys.stderr)
+        if other := sorted({str(r.config.get("reads", "full")) for r in results} - {"full"}):
+            print(
+                f"report: results judged under reads={other}; only full reads are reported",
+                file=sys.stderr,
+            )
             return EXIT_USAGE
         if self.fast != "":  # plan 0090: fast rows only, or everything else
             results = [r for r in results if (r.config.get("scope") == fast.SCOPE) == self.fast]
@@ -1429,7 +1433,7 @@ class Plan(Command):
         self.out = "outputs/plan"
         self.limit = 0
         self.layers = None  # all | <csv>: override the grid of record (plan 0032 §2.1)
-        self.reads = "full"  # lite: rows whose positions / layers are the lite ones
+        self.reads = "full"  # the only mode
         self.fast = False  # --fast: the fast subset's rows (plan 0090); all = its families
         self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
 
@@ -1445,8 +1449,6 @@ class Plan(Command):
             raise ValueError("layers=each is a judge / run key; plan takes all or a comma list")
         self.reads = _reads_arg(self.reads)
         _set_fast(self)
-        if self.fast and self.reads == "lite":
-            raise ValueError("--fast plans the fast subset's full reads; drop reads=lite")
         tier = _tier_arg(self)
         if tier and self.families is not None:
             raise ValueError(f"--{tier} picks the families itself; drop families= or the flag")
@@ -1500,7 +1502,7 @@ class Plan(Command):
 
     def _write(self, names: list[str]) -> int:
         for name in names:
-            specs = readplan.plan(name, layers=self.layers, reads=self.reads, fast=self.fast)
+            specs = readplan.plan(name, layers=self.layers, fast=self.fast)
             specs = specs[: self.limit or None]
             n = readplan.write(specs, self.out / f"{name}.jsonl")
             layers = sorted({L for s in specs for L in s.layers})
@@ -1572,8 +1574,8 @@ class Produce(Command):
         self.items = _strs(self.items)
         self.device = str(self.device)
         self.reads = _reads_arg(self.reads)
-        if self.fast and (self.reads == "lite" or not self.family):
-            raise ValueError("--fast reads a family's fast plan: give family=, drop reads=lite")
+        if self.fast and not self.family:
+            raise ValueError("--fast reads a family's fast plan: give family=")
 
     def execute(self) -> int:
         from wsbench.produce import METHODS, Producer, write
@@ -1620,7 +1622,6 @@ class Produce(Command):
                 limit=self.limit,
                 layers=self.layers,
                 items=self.items,
-                reads=self.reads,
                 **({"fast": True} if self.fast else {}),
             )
             if producer.counts is not None:
@@ -1691,8 +1692,6 @@ class Capture(Command):
             raise ValueError(f"dtype is fp32 or bf16, got {self.dtype!r}")
         self.device = str(self.device)
         self.reads = _reads_arg(self.reads)
-        if self.fast and self.reads == "lite":
-            raise ValueError("--fast captures the fast plan's full reads; drop reads=lite")
         self.limit = _int(self.limit)
         self.shard, self.shards = _int(self.shard), _int(self.shards)
         if self.shards < 1 or not 0 <= self.shard < self.shards:
@@ -1721,7 +1720,7 @@ class Capture(Command):
             if self.fast:
                 for name in names:
                     fast.entry(name)  # outside the subset, or a bank it was not frozen on
-            return {f: readplan.plan(f, reads=self.reads, fast=self.fast) for f in names}
+            return {f: readplan.plan(f, fast=self.fast) for f in names}
         except SystemExit as e:
             if not isinstance(e.code, str):
                 raise
@@ -2046,9 +2045,7 @@ class Read(Capture):
         if self.plan is not None:
             jobs = read.plan_file_jobs(self.plan)
         else:
-            jobs = [
-                read.job(f, specs, reads=self.reads, fast=self.fast) for f, specs in plans.items()
-            ]
+            jobs = [read.job(f, specs, fast=self.fast) for f, specs in plans.items()]
         if self.method == "model_continuation":
             if self.join:
                 from wsbench.produce.served import continuation

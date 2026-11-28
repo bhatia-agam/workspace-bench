@@ -11,7 +11,6 @@ no sidecar); default the global-workspace ``wsb_latest`` cache.
 import argparse
 import contextlib
 import dataclasses
-import io
 import json
 import os
 import subprocess
@@ -25,7 +24,6 @@ from wsbench.judge_config import resolve
 from wsbench.multitoken import regex
 from wsbench.multitoken.family import _layer_samples, name_credit
 from wsbench.multitoken.options import option_sets
-from wsbench.readouts import write_sidecar
 from wsbench.registry import JudgeArgs
 
 REPO = Path(__file__).resolve().parents[1]
@@ -197,41 +195,25 @@ def options_md(root: Path) -> tuple[str, dict[str, Any]]:
 def positions_md(root: Path, tmp: Path) -> tuple[str, dict[str, Any]]:
     plan = {s.id: s for s in readplan.plan(NAME)}
     s = plan[COEUR]
-    lite = {x.id: x for x in readplan.plan(NAME, reads="lite")}[COEUR]
     toks = [f"t{i}" for i in range(42)]
     full_pos = readplan.resolve(s.positions, toks)
-    lite_pos = readplan.resolve(lite.positions, toks)
-    out = ["# B1: every prompt token (lite: the final token)", "", "```json",
+    out = ["# B1: every prompt token", "", "```json",
            json.dumps(s.row(), ensure_ascii=False, indent=1), "```", ""]  # fmt: skip
     out.append(f"full positions: {len(full_pos)} ({full_pos[0]}..{full_pos[-1]}) x "
-               f"{len(s.layers)} layers {s.layers}; lite positions: {lite_pos}")  # fmt: skip
-    # the cached final-token file: report-only without a sidecar, exit 2 with a lite sidecar
+               f"{len(s.layers)} layers {s.layers}")  # fmt: skip
+    # the cached final-token file: report-only without a sidecar
     path = root / "rl-onchat-x4" / f"{NAME}.jsonl"
     _cells, rep = reads.load(_args(path, tmp / "pos"), NAME)
     out.append("")
     n_unenforced = len(rep.partial_ids_unenforced)
     out.append(
-        f"cached rl-onchat-x4 final-token file under reads=full: reads_checked="
+        f"cached rl-onchat-x4 final-token file: reads_checked="
         f"{rep.reads_checked}, partial_ids_unenforced={n_unenforced}"
     )
-    copy = tmp / "lite_sidecar.jsonl"
-    copy.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
-    write_sidecar(copy, reads="lite", sampling="bullet4", reader="rl-onchat-x4")
-    err = io.StringIO()
-    code = None
-    with contextlib.redirect_stderr(err):
-        try:
-            reads.load(_args(copy, tmp / "pos2"), NAME)
-        except SystemExit as e:
-            code = e.code
-    out.append(f"the same file with a `reads: lite` sidecar under reads=full: exit {code} "
-               f"({err.getvalue().strip()})")  # fmt: skip
     return "\n".join(out) + "\n", {
         "n_full_positions": len(full_pos),
-        "lite": lite_pos,
         "reads_checked": rep.reads_checked,
         "n_partial_unenforced": len(rep.partial_ids_unenforced),
-        "lite_sidecar_exit": code,
     }
 
 

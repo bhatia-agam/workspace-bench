@@ -399,13 +399,10 @@ everything below about v2's re-key and options holds for v3 except the lengths a
   tokens, the stimulus, the assistant header) at `readplan.GRID` (layers 20..60 step 4); `layers=`
   / `layers=each` judge any subset. A full read must hold one contiguous run of >= 6 positions
   per (item, layer) ending at the item's last position (`min_full_positions = 6`, the smallest
-  count a tail-5 file cannot satisfy; every render has >= 30 positions), so a lite file judged as
-  full exits 2 (`reads.check_full`).
-- **Lite (`reads=lite`):** the last five positions (`'\n'` after `assistant`, `<think>`, `'\n\n'`,
-  `</think>`, `'\n\n'`), every layer (`lite_layers = None`): the v1 read site. Lite is a subset of
-  full, so one GPU read serves both; a lite result's `prompt_version` ends `+reads-lite`.
+  count a tail-5 file cannot satisfy; every render has >= 30 positions), so a tail-5 file
+  exits 2 (`reads.check_full`).
 - **Summary (default aggregate):** every loaded cell of an item (all positions x all judged
-  layers; the tail five under lite) goes to ONE digest (`digest.collapse(..., expect_all=...)`
+  layers) goes to ONE digest (`digest.collapse(..., expect_all=...)`
   refuses a dropped cell), then one MC call per item and side on it.
 - **Native (`opts=aggregate=native`, an ablation):** one call per (item, layer, pos, side);
   about 95k calls per arm under full reads (83,028 cells; deliberative cells twice). Item pass: committed = any correct call;
@@ -687,7 +684,7 @@ question on the digest; a deliberative item one per side on the same digest, and
 both sides' majorities pick the gold (ec-v9: one pick per side, asked 3 times, see above). The
 prompt version is `digest.prompt_version("ec-v9+nq1" + judge.majority_stamp(n), args,
 "moral_rationale")` (e.g. `ec-v9+nq1+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
-multi-layer CLI run; `+reads-lite` under lite). Counts: `n_expected_cells` /
+multi-layer CLI run). Counts: `n_expected_cells` /
 `n_missing_cells` stay cell-level; `n_unjudged_cells` / `n_empty_cells` count items
 (`extras.summary.count_units`). An item with no cells, an empty digest and an unsummarized item
 are fails in the whole-scope denominator; unsummarized items and items with a failed side call

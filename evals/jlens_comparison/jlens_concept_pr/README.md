@@ -16,8 +16,7 @@ it is out of the macro by metric (`results.MACRO_METRICS` holds only `pass_rate`
 that cell's own J-lens top-10, so a cross-layer / cross-position digest has no reference to
 score against. Under the summary default the runner stamps `config.aggregate = "native"` and
 `extras.summary_mode_note`. No prompt-only floor either (`prompt_only.EXCLUDED`): the
-derangement foil is this family's floor. Lite = full by construction (one read position per
-label, `lite_positions = {"kind": "same"}`).
+derangement foil is this family's floor.
 
 **v3 (`jlens-pr-v3`, plan 0042, Camila 2026-10-30).** (1) The Stage-P foil runs by default, and a
 foil precision that was not measured reads `null` / "not measured", never 0.0. (2) Broken-character

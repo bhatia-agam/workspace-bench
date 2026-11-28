@@ -143,18 +143,12 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
 
 ## Read positions (plan 0048)
 
-- **Full (the default):** every token of the plain render, reported as negative offsets
+- Every token of the plain render, reported as negative offsets
   `-n..-1` (`{"kind": "all_from_end"}`), at every judged layer. The summarizer gets all of an
   item's readouts (every position x every layer) in one digest call.
-- **Lite (`reads=lite`):** the last word of the prompt only (`{"kind": "offset_from_end", "k":
-  K}` with `K = -readout.offsets[0]`, 1 or 2), at every layer. This is the 2026-09-23 site
-  (Camila: "multihop should be read on the second to last token, ie the last word, not the space
-  token"): for 31 of bank v5's 98 prompts the final token is a bare space after the last word,
-  so the read is `-2`; for the other 67 it is the final token. Lite is a subset of full, so one
-  read serves both; a lite run stamps `+reads-lite` on its `prompt_version`.
-- A full run needs one contiguous run of at least 8 positions per (item, layer)
+- A run needs one contiguous run of at least 8 positions per (item, layer)
   (`min_full_positions = 8`; the shortest prompt has more). A last-word file with a sidecar exits
-  2 under `reads=full` ("looks like a lite file"); a sidecar-less file is judged report-only and
+  2; a sidecar-less file is judged report-only and
   lists its short items under `extras.partial_ids_unenforced`.
 
 ## Scoring
@@ -285,7 +279,6 @@ replaced by `_` (`wsbench.banks.label_of`); `tokens` rows for a token lens.
 ```
 wsbench judge family=multihop_st readouts=examples/readouts/multihop_st.jsonl out=outputs/toy/multihop_st dry_run=True
 wsbench judge family=multihop_st readouts=<arm>.jsonl out=outputs/<arm>/multihop_st limit=3
-wsbench judge family=multihop_st readouts=<arm>.jsonl out=outputs/<arm>/multihop_st-lite opts=reads=lite
 ```
 
 ## Judge prompts
@@ -295,8 +288,8 @@ prompts unchanged from `bank-mc-2026-10-31`; `+bank-gate-r11`: the deterministic
 r10 reading the derived-forms table `mhforms-v2`, r11 never crediting the item's final answer (or a prefix of it) as the bridge; `+bank-v5`: the 98-item bank; summary mode:
 `digest.prompt_version` of it, by default
 `bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
-multi-layer run (`...+digest-v5-task-extractive+sj-v10` for one layer); `+reads-lite` for a lite
-run). The MC calls are keyed `bank-mc-2026-11-01-v3` (no gate or bank tag), so a gate or bank
+multi-layer run (`...+digest-v5-task-extractive+sj-v10` for one layer)).
+The MC calls are keyed `bank-mc-2026-11-01-v3` (no gate or bank tag), so a gate or bank
 change re-scores cached answers. Judge: the
 repo default (`claude-opus-5-5`), temperature 0. Output schema: `{"choice": str, "quote": str}`
 (a letter; an invalid letter is re-asked once, then unjudged). The prompts below are sent

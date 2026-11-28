@@ -489,7 +489,6 @@ def test_example_file_carries_the_every_position_regime(tmp_path, monkeypatch):
 GOLD_ID = "floordiv-205"  # floor(a / b) + c, intermediate 135, exact
 GOLD = 135.0
 SPAN = list(range(-34, 0))  # the shortest render's every position (min_full_positions)
-LITE = {"reads": "lite"}
 REAL_RUN_CALLS = judge.run_calls
 
 
@@ -517,6 +516,13 @@ def _grid_rows(
         for L in layers
         for p in positions
     ]
+
+
+def _l56_rows(samples: list[str]) -> list[dict]:
+    """The full L56 span of ``GOLD_ID``: ``samples`` at the final position, filler elsewhere."""
+    rows = _grid_rows([GOLD_ID], layers=[56])
+    rows[-1]["samples"] = samples
+    return rows
 
 
 def _nargs(path: Path, out: Path, **kw) -> object:
@@ -629,13 +635,10 @@ def test_batched_user_has_no_token_labels(tmp_path, monkeypatch):
 
 
 def test_arith_prose1_judges_one_sample(tmp_path, monkeypatch):
-    rows = [{"id": GOLD_ID, "layer": 56, "pos": -1, "samples": ["first gen", "second gen"]}]
-    path = _write_rows(tmp_path / "r.jsonl", rows)
-    write_sidecar(path, sampling="prose1", reads="lite")
+    path = _write_rows(tmp_path / "r.jsonl", _l56_rows(["first gen", "second gen"]))
+    write_sidecar(path, sampling="prose1")
     seen = _capture(monkeypatch)
-    r = judge.run(
-        _nargs(path, tmp_path / "o", layers=[56], extra={"cells": "all", "reads": "lite"})
-    )
+    r = judge.run(_nargs(path, tmp_path / "o", layers=[56], extra={"cells": "all"}))
     assert seen[0].user.count("first gen") == 1 and "second gen" not in seen[0].user
     assert r.config["sampling"] == "prose1" and r.config["sampling_source"] == "declared"
     assert r.extras["n_samples_trimmed"] == 1
@@ -643,21 +646,16 @@ def test_arith_prose1_judges_one_sample(tmp_path, monkeypatch):
 
 def test_arith_bullet4_judges_four_bullets(tmp_path, monkeypatch):
     gens = ["alpha one", "beta two", "gamma three", "delta four"]
-    rows = [{"id": GOLD_ID, "layer": 56, "pos": -1, "samples": gens}]
-    path = _write_rows(tmp_path / "r.jsonl", rows)
-    side = write_sidecar(path, sampling="bullet4", reads="lite")
+    path = _write_rows(tmp_path / "r.jsonl", _l56_rows(gens))
+    side = write_sidecar(path, sampling="bullet4")
     seen = _capture(monkeypatch)
-    r = judge.run(
-        _nargs(path, tmp_path / "o", layers=[56], extra={"cells": "all", "reads": "lite"})
-    )
+    r = judge.run(_nargs(path, tmp_path / "o", layers=[56], extra={"cells": "all"}))
     assert bulleted(gens) in seen[0].user
     assert bulleted(gens).count("\n- ") == 3
     assert r.config["sampling"] == "bullet4" and r.config["sampling_source"] == "declared"
     # summary: the digest shows the same four generations as four "- " lines under one header
     fake = FakeLLM.install(monkeypatch, _value_judge([]), digest=_keyed("1"))
-    judge.run(
-        summary_args(path, tmp_path / "s", PROMPT_VERSION, items=[GOLD_ID], layers=[56], extra=LITE)
-    )
+    judge.run(summary_args(path, tmp_path / "s", PROMPT_VERSION, items=[GOLD_ID], layers=[56]))
     bundle = next(u for n, _s, u in fake.calls if n == "digest")
     assert bundle.count("[L56 pos -1]") == 1 and all(f"- {g}" in bundle for g in gens)
     # the same file without a sidecar, sampling=bullet4: identical entry text, source override
@@ -668,7 +666,7 @@ def test_arith_bullet4_judges_four_bullets(tmp_path, monkeypatch):
         _nargs(
             path,
             tmp_path / "o2",
-            extra={"cells": "all", "reads": "lite", "sampling": "bullet4"},
+            extra={"cells": "all", "sampling": "bullet4"},
             layers=[56],
         )
     )
@@ -701,38 +699,30 @@ def test_arith_bullet4_value_not_assembled_across_generations(tmp_path, monkeypa
 
 def test_arith_s3d_multibullet_generation_is_one_readout(tmp_path, monkeypatch):
     gen = f"- the sum is {GOLD:g}\n- halving\n- floor of it\n- plus c"
-    rows = [{"id": GOLD_ID, "layer": 56, "pos": -1, "samples": [gen]}]
-    path = _write_rows(tmp_path / "r.jsonl", rows)
-    write_sidecar(path, sampling="prose1", reads="lite")
+    path = _write_rows(tmp_path / "r.jsonl", _l56_rows([gen]))
+    write_sidecar(path, sampling="prose1")
     seen = _capture(monkeypatch)
-    judge.run(_nargs(path, tmp_path / "o", layers=[56], extra={"cells": "all", "reads": "lite"}))
-    assert seen[0].meta["n_entries"] == 1 and gen in seen[0].user
+    judge.run(_nargs(path, tmp_path / "o", layers=[56], extra={"cells": "all"}))
+    assert seen[0].meta["n_entries"] == len(SPAN) and gen in seen[0].user
     quote = "halving floor of it"  # spans two bullets of the one generation
     fake = FakeLLM.install(monkeypatch, _value_judge([GOLD], quote), digest=_keyed("135"))
-    r = judge.run(
-        summary_args(path, tmp_path / "s", PROMPT_VERSION, items=[GOLD_ID], layers=[56], extra=LITE)
-    )
+    r = judge.run(summary_args(path, tmp_path / "s", PROMPT_VERSION, items=[GOLD_ID], layers=[56]))
     bundle = next(u for n, _s, u in fake.calls if n == "digest")
-    line = next(x for x in bundle.splitlines() if x.startswith("- "))
-    assert line.count(digest.BULLET_MARK.strip()) == 3
-    assert sum(1 for x in bundle.splitlines() if x.startswith("- ")) == 1
+    lines = [x for x in bundle.splitlines() if x.startswith("- ")]
+    assert lines[-1].count(digest.BULLET_MARK.strip()) == 3
+    assert len(lines) == len(SPAN)  # one "- " line per position: the bullets are not split
     ev = digest.native_lines([Cell(GOLD_ID, 56, -1, (gen,), None, None)])
     assert digest.quote_ok(quote, ev)
     assert r.rows[0]["pass"] is True
 
 
-# C4: all layers by default, lite = 56/60 -----------------------------------------------
+# C4: all layers by default -----------------------------------------------------------
 
 
-def test_arith_plan_full_is_grid_lite_is_56_60():
+def test_arith_plan_is_grid():
     full = readplan.plan("arithmetic_intermediates")
-    lite = readplan.plan("arithmetic_intermediates", reads="lite")
-    assert len(full) == len(lite) == 480
+    assert len(full) == 480
     assert all(s.layers == readplan.GRID for s in full)
-    assert all(s.lite_layers == [56, 60] and s.lite_positions == {"kind": "same"} for s in full)
-    assert all(s.layers == [56, 60] for s in lite)
-    assert all(s.positions["full"] == {"kind": "all_from_end"} for s in lite)
-    assert all(s.positions["lite"] == {"kind": "same"} for s in lite)
 
 
 def test_arith_full_default_judges_every_layer(tmp_path, monkeypatch):
@@ -757,22 +747,6 @@ def test_arith_full_default_judges_every_layer(tmp_path, monkeypatch):
         PROMPT_VERSION, rs_args := summary_args(path, tmp_path / "x", PROMPT_VERSION), judge.NAME
     )
     assert rs_args.extra.get("reads") is None
-
-
-def test_arith_lite_reads_two_layers(tmp_path, monkeypatch):
-    path = _write_rows(tmp_path / "r.jsonl", _grid_rows([GOLD_ID]))
-    write_sidecar(path)
-    seen = _capture(monkeypatch)
-    r = judge.run(_nargs(path, tmp_path / "o", extra={"cells": "all", "reads": "lite"}))
-    assert r.config["layers_judged"] == [56, 60] and len(seen) == 2
-    assert all(c.meta["n_entries"] == len(SPAN) for c in seen)  # every position (same)
-    assert r.config["prompt_version"].endswith("+reads-lite")
-    FakeLLM.install(monkeypatch, _value_judge([]), digest=_keyed("1"))
-    rs = judge.run(
-        summary_args(path, tmp_path / "s", PROMPT_VERSION, items=[GOLD_ID], extra={"reads": "lite"})
-    )
-    assert rs.config["layers_judged"] == [56, 60]
-    assert rs.config["prompt_version"].endswith("+reads-lite")
 
 
 def test_arith_full_rejects_partial_span(tmp_path, monkeypatch):
@@ -802,33 +776,15 @@ def test_arith_full_rejects_56_60_only_file(tmp_path, monkeypatch, capsys):
     r = judge.run(_nargs(path, tmp_path / "o2", extra={"cells": "all"}))
     assert r.config["reads_checked"] == "no_sidecar"
     assert GOLD_ID in r.extras["partial_ids_unenforced"]
-    write_sidecar(path, reads="full")
-    r = judge.run(_nargs(path, tmp_path / "o3", extra={"cells": "all", "reads": "lite"}))
-    assert r.config["layers_judged"] == [56, 60] and not reads.incomplete(
-        _nargs(path, tmp_path / "o3", extra={"cells": "all", "reads": "lite"})
-    )
-    assert not r.extras.get("partial_ids") and not r.extras.get("layers_missing")
 
 
-def test_arith_lite_file_is_complete_over_the_bank(tmp_path, monkeypatch):
-    """A whole-bank 56/60 file judged ``reads=lite`` is a complete result."""
-    _h, items = load_bank(BANK)
-    path = _write_rows(
-        tmp_path / "r.jsonl", _grid_rows([it["id"] for it in items], layers=[56, 60])
-    )
-    write_sidecar(path)
-    _capture(monkeypatch)
-    r = judge.run(_nargs(path, tmp_path / "o", items=None, extra={"reads": "lite"}))
-    assert r.complete is True and r.config["cells"] == "frozen" and r.extras["n_calls"] == 480
-
-
-def test_arith_sidecar_lite_file_under_full_exits(tmp_path, monkeypatch):
+def test_arith_sidecar_declaring_lite_exits(tmp_path, monkeypatch):
     path = _write_rows(tmp_path / "r.jsonl", _grid_rows([GOLD_ID], layers=[56, 60]))
     write_sidecar(path, reads="lite")
     _capture(monkeypatch)
     with pytest.raises(SystemExit) as e:
         judge.run(_nargs(path, tmp_path / "o", extra={"cells": "all"}))
-    assert e.value.code == 2
+    assert "full is the only reads mode" in str(e.value)
 
 
 def test_arith_summary_single_layer_feeds_only_that_layer(tmp_path, monkeypatch):
@@ -999,18 +955,13 @@ def test_arith_flood_void_not_bypassed_by_other_number_quote():
 
 
 def _prose_both_modes(tmp_path, monkeypatch, sample: str, tag: str):
-    rows = [{"id": GOLD_ID, "layer": 56, "pos": -1, "samples": [sample]}]
-    path = _write_rows(tmp_path / f"{tag}.jsonl", rows)
-    write_sidecar(path, sampling="prose1", reads="lite")
+    path = _write_rows(tmp_path / f"{tag}.jsonl", _l56_rows([sample]))
+    write_sidecar(path, sampling="prose1")
     _capture(monkeypatch, _batch_hit([GOLD]))
-    nat = judge.run(
-        _nargs(path, tmp_path / f"{tag}-n", layers=[56], extra={"cells": "all", "reads": "lite"})
-    )
+    nat = judge.run(_nargs(path, tmp_path / f"{tag}-n", layers=[56], extra={"cells": "all"}))
     FakeLLM.install(monkeypatch, _value_judge([GOLD]), digest=_keyed("135"))
     summ = judge.run(
-        summary_args(
-            path, tmp_path / f"{tag}-s", PROMPT_VERSION, items=[GOLD_ID], layers=[56], extra=LITE
-        )
+        summary_args(path, tmp_path / f"{tag}-s", PROMPT_VERSION, items=[GOLD_ID], layers=[56])
     )
     return nat, summ
 

@@ -285,14 +285,11 @@ def stamp_fast(family: str, result: FamilyResult, entry: Mapping[str, Any]) -> N
 def finalize_reads(args: JudgeArgs, result: FamilyResult) -> None:
     """The load's stamps on every result, whatever the family's own config builder (plan 0032
     §2.0 / §2.6): ``config.reads`` / ``sampling`` / ``sampling_source`` / ``reader`` /
-    ``reads_checked`` / ``layers_judged``; ``+reads-lite`` on a lite ``prompt_version``; the
+    ``reads_checked`` / ``layers_judged``; the
     partial ids, missing layers and sampling diag counts in ``extras``; ``complete=False`` when
     the load left items partial or layers missing, or a summary item was truncated (stride)."""
     for k, v in reads.config_stamps(args).items():
         result.config.setdefault(k, v)
-    pv = result.config.get("prompt_version")
-    if isinstance(pv, str):
-        result.config["prompt_version"] = reads.stamp(pv, reads.mode(args))
     result.config.setdefault("token_note_version", mc.TOKEN_NOTE_VERSION)
     for k, v in reads.extras_of(args).items():
         if v:  # only what the load found (a clean load adds nothing, as a direct call)

@@ -130,7 +130,6 @@ def test_plan_layers_all_is_every_model_layer(monkeypatch):
     assert readplan.plan("poetry")[0].layers == [20, 44]
     monkeypatch.delenv(readplan.LAYERS_ENV)
     assert readplan.plan("poetry")[0].layers == readplan.GRID
-    assert readplan.plan("arithmetic_intermediates", layers=[44])[0].lite_layers is None
 
 
 def test_every_family_reads_grid(real_families):

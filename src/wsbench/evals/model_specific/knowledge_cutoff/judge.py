@@ -514,7 +514,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     scope = item_scope(load_items(), args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}
-    # the ONE loader (plan 0032 §2.0): sidecar, declared sampling, lite selection, span check
+    # the ONE loader (plan 0032 §2.0): sidecar, declared sampling, span check
     loaded, rep = reads.load(args, NAME, ids=ids)
     # every position is a negative offset (plan rule all_from_end); anything else is off-plan
     cells = [c for c in loaded if c.pos < 0]

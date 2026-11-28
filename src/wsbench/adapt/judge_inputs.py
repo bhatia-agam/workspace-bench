@@ -733,13 +733,6 @@ _add(
                 "association/prompts.py:24",
                 probe=_p_assoc_seven,
             ),
-            _r(
-                _fam("association", "lite_rule.json"),
-                NA,
-                COPY,
-                "readplan.py:116-127",
-                "family-keyed ({kind: same})",
-            ),
             _CHAT_SUMMARIZE,
             _qwen_min_full(19, "association/__init__.py:27"),
             _GRID,
@@ -1152,7 +1145,7 @@ _add(
                 "readout.offsets",
                 SUBJECT,
                 "readplan.py:527-541",
-                "lite last-word offset in the subject's tokens; absent = [-1]",
+                "last-word offset in the subject's tokens; absent = [-1]",
                 absent=SILENT,
             ),
             _r(
@@ -1230,7 +1223,6 @@ _add(
                 "readout",
                 COPY,
                 "readplan.py:707-731",
-                "readout.lite; absent = final_token lite (readplan.py:725)",
                 absent=SILENT,
             ),
             _req("mc.readout", BUILD, "multitoken/options.py:207-212", absent=FALLBACK),
@@ -1576,7 +1568,7 @@ _add(
                 EXIT,
                 SUBJECT,
                 "buggy_code/judge.py:268-276; readplan.py:992",
-                "subject layers; lite_layers double-remapped by plan() (A1.8)",
+                "subject layers",
                 required=True,
             ),
             _rule(
@@ -1710,7 +1702,6 @@ _add(
                 "v1 path only; the subject's distilled reasons (rekey / adopt)",
             ),
             _i("subject_answer", NA, SUBJECT, "-", "adapt-time (SUBJECT_FIELDS)"),
-            _q("lite last_n 5 = Qwen assistant header", SUBJECT, "readplan.py:888-893"),
             _GRID,
         ),
     )

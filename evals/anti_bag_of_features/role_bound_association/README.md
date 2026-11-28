@@ -72,14 +72,8 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   19 suffix and chat-tail positions (`Sum mar ize the preceding story in one sentence .` +
   `<|im_end|> \n <|im_start|> assistant \n <think> \n\n </think> \n\n`) at every layer of
   `readplan.GRID` (20..60 step 4, 11 layers). Story positions are never read.
-  `reads=full` requires that span per (item, layer): `EvalSpec.min_full_positions = 19`,
-  `full_contiguous = True` (`reads.check_full`, inside `reads.load`). **Lite** (`reads=lite`):
-  the frozen rule of `readplan.frozen_lite_rule` — `final_token` until the pre-registered
-  support-share procedure (`scripts/lite_site_table.py`, gpu runbook R4d; candidates
-  `final_token`, the top-3 `offset_from_end` k by pooled support share, and `offset_from_end
-  k=4`, the `\n` after `assistant`; switch only on > 10 points of share, pass rates never
-  consulted) freezes one into `evals/anti_bag_of_features/role_bound_association/lite_rule.json`; lite results stamp
-  `config.lite_rule`.
+  A sidecar file must hold that span per (item, layer): `EvalSpec.min_full_positions = 19`,
+  `full_contiguous = True` (`reads.check_full`, inside `reads.load`).
 - **Story-echo guard:** after `reads.load`, per (item, layer), cells read before the position
   whose token run starts the suffix text are story positions: exit 2 ("readouts carry positions
   before the summarize suffix"), or under `allow_missing=True` dropped and counted in
@@ -93,8 +87,8 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   summary mode the stamp is
   `reads.stamp(digest.prompt_version(judge.instrument() + judge.majority_stamp(n), args, family), reads.mode(args))`:
   `oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a multi-layer run
-  under the defaults (`oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive+sj-v10` for one layer;
-  `+reads-lite` under lite). `+maj3v` is the majority of three draws' verdicts (Summary mode,
+  under the defaults (`oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive+sj-v10` for one layer).
+  `+maj3v` is the majority of three draws' verdicts (Summary mode,
   below). Native results carry `oa-v3.1+bank-v2`, which the ATI gate and the guesser floors are
   matched against.
 - **The prompt-only floor is a bar under the pair headline.** The scene states who did what to

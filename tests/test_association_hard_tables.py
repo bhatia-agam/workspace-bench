@@ -88,9 +88,6 @@ def test_read_plan_is_the_association_read(items):
     for key in ("render", "positions", "layers", "suffix"):
         assert row[key] == easy[key], key
     assert row["render"] == "chat_summarize" and row["text"] == items[row["id"]]["prompt"]
-    assert row["lite_positions"] == {"kind": "same"}
-    assert FAMILY not in readplan.LITE_SITE_FAMILIES
-    assert not (registry.family_root(FAMILY) / "lite_rule.json").exists()
 
 
 def test_the_ledger_has_the_family_and_the_easy_entry_did_not_move():

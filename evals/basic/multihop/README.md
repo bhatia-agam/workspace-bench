@@ -74,17 +74,13 @@ scorer reads.
 
 ## Reads (Camila 2026-10-30: "Should be read at every token not just final position (except lite/fast should be last token)")
 
-- **Full (`reads=full`, the default):** every prompt token (`positions {"kind": "all"}`) at
+- Every prompt token (`positions {"kind": "all"}`) at
   every grid layer (`readplan.GRID`, 11 layers). The plain render is 15–47 tokens
   (`n_render_tokens`); a full read of an item is ONE contiguous run of at least 15 positions
   (`EvalSpec.min_full_positions = 15`, the shortest render; `full_contiguous`). With a producer
-  sidecar a short or broken span exits 2 (`allow_missing=True`: partial, not complete); a
-  `reads: lite` sidecar under `reads=full` exits 2; a sidecar-less file (every cached v1 readout)
+  sidecar a short or broken span exits 2 (`allow_missing=True`: partial, not complete); a sidecar-less file (every cached v1 readout)
   is checked report-only (`config.reads_checked = "no_sidecar"`,
   `extras.partial_ids_unenforced`).
-- **Lite (`reads=lite`):** the final prompt token (`lite_positions {"kind": "final_token"}`, all
-  layers): the read site of every result before 2026-10-30, so lite numbers are the ones
-  comparable to the old 0.857. Stamp `+reads-lite`. One full read serves both (lite ⊆ full).
 - What changes: the final token asks "is the bridge present right before the answer"; every
   token asks "is the bridge anywhere while reading", closer to entity recognition at clue
   positions.
@@ -438,8 +434,7 @@ rows for a token lens. `examples/readouts/multihop.jsonl` is a toy final-token f
 `dry_run=True`.
 
 ```
-wsbench plan families=multihop out=plan/            # full: every token x 11 layers
-wsbench plan families=multihop reads=lite out=plan/  # lite: the final token
+wsbench plan families=multihop out=plan/            # every token x 11 layers
 wsbench judge family=multihop readouts=examples/readouts/multihop.jsonl out=outputs/toy/multihop dry_run=True
 wsbench judge family=multihop readouts=<arm>.jsonl out=outputs/<arm>/multihop limit=3
 ```

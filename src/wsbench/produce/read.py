@@ -24,14 +24,13 @@ class Job:
     family: str
     specs: list[ReadSpec]
     plan_sha: str
-    reads: str = "full"
     fast: bool = False  # the rows are the fast subset's plan
 
 
-def job(family: str, specs: Sequence[ReadSpec], *, reads: str = "full", fast: bool = False) -> Job:
+def job(family: str, specs: Sequence[ReadSpec], *, fast: bool = False) -> Job:
     """A registered eval's job, with the plan hash the judge compares against."""
     sha = reads_mod.fast_plan_sha(family) if fast else reads_mod.plan_sha(family)
-    return Job(family, list(specs), sha, reads, fast)
+    return Job(family, list(specs), sha, fast)
 
 
 def plan_file_jobs(path: Path) -> list[Job]:
@@ -94,7 +93,7 @@ def finish(out: Path, j: Job, shards: int, *, reader: str, sampling: str) -> boo
         _write(target, lines)
     write_sidecar(
         target,
-        reads=j.reads,
+        reads=reads_mod.READS,
         sampling=sampling,
         reader=reader,
         arm=reader,
@@ -369,4 +368,4 @@ def sum_stats(parts: Sequence[dict[str, Any]]) -> dict[str, Any]:
 
 def one_layer(j: Job, layer: int) -> Job:
     """The job as a layer-free method writes it: every row at the one layer number."""
-    return Job(j.family, [_at_layer(s, layer) for s in j.specs], j.plan_sha, j.reads, j.fast)
+    return Job(j.family, [_at_layer(s, layer) for s in j.specs], j.plan_sha, j.fast)

@@ -18,7 +18,7 @@ SPEC = register(
         bank=family_rel("basic_readout") / "items_v7.json",
         prompt_version=BRMT_PROMPT_VERSION,
         # a v2 chat render is >= 15 tokens; 8 contiguous positions ending at -1 rule out a
-        # lite or truncated file under reads=full
+        # single-site or truncated file
         min_full_positions=8,
         full_contiguous=True,
         task_note=BRMT_TASK_NOTE,

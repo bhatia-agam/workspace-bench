@@ -339,8 +339,7 @@ def _windows(
 ) -> tuple[dict[str, dict[int, Region]], dict[str, Any]]:
     """Region labels and write compliance per item. For a ``prompt_only:`` reader (one cell per
     item) the window is not the sentence, so the compliance gate (a run of 3 target words) is
-    skipped and every loaded cell is in-sentence (mcdm.md G1). ``reads=lite`` reads the same
-    sentence cells as ``reads=full`` (plan 0061) and takes the full path."""
+    skipped and every loaded cell is in-sentence (mcdm.md G1)."""
     if reads.is_prompt_only(rep.reader):
         regions: dict[str, dict[int, Region]] = defaultdict(dict)
         for c in cells:

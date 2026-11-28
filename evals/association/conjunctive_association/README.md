@@ -202,16 +202,6 @@ inverted credit (this is especially important, maybe use this as another distrac
   positions are never read ([docs/read_sites.md](../../../docs/read_sites.md)).
   `min_full_positions = 19`, `full_contiguous = True`: a sidecar file must hold the 19-site run
   ending at the item's last position (`reads.check_full`).
-- **Lite (`reads=lite`): the same 19 positions at the same layers as full** (Camila r3,
-  2026-11-01: "make lite mode the same number of positions as default"; frozen in
-  `evals/association/conjunctive_association/lite_rule.json` as kind `same`). Until then lite read
-  `final_token` (the `\n\n` after `</think>`) only: one site per layer, so its sharded digest had
-  2 shards where full has 8, and its candidate-list rule had its own, lower chance line (0.049 on
-  bank v4) that every guesser cleared (0.15 / 0.26 / 0.22). Lite now selects exactly the full
-  cells, so its digest, shard count, chance and guesser floors ARE full's; a lite run differs
-  from full only in its `+reads-lite` stamp and `config.lite_rule`. No new readouts: the full
-  cells were always read; lite results judged under the old rule are stale (re-judge, the
-  digests are the full ones).
 - **Summary mode is the default** (plan 0024): every cell of an item (every layer and read
   position) goes to ONE digest call (`digest.collapse(..., expect_all=)`), told the task type
   (`DIGEST_TASK_NOTE` = `EvalSpec.task_note`); the item's one MC reads that digest.

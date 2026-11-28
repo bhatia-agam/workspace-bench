@@ -475,27 +475,6 @@ def render_design_score(
 READ_SCOPE_FULL = "every token position, at each layer read"
 
 
-def _ordinal(n: int) -> str:
-    if 10 <= n % 100 <= 20:
-        return f"{n}th"
-    return f"{n}" + {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
-
-
-def read_scope(mode: str, lite_rule: Mapping[str, Any] | None = None) -> str:
-    """The ``{read_scope}`` of :data:`DESIGN_SCORE_PROMPT_SUMMARY` (plan 0052 §4a): every
-    position under ``reads=full``; under ``reads=lite`` the family's lite rule in words (the read
-    plan's ``every_nth_plus_tail``: "every 16th, plus the last 8")."""
-    if mode != "lite":
-        return READ_SCOPE_FULL
-    rule = dict(lite_rule or {})
-    if rule.get("kind") != "every_nth_plus_tail":
-        raise ValueError(f"agentic lite rule {rule!r}: expected every_nth_plus_tail")
-    return (
-        f"a sample of token positions (every {_ordinal(int(rule['n']))}, plus the last "
-        f"{int(rule['tail'])}), at each layer read"
-    )
-
-
 def render_design_score_summary(
     digest_text: str,
     summary_note: str,

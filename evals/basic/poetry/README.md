@@ -309,10 +309,9 @@ and candidates (`build_mc.py`); the adapted banks under `adapted/` predate v2.
 
 ## Read sites
 
-- `reads=full` (default): rule `line_one_tail` = line one's last word through the newline that
+- Rule `line_one_tail` = line one's last word through the newline that
   ends it (`couplet-gray-day`: `" gray"`, `","`, `"\n"` = positions 16-18), at every grid
   layer (20..60 step 4). `EvalSpec.min_full_positions = 2`, contiguous.
-- `reads=lite`: `final_token` of that span = the line-one newline (the v1 site), all layers.
 - No read position ever lies after the line-one newline: the prompt-only / ATI prefix is the
   render through the last read position, so line two's stub is never shown (the 2026-09-23
   invariant, kept under both modes).
@@ -393,7 +392,6 @@ the three tail positions) for `dry_run=True`.
 ```
 wsbench judge family=poetry readouts=examples/readouts/poetry.jsonl out=outputs/toy/poetry layers=20,36 dry_run=True
 wsbench judge family=poetry readouts=<arm>.jsonl out=outputs/<arm>/poetry limit=3
-wsbench run families=poetry readouts_root=<dir> reads=lite     # the line-one newline only
 ```
 
 ## Judge prompts
@@ -457,7 +455,7 @@ A line whose items are separated by " | " is one ranked list of the top vocabula
 
 `prompt_version`: `poetry-mc-2026-11-01-v5` (bank v5's options, PR #214 review r7; prompts and
 gates are `poetry-mc-2026-10-31h`'s; summary mode stamps
-`poetry-mc-2026-11-01-v5+digest-v5-task-extractive+sj-v10`, plus `+reads-lite` for lite). Judge: the
+`poetry-mc-2026-11-01-v5+digest-v5-task-extractive+sj-v10`). Judge: the
 repo default (`claude-opus-5-5`); summarizer: Opus 5.5, task variant. The judge is blind: it sees
 no prompt text, no line one and no gold marker. Output schema: `{"choice": str, "quote": str}`.
 

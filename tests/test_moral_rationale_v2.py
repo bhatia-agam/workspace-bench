@@ -1,6 +1,6 @@
 """moral_rationale bank v2/v3 + the ec-v4 / ec-v4.1 instrument (plan 0046; bank v3 = v2 with
 length-matched, co-registered option lists, review round 4 of PR #186): re-keyed bank, same-topic
-options, every-position reads with a tail-5 lite mode, rules (a)-(f), the stance rule on every
+options, every-position reads, rules (a)-(f), the stance rule on every
 ask, the two-level quote gate, and the shared token-list rule."""
 
 import hashlib
@@ -254,16 +254,13 @@ def test_no_concession_phrasing_in_v2():
 # ---------------------------------------------------------------- reads (§2.5)
 
 
-def test_moral_plan_full_is_all_lite_is_last5():
+def test_moral_plan_full_is_all():
     it = _committed()
     (row,) = [s for s in readplan.plan(FAMILY) if s.id == it["id"]]
     assert row.positions == {"kind": "all"} and row.render == "chat"
-    assert row.lite_positions == {"kind": "last_n", "n": 5} and row.lite_layers is None
     assert row.layers == list(readplan.GRID)
     toks = [f"t{i}" for i in range(37)]
-    full = readplan.resolve(row.positions, toks)
-    assert full == list(range(37))
-    assert readplan.lite_select(full, row.lite_positions) == list(range(32, 37))
+    assert readplan.resolve(row.positions, toks) == list(range(37))
 
 
 def test_moral_tail5_file_as_full_exits_2(tmp_path, monkeypatch):
@@ -290,21 +287,18 @@ def test_summary_gets_every_position(tmp_path, monkeypatch):
     layers = [20, 40, 60]
     path = write_jsonl(tmp_path / "r.jsonl", _rows(it["id"], layers, range(40)))
     write_sidecar(path, reader="t", arm="t", layers=layers)
-    for mode, n_headers in (("full", 120), ("lite", 15)):
-        fake = FakeLLM.install(monkeypatch, lambda s, u, sc: {"choice": 6, "quote": ""})
-        args = summary_args(
-            path, tmp_path / mode, mrp.PROMPT_VERSION, items=[it["id"]], layers=layers,
-            extra={"reads": mode},
-        )  # fmt: skip
-        r = mr.run(args)
-        # audit F1: one digest per read layer; together they carry every cell
-        dig = "\n".join(u for name, _s, u in fake.calls if name == "digest")
-        assert len(re.findall(r"^\[L\d+ pos \d+\]$", dig, flags=re.M)) == n_headers, mode
-        want = reads.stamp(digest.prompt_version("ec-v4.1+maj3v", args, FAMILY), mode)
-        assert r.config["prompt_version"] == want
-        assert want.endswith("+reads-lite") == (mode == "lite")
-        s = r.extras["summary"]
-        assert s["n_readouts_in"] == s["n_readouts_bundled"] == n_headers
+    fake = FakeLLM.install(monkeypatch, lambda s, u, sc: {"choice": 6, "quote": ""})
+    args = summary_args(
+        path, tmp_path / "full", mrp.PROMPT_VERSION, items=[it["id"]], layers=layers,
+        extra={"reads": "full"},
+    )  # fmt: skip
+    r = mr.run(args)
+    # audit F1: one digest per read layer; together they carry every cell
+    dig = "\n".join(u for name, _s, u in fake.calls if name == "digest")
+    assert len(re.findall(r"^\[L\d+ pos \d+\]$", dig, flags=re.M)) == 120
+    assert r.config["prompt_version"] == digest.prompt_version("ec-v4.1+maj3v", args, FAMILY)
+    s = r.extras["summary"]
+    assert s["n_readouts_in"] == s["n_readouts_bundled"] == 120
 
 
 # ---------------------------------------------------------------- judge prompts (§2.6)

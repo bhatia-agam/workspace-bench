@@ -24,10 +24,8 @@ the benchmark, remove it").
 `items_v2.json` (bank v2, `version: 2`, `supersedes: items.json`; `items.json` v1 is kept
 byte-identical): the same 100 items, prompts and render as v1, plus per item
 
-- `readout = {"kind": "all_positions", "lite": {"kind": "final_token"}}`: `reads=full` (the
-  default) reads **every token** of the plain render (absolute positions `0..n-1`, ~12-25 Qwen
-  tokens; the plan rule `{"kind": "all"}`); `reads=lite` reads only the final token (the last
-  word ` year` / ` of`, the v1 read site). Layers: the standard grid L20..60 step 4, or any
+- `readout = {"kind": "all_positions", "lite": {"kind": "final_token"}}`: the read is **every token** of the plain render (absolute positions `0..n-1`, ~12-25 Qwen
+  tokens; the plan rule `{"kind": "all"}`; the `lite` key is not read). Layers: the standard grid L20..60 step 4, or any
   `layers=` list (`all`, a csv, one layer).
 - `mc`: the frozen multiple-choice block (below), built by `scripts/wrong_intermediate_mc_options.py`
   (deterministic; its only network step, the Wikidata `zh*` label + alias fetch, is cached in
@@ -224,9 +222,8 @@ template listed there (`adapt.wrong_intermediate.category_of`, `adapt.judge_inpu
   in `evals/baselines/lucky_guessing.json`. The measured prompt-only floor is Opus 5.5
   (`po-opus-v1`: one Opus readout per item judged through this same digest + MC judge,
   `evals/baselines/prompt_only_summary.json`); there was none before bank v2.
-- `reads=full` checks every (item, layer) holds one contiguous run of >= 9 positions (the
-  shortest prompt has 9 words); a file with a sidecar and one position per cell exits 2 ("looks
-  like a lite file"); `reads=lite` stamps `+reads-lite` on the prompt version.
+- The loader checks every (item, layer) holds one contiguous run of >= 9 positions (the
+  shortest prompt has 9 words); a file with a sidecar and one position per cell exits 2.
 
 ### `+wbcues-v2` (plan 0066 §5.4, 2026-11-04)
 
@@ -247,16 +244,15 @@ item `name` (`wsbench.banks.label_of`); every position of the prompt per layer. 
 `examples/readouts/wrong_intermediate.jsonl` (+ `.meta.json` sidecar, `sampling: prose1`).
 
 ```
-wsbench plan families=wrong_intermediate out=plan/               # reads=full: positions {"kind": "all"}
+wsbench plan families=wrong_intermediate out=plan/               # positions {"kind": "all"}
 wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl out=outputs/<arm>/wrong_intermediate limit=3
-wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl out=outputs/<arm>/wrong_intermediate-lite reads=lite
 ```
 
 ## Judge prompts
 
 `prompt_version`: `wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
-`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
-`reads=lite`). The MC calls are keyed by the frozen round-3 call version
+`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`).
+The MC calls are keyed by the frozen round-3 call version
 `wb-mc-2026-10-31r+rv-2026-10-31e` (`prompts.MC_CALL_VERSION`) in place of the stamp: the MC
 prompt has not changed since, so cached MC answers are re-scored; no call keys on `+wbcues-v2`.
 Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
@@ -322,8 +318,7 @@ A line whose items are separated by " | " is one ranked list of the top vocabula
 ## Summary mode
 
 The default since plan 0024 (`opts=aggregate=native` opts out to the any-layer rule above).
-Every cell of an item (every read layer × position × sample under `reads=full`; the final
-position at every layer under `reads=lite`) goes to ONE digest call (`docs/summarizer.md` §
+Every cell of an item (every read layer × position × sample) goes to ONE digest call (`docs/summarizer.md` §
 Item digest) with this family's task note, and the MC judge is called ONCE per item on that
 digest. A gold pick needs a quote from inside one evidence sample (`col.evidence`; verbatim or
 near-verbatim), never from the note-taker's words. User message (`{summary_note}` = the shared `digest.SUMMARY_NOTE`, plus the

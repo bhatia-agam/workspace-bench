@@ -67,115 +67,9 @@ class ReadSpec:
     assistant: str | None = None
     note: str = ""
     extra: dict[str, Any] = field(default_factory=dict)
-    # plan 0032 §2.6: the reads=lite site, a rule over the item's FULL positions (LITE_KINDS),
-    # required on every plan row; lite_layers None = the row's full layers
-    lite_positions: dict[str, Any] = field(default_factory=dict)
-    lite_layers: list[int] | None = None
 
     def row(self) -> dict[str, Any]:
-        d = asdict(self)
-        out = {k: v for k, v in d.items() if v not in (None, "", {}, [])}
-        out["lite_positions"] = d["lite_positions"]
-        if d["lite_layers"] is not None:
-            out["lite_layers"] = d["lite_layers"]
-        return out
-
-
-# ---------------------------------------------------------------- lite rules (plan 0032 §2.6.3)
-#
-# A lite rule picks a subset of an item's FULL positions at one layer, resolved from the
-# positions themselves (absolute indices, or negative offsets from the end), so the judge never
-# needs a tokenizer. ``max`` is the item's largest position at that layer.
-#   same                       every full position
-#   final_token                max
-#   offset_from_end {k}        the k-th from the end: max-(k-1) absolute, -k negative
-#   offsets_from_end {ks}      the union of those
-#   last_n {n}                 the n largest
-#   positions {positions}      an explicit absolute list stored in the bank
-#   every_nth_plus_tail {n, tail}  absolute p with p % n == 0, plus the last `tail` positions
-LITE_KINDS = (
-    "same",
-    "final_token",
-    "offset_from_end",
-    "offsets_from_end",
-    "last_n",
-    "positions",
-    "every_nth_plus_tail",
-)
-FINAL = {"kind": "final_token"}
-
-
-LITE_SITE_FAMILIES = ("association", "conjunctive_association", "role_bound_association")
-SAME = {"kind": "same"}
-# plan 0061 (Camila 2026-11-02: "for ALL directed modulation eval families lite should be the same
-# positions as normal. user modeling should also be the same, and basic readout"): reads=lite
-# reads every full position at every full layer, so a lite run differs from full only in its
-# +reads-lite stamp. A code constant, not evals/<family>/lite_rule.json: these families never had
-# a procedure-chosen lite site (LITE_SITE_FAMILIES). The banks' `readout.lite` keys are not read.
-LITE_SAME_FAMILIES = (
-    "basic_readout_st",
-    "directed_modulation",
-    "model_specific_directed_modulation",
-    "multi_concept_directed_modulation",
-    "user_modeling",
-)
-
-
-def frozen_lite_rule(family: str) -> dict[str, Any]:
-    """The lite rule frozen by the pre-registered lite-site procedure (plan 0032 §2.6; gpu.md
-    R4d: ``scripts/lite_site_table.py --write``) in ``evals/<family>/lite_rule.json``, else
-    ``final_token``. A lite-rule edit never changes full cells, ``plan_sha`` or ``bank_sha``."""
-    path = REPO_ROOT / registry.family_rel(family) / "lite_rule.json"
-    if not path.exists():
-        return dict(FINAL)
-    rule = json.loads(path.read_text(encoding="utf-8"))["lite_positions"]
-    if rule.get("kind") not in LITE_KINDS:
-        raise ValueError(f"{path}: lite rule {rule!r} is not one of {LITE_KINDS}")
-    return dict(rule)
-
-
-def _adapted_offset(rule: dict[str, Any], header: dict[str, Any]) -> bool:
-    """role_bound plan 0055 C3.3: an ``offset_from_end`` lite rule counts positions of the Qwen
-    chat tail, so an adapted bank (``$WSB_BANK_ROOT``) reads ``final_token`` instead unless its
-    header's ``readout`` block names a ``lite`` source key."""
-    if not os.environ.get(BANK_ROOT_ENV) or rule.get("kind") not in (
-        "offset_from_end",
-        "offsets_from_end",
-    ):
-        return False
-    return not (header.get("readout") or {}).get("lite")
-
-
-def lite_select(positions: Iterable[int], rule: dict[str, Any]) -> list[int]:
-    """The subset of ``positions`` (one item, one layer) that ``rule`` keeps, sorted."""
-    ps = sorted(set(positions))
-    if not ps:
-        return []
-    kind = rule.get("kind")
-    top = ps[-1]
-    negative = top < 0
-
-    def from_end(k: int) -> int:
-        return -k if negative else top - (k - 1)
-
-    if kind == "same":
-        keep = set(ps)
-    elif kind == "final_token":
-        keep = {top}
-    elif kind == "offset_from_end":
-        keep = {from_end(int(rule["k"]))}
-    elif kind == "offsets_from_end":
-        keep = {from_end(int(k)) for k in rule["ks"]}
-    elif kind == "last_n":
-        keep = set(ps[-int(rule["n"]) :])
-    elif kind == "positions":
-        keep = {int(p) for p in rule["positions"]}
-    elif kind == "every_nth_plus_tail":
-        n, tail = int(rule["n"]), int(rule["tail"])
-        keep = {p for p in ps if p % n == 0} | set(ps[-tail:])
-    else:
-        raise ValueError(f"unknown lite rule {kind!r} (allowed: {', '.join(LITE_KINDS)})")
-    return [p for p in ps if p in keep]
+        return {k: v for k, v in asdict(self).items() if v not in (None, "", {}, [])}
 
 
 # ---------------------------------------------------------------- positions rules
@@ -240,8 +134,6 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
     mojibake, which ``is_fast_site`` does not recognise."""
     n = len(tokens)
     kind = rule["kind"]
-    if kind == "lite_of":  # a reads=lite plan row: the lite rule over the full rule's positions
-        return lite_select(resolve(rule["full"], tokens), rule["lite"])
     if kind == "fast_of":  # a --fast plan row: the fast rule within the full rule's positions
         return fast_select(resolve(rule["full"], tokens), rule["fast"], tokens)
     if kind == "punct_special":
@@ -516,19 +408,13 @@ def _final_token_families(family: str, render: str) -> list[ReadSpec]:
 def _final_token_families_items(
     family: str, items: list[dict[str, Any]], render: str
 ) -> list[ReadSpec]:
-    lite = frozen_lite_rule(family) if family in LITE_SITE_FAMILIES else dict(FINAL)
-    same = family in LITE_SAME_FAMILIES
-    if same:
-        lite = dict(SAME)
     out = []
     for it in items:
         rule = {"kind": "final_token"}
-        item_lite = lite
         spec = it.get("readout") or {}
         if spec.get("kind") == "question_through_end":
             # plan 0053 (basic_readout_st v2): every token from the first token of the user question
-            # through the prefilled answer stem; lite = the bank's lite rule (the stem's ":"),
-            # except for LITE_SAME_FAMILIES (basic_readout_st, plan 0061: the same positions)
+            # through the prefilled answer stem
             out.append(
                 ReadSpec(
                     family,
@@ -540,7 +426,6 @@ def _final_token_families_items(
                     prefill=ANSWER_STEM,
                     note="the user question, the turn end, the assistant header and the "
                     "prefilled answer stem",
-                    lite_positions=dict(SAME) if same else dict(spec.get("lite") or FINAL),
                 )
             )
             continue
@@ -548,10 +433,8 @@ def _final_token_families_items(
             k = -int(spec["offsets"][0])
             rule = {"kind": "final_token"} if k == 1 else {"kind": "offset_from_end", "k": k}
         elif spec.get("kind") == "all_positions":
-            # every token of the render (wrong_intermediate v2, plan 0050); the bank's `lite` key is
-            # the reads=lite site, copied into the plan row (the judge never reads the bank for it)
+            # every token of the render (wrong_intermediate v2, plan 0050)
             rule = {"kind": "all"}
-            item_lite = dict(SAME) if same else dict(spec.get("lite") or FINAL)
         r = it.get("eval_render") or render
         if (
             r == "chat"
@@ -565,32 +448,19 @@ def _final_token_families_items(
                     GRID,
                     text=it["prompt"],
                     prefill=ANSWER_STEM,
-                    lite_positions=item_lite,
                 )
             )
         else:
-            out.append(
-                ReadSpec(
-                    family, it["id"], r, rule, GRID, text=it["prompt"], lite_positions=item_lite
-                )
-            )
+            out.append(ReadSpec(family, it["id"], r, rule, GRID, text=it["prompt"]))
     return out
 
 
 def _multihop_st() -> list[ReadSpec]:
-    """Multihop (plan 0036 C2): full = every token of the plain render, reported as negative
-    offsets (``all_from_end``); lite = the last word of the prompt, ``offset_from_end k`` with
-    ``k = -readout.offsets[0]`` (1 or 2), which retains the 2026-09-23 decision (read the last
-    word, not the trailing space token). ``offset_from_end k=1`` rather than ``final_token``
-    keeps both modes on one coordinate system; lite is a subset of full, so one read serves
-    both."""
+    """Multihop (plan 0036 C2): every token of the plain render, reported as negative offsets
+    (``all_from_end``)."""
     _h, items = _bank("multihop_st")
     out = []
     for it in items:
-        offsets = (it.get("readout") or {}).get("offsets") or [-1]
-        k = -int(offsets[0])
-        if k < 1:
-            raise ValueError(f"multihop_st/{it['id']}: readout.offsets {offsets} must be negative")
         out.append(
             ReadSpec(
                 "multihop_st",
@@ -599,8 +469,7 @@ def _multihop_st() -> list[ReadSpec]:
                 {"kind": "all_from_end"},
                 GRID,
                 text=it["prompt"],
-                note="full: every token of the render; lite: the last word of the prompt",
-                lite_positions={"kind": "offset_from_end", "k": k},
+                note="every token of the render",
             )
         )
     return out
@@ -609,10 +478,6 @@ def _multihop_st() -> list[ReadSpec]:
 # families whose plan layers an adapted bank stores itself (none since plan 0032: buggy_code and
 # multi_concept_directed_modulation read GRID like every other family, remapped by depth)
 BANK_LAYERS: set[str] = set()
-# families whose LITE layers come from the bank header (buggy_code: ``read_cells[...].layer``, the
-# judge's layer of record). adapt freeze already remaps those cells to the subject's depth, so
-# plan() must not remap them again (plan 0060 A1.8); their full rows are remapped as usual.
-LITE_BANK_LAYERS: frozenset[str] = frozenset({"buggy_code"})
 
 
 def _subject_layers() -> int | None:
@@ -652,9 +517,7 @@ def _layers_env() -> LayersArg:
         raise SystemExit(f"{LAYERS_ENV}={raw!r}: expected all or a comma list of ints") from None
 
 
-def plan(
-    family: str, *, layers: LayersArg = None, reads: str = "full", fast: bool = False
-) -> list[ReadSpec]:
+def plan(family: str, *, layers: LayersArg = None, fast: bool = False) -> list[ReadSpec]:
     """The family's read plan in the subject's own layers.
 
     ``layers``: None = the family's grid of record (``$WSB_LAYERS``, ``all`` or a csv, is read
@@ -662,31 +525,22 @@ def plan(
     layer (64 for the frozen banks, ``report.json`` ``n_layers`` under ``$WSB_BANK_ROOT``); a
     list = those layers verbatim (the subject's own; no remap). Under ``$WSB_BANK_ROOT`` the
     grid of record taken from the 27B constants is remapped by depth (``round(L * n / 64)``,
-    then snapped to ``read_band``; duplicates dropped). ``reads="lite"``: rows whose positions /
-    layers ARE the lite ones (a ``lite_of`` rule over the full rule), for a cheaper producer
-    path; the campaign always produces ``full`` (lite ⊆ full). ``fast=True`` (plan 0090): the
+    then snapped to ``read_band``; duplicates dropped). ``fast=True`` (plan 0090): the
     full plan's rows of the family's fast read ids in the active subset (plan order), their
     positions the ``fast_of`` rule where the fast entry reduces them (the two safety families
     in the frozen safety versions); a family outside the subset raises
-    ``fast.NotInFast``, and ``reads="lite"`` is refused."""
+    ``fast.NotInFast``."""
     from dataclasses import replace
 
-    if reads not in ("full", "lite"):
-        raise SystemExit(f"reads={reads!r}: expected full or lite")
     family = canonical(family)  # a former key (registry.LEGACY_FAMILY_NAMES) plans the family
     fast_entry = None
     if fast:
         from wsbench import fast as fast_mod
 
-        if reads == "lite":
-            raise SystemExit("fast=True plans the fast subset's full reads; drop reads=lite")
         fast_entry = fast_mod.entry(family)
     if layers is None:
         layers = _layers_env()
     specs = _plan(family)
-    for s in specs:
-        if not s.lite_positions or s.lite_positions.get("kind") not in LITE_KINDS:
-            raise ValueError(f"{family}/{s.id}: plan row without a valid lite_positions rule")
     n = _subject_layers()
     if layers == "all":
         every = list(range(n or N_MODEL_LAYERS))
@@ -699,35 +553,8 @@ def plan(
         from wsbench.adapt.subjects import remap_layers
 
         band = _subject_band()
-
-        def remap(xs: list[int] | None) -> list[int] | None:
-            return None if xs is None else remap_layers([int(x) for x in xs], n, band)
-
-        lite_done = family in LITE_BANK_LAYERS  # already in the subject's layers (A1.8)
         specs = [
-            replace(
-                s,
-                layers=remap(s.layers),
-                lite_layers=s.lite_layers if lite_done else remap(s.lite_layers),
-            )
-            for s in specs
-        ]
-    if layers is not None:  # an explicit layer set: lite keeps its layers that are read
-        specs = [
-            replace(s, lite_layers=[x for x in s.lite_layers if x in s.layers] or None)
-            if s.lite_layers is not None
-            else s
-            for s in specs
-        ]
-    if reads == "lite":
-        specs = [
-            replace(
-                s,
-                positions={"kind": "lite_of", "full": s.positions, "lite": s.lite_positions},
-                layers=s.lite_layers or s.layers,
-                extra={**s.extra, "reads": "lite"},
-            )
-            for s in specs
+            replace(s, layers=remap_layers([int(x) for x in s.layers], n, band)) for s in specs
         ]
     if fast_entry is not None:
         keep = set(fast_entry["read_ids"])
@@ -765,10 +592,8 @@ def user_modeling_hard_specs(items: Iterable[dict[str, Any]]) -> list[ReadSpec]:
             messages=it["messages"],
             note=(
                 "every token of the render (system turn, user turn, assistant header, empty "
-                "think block); lite = the same positions"
+                "think block)"
             ),
-            lite_positions=dict(SAME),
-            lite_layers=None,
         )
         for it in items
     ]
@@ -785,8 +610,7 @@ def _plan(family: str) -> list[ReadSpec]:
     if family == "typo":
         # plan 0033 M3: the tokens of the misspelled word that ends the prompt from the one that
         # contains the first misspelled character on, nothing earlier (a read before the
-        # misspelling exists would credit predicting the word, not correcting it); lite = its
-        # final token, today's site (lite is a subset of full: one read serves both)
+        # misspelling exists would credit predicting the word, not correcting it)
         _h, items = _bank(family)
         return [
             ReadSpec(
@@ -801,14 +625,12 @@ def _plan(family: str) -> list[ReadSpec]:
                 GRID,
                 text=it["prompt"],
                 note="the misspelled word's tokens from the first misspelled character on",
-                lite_positions=dict(FINAL),
             )
             for it in items
         ]
     if family in MULTILINGUAL_ALL_POSITIONS:
-        # plan 0040 B4 (Camila 2026-10-30: "Read on all positions and give all this to the judge
-        # (final position only for fast/lite)"): every prompt position by default, the final
-        # prompt token under reads=lite
+        # plan 0040 B4 (Camila 2026-10-30: "Read on all positions and give all this to the
+        # judge"): every prompt position
         _h, items = _bank(family)
         return [
             ReadSpec(
@@ -818,8 +640,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 {"kind": "all"},
                 GRID,
                 text=it["prompt"],
-                note="every prompt position (plain render); reads=lite: the final prompt token",
-                lite_positions=dict(FINAL),
+                note="every prompt position (plain render)",
             )
             for it in items
         ]
@@ -840,20 +661,15 @@ def _plan(family: str) -> list[ReadSpec]:
                         text=it["prompt"],
                         note="every position of the chat render (the user question and the "
                         "template tail; -1 is the assistant onset)",
-                        # the bank's readout.lite (v2: final_token, Camila: "lite/fast should
-                        # just be last token")
-                        lite_positions={
-                            "kind": (it.get("readout") or {}).get("lite", "final_token")
-                        },
                     )
                 )
             else:  # the v1 completion bank (WSB_BANK_FILE_BASIC_READOUT=items.json)
                 out += _final_token_families_items(family, [it], "plain")
         return out
     if family == "multihop":
-        # bank v2 (plan 0041; Camila 2026-10-30: "read at every token not just final position
-        # (except lite/fast should be last token)"): the item's `readout` block is the source,
-        # every prompt token at every GRID layer, lite = its `lite` rule (the final token)
+        # bank v2 (plan 0041; Camila 2026-10-30: "read at every token not just final
+        # position"): the item's `readout` block is the source, every prompt token at every
+        # GRID layer
         _h, items = _bank(family)
         out = []
         for it in items:
@@ -868,9 +684,7 @@ def _plan(family: str) -> list[ReadSpec]:
                     {"kind": "all"},
                     GRID,
                     text=it["prompt"],
-                    note="every prompt token (lite: the final token)",
-                    lite_positions=dict(ro.get("lite") or FINAL),
-                    lite_layers=None,
+                    note="every prompt token",
                 )
             )
         return out
@@ -895,8 +709,7 @@ def _plan(family: str) -> list[ReadSpec]:
                     text=POETRY_PREFILL_USER,
                     prefill=poetry_prefill(it["prompt"]),
                     note="line one's last word through the newline that ends it, inside the "
-                    "prefill; lite = that newline",
-                    lite_positions=FINAL,
+                    "prefill",
                 )
             else:
                 texts = {
@@ -911,8 +724,7 @@ def _plan(family: str) -> list[ReadSpec]:
                     GRID,
                     text=texts.get(gv, it["prompt"]),
                     note="line one's last word through the newline that ends it (never the "
-                    "line-two stub); lite = that newline",
-                    lite_positions=FINAL,
+                    "line-two stub)",
                 )
             out.append(spec)
         return out
@@ -927,9 +739,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 GRID,
                 text=it["prompt"],
                 assistant=it["assistant"],
-                note="every token of the teacher-forced carrier sentence; lite = the same "
-                "positions (plan 0061)",
-                lite_positions=dict(SAME),
+                note="every token of the teacher-forced carrier sentence",
             )
             for it in items
         ]
@@ -946,7 +756,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 note="every prompt position as a negative offset (reply_start, the last prompt "
                 "token, is -1); one judge call reads all of them together (summary mode: per "
                 "item; native: per item and layer)",
-                lite_positions=FINAL,
             )
             for it in items
         ] + _nocot_rows()
@@ -961,9 +770,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 GRID,
                 text=it["user"],
                 assistant=it["carrier"],
-                note="every token of the teacher-forced carrier sentence (no <|im_end|>); lite = "
-                "the same positions (plan 0061)",
-                lite_positions=dict(SAME),
+                note="every token of the teacher-forced carrier sentence (no <|im_end|>)",
             )
             for it in items
         ]
@@ -975,7 +782,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 it["id"],
                 "chat_context",
                 # user_modeling plan (Camila 2026-10-30: "We should read at all positions"):
-                # every token of the chat_context render; lite = the same positions (plan 0061)
+                # every token of the chat_context render
                 {"kind": "all"},
                 GRID,
                 messages=it["messages"],
@@ -983,14 +790,11 @@ def _plan(family: str) -> list[ReadSpec]:
                     "every token of the render (system turn, user turn, assistant header, empty "
                     "think block)"
                 ),
-                lite_positions=dict(SAME),
-                lite_layers=None,
             )
             for it in items
         ]
     if family == "user_modeling_hard":
-        # plan 0106: its own branch (the user_modeling branch above and LITE_SAME_FAMILIES,
-        # plan 0061's constant, are not touched); the same read as user_modeling
+        # plan 0106: its own branch; the same read as user_modeling
         _h, items = _bank(family)
         return user_modeling_hard_specs(items)
     if family == "moral_rationale":
@@ -1006,22 +810,17 @@ def _plan(family: str) -> list[ReadSpec]:
                 family,
                 it["id"],
                 "chat",
-                {"kind": "all"},  # plan 0046 §2.5: every position; lite = today's tail five
+                {"kind": "all"},  # plan 0046 §2.5: every position
                 GRID,
                 text=it["stimulus"],
                 system=it.get("system"),  # the subject's one-word system turn (moral.variant)
-                note=(
-                    "every position of the chat render (stimulus and template); lite: the last "
-                    "five (assistant header)"
-                ),
-                lite_positions={"kind": "last_n", "n": 5},
+                note="every position of the chat render (stimulus and template)",
             )
             for it in items
         ]
     if family == "relational_multihop":
         # plan 0043 C1 (Camila: "every position starting after the second sentence (including
-        # the full stop)"): full = the full stop ending sentence two through the possessive
-        # blank; lite = the blank alone (today's read, the span's last position)
+        # the full stop)"): the full stop ending sentence two through the possessive blank
         _h, items = _bank(family)
         return [
             ReadSpec(
@@ -1033,13 +832,12 @@ def _plan(family: str) -> list[ReadSpec]:
                 text=it["stimulus"],
                 note='the full stop ending sentence two through the possessive blank (". In '
                 "other words, P3 is P1's\")",
-                lite_positions=dict(FINAL),
             )
             for it in items
         ]
     if family == "association_hard":
         # plan 0108: its own branch, the same read as association (the three-family branch
-        # below, LITE_SITE_FAMILIES and frozen_lite_rule are not touched); lite = the same sites
+        # below)
         _h, items = _bank(family)
         return [
             ReadSpec(
@@ -1052,20 +850,13 @@ def _plan(family: str) -> list[ReadSpec]:
                 suffix=SUMMARIZE_SUFFIX,
                 note="the 19 suffix and chat-tail tokens; story positions are never "
                 "read (docs/read_sites.md)",
-                lite_positions=dict(SAME),
             )
             for it in items
         ]
     if family in ("association", "conjunctive_association", "role_bound_association"):
         # plan 0039 §C2: association reads the conjunctive / role-bound sites exactly (its bank
         # v2 scene is `prompt`; the siblings' is `stimulus`)
-        header, items = _bank(family)
-        lite = frozen_lite_rule(family)
-        # role_bound plan 0055 C3.3, applied to every sibling with an offset rule (association's
-        # round-3 k=7): the offset counts Qwen chat-tail tokens, so an adapted bank without its
-        # own lite source reads the final token
-        if _adapted_offset(lite, header or {}):
-            lite = dict(FINAL)
+        _h, items = _bank(family)
         return [
             ReadSpec(
                 family,
@@ -1077,10 +868,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 suffix=SUMMARIZE_SUFFIX,
                 note="the 19 suffix and chat-tail tokens; story positions are never "
                 "read (docs/read_sites.md)",
-                # plan 0032 §2.6: final_token until a rule is frozen into
-                # evals/<family>/lite_rule.json (association r2 and conjunctive r3: ``same``,
-                # i.e. lite reads every full site; role_bound: its support-share rule)
-                lite_positions=lite,
             )
             for it in items
         ]
@@ -1092,13 +879,12 @@ def _plan(family: str) -> list[ReadSpec]:
                 it["id"],
                 "chat",
                 # plan 0038 C7: from the start number's LAST token (Qwen splits digits, so the
-                # "3" of "23") through the end of the render; lite = the final token
+                # "3" of "23") through the end of the render
                 {"kind": "from_text_last_token", "text": f"The starting number is {it['start']}"},
                 GRID,
                 text=it["prompt"],
-                note="the start number's last token through the end of the render (full, 27 "
-                "positions on Qwen3.6-27B); lite = the render's final token, the assistant onset",
-                lite_positions=FINAL,
+                note="the start number's last token through the end of the render (27 "
+                "positions on Qwen3.6-27B)",
             )
             for it in items
         ]
@@ -1115,16 +901,13 @@ def _plan(family: str) -> list[ReadSpec]:
                 GRID,
                 text=it["prompt"],
                 extra={"variant": it["variant"], "frozen_cell": it["cell"]},
-                note="every position at every GRID layer (plan 0032; lite: layers 56 and 60, "
-                "decision Q14); frozen_cell is the pre-registered (layer, negative offset) the "
-                "native cells=frozen ablation reads",
-                lite_positions={"kind": "same"},
-                lite_layers=[56, 60],
+                note="every position at every GRID layer (plan 0032); frozen_cell is the "
+                "pre-registered (layer, negative offset) the native cells=frozen ablation reads",
             )
             for it in items
         ]
     if family == "buggy_code":
-        header, items = _bank(family)
+        _h, items = _bank(family)
         return [
             ReadSpec(
                 family,
@@ -1133,10 +916,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 {"kind": "final_token"},
                 GRID,
                 text=it["code"],
-                note="the end of the file at every GRID layer (plan 0032 §2.1.4); lite: the "
-                "bank layer, 60 for python, 56 otherwise",
-                lite_positions=FINAL,
-                lite_layers=[int(header["read_cells"][it["lang_group"]]["layer"])],
+                note="the end of the file at every GRID layer (plan 0032 §2.1.4)",
             )
             for it in items
         ]
@@ -1152,9 +932,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 text=it["prompt"],
                 prefill=header["target_sentence"],
                 note="every token of the prefilled target sentence, at every GRID layer "
-                "(plan 0032 §2.1.2); lite = the same positions (plan 0061; was the 6th token "
-                "from the end, ' to')",
-                lite_positions=dict(SAME),
+                "(plan 0032 §2.1.2)",
             )
             for it in items
         ]
@@ -1181,8 +959,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 note="every token of the last user turn, first content token through its "
                 "<|im_end|> (read.span); the bank's n_tokens also closes an empty assistant "
                 "turn, two tokens past the generation prompt and past every read position",
-                # turn_end (<|im_end|>) is the max position of the full grid
-                lite_positions=FINAL,
             )
             for it in items
         ]
@@ -1199,7 +975,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 system=it.get("system"),
                 note="every prompt position of the chat render (system + user); the pinned "
                 "rollout is not read",
-                lite_positions={"kind": "every_nth_plus_tail", "n": 16, "tail": 8},
             )
             for it in items
         ]
@@ -1225,7 +1000,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 "tokenizer indices into the shipped prompt-only ids, which end at the generation "
                 "prompt: Qwen3.6-27B's for the registered bank, the set's subject under "
                 "WSB_BANK_ROOT, plan 0084; both twins read the same count)",
-                lite_positions={"kind": "last_n", "n": 32},
             )
             for it in items
         ]
@@ -1243,8 +1017,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 note="every position after the entity (the rest of the question, the answer "
                 "suffix and the assistant header; Qwen tokenizer indices into the shipped "
                 "chat-template ids, thinking off)",
-                # plan 0076 rev 6: gw's `tail`, the last 12 prompt tokens
-                lite_positions={"kind": "last_n", "n": 12},
             )
             for it in items
         ]
@@ -1277,7 +1049,6 @@ def _plan(family: str) -> list[ReadSpec]:
                 note="the subject's own rollout ids (items.json)"
                 if rows
                 else "the text is not shipped; recapture from the source repo's items",
-                lite_positions={"kind": "same"},
             )
             for p in m["prompts"]
         ]
@@ -1307,7 +1078,6 @@ def _nocot_rows() -> list[ReadSpec]:
             extra={"source": "nocot"},
             note="a nocot-bench knowledge question (text fetched from nocot's zip at plan time; "
             "never republish it); every prompt position, as for the frozen items",
-            lite_positions=FINAL,
         )
         for it in nocot.load_obscure()[1]
     ]
@@ -1318,8 +1088,7 @@ def _nyt_rows() -> list[ReadSpec]:
     NYT mirror (``wsbench.nyt``, fetched here, sha256-checked); none with ``$WSB_NO_NYT`` set (an
     offline consumer). Unlike knowledge_cutoff's nocot rows, an adapted bank root still plans: the
     planned text is the model-independent puzzle prompt (the labels, which are model-specific, are
-    not in the plan), so a clone under ``$WSB_BANK_ROOT`` plans exactly like its original. Lite =
-    ``SAME`` (plan 0061's retained rule: a lite run differs from full only by its stamp)."""
+    not in the plan), so a clone under ``$WSB_BANK_ROOT`` plans exactly like its original."""
     from wsbench import nyt
 
     if os.environ.get(nyt.NO_NYT_ENV):
@@ -1336,7 +1105,6 @@ def _nyt_rows() -> list[ReadSpec]:
             note="an NYT Connections puzzle, members-only answer format (text rendered from the "
             "pinned mirror at plan time; never republish it); the last 12 prompt tokens, before "
             "the model writes anything",
-            lite_positions=dict(SAME),
         )
         for it in items
     ]
@@ -1369,8 +1137,7 @@ def _introspection() -> list[ReadSpec]:
     """One row per activation a producer must generate WITH the steer applied: inject and
     gaussian items and the 12 beta0 rows. Cross items reuse their partner's readout
     (`readout_of`) and get no row; only the 125 headline items are ATI-scored. Plan 0045: the
-    steer names its shipped vector (`vector_file` / `vector_row`, bank v2 `vectors`), and the
-    lite site is the bank render's `lite` (absolute positions; twins at their own render's)."""
+    steer names its shipped vector (`vector_file` / `vector_row`, bank v2 `vectors`)."""
     bp = bank_path("introspection")
     bank = json.loads(bp.read_text())
     renders, rec = bank["renders"], bank["spec"]
@@ -1414,7 +1181,6 @@ def _introspection() -> list[ReadSpec]:
         }
         if it["id"] in reused:
             extra["readout_reused_by"] = reused[it["id"]]
-        lite = r.get("lite") or [r["grid"][-1]]
         out.append(
             ReadSpec(
                 "introspection",
@@ -1427,7 +1193,6 @@ def _introspection() -> list[ReadSpec]:
                 "token; apply extra.steering (wsbench produce does: a forward hook at "
                 "inject_layer over token_span, h <- h + beta*||h||*v/||v||, v = "
                 "vector_file[vector_row]; beta0 rows are a plain forward)",
-                lite_positions={"kind": "positions", "positions": [int(p) for p in lite]},
             )
         )
     return out

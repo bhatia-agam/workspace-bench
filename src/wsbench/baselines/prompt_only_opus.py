@@ -6,7 +6,7 @@ One Opus 5.5 readout per plan row id (twins, controls and paired rows are their 
 their own, independent draw), asked with the plan-0014 open-model question about the item's
 render decoded through its LAST full-read site, and written as ONE prose cell at that position
 and layer :data:`PROMPT_ONLY_LAYER`. The file's sidecar declares ``reader:
-prompt_only:claude-opus-5-5``, so ``reads.load`` waives the lite selection and the full-span
+prompt_only:claude-opus-5-5``, so ``reads.load`` waives the full-span
 checks for it, and ``wsbench run all=True readouts_root=<out>/readouts allow_missing=True`` (no
 ``layers=``, no ``reads=``) judges it with exactly the lens instrument: the same digest, task
 note, judge prompts, MC options, cannot-tell and quote gates. Refusals are final (never

@@ -60,7 +60,7 @@ uv run wsbench report dir=outputs/judged/mylens-fast --fast
   `wsbench run families=jailbreak_recognition,agentic_misalignment`.
 - **Limits.** Qwen3.6-27B's registered banks only: `--fast` exits 2 under `WSB_BANK_ROOT` or a
   `WSB_BANK_FILE_*` pin, and when a registered bank is not the one the subset was cut on.
-  Summary mode and full reads only: `--fast` with `reads=lite`, `layers=each`,
+  Summary mode only: `--fast` with `layers=each`,
   `opts=aggregate=native` or `opts=judge=...` is a usage error, and so is `--fast` with
   `anti_text_inversion=True` on `plan`, `judge` and `run` (on `report` it is the strict-ATI
   view above). `items=` under

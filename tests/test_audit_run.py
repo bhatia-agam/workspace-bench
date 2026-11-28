@@ -1,10 +1,10 @@
-"""scripts/audit_run.py (gpu.md G9; plan 0032 late fix 2): the mechanical run audit."""
+"""scripts/audit_run.py (gpu.md G9): the mechanical run audit."""
 
 import importlib.util
 import json
 from pathlib import Path
 
-from wsbench import digest, reads, registry
+from wsbench import digest, registry
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts/audit_run.py"
 _spec = importlib.util.spec_from_file_location("audit_run", SCRIPT)
@@ -12,17 +12,16 @@ ar = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ar)  # type: ignore[union-attr]
 
 
-def _write(root: Path, family: str, mode: str = "full", **cfg_over) -> Path:
+def _write(root: Path, family: str, **cfg_over) -> Path:
     spec = registry._spec_for_bank(family)
     probe = digest._probe({"aggregate": "summary"})
     pv = digest.prompt_version(spec.judge.prompt_version, probe)
     cfg = {
         **digest.config(probe, "prose", family),
-        "prompt_version": reads.stamp(pv, mode),
-        "reads": mode,
+        "prompt_version": pv,
+        "reads": "full",
         "reads_checked": "sidecar",
         "sampling_source": "declared",
-        **({"lite_rule": reads.lite_rule_of(reads.specs(family))} if mode == "lite" else {}),
         **cfg_over,
     }
     d = root / family
@@ -39,18 +38,6 @@ def _write(root: Path, family: str, mode: str = "full", **cfg_over) -> Path:
 
 def test_a_clean_run_passes(tmp_path):
     assert ar.audit_family(_write(tmp_path / "a", "moral_rationale"))["ok"]
-    assert ar.audit_family(_write(tmp_path / "b", "moral_rationale", "lite"))["ok"]
-
-
-def test_lite_rule_is_checked(tmp_path):
-    d = _write(
-        tmp_path,
-        "moral_rationale",
-        "lite",
-        lite_rule=json.dumps([{"positions": {"kind": "final_token"}, "layers": None}]),
-    )
-    r = ar.audit_family(d)
-    assert not r["ok"] and "frozen plan rule" in r["problems"][0]
 
 
 def test_undeclared_and_stale_fail(tmp_path):

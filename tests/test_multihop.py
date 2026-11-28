@@ -1,5 +1,5 @@
 """multihop: the shortcut-gated bank (plan 0013) and bank v2 (plan 0041, Camila 2026-10-30):
-read at every prompt token (lite: the final token), judged by its own pinned MC judge over other
+read at every prompt token, judged by its own pinned MC judge over other
 questions' bridges / targets with cannot tell, a name gate over ``name_forms`` (unique surnames
 and misspellings credit), markdown folded, out of the ATI subset."""
 
@@ -116,20 +116,17 @@ def test_registered():
     assert SPEC.task_note == P.MH2_TASK_NOTE and not SPEC.superseded_by
 
 
-# ---------------------------------------------------------------- B1: every token, lite = final
+# ---------------------------------------------------------------- B1: every token
 
 
-def test_plan_full_reads_every_token_lite_reads_final():
+def test_plan_full_reads_every_token():
     plan = {s.id: s for s in readplan.plan(NAME)}
     assert len(plan) == 70
     for s in plan.values():
         assert s.positions == {"kind": "all"} and s.render == "plain"
-        assert s.lite_positions == {"kind": "final_token"} and s.lite_layers is None
         assert s.layers == readplan.GRID
     toks = [f"t{i}" for i in range(42)]  # the coeur-de-lion render is 42 tokens
     assert readplan.resolve(plan[COEUR].positions, toks) == list(range(42))
-    lite = {s.id: s for s in readplan.plan(NAME, reads="lite")}[COEUR]
-    assert readplan.resolve(lite.positions, toks) == [41]
 
 
 def test_min_full_positions_is_shortest_render():
@@ -178,23 +175,6 @@ def _picker(quotes: dict[str, str] | None = None):
     return judge
 
 
-def test_lite_keeps_final_position(tmp_path, monkeypatch):
-    rows = [
-        {"id": COEUR, "layer": 20, "pos": p, "samples": [f"position {p} text"]}
-        for p in (39, 40, 41)
-    ]
-    path = _write(tmp_path / "r.jsonl", rows)
-    fake = FakeLLM.install(monkeypatch, _picker())
-    args = summary_args(path, tmp_path / "o", P.MH2_PROMPT_VERSION, items=[COEUR],
-                        extra={"reads": "lite"}, allow_missing=True)  # fmt: skip
-    r = SPEC.run(args)
-    (digest_user,) = [u for n, _s, u in fake.calls if n == "digest"]
-    assert "position 41 text" in digest_user
-    assert "position 39" not in digest_user and "position 40" not in digest_user
-    assert r.config["reads"] == "lite"
-    assert r.config["prompt_version"].endswith(reads.LITE_STAMP)
-
-
 def test_full_digest_gets_all_positions_and_layers(tmp_path, monkeypatch):
     n = _n(COEUR)
     path = _write(tmp_path / "r.jsonl", _full_rows(COEUR, n, readplan.GRID))
@@ -240,13 +220,12 @@ def _final_token_file(tmp_path: Path) -> Path:
     return _write(tmp_path / "final.jsonl", rows)
 
 
-def test_mh2_final_token_file_with_lite_sidecar_exits_2_under_full(tmp_path, monkeypatch):
+def test_mh2_final_token_file_with_lite_sidecar_is_refused(tmp_path, monkeypatch):
     path = _final_token_file(tmp_path)
     write_sidecar(path, reads="lite", sampling="prose1", reader="t", layers=readplan.GRID)
     FakeLLM.install(monkeypatch, _picker())
-    with pytest.raises(SystemExit) as e:
+    with pytest.raises(SystemExit, match="full is the only reads mode"):
         SPEC.run(summary_args(path, tmp_path / "o", P.MH2_PROMPT_VERSION))
-    assert e.value.code == 2
 
 
 def test_mh2_sidecarless_final_token_file_is_report_only(tmp_path, monkeypatch):

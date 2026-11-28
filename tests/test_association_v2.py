@@ -1,12 +1,10 @@
 """association bank v2 (plan 0039): retired items, the 8-way MC judge and its deterministic gate,
-the summarize-suffix read sites, the summary digest of every cell, lite reads, prompt-only."""
+the summarize-suffix read sites, the summary digest of every cell, prompt-only."""
 
 import dataclasses
 import hashlib
-import importlib.util
 import json
 import re
-from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -598,86 +596,8 @@ def test_prompt_only_rows_take_the_same_instrument(tmp_path):
     lr, lfake = judge_run(
         tmp_path / "l", lens, [BD], lambda s, u, sc: answer(u, "birthday", "birthday"), ["cake"]
     )
-    assert reads.strip_reads(r.config["prompt_version"]) == reads.strip_reads(
-        lr.config["prompt_version"]
-    )
+    assert r.config["prompt_version"] == lr.config["prompt_version"]
     assert po_systems == {s for n, s, _u in lfake.calls if n == "readout_mc"}
-
-
-# ---------------------------------------------------------------- C6: lite
-
-
-def test_lite_reads_every_full_site(tmp_path):
-    # Camila r2 (2026-11-01): association lite = ALL 19 positions of the summary request, the
-    # same cells as reads=full (no longer the round-3 single site k=7)
-    path = write_cells(tmp_path / "r.jsonl", {(BD, 44, LAST): "- a birthday cake"}, [BD])
-    r, fake = judge_run(
-        tmp_path,
-        path,
-        [BD],
-        lambda s, u, sc: answer(u, "birthday", "birthday"),
-        ["cake"],
-        extra={"reads": "lite"},
-    )
-    bundle = "\n".join(u for n, _s, u in fake.calls if n == "digest")
-    groups = set(re.findall(r"^\[L(\d+) pos (\d+)\]$", bundle, flags=re.M))
-    assert groups == {(str(L), str(p)) for L in GRID for p in POS}
-    assert r.config["prompt_version"].endswith("+reads-lite")
-    assert json.loads(r.config["lite_rule"]) == [{"positions": {"kind": "same"}, "layers": None}]
-    assert r.value == 1.0  # the gold hit at the final site is still read under lite
-    # the full run reads the identical cells
-    _rf, ffake = judge_run(
-        tmp_path / "f", path, [BD], lambda s, u, sc: answer(u, "birthday", "birthday"), ["cake"]
-    )
-    fbundle = "\n".join(u for n, _s, u in ffake.calls if n == "digest")
-    assert set(re.findall(r"^\[L(\d+) pos (\d+)\]$", fbundle, flags=re.M)) == groups
-
-
-def _lite_table_module():
-    spec = importlib.util.spec_from_file_location(
-        "lite_site_table", REPO / "scripts/lite_site_table.py"
-    )
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)  # type: ignore[union-attr]
-    return m
-
-
-def test_lite_site_table_uses_support_share(tmp_path):
-    """Fixture digests for 2 items x 3 arms; the choice follows the pooled support share and
-    ignores pass rates; a 9-point win keeps final_token, an 11-point win switches."""
-    lst = _lite_table_module()
-    ids = [BD, "winter"]
-    end = LAST
-    forms = {i: lst.gold_forms("association", items()[i]) for i in ids}
-    assert "生日" in forms[BD] and forms[BD][0] == "birthday"
-
-    def arm_rows(k1: int, k3: int, passes: list[bool]) -> list[dict]:
-        rows = []
-        for iid, ok in zip(ids, passes, strict=True):
-            g = items()[iid]["mc"]["gold"]
-            ev = [f"{g} here"] * (k1 + k3) + ["nothing"]
-            where = [f"[L44 pos {end}]"] * k1 + [f"[L44 pos {end - 2}]"] * k3 + ["[L44 pos 30]"]
-            rows.append(
-                {"id": iid, "pass": ok, "summary_evidence": ev, "summary_evidence_where": where}
-            )
-        return rows
-
-    ends = {(i, 44): end for i in ids}
-
-    def choose(k1, k3, passes):
-        per = {
-            arm: lst.gold_lines_by_k(arm_rows(k1, k3, passes), forms, ends)
-            for arm in ("s3d", "jlens", "mlnla")
-        }
-        return lst.table("association", per)["chosen"]
-
-    # shares: k=1 vs k=3 of 100 lines -> 9-point win keeps final_token, 11-point win switches
-    assert choose(455, 545, [True, False]) == {"kind": "final_token"}  # 45.5% vs 54.5%
-    assert choose(445, 555, [True, False]) == {"kind": "offset_from_end", "k": 3}  # 44.5 / 55.5
-    assert choose(445, 555, [False, True]) == {"kind": "offset_from_end", "k": 3}  # pass permuted
-    assert Counter(lst.gold_lines_by_k(arm_rows(1, 0, [True, True]), forms, ends)) == Counter(
-        {1: 2}
-    )
 
 
 def test_registered_spec_is_summary_family():

@@ -22,7 +22,7 @@ POOL = "mmh"  # refill.POOL_FILES key
 WORK = "mmh"  # adapted/<m>/mmh/: the work files (git-ignored)
 DRAWS, TEMP, TOP_P, MAX_TOKENS = 20, 0.7, 0.95, 64  # gw _row (Camila 2026-11-05: T=0.7)
 SHARE_MIN = 0.8  # gw gate.SHARE_MIN: >= 16/20 on every prompt form
-TAIL = 12  # gw TAIL (lite = the last 12 prompt tokens)
+TAIL = 12  # gw TAIL (the last 12 prompt tokens)
 MIN_POST = 16  # model_multihop EvalSpec.min_full_positions
 N_FOILS_MIN, N_FOILS_MAX = 4, 6  # invented decoys (bank v2: 5-7 options)
 N_FOILS_CUTOFF = 4  # cutoff decoys (bank v2: exactly 4)

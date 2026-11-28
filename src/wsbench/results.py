@@ -487,7 +487,7 @@ def _macro_context(
     retired: Mapping[str, str] | None,
 ) -> _MacroContext:
     """The registry defaults, the adapted set's exclusions and the run-level guards of
-    :func:`macro` (mixed reads modes, mixed adapted ATI gates, mixed fast and non-fast rows:
+    :func:`macro` (reads other than full, mixed adapted ATI gates, mixed fast and non-fast rows:
     each a ``SystemExit``)."""
     if superseded is None or held_out is None or removed is None:
         from wsbench import registry  # lazy: registry imports this module
@@ -500,9 +500,8 @@ def _macro_context(
 
         retired = registry.RETIRED_FAMILIES
     skip = adapted_exclusions()
-    modes = sorted({str(r.config.get("reads", "full")) for r in results})
-    if len(modes) > 1:  # plan 0032 §2.6.8: a macro never blends reads=full and reads=lite rows
-        raise SystemExit(f"macro: results mix reads modes {modes}; report one mode at a time")
+    if other := sorted({str(r.config.get("reads", "full")) for r in results} - {"full"}):
+        raise SystemExit(f"macro: results judged under reads={other}; only full reads are reported")
     ati_gates = sorted(
         {
             str(r.extras.get("ati_gate"))
@@ -699,11 +698,9 @@ _ALT_SAME_READOUTS = ("reader", "sampling", "bank_version")
 
 def alt_judge_matches(r: FamilyResult, alt: FamilyResult) -> bool:
     """Whether ``alt`` (a judge-override run) is the same measurement as ``r`` under another
-    judge: the same family, prompt_version (read mode aside, compared separately), digest
-    settings, judged layers and read mode, the same readouts (reader, sampling and bank
+    judge: the same family, prompt_version, digest
+    settings and judged layers, the same readouts (reader, sampling and bank
     version), a different judge model, and not a subset run."""
-    from wsbench.reads import strip_reads
-
     a, b = r.config, alt.config
     summ = [
         {
@@ -716,9 +713,7 @@ def alt_judge_matches(r: FamilyResult, alt: FamilyResult) -> bool:
     return (
         alt.family == r.family
         and b.get("judge_model") not in (None, a.get("judge_model"))
-        and strip_reads(str(b.get("prompt_version") or ""))
-        == strip_reads(str(a.get("prompt_version") or ""))
-        and a.get("reads", "full") == b.get("reads", "full")
+        and str(b.get("prompt_version") or "") == str(a.get("prompt_version") or "")
         and a.get("aggregate") == b.get("aggregate")
         and summ[0] == summ[1]
         and (a.get("layers_judged") or None) == (b.get("layers_judged") or None)

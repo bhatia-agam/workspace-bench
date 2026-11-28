@@ -197,7 +197,7 @@ def test_lineage_step_rules():
     assert reads.lineage_step(a, [{**a[0], "render": "r9"}]) is None  # a changed kept row
     assert reads.lineage_step(a, [a[0], {"id": "z", "family": FAM}]) is None  # an added id
     assert reads.lineage_step([*a, a[0]], a[:1]) is None  # a repeated id
-    # the excluded keys (layers, lite site, note) may move without voiding the record
+    # the excluded keys (layers, note) may move without voiding the record
     assert reads.lineage_step(a, [{**a[0], "layers": [3], "note": "n"}])["dropped"] == ["y"]
 
 

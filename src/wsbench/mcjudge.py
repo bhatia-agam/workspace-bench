@@ -221,14 +221,13 @@ def is_subset(args: JudgeArgs) -> bool:
 
 def base_config(args: JudgeArgs, prompt_version: str, **extra: Any) -> dict:
     """The ``config`` every family result carries; plan 0032 adds the load's stamps (``reads``,
-    ``sampling``, ``sampling_source``, ``reader``, ``reads_checked``, ``layers_judged``) and the
-    ``+reads-lite`` suffix on a lite run's ``prompt_version``."""
+    ``sampling``, ``sampling_source``, ``reader``, ``reads_checked``, ``layers_judged``)."""
     from wsbench import reads
 
     return {
         **reads.config_stamps(args),
         "judge_model": args.judge.model,
-        "prompt_version": reads.stamp(prompt_version, reads.mode(args)),
+        "prompt_version": prompt_version,
         "reasoning": args.judge.reasoning,
         "layers": args.layers,
         "dry_run": args.dry_run,

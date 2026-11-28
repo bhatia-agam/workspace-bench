@@ -129,10 +129,6 @@ grader prompt and its sha, the unused gated role-play pool for HallucinationBenc
   the shared `reads.check_full` (`min_full_positions = 2`, `full_contiguous = True`: one
   contiguous run ending at `turn_end`); the v1 family-local grid check is deleted (a
   sidecar-less file is report-only). Token identity (`read.tokens[pos]`) is still checked.
-- **Lite read** (`reads=lite`): `lite_positions = {kind: final_token}` = `turn_end` (the
-  `<|im_end|>`), all layers; scored from the full read. Chosen because in the cached native
-  O-lens run the `<|im_end|>` slot carries the highest recognition density (114 of 430 cells,
-  26.5%, vs 1.4–8.8% elsewhere).
 - `opts=read=punct` stays a native diagnostic (a post-load filter; never complete).
 
 ## Judge

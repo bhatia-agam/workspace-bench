@@ -532,17 +532,10 @@ def _samples(cell: Cell) -> tuple[list[str], str]:
 
 
 def _expected_positions(
-    us: list[dict[str, Any]], renders: Mapping[str, Any], mode: str
+    us: list[dict[str, Any]], renders: Mapping[str, Any]
 ) -> dict[str, list[int]]:
-    """Per readout: the grid (reads=full) or the bank's lite site (reads=lite, C2)."""
-    out: dict[str, list[int]] = {}
-    for u in us:
-        r = renders[u["render"]]
-        # a v1 bank (WSB_BANK_FILE_INTROSPECTION) has no `lite`: its plan's final_token
-        out[u["readout_of"]] = (
-            list(r.get("lite") or r["grid"][-1:]) if mode == "lite" else list(r["grid"])
-        )
-    return out
+    """Per readout: the render's grid."""
+    return {u["readout_of"]: list(renders[u["render"]]["grid"]) for u in us}
 
 
 def run(args: JudgeArgs) -> FamilyResult:
@@ -553,8 +546,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     scope_name, scope = _scoped(bank, args)
     us = units(bank, scope)
     renders = bank["renders"]
-    mode = reads.mode(args)
-    pos_map = _expected_positions(us, renders, mode)
+    pos_map = _expected_positions(us, renders)
     cells, rep = reads.load(args, NAME, positions=pos_map)
     # plan 0032 §2.1.4: the file's own layers (any combination) unless layers= names them
     layers = list(args.layers) if args.layers is not None else (list(rep.layers) or list(GRID))
@@ -749,7 +741,7 @@ def _run_summary(
     unit whose digest failed is undecided; an empty digest names nothing (a judged none). The
     regex diagnostic reads the loaded raw cells, never the digest."""
     by_readout: dict[str, list[Cell]] = defaultdict(list)
-    for c in cells:  # loaded on the grid (or the lite site) already
+    for c in cells:  # loaded on the grid already
         by_readout[c.id].append(c)
     notes = item_task_notes()
     spend = Spend()

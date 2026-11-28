@@ -452,7 +452,7 @@ def test_language_label_alone_fails_language_leg(name, tmp_path, monkeypatch):
 def test_regex_leg_of_mcrx_has_its_own_stamp(name, summary, tmp_path, monkeypatch):
     """Review r4 item 2: ``opts=judge=regex`` on an mc+regex family is a different instrument
     from the mc+regex record, so it never carries the record's stamp (floor / ATI matching is
-    by ``strip_reads(pv)`` + judge model, which would otherwise not tell the two apart)."""
+    by prompt version + judge model, which would otherwise not tell the two apart)."""
     from wsbench.multitoken.family import REGEX_LEG_VERSION
 
     item = HALF if name == "multilingual_st" else KENTE
@@ -519,7 +519,6 @@ def test_v2_full_read_settings(name, real_families):
     rows = readplan.plan(name)
     assert {r.render for r in rows} == {"plain"}
     assert all(r.positions == {"kind": "all"} for r in rows)
-    assert all(r.lite_positions == {"kind": "final_token"} and r.lite_layers is None for r in rows)
     assert all(r.layers == readplan.GRID for r in rows)
 
 

@@ -8,29 +8,18 @@ quotes, so the "same as" group check (``quote_options`` inside A(c)) cannot be a
 offline (every quote is taken as naming only the pick); the v2 menu ("also" / "same as") and
 rubric only act in the LLM phase. ``--v1`` scores with A(c) = {c} (today's rule).
 
-``--lite-support``: the C2 support check (no judge outcome): for the neutral prompts, the share
-of gold-bearing digest evidence lines (``mc.form_in`` over the forms of A(c)) at the final token
-vs at ``grid[1]``, per arm and pooled over the ``reads=full`` all-layer summary runs. If
-``grid[1]``'s pooled share does not beat the final token's by more than 10 points, the neutral
-lite rule becomes ``final_token``.
-
     uv run --no-sync python scripts/introspection_offline_evidence.py [--out evidence.json]
-    uv run --no-sync python scripts/introspection_offline_evidence.py --lite-support \\
-        --arm s3d=<judged>/introspection --arm jlens=... --arm mlnla=...
 """
 
 import argparse
 import json
-import re
 import sys
-from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from wsbench import mc  # noqa: E402
 from wsbench.evals.model_specific.introspection import judge  # noqa: E402
 
 SRC = Path("/workspace/gw-introspection-inject")
@@ -38,8 +27,6 @@ VERDICTS = (
     SRC / "evals/workspace-bench/hillclimbing_evals/multi_token/introspection_inject/readouts"
     "/grid_verdicts.json"
 )
-MARGIN = 0.10
-_WHERE = re.compile(r"\[L(-?\d+) pos (-?\d+)")
 
 
 # ---------------------------------------------------------------- paired (source verdicts)
@@ -130,96 +117,11 @@ def cmd_paired(a: argparse.Namespace) -> dict:
     return out
 
 
-# ---------------------------------------------------------------- lite support (C2)
-
-
-def lite_support_table(
-    evidence: Mapping[str, Sequence[tuple[str, str]]],
-    forms: Mapping[str, Sequence[str]],
-    sites: Mapping[str, tuple[int, int]],
-) -> dict[str, Any]:
-    """One arm's support counts. ``evidence``: readout id -> its digest evidence lines as
-    ``(text, where)``; ``forms``: readout id -> the forms of A(c); ``sites``: readout id ->
-    ``(final_token_pos, grid1_pos)``. Digests and forms only: a judged row (anything carrying a
-    verdict) is refused, so no judge outcome can enter the choice."""
-    for rid, lines in evidence.items():
-        if isinstance(lines, Mapping) or any(not isinstance(x, tuple | list) for x in lines):
-            raise TypeError(f"{rid}: lite support takes digest lines, not judged rows")
-        for x in lines:
-            if len(x) != 2:
-                raise TypeError(f"{rid}: lite support takes (text, where) digest lines")
-    final = grid1 = total = 0
-    for rid, lines in evidence.items():
-        fs = forms.get(rid) or []
-        if not fs or rid not in sites:
-            continue
-        pf, p1 = sites[rid]
-        for text, where in lines:
-            m = _WHERE.search(str(where))
-            if not m or not mc.form_in(str(text), fs):
-                continue
-            total += 1
-            pos = int(m.group(2))
-            final += pos == pf
-            grid1 += pos == p1
-    return {"n_gold_lines": total, "final_token": final, "grid1": grid1}
-
-
-def choose(per_arm: Mapping[str, Mapping[str, int]]) -> dict[str, Any]:
-    keys = ("n_gold_lines", "final_token", "grid1")
-    tot = {k: sum(int(a[k]) for a in per_arm.values()) for k in keys}
-    n = tot["n_gold_lines"]
-    sf = tot["final_token"] / n if n else 0.0
-    s1 = tot["grid1"] / n if n else 0.0
-    keep = s1 > sf + MARGIN
-    return {
-        "per_arm": dict(per_arm),
-        "pooled": {"share_final_token": sf, "share_grid1": s1, **tot},
-        "neutral_lite_rule": "grid[1] (bank)" if keep else "final_token",
-        "rule": f"grid[1] stays only if its pooled share beats final_token's by > {MARGIN:.0%}",
-    }
-
-
-def _arm_evidence(path: Path) -> tuple[dict, dict, dict]:
-    res = json.loads((path / "results.json").read_text(encoding="utf-8"))
-    if res.get("config", {}).get("reads", "full") != "full":
-        sys.exit(f"{path}: not a reads=full result")
-    bank = judge.load()
-    items = {it["id"]: it for it in bank["items"]}
-    evidence: dict[str, list[tuple[str, str]]] = {}
-    forms: dict[str, list[str]] = {}
-    sites: dict[str, tuple[int, int]] = {}
-    for row in res.get("rows", []):
-        it = items.get(str(row.get("id")))
-        if it is None or it["kind"] != "inject" or it["prompt_kind"] != "neutral":
-            continue
-        rid = it["readout_of"]
-        texts = row.get("summary_evidence") or []
-        wheres = row.get("summary_evidence_where") or []
-        evidence[rid] = [(str(t), str(w)) for t, w in zip(texts, wheres, strict=False)]
-        forms[rid] = judge.regex_forms(bank, it["concept"])
-        grid = bank["renders"][judge.render_key(it)]["grid"]
-        sites[rid] = (grid[-1], grid[1])
-    return evidence, forms, sites
-
-
-def cmd_lite_support(a: argparse.Namespace) -> dict:
-    per_arm = {}
-    for x in a.arm:
-        name, _, p = x.partition("=")
-        per_arm[name] = lite_support_table(*_arm_evidence(Path(p)))
-    out = choose(per_arm)
-    print(json.dumps(out, indent=1))
-    return out
-
-
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--lite-support", action="store_true")
-    ap.add_argument("--arm", action="append", default=[], help="name=<judged family dir>")
     ap.add_argument("--out", default="")
     a = ap.parse_args(argv)
-    out = cmd_lite_support(a) if a.lite_support else cmd_paired(a)
+    out = cmd_paired(a)
     if a.out:
         Path(a.out).write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", "utf-8")
     return 0

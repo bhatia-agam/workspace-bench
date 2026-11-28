@@ -64,8 +64,8 @@ the intended one.
   Some pairs still share a shape (sum loops with a changed bound; `N of 4` counts with `>`
   against `>=`), and `bc-w2-c-warehouse-unit-total` / `-b` are one program with two different
   bugs (the first element skipped, the last element skipped).
-- **Read plan.** The bank's own 143 rows (the EOF cell at every GRID layer, lite = the bank
-  layer; plan_sha `4f3419aa…`). The 63 kept rows equal `items.json`'s, so their readouts carry
+- **Read plan.** The bank's own 143 rows (the EOF cell at every GRID layer;
+  plan_sha `4f3419aa…`). The 63 kept rows equal `items.json`'s, so their readouts carry
   over; only the 80 new items needed new reads.
 - **Stamp**
   `buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2`

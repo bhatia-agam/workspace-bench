@@ -904,7 +904,7 @@ def test_cell_text_is_shared_bulleted_join(tmp_path, fake_llm, jargs):
     assert stage_a_bodies({}, "o2") == ["Text:\n- a metaphor"]  # prose1: one sample per cell
 
 
-def test_lite_judges_same_cells_as_full(tmp_path, fake_llm, jargs):
+def test_full_run_stamps_the_prompt_version(tmp_path, fake_llm, jargs):
     from conftest import write_sidecar
 
     src = write_jsonl(
@@ -913,12 +913,7 @@ def test_lite_judges_same_cells_as_full(tmp_path, fake_llm, jargs):
     write_sidecar(src, reads="full", sampling="prose1")
     fake_llm(_responder)
     full = jj.run(jargs(src, items=LABELS, out=tmp_path / "full"))
-    fake_llm(_responder)
-    lite = jj.run(jargs(src, items=LABELS, extra={"reads": "lite"}, out=tmp_path / "lite"))
-    assert [r["key"] for r in full.rows] == [r["key"] for r in lite.rows]
-    assert full.value == lite.value
     assert full.config["prompt_version"] == "jlens-pr-v3+fw-v2+sense-v1"
-    assert lite.config["prompt_version"] == "jlens-pr-v3+fw-v2+sense-v1+reads-lite"
 
 
 def test_file_layers_without_reference_are_dropped(tmp_path, fake_llm, jargs, capsys):

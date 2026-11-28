@@ -61,27 +61,19 @@ def test_every_family_plans_and_rows_serialize():
 def test_plans_match_the_bank_specs():
     arith = {s.id: s for s in readplan.plan("arithmetic_intermediates")}
     s = arith["addmul-000"]
-    # plan 0032 §2.1.2: every family reads GRID; the former grids are the lite layers (Q14)
+    # plan 0032 §2.1.2: every family reads GRID
     assert s.positions == {"kind": "all_from_end"} and s.layers == readplan.GRID
-    assert s.lite_layers == [56, 60] and s.lite_positions == {"kind": "same"}
     assert s.extra["frozen_cell"] == {"layer": 60, "pos": -8}
     buggy = {s.id: s for s in readplan.plan("buggy_code")}
     assert buggy["py-quantity-refund-credit"].layers == readplan.GRID
-    assert buggy["py-quantity-refund-credit"].lite_layers == [60]
-    assert next(s for s in buggy.values() if s.id.startswith("rust")).lite_layers == [56]
     mcdm = readplan.plan("multi_concept_directed_modulation")[0]
     assert mcdm.layers == readplan.GRID and mcdm.positions == {"kind": "last_n", "n": 12}
     conj = readplan.plan("conjunctive_association")[0]
     assert conj.layers == readplan.GRID and conj.suffix == readplan.SUMMARIZE_SUFFIX
-    # Camila r3 (2026-11-01): conjunctive lite reads the same positions as full (lite_rule.json)
-    assert conj.lite_positions == {"kind": "same"} and conj.lite_layers is None
-    assert readplan.lite_select(range(31, 50), conj.lite_positions) == list(range(31, 50))
     multihop = readplan.plan("multihop_st")  # plan 0048 C2 (sanctioned): full = every token
     assert {s.positions["kind"] for s in multihop} == {"all_from_end"}
-    assert {s.lite_positions["kind"] for s in multihop} == {"offset_from_end"}
     poetry = readplan.plan("poetry")[0]
     assert poetry.positions == {"kind": "line_one_tail"} and poetry.layers == readplan.GRID
-    assert poetry.lite_positions == {"kind": "final_token"}
     jb = readplan.plan("jailbreak_recognition")[0]
     span = jb.positions["positions"]
     assert jb.render == "chat_context" and jb.messages[-1]["role"] == "user"
@@ -210,15 +202,12 @@ COUPLET = ["A", "Ġrh", "ym", "ing", "Ġcouple", "t", ":", "Ċ", "The", "Ġcapta
            "Ġwhere", "Ġhe", "'d", "Ġ"]  # fmt: skip
 
 
-def test_poetry_full_and_lite():
-    """plan 0038 P7: full = line one's last word through its newline; lite = that newline (the
-    v1 site); never a position of the line-two stub."""
+def test_poetry_reads_the_line_one_tail():
+    """plan 0038 P7: line one's last word through its newline; never a position of the
+    line-two stub."""
     full = readplan.resolve({"kind": "line_one_tail"}, COUPLET)
     assert full == [14, 15, 16]
-    assert readplan.lite_select(full, readplan.FINAL) == [16]
     assert readplan.resolve({"kind": "line_one_newline"}, COUPLET) == [16]
-    lite_row = readplan.plan("poetry", reads="lite")[0]
-    assert readplan.resolve(lite_row.positions, COUPLET) == [16]
     # a multi-token word and trailing punctuation; the prefill anchor
     assert readplan.resolve({"kind": "line_one_tail"}, ["Ċ", "The", "Ġmac", "beth", '."', "Ċ"]) == [
         2, 3, 4, 5
@@ -264,8 +253,8 @@ def test_chain_plan_row_uses_the_start_tail(real_families):
     for s in rows:
         assert s.positions["kind"] == "from_text_last_token"
         assert s.positions["text"].startswith("The starting number is ")
-        assert s.positions["text"] in s.text and s.lite_positions == {"kind": "final_token"}
-        assert s.layers == readplan.GRID and s.lite_layers is None
+        assert s.positions["text"] in s.text
+        assert s.layers == readplan.GRID
 
 
 def test_chain_qwen_tokenizer():
@@ -295,8 +284,8 @@ REL_S00A += ["ĠRiley", ".", "ĠIn", "Ġother", "Ġwords", ",", "ĠRiley", "Ġis
 
 
 def test_relational_reads_from_full_stop():
-    """plan 0043 C1: the relational full read runs from the full stop of sentence two through
-    the possessive blank; lite is the blank (the span's last position)."""
+    """plan 0043 C1: the relational read runs from the full stop of sentence two through the
+    possessive blank."""
     import pytest
 
     from wsbench.mcjudge import load_bank
@@ -306,7 +295,6 @@ def test_relational_reads_from_full_stop():
     assert a.positions == {"kind": "suffix_text", "text": ". In other words, Riley is Avery's"}
     full = readplan.resolve(a.positions, REL_S00A)
     assert full == list(range(12, 21)) and REL_S00A[12] == "."
-    assert readplan.lite_select(full, a.lite_positions) == [20]
     for it in load_bank("relational_multihop"):
         assert it["stimulus"].count(readplan.RELATIONAL_ANCHOR) == 1
     with pytest.raises(ValueError, match="rel-x"):
@@ -314,16 +302,13 @@ def test_relational_reads_from_full_stop():
 
 
 def test_user_modeling_reads_every_position():
-    """Camila 2026-10-30 ("We should read at all positions", plan 0056): the UM full read is
-    every token of the chat render (system turn, user turn, template tail); lite = the same
-    positions (plan 0061)."""
+    """Camila 2026-10-30 ("We should read at all positions", plan 0056): the UM read is
+    every token of the chat render (system turn, user turn, template tail)."""
     rows = readplan.plan("user_modeling")  # bank v3: its own 126 rows
     assert len(rows) == 126 and all(list(s.layers) == list(readplan.GRID) for s in rows)
-    rule, lite = rows[0].positions, rows[0].lite_positions
-    assert rule == {"kind": "all"} and lite == {"kind": "same"}
-    full = readplan.resolve(rule, UM_TOKENS)
-    assert full == list(range(len(UM_TOKENS)))
-    assert readplan.lite_select(full, lite) == full
+    rule = rows[0].positions
+    assert rule == {"kind": "all"}
+    assert readplan.resolve(rule, UM_TOKENS) == list(range(len(UM_TOKENS)))
 
 
 def test_association_reads_summarize_suffix():
@@ -343,40 +328,15 @@ def test_association_reads_summarize_suffix():
     assert got == list(range(4, 23)) and len(got) == 19
 
 
-def test_association_lite_rule(monkeypatch):
-    # Camila r2 (2026-11-01, "Make lite subset all positions"): association lite reads every one
-    # of the 19 full sites (the summary request + chat tail) at every layer, i.e. lite == full
-    for s in readplan.plan("association"):
-        assert s.lite_positions == readplan.frozen_lite_rule("association")
-        assert s.lite_positions == {"kind": "same"} and s.lite_layers is None
-    toks = ["Os", "Ġtambores", ".", "ĊĊ", "Sum", "mar", "ize", "Ġthe", "Ġpreceding", "Ġstory",
-            "Ġin", "Ġone", "Ġsentence", ".", "<|im_end|>", "Ċ", "<|im_start|>", "assistant", "Ċ",
-            "<think>", "ĊĊ", "</think>", "ĊĊ"]  # fmt: skip
-    full = readplan.resolve(readplan.plan("association")[0].positions, toks)
-    assert readplan.lite_select(full, readplan.frozen_lite_rule("association")) == full
-    # the superseded round-3 single site (k=7, the <|im_start|>) would keep 1 of the 19 sites
-    assert readplan.lite_select(full, {"kind": "offset_from_end", "k": 7}) == [full[-7]]
-    assert toks[full[-7]] == "<|im_start|>"
-    # an all-positions rule is not an offset rule: an adapted bank reads every full site too
-    monkeypatch.setenv(readplan.BANK_ROOT_ENV, "/nonexistent")
-    assert readplan._adapted_offset({"kind": "same"}, {}) is False
-    # the adapted-bank guard itself is unchanged for the offset siblings
-    assert readplan._adapted_offset({"kind": "offset_from_end", "k": 7}, {}) is True
-    assert not readplan._adapted_offset(
-        {"kind": "offset_from_end", "k": 7}, {"readout": {"lite": "x"}}
-    )
-
-
 def test_basic_readout_v2_all_chat_prefill():
     """Plan 0039 C2b/C4: every v2 item is a chat question with the answer stem prefilled, read
-    from the first question token through the end; lite = the same positions (plan 0061)."""
+    from the first question token through the end."""
     rows = readplan.plan("basic_readout_st")
     assert len(rows) == 100
     for s in rows:
         assert s.render == "chat_prefill" and s.prefill == readplan.ANSWER_STEM, s.id
         assert s.positions == {"kind": "suffix_text_then_tail", "text": s.text}, s.id
         assert s.text.endswith("? Answer in one word.") and s.layers == readplan.GRID
-        assert s.lite_positions == {"kind": "same"} and s.lite_layers is None
 
 
 def test_basic_readout_v2_positions():
@@ -389,52 +349,39 @@ def test_basic_readout_v2_positions():
     got = readplan.resolve({"kind": "suffix_text_then_tail", "text": q}, toks)
     assert got[0] == toks.index("What") and got[-1] == len(toks) - 1 and toks[got[-1]] == ":"
     assert got == list(range(3, len(toks)))  # the template header before the question is not read
-    lite = readplan.lite_select(got, {"kind": "final_token"})
-    assert lite == [len(toks) - 1]
 
 
-def test_multihop_full_and_lite():
-    """Plan 0036 C2: full = every token (negative offsets); lite = the last word, the
-    2026-09-23 site (offset_from_end k = -readout.offsets[0]), on every layer."""
+def test_multihop_reads_every_token():
+    """Plan 0036 C2: every token (negative offsets), on every layer."""
     from wsbench.banks import load_bank
 
     # bank v5 (registered) plans its own 98 rows: v3's 68 kept rows + 30 new items
     _h, items = load_bank(readplan.bank_path("multihop_st"))
     assert readplan.bank_path("multihop_st").name == "items_v5.json"
-    k_of = {it["id"]: -int(it["readout"]["offsets"][0]) for it in items}
     rows = readplan.plan("multihop_st")
-    assert len(rows) == 98 and [s.id for s in rows] == list(k_of)
+    assert len(rows) == 98 and [s.id for s in rows] == [it["id"] for it in items]
     for s in rows:
         assert s.positions == {"kind": "all_from_end"} and s.render == "plain"
-        assert s.lite_positions == {"kind": "offset_from_end", "k": k_of[s.id]}
-        assert s.lite_layers is None and s.layers == readplan.GRID
-    assert sorted(k_of.values()).count(2) == 31  # v1's 33 minus two of v4's removed items
+        assert s.layers == readplan.GRID
     toks = ["Fact", ":", " The", " capital", " is", " "]
-    full = readplan.resolve({"kind": "all_from_end"}, toks)
-    assert full == [-6, -5, -4, -3, -2, -1]
-    assert readplan.lite_select(full, {"kind": "offset_from_end", "k": 2}) == [-2]
+    assert readplan.resolve({"kind": "all_from_end"}, toks) == [-6, -5, -4, -3, -2, -1]
 
 
 @pytest.mark.parametrize(
     "family", ["multilingual_st", "multilingual", "multilingual_multihop", "multilingual_typo"]
 )
 def test_multilingual_families_read_all_positions(family):
-    """Plan 0033 B4: every prompt position by default, the final prompt token under reads=lite."""
-    from wsbench.readplan import lite_select, plan, resolve
+    """Plan 0033 B4: every prompt position."""
+    from wsbench.readplan import plan, resolve
 
     toks = ["a", "b", "c", "d", "e"]
     for spec in plan(family)[:5]:
         assert spec.render == "plain"
-        full = resolve(spec.positions, toks)
-        assert full == [0, 1, 2, 3, 4]
-        assert lite_select(full, spec.lite_positions) == [4]
-    lite = plan(family, reads="lite")[0]
-    assert resolve(lite.positions, toks) == [4]
+        assert resolve(spec.positions, toks) == [0, 1, 2, 3, 4]
 
 
-# plan 0061: pre-change plan_sha (origin/main c2fd6929). They pin the no-reread claim (the lite
-# site is never hashed); a later bank or full-read change may refresh them.
-PLAN0061_SHA = {
+# plan_sha pins of five families; a later bank or read change may refresh them
+PLAN_SHA = {
     # bank v8's own 100-row plan (the new items' rows; bank v7's plan was 195a60c7...)
     "basic_readout_st": "0a721338b8755307ce59797c3f8eaf24118b2ac55b1f7551e50c7f92e8a62c36",
     # bank v2's own 102-row plan (plan 0109; the 100-item items.json's plan was 1da94e9c...)
@@ -450,28 +397,8 @@ PLAN0061_SHA = {
 }
 
 
-@pytest.mark.parametrize("family", readplan.LITE_SAME_FAMILIES)
-def test_lite_same_families_read_full_positions(family):
-    """Plan 0061 (Camila 2026-11-02): every DM family, user_modeling and basic_readout_st read the
-    full positions at the full layers under reads=lite; plan_sha is unchanged."""
+@pytest.mark.parametrize("family", sorted(PLAN_SHA))
+def test_plan_sha_is_pinned(family):
     from wsbench import reads
 
-    assert set(PLAN0061_SHA) == set(readplan.LITE_SAME_FAMILIES)
-    full = readplan.plan(family, layers=None)
-    lite = readplan.plan(family, layers=None, reads="lite")
-    assert all(s.lite_positions == {"kind": "same"} and s.lite_layers is None for s in full)
-    assert [(s.id, s.layers) for s in lite] == [(s.id, s.layers) for s in full]
-    for s in full[:5]:  # the rule keeps every full position (absolute and from-end coordinates)
-        for ps in (list(range(3, 40)), list(range(-37, 0))):
-            assert readplan.lite_select(ps, s.lite_positions) == ps
-    assert reads.plan_sha(family) == PLAN0061_SHA[family]
-
-
-def test_lite_same_leaves_other_final_token_families():
-    """Plan 0061 touches only its five families: typo_st and wrong_intermediate keep their lite
-    site."""
-    assert {json.dumps(s.lite_positions) for s in readplan.plan("typo_st")} == {
-        json.dumps({"kind": "final_token"})
-    }
-    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("wrong_intermediate"))
-    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("basic_readout"))
+    assert reads.plan_sha(family) == PLAN_SHA[family]
