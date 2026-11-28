@@ -10,7 +10,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=8", "ruff>=0.6", "matplotlib>=3.11.2"]  # matplotlib: the `wsbench hb final` plots
+hb = ["transformers>=5.11", "jinja2>=3.1", "matplotlib>=3.11.2"]  # `wsbench hb`: tokenizer, plots
 viewer = ["python-fasthtml>=0.12", "uvicorn>=0.30"]  # `wsbench viewer serve`
 gpu = ["torch>=2.4", "transformers>=5", "peft>=0.14", "huggingface_hub", "accelerate", "pyyaml",
        "tiktoken"]  # tiktoken: Kimi-K2's hub tokenizer
@@ -28,12 +29,20 @@ packages = ["src/wsbench"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+# HallucinationBench's pilot counter is a verbatim record of the pilot run (not linted)
+extend-exclude = ["evals/hallucinationbench/sibling_probe/pilot"]
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "N", "UP", "B", "SIM", "C4", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/wsbench/viewer/app/pages.py" = ["E501"]  # HTML templates as strings
+# HallucinationBench, imported unchanged (plan 0120): the rules that fire there, never fixed in code
+"src/wsbench/hb/**" = ["N803", "N806", "N812", "N815", "RUF001", "RUF002", "SIM102", "SIM108",
+                       "SIM118", "SIM300", "C416"]
+"tests/hb/**" = ["N802", "N803", "N806", "N812", "RUF001", "SIM102", "SIM300", "SIM905", "C420"]
+"scripts/hb/**" = ["N802", "N803", "N806", "N812", "RUF001", "SIM102", "SIM108", "SIM115",
+                   "SIM212", "C408", "C416", "C420"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

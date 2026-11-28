@@ -218,3 +218,14 @@ Judging is the contract; the readout file format is stated once in README §Scor
 GPU) can fill it for you; it is not a fan-out harness, and there is no model serving here.
 `wsbench convert-gen-dir` (and the legacy `convert-read-json`) turn the two in-house producer
 layouts into the contract.
+
+## HallucinationBench
+
+Hallucination is not a WorkspaceBench family. It is measured by HallucinationBench, which lives
+in this repository as its own sub-package: `src/wsbench/hb/` (command `wsbench hb <command>`),
+banks in `evals/hallucinationbench/`, tests in `tests/hb/`. It registers no family and its index
+never enters the macro, a tier or the fast subset; `wsbench report` prints the frozen index
+beside the macro. Before working there read `src/wsbench/hb/CLAUDE.md`: its prompts, banks and
+scoring are frozen under an index version, and one of its families (`benign_roleplay`) is judged
+by a separate pinned WorkspaceBench checkout that must never import this one
+(`wsb.pinned_env()`). `docs/hallucinationbench.md` is the short description.

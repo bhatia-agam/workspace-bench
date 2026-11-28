@@ -380,7 +380,7 @@ The index of every page is [docs/README.md](docs/README.md). The ones most often
 - [docs/judge_backends.md](docs/judge_backends.md): live calls or Message Batches, sizing concurrency.
 - [docs/results_contract.md](docs/results_contract.md): the fields of `results.json` and the macro row.
 - [docs/porting.md](docs/porting.md), [AGENTS.md](AGENTS.md), [adapted/README.md](adapted/README.md): running the bench on another model.
-- [docs/hallucinationbench.md](docs/hallucinationbench.md): the HallucinationBench index that `report` shows.
+- [docs/hallucinationbench.md](docs/hallucinationbench.md): HallucinationBench, the hallucination evals in `src/wsbench/hb` (`wsbench hb`), and its index that `report` shows.
 - [docs/adding_an_eval.md](docs/adding_an_eval.md): every file and shared table a new eval touches, and the tests that say what is missing.
 - [docs/adding_a_readout_method.md](docs/adding_a_readout_method.md): a method of your own in `wsbench produce`.
 - [docs/checks.md](docs/checks.md): the checks and how to add one.
