@@ -233,7 +233,6 @@ Lens (final-olens-rl600-x4, cached readouts, ec-v7; n = 24, so 95% CIs are about
 | config | v5 | same 24 items on their v3 lists (ec-v5d) |
 |---|---|---|
 | all layers | 0.583 [0.375, 0.792] | 0.625 |
-| lite | 0.583 [0.417, 0.792] | 0.625 |
 | single layers L20..L60 | 0.29-0.63 (L44 0.625) | |
 | prompt-only (Opus) | 0.250 | 0.217 |
 | prompt-only (Sonnet 5 fallback) | 0.167 | |
@@ -275,17 +274,16 @@ readouts filtered to the v4 ids judge v4 with no GPU. Judged under `ec-v9-b4` (b
 `ec-v6`, ec-v5d's prompts and scoring). Select it with `WSB_BANK_FILE_MORAL_RATIONALE=evals/logical_processing/moral_rationale/items_v4.json`. Per-list record:
 `rekey_report_v4.json` (gate counts per round, replacements, floors).
 
-| bank | lens all-layer | lens lite | question_marks | described_marks | blind_marks | question (1 pick) | described | blind | prompt-only |
-|---|---|---|---|---|---|---|---|---|---|
-| v3 (195, ec-v5d) | 0.682 | 0.636 | **0.831** | 0.744 | 0.687 | 0.706 | 0.704 | 0.608 | 0.441 |
-| v4 (53, ec-v6) | 0.509 | 0.642 | **0.509** | 0.434 | 0.415 | 0.053 | 0.396 | 0.215 | 0.170 |
+| bank | lens all-layer | question_marks | described_marks | blind_marks | question (1 pick) | described | blind | prompt-only |
+|---|---|---|---|---|---|---|---|---|
+| v3 (195, ec-v5d) | 0.682 | **0.831** | 0.744 | 0.687 | 0.706 | 0.704 | 0.608 | 0.441 |
+| v4 (53, ec-v6) | 0.509 | **0.509** | 0.434 | 0.415 | 0.053 | 0.396 | 0.215 | 0.170 |
 
 Lens = final-olens-rl600-x4 (cached draws; v4 lists that changed re-judged); floors = Opus 5.5,
 fresh draws, the `_marks` floors scored by the multi-label rule (`lucky_guessing.marks_pass`,
 3 draws), the
 single-pick ones by majority of 5. On v4 the all-layer lens ties the highest floor (0.509 vs
-0.509), so v4 does not separate it from a question+options reader either; lite clears it
-(0.642); single layers score 0.34-0.51. Decided for the freeze (2026-11-01): v3 stays the
+0.509), so v4 does not separate it from a question+options reader either; single layers score 0.34-0.51. Decided for the freeze (2026-11-01): v3 stays the
 default (see the top); v4's always-no reader (50/53 = 0.943) puts its side-aware bar above
 v3's 0.831. Still open: either accept the 80% target as
 infeasible under the same-side "not raised by Qwen in 0/10 draws" check (which filters out
@@ -482,7 +480,7 @@ holding quotes of two marked options unmarked both, and code decided the pass: t
 not every option marked, and no marked opposite-side option with >= 1.5x the gold's support
 (ec-v5c: the per-claim count of the lines holding the quotes; ec-v5d: the strongest statement a
 3-draw support-locator call found). Measured on final-olens-rl600-x4: all-layer 0.749 (ec-v5c)
--> 0.682 (ec-v5d), lite 0.636; its floor of record was question_marks 0.831. The rule survives
+-> 0.682 (ec-v5d); its floor of record was question_marks 0.831. The rule survives
 only as `lucky_guessing.marks_pass`, which scores the multi-mark guessers and side readers of the
 floors frozen under it.
 

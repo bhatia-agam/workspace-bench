@@ -221,7 +221,7 @@ def test_full_requires_contiguous_span(tmp_path, bank, scripted):
     write_sidecar(p3, reads="full", sampling="bullet4", reader="s3d-rl600", layers=[60])
     with pytest.raises(SystemExit):
         judge.run(_args(p3, tmp_path / "o4", ["k1", "k2"], layers=[60]))
-    p4 = write_jsonl(tmp_path / "lite.jsonl", full)
+    p4 = write_jsonl(tmp_path / "declared.jsonl", full)
     write_sidecar(p4, reads="lite", sampling="bullet4", reader="s3d-rl600", layers=[60])
     with pytest.raises(SystemExit):
         judge.run(_args(p4, tmp_path / "o5", ["k1", "k2"], layers=[60]))

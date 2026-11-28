@@ -578,7 +578,7 @@ SODIUM = (
 
 
 def test_r3_atomic_number_quote_is_not_the_bridge():
-    """Too lenient before (nhop-soccer/cube/rainbow-element at lite): the quote names the gold
+    """Too lenient before (nhop-soccer/cube/rainbow-element): the quote names the gold
     number only as the answer element's atomic number / periodic position."""
     v = _pick_c("nhop-soccer-element", [SODIUM], "Sodium\u2019s atomic number is **11**")
     assert v["element_index"] and not v["correct"]

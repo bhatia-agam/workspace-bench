@@ -119,7 +119,7 @@ def test_pair_names(bare):
 def test_stored_family_by_stamp(bare):
     live, other = STAMPS[bare]
     st = f"{bare}_st"
-    for suffix in ("", "+digest-v5-task-extractive+sj-v10", "+reads-lite", "+fast-last_n"):
+    for suffix in ("", "+digest-v5-task-extractive+sj-v10", "+fast-last_n"):
         assert registry.stored_family(bare, live + suffix) == bare
         assert registry.stored_family(bare, other + suffix) == st
     assert registry.stored_family(bare, "") == bare and registry.stored_family(bare, None) == bare

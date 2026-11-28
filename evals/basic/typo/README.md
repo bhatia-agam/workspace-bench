@@ -125,11 +125,11 @@ The bank file is a frozen copy of the source repo's hard-tier bank; its `contrac
   matched as raw tokens natively and through the one digest under summary mode (the default).
   The `mt-regex-summarized-decoded-2026-10-27` numbers are not comparable to either.
 - 2026-10-30 (plan 0033): bank v2 (85 items, arith dropped), full read = the misspelled word's
-  tokens from the first misspelled character on (lite = its final token), numeric markers in any case, split words of adjacent
+  tokens from the first misspelled character on, numeric markers in any case, split words of adjacent
   positions counted, out of the ATI subset; instrument `mt-regex-2026-10-30+typo-v2`. On the
-  cached final-token (= lite) readouts, 100 -> 85 items: rl-onchat-x4 89/100 -> 85/85, s3d
+  cached final-token readouts, 100 -> 85 items: rl-onchat-x4 89/100 -> 85/85, s3d
   87/100 -> 84/85, J-lens 21/98 -> 0/85 (the old 21 came from the deleted token-summarizer step; natively a
-  one-token lite read cannot spell a multi-token correction), logit lens 23/100 -> 23/85 (all 15 arith items, and so
+  one-token read cannot spell a multi-token correction), logit lens 23/100 -> 23/85 (all 15 arith items, and so
   all 11 non-word fails of the best O-lens, are gone).
 
 ## Readouts

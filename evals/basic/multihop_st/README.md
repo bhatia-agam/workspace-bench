@@ -58,7 +58,7 @@ numbers.
   of its gold.
 - **Read plan.** No `read_plan_bank`: bank v5 plans its own 98 rows (plan_sha `3c975160…`). The
   68 kept rows equal bank v3's rows on every hashed field, so their readouts carry over; only the
-  30 new items needed new reads. All 30 new prompts end in a word token (lite `k = 1`).
+  30 new items needed new reads. All 30 new prompts end in a word token.
 - **Side tables.** `derived_forms.json` is `mhforms-v2`: 105 keys for the new items' options (32
   with forms); every earlier entry is unchanged and no new key is an option of banks v1-v4, so no
   earlier verdict moves. The gate version is `bank-gate-r11` (r11, #366: the final answer never names the bridge). `split_subjects.json`
@@ -111,7 +111,7 @@ picked, over all 14 configs and prompt-only, is on the v3 list. Gate tests read 
 bank (`tests/test_multihop.py`, `BANK = BANK_V3`), so a list that loosens a regression fails it.
 Replaying the 14 cached configs' gold picks on v2 vs v3 options: 8 cells flip, all pass -> fail,
 all on re-chosen (leaky-in-v2) items, each because the readouts tie the cue to a NEW option in
-the bridge slot: holiday-halloween-monthnum L20/L24/L28/lite ("Halloween is in month number 11
+the bridge slot: holiday-halloween-monthnum L20/L24/L28/last-word ("Halloween is in month number 11
 ... the month of November", 5 samples at L28), bf-tajmahal-continent L52 ("the country where the
 Taj Mahal is located is Brazil", 4; "... France", 4), half-clock-hours L48/L56/L60 ("on a digital
 clock ... is 8 hours", 4). These were the split rule doing its job on options v2 did not show,
@@ -220,9 +220,9 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
   element-index word ("Sodium is 11" cut from "Sodium is 11 on the periodic table"); the count
   rescue is unchanged. Both rules only re-scored cached calls (then `config.gate =
   bank-gate-r4`, outside the stamp; the gate version joins the stamp since `bank-gate-r9`). Replay over all 14
-  cached multihop_st configs: exactly the three nhop-*-element lite cells flip. Round 4 re-check (Camila r2: "We still need to check the numbers
+  cached multihop_st configs: exactly the three nhop-*-element last-word cells flip. Round 4 re-check (Camila r2: "We still need to check the numbers
   thing being too lenient"), current gate over all 14 cached configs (11 single layers, all,
-  lite, prompt-only): the number-flood / element-index fix holds everywhere. The three lite
+  last-word, prompt-only): the number-flood / element-index fix holds everywhere. The three last-word
   cells credited on lists of atomic numbers (nhop-soccer/cube/rainbow-element) fail. Of the 86
   remaining number-bridge passes, the 25 whose quote has an element word or whose support line
   holds 3+ distinct numerals were read by hand: each rests on a sample that ties the gold to its

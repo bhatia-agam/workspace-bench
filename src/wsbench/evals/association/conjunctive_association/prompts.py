@@ -143,7 +143,7 @@ SCHEMA = schema_block(
     "readout_mc", {"choice": {"type": "integer"}, "quote": {"type": "string"}}, ["choice", "quote"]
 )
 # round 4 (Camila r2, "fix the too strict conjunctive association cases"): a SHARDED digest
-# (all-layer, lite) is judged with a candidate list. In a shard holding statements of several
+# (all-layer) is judged with a candidate list. In a shard holding statements of several
 # options, the one-pick MC answered cannot tell on lone verbatim gold lines it re-judges to the
 # gold on their own (q10_c, q06_i). A sharded draw is TWO calls on the same shard: the one-pick
 # MC (unchanged) and a candidate list; the draw's candidates are the one pick plus the list, each

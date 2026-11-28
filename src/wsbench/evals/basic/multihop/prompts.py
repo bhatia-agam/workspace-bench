@@ -16,7 +16,7 @@ from wsbench.rival import rival_rule
 # name gate (bank v2 name_forms carry en + zh); it was "in any language or script"
 # 2026-10-31b (pre-rejudge fix): the prominence clause describes digest-v5's
 # "[N samples, M layers]" markers, not the retired [many]/[several]/[few]/[one] tags
-# mh2-mc-2026-11-01 (round 4, reaudit r2 lite tippecanoe / sabre): the judge also returns
+# mh2-mc-2026-11-01 (round 4, reaudit r2 tippecanoe / sabre): the judge also returns
 # rival_quote and code fails a pick a rival (an option or not) nearly matches in samples
 # (family.contested_verdict, rival.AT_LEAST, + every listed option weighed in code, optrv-v1);
 # +bank-v3: items_v3.json, the Opus-authored same-topic distractors (MC leakage standard)

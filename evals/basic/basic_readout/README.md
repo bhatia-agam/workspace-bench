@@ -232,9 +232,9 @@ four readers, 3 draws each, the kept items' answers reused): 0/90.
   rival (`rival.MORE_THAN`): a tie is contested (Camila r2: "equally prominent answers ... should
   not pass"; the reaudit's cur-ouguiya-subunit passed 4 vs 4 on "five dirhams make one
   ouguiya"). optrv-v2 is a rule-only bump (`family.call_pv` keys the calls by optrv-v1). Re-judged
-  on the cached final-olens-rl600-x4 digests (new MC calls for the v4 lists only): all-lite 0.394
+  on the cached final-olens-rl600-x4 digests (new MC calls for the v4 lists only): final-token 0.394
   (v3) -> 0.404, L20 0.869 -> 0.828, L60 0.798 -> 0.758, all 0.929 -> 0.929. The seven reaudit
-  all-lite cases all fail (drakensberg, naples-yellow-2, currency-gambia: a distractor pick;
+  final-token cases all fail (drakensberg, naples-yellow-2, currency-gambia: a distractor pick;
   beckwith-wiedemann: invalid; cur-eritrea: cannot tell; cur-vanuatu 1 vs 3 and sohnkeechung 1
   vs 5: contested). cur-ouguiya-subunit L60 is now contested (2 vs 2); at L20 it still passes
   4 vs 1 because the judge named the 1-sample "wis" line as the rival instead of the 4-sample
@@ -261,7 +261,7 @@ four readers, 3 draws each, the kept items' answers reused): 0/90.
   L20 0.828 -> 0.808 (cur-ouguiya-subunit 4 vs dirhams 4; palau-capital 5 vs "Prior to 2016,
   Palau's capital was Koror" 10), all 0.929 -> 0.919 (bonaire-capital: Kralendijk 69 vs
   "The capital and principal city of Aruba is Oranjestad" 72; a line about Aruba, no rival: the
-  round-4e option audit dismisses it), all-lite 0.404 and L60 0.758 unchanged.
+  round-4e option audit dismisses it), final-token 0.404 and L60 0.758 unchanged.
   multihop gets no table (its README says why).
 - 2026-11-01 (`+optrv-v4`, review of PR #208 round 4d): **option audit** (`optaudit-v1`,
   `OPTION_AUDIT_SYSTEM`, since removed). The code option-rival check counted every line naming another
@@ -276,13 +276,13 @@ four readers, 3 draws each, the kept items' answers reused): 0/90.
   cached (`OPTION_RIVAL_CALL_VERSION`). Re-scored from the round-4d caches: all 0.919 -> 0.929
   (bonaire: Aruba dismissed, now 69 vs 29), L20 0.808 -> 0.828 (palau: Koror-before-2016
   dismissed, the current-Koror line 4 < 5; chindwin: a "two famous river systems" mention),
-  L60 0.758 -> 0.768 (marj-dabiq: "the second battle, Chaldiran"), all-lite 0.404 unchanged.
+  L60 0.758 -> 0.768 (marj-dabiq: "the second battle, Chaldiran"), final-token 0.404 unchanged.
   cur-ouguiya-subunit stays contested at L20 and L60: the audit keeps "five dirhams make one
   ouguiya's worth" as a rival (two drafts without the `why` field dismissed it; the field and the
   "even when both could be true" clause were added for that reason).
 - 2026-11-01 (`rv-2026-11-01h`, review of PR #208 round 4c, rule only): a line holding the
   rival quote and naming the gold counts for neither side (wrong_intermediate README, round 4d). No
-  basic_readout cell moves (all 91, all-lite 40, L20 80, L60 75 of 99, re-scored).
+  basic_readout cell moves (all 91, final-token 40, L20 80, L60 75 of 99, re-scored).
 - 2026-11-01 (`rv-2026-11-01g`, rule only): a rival line that also names the gold is no rival
   line (`rival.contest`; multihop README). No basic_readout cell moves (its remaining
   ties, e.g. tayebsalih all 62 vs 62, lemierre L20 8 vs 8, are distinct lines).

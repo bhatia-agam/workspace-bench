@@ -85,7 +85,7 @@ def test_bank_counts_and_renders():
     for row in bank["beta0_rows"]:
         assert set(row["options_by_cluster"]) == set(bank["clusters"])
     assert len(bank["vector_recipe"]["baseline_words"]) == 100
-    # plan 0045 bank v2 (assertions added): 7 options, cannot-tell last; twins; lite sites
+    # plan 0045 bank v2 (assertions added): 7 options, cannot-tell last; twins; the render sites
     for it in bank["items"]:
         labels = [o["label"] for o in it["options"]]
         assert len(labels) == 7 and labels[-1] == mc.CANNOT and labels[-2] != mc.CANNOT

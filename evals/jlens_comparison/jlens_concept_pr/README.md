@@ -47,7 +47,7 @@ grounding token (`prompts.grounding_void`): (1) a frequency adverb ("often", "ty
 "commonly", "往往", "通常" ...) grounds a concept only when the concept states frequency,
 typicality or invariance ("common", "frequent", "usual", "most", "determinism", "annual" ...),
 and "common" in a shared / vernacular collocation ("common names", "common ground", "common
-sense", "in common" ...) states none: pt-fineweb-0021 lite L24 ("often" partial for "common
+sense", "in common" ...) states none: pt-fineweb-0021 L24 ("often" partial for "common
 names") 0.100 -> 0.067 and L48 (" commonly" 'in' for "common names") 0.071 -> 0.000, the audit's
 hand view ~0.07; (2) an agent noun built on the concept's word for an ACT, the word after an
 article / adjective or after "to" ("a quick read", "chapter to read"), names the doer, not the

@@ -133,7 +133,7 @@ distractors alone are shuffled by the stamp's seed and the gold is inserted at i
 changes.
 
 **Replay** (`mc_leakage_r4.py replay`, header `mc_leakage.observed.replay`): every one of the
-259 bank-v2 non-pass cells (final-olens-rl600-x4 L20..L60, all, all-lite; prompt-only-opus all)
+259 bank-v2 non-pass cells (final-olens-rl600-x4 L20..L60, all, final-token; prompt-only-opus all)
 re-judged under v5 and `-v5b` with the cached digests: 19 fail -> pass, **0 attributable** (no
 flip drops an option its digest names). 12 of the 19 are on cells whose v5 list holds exactly
 v2's options, i.e. option-order / judge noise; the other 7 dropped only never-named options.

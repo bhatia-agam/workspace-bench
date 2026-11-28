@@ -141,7 +141,7 @@ written for the full read serves `cells=all` and `cells=frozen` too.
 - **Regime of record since 2026-10-30:** every position of the render (34–42 per item) at the 11
   grid layers — 242,242 cells over the 596 items of bank v1 (22,022 per layer; bank v2 has
   480) — with the producer's sidecar (`<file>.meta.json`: `reads`, `sampling`, `plan_sha`). Before: layers 56 and 60 only
-  (44,044 cells), now the lite read. The NLA and SAE arms carry layer 42 only and are judged with
+  (44,044 cells). The NLA and SAE arms carry layer 42 only and are judged with
   `layers=42`, an off-grid diagnostic.
 - **One readout per activation (decision Q1; Camila: "Make sure that only a single readout is
   being judged unless the method is a single token olens which should be sampled four times and
@@ -162,7 +162,7 @@ written for the full read serves `cells=all` and `cells=frozen` too.
 
 Token lenses are shown as their bag (no scores) and verified against the tokens.
 `examples/readouts/arithmetic_intermediates.jsonl` holds a few real O-lens rows of four items at
-several positions of both lite layers, frozen cells included (one empty cell among them).
+several positions of layers 56 and 60, frozen cells included (one empty cell among them).
 
 ```
 wsbench judge family=arithmetic_intermediates readouts=examples/readouts/arithmetic_intermediates.jsonl out=outputs/toy/arith dry_run=True

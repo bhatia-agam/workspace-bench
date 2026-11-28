@@ -55,13 +55,8 @@ of gold draws (any shard's majority, for a sharded digest). The frozen guesser f
 [Floors and ATI](#floors-and-ati) were measured under the earlier `+maj-noinv` rule and wait for a
 re-measure.
 
-**Round 5 (2026-11-01, Camila r3): lite reads the same positions as full; bank v5 opt-in.**
-`reads=lite` now selects every full cell (all 19 summary-request positions at every layer,
-`lite_rule.json` kind `same`), so lite's digest, chance and guesser floors are full's (the old
-final-token lite had its own lower chance line that every guesser cleared). Read plan: the lite
-render changes (more positions), the full render does not; the full cells were always read, so
-**no new readouts** are needed, but lite results judged before this are stale (re-judge). Under the
-family rule full still sits over the bar (single-layer blind / described / topic 0.06 / 0.06 / 0.10
+**Round 5 (2026-11-01, Camila r3): bank v5 opt-in.** Under the
+family rule the registered bank still sits over the bar (single-layer blind / described / topic 0.06 / 0.06 / 0.10
 against a 0.052 line). **Bank v5** (`items_v5.json`, opt-in) adds Camila's equally-typical
 confusers (spouse vs partner / fiancé(e) / girlfriend; q06 four more contents) and **does not close
 the gap either** (0.08 / 0.08 / 0.07 against 0.051): bank v4 stays the registered bank.
@@ -78,7 +73,7 @@ allowed, read against its measured floors.
 **Round 4 (2026-11-01, Camila r2): instrument `comp-v4` on bank v3** — the comp-v3 prompts and
 rules below on bank v3's lists (two never-gold grid confusers and their twins per twinned
 cluster: the MC leakage standard, [Option list](#option-list)), and every SHARDED digest
-(all-layer, lite) judged by candidate lists (`+cand3`, [Digest shards](#digest-shards); Camila:
+(all-layer) judged by candidate lists (`+cand3`, [Digest shards](#digest-shards); Camila:
 "fix the too strict conjunctive association cases"; kept: the majority of draws and the
 inverted-twin veto). Stamp `comp-v4+maj-noinv[+shard8k+cand3]+digest-…`. **Bank v3 does NOT
 meet the MC leakage standard** once both sides are read under the family's own rule (review of
@@ -260,7 +255,7 @@ inverted credit (this is especially important, maybe use this as another distrac
   uniform picks (`score.candidate_p`: P(gold listed)), majority of 3, any of S shards; ~0.44 at
   all-layer, i.e. the any-of-grid scale of the rule (it ignores the quote gate, which no guess
   can pass). Cached-readout re-judge of the O-lens (`final-olens-rl600-x4`, bank
-  v3): all-layer 0.22 -> 0.28 (CI 0.19-0.37), lite 0.10 -> 0.12, L44 0.13 -> 0.16 (fresh draws;
+  v3): all-layer 0.22 -> 0.28 (CI 0.19-0.37), L44 0.13 -> 0.16 (fresh draws;
   one shard, no list). The cited re-audit too-strict ids q06_i and q10_c now pass, q07_f is a
   coin flip (gold in one of two cached re-judges: one shard's draws split 2-1 either way), q04_h
   / q06_a / q06_c / q06_f stay passes; q03_b ("her husband's test": the quote re-judges to
@@ -654,7 +649,7 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
   `evals/baselines/lucky_guessing.json`; a guesser never reads the judge prompt). In brackets:
   the first v6 (variants without twins), then bank v4:
 
-  | guesser | per-draw mean | single-layer rule (line 0.051) | all-layer +cand3 = lite (line 0.113) | picks on another value's options |
+  | guesser | per-draw mean | single-layer rule (line 0.051) | all-layer +cand3 (line 0.113) | picks on another value's options |
   |---|---|---|---|---|
   | options only | 0.024 [0.080, 0.062] | 0.02 [0.07, 0.06] pass | 0.22 [0.32, 0.17] **FAIL** | 20% [1%] |
   | described | 0.056 [0.062, 0.074] | 0.04 [0.05, 0.06] pass | 0.34 [0.35, 0.30] **FAIL** | 20% [0%] |
@@ -731,16 +726,14 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
 
   **Bank v4 (comp-v5), measured 2026-11-01** (Opus 5.5, 5 draws, then frozen in `lucky_guessing.json`,
   topic-v4; chance under the rule falls with the wider lists: 0.002 single-layer, 0.157
-  all-layer). Round 5 (Camila r3, lite = full's positions): the lite column is re-scored from
-  the same cached calls at 8 shards, so it now equals the all-layer column (it was 2 shards,
-  chance 0.049, line 0.099: 0.15 / 0.26 / 0.22, all **FAIL**):
+  all-layer):
 
-  | guesser | single-layer rule (line 0.052) | all-layer +cand3 (line 0.207) | lite +cand3 (= all-layer, line 0.207) |
-  |---|---|---|---|
-  | options only (`blind`, `blind_cands`) | 0.06 **FAIL** | 0.17 pass | 0.17 pass |
-  | described (task + 3 solved examples) | 0.06 **FAIL** | 0.30 **FAIL** | 0.30 **FAIL** |
-  | topic (task + the topic-v4 story line) | 0.10 **FAIL** | 0.21 **FAIL** | 0.21 **FAIL** |
-  | seeded uniform (`uniform`, `uniform_cands`) | 0.00 | 0.12 | 0.12 |
+  | guesser | single-layer rule (line 0.052) | all-layer +cand3 (line 0.207) |
+  |---|---|---|
+  | options only (`blind`, `blind_cands`) | 0.06 **FAIL** | 0.17 pass |
+  | described (task + 3 solved examples) | 0.06 **FAIL** | 0.30 **FAIL** |
+  | topic (task + the topic-v4 story line) | 0.10 **FAIL** | 0.21 **FAIL** |
+  | seeded uniform (`uniform`, `uniform_cands`) | 0.00 | 0.12 |
 
   (per-draw single-pick means: blind 0.062, described 0.074, topic 0.094; uniform 0.026.)
 
@@ -756,7 +749,7 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
   (Opus 5.5, 5 draws, topic-v4; not frozen into `lucky_guessing.json`, whose entry is the
   registered bank's):
 
-  | guesser | single-layer rule (line 0.051) | all-layer +cand3 = lite (line 0.176) |
+  | guesser | single-layer rule (line 0.051) | all-layer +cand3 (line 0.176) |
   |---|---|---|
   | options only | 0.08 **FAIL** | 0.15 pass |
   | described | 0.08 **FAIL** | 0.24 **FAIL** |
@@ -770,8 +763,6 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
   on every leaking cluster's two-valued axis (shock beside grief, a court verdict beside
   medical results; `v5_new_values.json` keeps the proposals) measured the same 0.08 / 0.08 /
   0.07. The O-lens of record (final-olens-rl600-x4, L44) passes 0.10 on v5 against 0.11 on v4.
-  Re-judged under the new lite rule (all 19 sites, all 11 layers; cached readouts), the O-lens
-  lite config on bank v4 passes 0.25 (it was 0.12 at the final token).
   Bank v4 therefore stays registered; v5 is kept as the record of the attempt.
 
   Round 1's lists (not frozen; run dir kept in the campaign scratch) measured 0.05 / 0.10 /
@@ -804,21 +795,21 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
   (a = 1/n, b = 1/n with a twin), **0.0073** on bank v3 (`lucky_guessing.family_chance`, the
   guesser's lists; `score.mean_chance`, with cannot tell and no veto, gives 0.0066). Both sides
   are now read under the same rule (`lucky_guessing.standard`): `family_rule` against
-  `family_chance` for the single-layer configs, and for the sharded headline configs
-  (all-layer, lite: one pick + up to 3 candidates per draw, 3 draws per shard, any gold shard
-  passes, any inverted shard vetoes) the `*_cands` guessers' `rule_all` / `rule_lite` against
+  `family_chance` for the single-layer configs, and for the sharded headline config
+  (all-layer: one pick + up to 3 candidates per draw, 3 draws per shard, any gold shard
+  passes, any inverted shard vetoes) the `*_cands` guessers' `rule_all` against
   the exact chance of that rule (`rule_chance`, which then counted the cross-shard veto: 0.255 at 8
-  shards, 0.135 at 2; `score.mean_chance`'s 0.44 ignores the veto). Shards: the cached O-lens
-  runs' counts (all-layer 8 for 92 of 100 items, lite 2). Measured 2026-11-01 on bank v3 (Opus
+  shards; `score.mean_chance`'s 0.44 ignores the veto). Shards: the cached O-lens
+  runs' counts (all-layer 8 for 92 of 100 items). Measured 2026-11-01 on bank v3 (Opus
   5.5, instrument `comp-v4`, topic-v4; superseded in `lucky_guessing.json` by bank v4's entry,
   above):
 
-  | guesser | single-layer rule (line 0.057) | all-layer +cand3 (line 0.305) | lite +cand3 (line 0.185) |
-  |---|---|---|---|
-  | options only (`blind`, `blind_cands`) | 0.07 **FAIL** | 0.25 pass | 0.26 **FAIL** |
-  | described (task + 3 solved examples) | 0.08 **FAIL** | 0.37 **FAIL** | 0.30 **FAIL** |
-  | topic (task + the topic-v4 story line) | 0.10 **FAIL** | 0.26 pass | 0.26 **FAIL** |
-  | seeded uniform (`uniform`, `uniform_cands`) | 0.00 | 0.32 | 0.15 |
+  | guesser | single-layer rule (line 0.057) | all-layer +cand3 (line 0.305) |
+  |---|---|---|
+  | options only (`blind`, `blind_cands`) | 0.07 **FAIL** | 0.25 pass |
+  | described (task + 3 solved examples) | 0.08 **FAIL** | 0.37 **FAIL** |
+  | topic (task + the topic-v4 story line) | 0.10 **FAIL** | 0.26 pass |
+  | seeded uniform (`uniform`, `uniform_cands`) | 0.00 | 0.32 |
 
   (per-draw single-pick means: blind 0.070, described 0.074, topic 0.110; uniform 0.044.)
 
@@ -828,7 +819,7 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
   Bank v3 cut the per-draw excess (G 10 -> 12) but the rule's chance falls with 1/n^2 while a
   consistent guesser keeps 1/G, so under the rule a list needs G >= 18 equally plausible
   non-twin options (about 36 lines with their twins; q06 about 18) to sit under the line, before
-  any leak. The lite / all-layer candidate lists widen the gap (four options a draw). Closing it
+  any leak. The all-layer candidate lists widen the gap (four options a draw). Closing it
   is a product decision for Camila: widen every list to that size (a heavier MC for the judge),
   or rule how the standard's chance is read under a multi-draw rule (the per-draw reading
   above is the one the review rejected). Fable ruled (#202, 2026-11-01): widen the lists, keep
@@ -841,11 +832,9 @@ the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-a
   new calls, against the exact product chance + 5 points:
   - Single-layer: 0.00 / 0.00 / 0.02, line 0.050. Pass.
   - All-layer +cand3: 0.13 / 0.14 / 0.13, line 0.174. Pass.
-  - Lite +cand3: 0.13 / 0.10 / 0.12, line 0.090. **Fail**. Lite passes only if its draws drop
-    the candidate list (one pick: 0.00 / 0.00 / 0.04, line 0.050).
 
-  On the cached O-lens re-judge, the same rule takes the lens to 0.10 at all-layer (from 0.28),
-  0.06 at lite (from 0.12) and 0.06 at L44 (from 0.16). At all-layer that is under the
+  On the cached O-lens re-judge, the same rule takes the lens to 0.10 at all-layer (from 0.28)
+  and 0.06 at L44 (from 0.16). At all-layer that is under the
   options-only guessers' pair rate, so the rule would not leave a readable headline. Not
   adopted (Fable, #202 2026-11-01: do not redefine the chance null).
 

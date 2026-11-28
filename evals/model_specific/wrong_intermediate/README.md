@@ -14,7 +14,7 @@ Example: "Fact: The composer of Canon and Gigue in D died in the year" -> model 
 (Bach's death year); true bridge Johann Pachelbel (1706), the model's bridge Johann Sebastian Bach.
 
 Plan of record: `plans/0050-wrong-bridge-mc.md` (2026-10-30; Camila: "read ALL tokens not just
-the final one by default (lite/fast can just be last token though)", "make this multiple choice,
+the final one by default", "make this multiple choice,
 which should include the correct bridge too and other distractor items from the same category",
 "make sure this fixes the "judge too lenient" cases", "wrong bridge true - this should not be in
 the benchmark, remove it").

@@ -2,7 +2,7 @@
 
 *Renamed from `introspection_inject` on 2026-10-26. Plan 0045 (2026-10-30, Camila's
 "Introspection" feedback) moved the family to bank v2 (`items_v2.json`): paired controls,
-near-duplicate equivalents, shipped vectors, a stricter judge and a lite site. `items.json` is
+near-duplicate equivalents, shipped vectors and a stricter judge. `items.json` is
 the frozen v1 and stays untouched.*
 
 A concept vector is injected into Qwen3.6-27B's user turn at layer 12; the visible text never

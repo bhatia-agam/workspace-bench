@@ -161,7 +161,7 @@ Russian sentence"); they are measured in the run phase.
 - 2026-11-01 (round 4, tag `+same-sample-v1+bank-v3`): the same-sample rule (concept and naming in one sample;
   replaced 2026-11-04) replaces the
   round-3 anchoring, and bank v3 adds "tonsil" / "tonsils" to mlh-tr-bademcik. Cached
-  final-olens-rl600-x4 digests re-scored (no new calls): all 0.83 -> 0.70, all-lite 0.56 ->
+  final-olens-rl600-x4 digests re-scored (no new calls): all 0.83 -> 0.70, final-token 0.56 ->
   0.50, prompt-only 0.96 -> 0.97 (bademcik now passes), single layers 5 to 16 points lower
   (L20 0.19 -> 0.08 ... L60 0.42 -> 0.33). Every lost pass rests on a language naming whose
   sample holds the passage-language word but not the English / Chinese concept ("Magyarul ez a

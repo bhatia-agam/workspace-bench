@@ -168,12 +168,12 @@ Russian sentence"); they are measured in the run phase.
 - 2026-11-01 (round 4, tag `+anchor-support-v1`): the anchored support above. The 13
   too-strict cases of ANSWERS_R2 §8 (every one a naming in the raw samples with one sample per
   layer, dropped by the digest): 7 now pass on cached final-olens-rl600-x4 digests (no new calls)
-  — id-kelembapan and el-aftokinitodromos-2 (all), pl-elektroencefalografia (all-lite),
+  — id-kelembapan and el-aftokinitodromos-2 (all), pl-elektroencefalografia (final-token),
   id-invertebrata (L40), ko-copd (L44), ko-cfrp (L56; prompt-only already passed). The other 6
   stay failing on purpose: their lone naming is of a DIFFERENT word (tr-bagimsizlik 'Türkçesi
   "Uzun süreli"', ru-anticyclone 'слово «морозный»'; ko-artificial-neural-network,
   ru-elektrolobzik, pl-jedwabnictwo, fi-mikroaaltouuni L44 alike), the shape multilingual's
-  too-lenient fix refuses. all 0.68 -> 0.72, all-lite 0.25 -> 0.26, prompt-only 0.76 -> 0.76,
+  too-lenient fix refuses. all 0.68 -> 0.72, final-token 0.25 -> 0.26, prompt-only 0.76 -> 0.76,
   single layers +1 to +5 points, nothing lost.
 - 2026-11-04 (tag `+langleg-v1`): the language unit leaves the per-layer conjunction and is scored by the raw-sample leg above, because an equivalent
   one-sample naming passed or failed by whether the digest kept it (mlt-ar-biruqratiyya,

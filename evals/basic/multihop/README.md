@@ -72,7 +72,7 @@ The bank file is a frozen copy of the source repo's bank (`family: multihop-hard
 Its `contract` block, per-unit `forms` and `probe_token_lens` counts are exactly what the
 scorer reads.
 
-## Reads (Camila 2026-10-30: "Should be read at every token not just final position (except lite/fast should be last token)")
+## Reads (Camila 2026-10-30: "Should be read at every token not just final position")
 
 - Every prompt token (`positions {"kind": "all"}`) at
   every grid layer (`readplan.GRID`, 11 layers). The plain render is 15–47 tokens
@@ -270,7 +270,7 @@ in the 2026-11-04 refreeze (Floors).
   lists and their lucky floor are unchanged. A zh hit is credit kind `surname` (a further name
   form). Only English and the native languages credit: a name written only in another script
   (Распутин) is `name_miss`, and the judge's SYSTEM says so (`mh2-mc-2026-10-30b`). On the cached
-  rl-onchat-x4 lite readouts the b re-judge is unchanged at 0.929 (65/70; credits exact 59,
+  rl-onchat-x4 final-token readouts the b re-judge is unchanged at 0.929 (65/70; credits exact 59,
   surname 11; the cached run had no name_miss to rescue).
 - **Misspellings (Camila: "You can make the judge a bit less strict by allowing e.g.
   'khatchaturian'").** The judge's SYSTEM credits misspellings explicitly; the name gate and the
@@ -360,7 +360,7 @@ in the 2026-11-04 refreeze (Floors).
 - 2026-11-01 (`+optrv-v4`, review of PR #208 round 4d): the shared option audit
   (basic_readout README; `OPTION_AUDIT_SYSTEM`, since removed) checks every code option-rival line
   that would tie or beat the gold; a dismissed line is not weighed. No cell moves (all 62,
-  all-lite 54 of 70, re-scored; 6 audit calls): tippecanoe all-lite stays failing.
+  final-token 54 of 70, re-scored; 6 audit calls): tippecanoe final-token stays failing.
 - 2026-11-01 (`+optrv-v3`, review of PR #208 round 4b): a stamp-only bump. optrv-v3 adds hidden
   rivals to the shared code check (`family.hidden_rivals`; basic_readout README), but this
   family has no table: its earlier lists name the chain's own unstated entities (v1 lists Samuel
@@ -369,38 +369,38 @@ in the 2026-11-04 refreeze (Floors).
   such correct cells.
 - 2026-11-01 (`rv-2026-11-01h`, review of PR #208 round 4c, rule only): a line holding the
   rival quote and naming the gold counts for neither side, not for the gold (wrong_intermediate
-  README, round 4d). No cell moves (all 62, all-lite 54 of 70, re-scored): bolivar-caracas-t2
-  passes on its gold-only line (95, split 392), rand-novel 120 (split 166), all-lite
+  README, round 4d). No cell moves (all 62, final-token 54 of 70, re-scored): bolivar-caracas-t2
+  passes on its gold-only line (95, split 392), rand-novel 120 (split 166), final-token
   henry-james-pragmatism bridge2 11 (split 27).
 - 2026-11-01 (`rv-2026-11-01g`, review of PR #208 round 4c, rule only): a rival line that also
   names the gold is no rival line (`rival.contest`; the judge is told so, but code checked only
   the rival quote). The round-4b tie rule had turned this into a too-strict fail: the judge
   quoted the rival from the gold's own best line, which then tied the gold with itself
   (bolivar-caracas-t2 392 vs 392 on "... was Simón Bolívar, while the man who freed South
-  America from Portuguese rule was José de San Martín"; rand-novel 166 vs 166; all-lite
+  America from Portuguese rule was José de San Martín"; rand-novel 166 vs 166; final-token
   henry-james-pragmatism bridge2 27 vs 27). Correction to the round-4b entry below: its numbers
-  (all-lite 0.786, all 0.886) were computed under the round-4 margin; under the tie rule they
+  (final-token 0.786, all 0.886) were computed under the round-4 margin; under the tie rule they
   were 0.757 / 0.857 (these 3 cells plus may-imperial-t1, a genuine 3 vs 3 tie). Re-scored on
-  the cached digests and MC answers (0 calls): all-lite 0.757 -> 0.771, all 0.857 -> 0.886.
+  the cached digests and MC answers (0 calls): final-token 0.757 -> 0.771, all 0.857 -> 0.886.
 - 2026-11-01 (`+optrv-v2+bank-v4`, round 4b): bank v4 (`items_v4.json`), the refined lists of
   Floors, and the gold must LEAD the strongest rival (`rival.MORE_THAN`, as basic_readout: a
   tie is contested; a rule-only bump, the calls stay keyed by optrv-v1). The prompts are
   unchanged. Re-judged on the cached final-olens-rl600-x4 digests (new MC calls for the v4 lists
-  only): all-lite 0.743 (v3) -> 0.786, all 0.943 -> 0.886; the tie rule moved no cell here. The
-  reaudit's lite tippecanoe and sabre still fail (a distractor pick at bridge1 / contested at
-  bridge2; a distractor pick). Nine all-lite items flipped with the new lists (five up, four
+  only): final-token 0.743 (v3) -> 0.786, all 0.943 -> 0.886; the tie rule moved no cell here. The
+  reaudit's final-token tippecanoe and sabre still fail (a distractor pick at bridge1 / contested at
+  bridge2; a distractor pick). Nine final-token items flipped with the new lists (five up, four
   down), each a different option set beside the same digest.
 - 2026-11-01 (`mh2-mc-2026-11-01+rv-2026-10-31f+optrv-v1+bank-v3`, round 4): the judge also returns
   `rival_quote` (`MH2_RIVAL_RULE`), and a summary-mode gold pick is `contested` when the rival
   line's samples, or the best line singling out any other listed option, outweigh the gold's
-  best singling line (`family.contested_verdict`, `rival.AT_LEAST`; reaudit r2 lite
+  best singling line (`family.contested_verdict`, `rival.AT_LEAST`; reaudit r2 final-token
   tippecanoe: Benjamin Harrison [1 sample] beside Grover Cleveland [3] / Hayes [2]; sabre:
   Khachaturyan [1] beside Shostakovich [15+]). Bank v3 (Floors).
 
 - 2026-10-15: frozen with the regex contract of record (`mt-regex-2026-09-23`).
 - 2026-10-23: the default multihop multi-token family (plan 0015), replacing `multihop_mt_regex`.
 - 2026-10-30 (plan 0032 §2.3): the token-bag summarizer step is deleted.
-- 2026-10-30 (plan 0041): bank v2, every-token reads (lite = the final token), the pinned MC
+- 2026-10-30 (plan 0041): bank v2, every-token reads, the pinned MC
   judge `mh2-mc-2026-10-30` over other questions' bridges with cannot tell and the name gate;
   the regex contract (`mt-regex-2026-10-30+md+fz`) becomes a diagnostic; out of ATI. `multihop_mt_regex` is
   removed. No result before this date is comparable to the v2 instrument.

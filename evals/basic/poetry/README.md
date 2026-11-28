@@ -116,14 +116,14 @@ config re-judges from its cached digests.
   bank's sha256; frozen bank v5 is not rewritten, its `prompt_only_opus` records stay the MC
   ones, `prompts.BANK_GATE_INSTRUMENT`).
 - **Re-judge of every cached config, before / after** (final-olens-rl600-x4 bullet4, 11 layers +
-  all + all-lite, and the two prompt-only Opus runs; digests served from the cache, 2 x 100
+  all + the line-one newline alone, and the two prompt-only Opus runs; digests served from the cache, 2 x 100
   calls per config). "cached" = the stored run (bank v2, `poetry-mc-2026-10-31h`); "MC v5" = the
   diagnostic column of this run (= the previous headline); "free" = the new headline:
 
 | config | cached (bank v2, mc-10-31h) | MC v5 (diagnostic) | free (headline) | MC pass, free fail | free pass, MC fail | rival vetoes | free fails, gold dominates |
 |---|---|---|---|---|---|---|---|
 | final-olens-rl600-x4/all | 0.67 | 0.68 | 0.54 | 17 | 3 | 3 | 14 / 46 |
-| final-olens-rl600-x4/all-lite | 0.38 | 0.36 | 0.12 | 24 | 0 | 1 | 21 / 88 |
+| final-olens-rl600-x4/all, line-one newline alone | 0.38 | 0.36 | 0.12 | 24 | 0 | 1 | 21 / 88 |
 | final-olens-rl600-x4/L20 | 0.17 | 0.19 | 0.12 | 9 | 2 | 0 | 11 / 88 |
 | final-olens-rl600-x4/L24 | 0.19 | 0.17 | 0.13 | 6 | 2 | 0 | 8 / 87 |
 | final-olens-rl600-x4/L28 | 0.18 | 0.17 | 0.09 | 8 | 0 | 0 | 9 / 91 |
@@ -185,7 +185,7 @@ unchanged).
   over the cached final-olens bullet4 readouts (100 items x (11 layers + all) = 1200 cells):
   **v2 -> v5 loosens 0** (tightens 6, as v2 -> v4), v4 -> v5 changes none.
 - **Re-judge replay** (`mc_leakage_r4.py replay`, header `mc_leakage.observed.replay`): every
-  one of the 1031 bank-v2 non-pass cells (final-olens-rl600-x4 L20..L60, all, all-lite;
+  one of the 1031 bank-v2 non-pass cells (final-olens-rl600-x4 L20..L60, all, all at the line-one newline alone;
   prompt-only-opus and prompt-only-opus-fb all) re-judged under v5 with the cached digests (1030
   judged; prompt-only-opus has no v3-po-long-song readout, as under v2): 18 fail -> pass, **0
   attributable** (no flip drops an option that ends a line of its digest; none even mentions

@@ -752,7 +752,7 @@ def test_t2_a_pre_0101_results_tree_reads_as_the_families_it_was_written_for(bar
     # before 2026-11-20: `<bare>/` was the single-token family, `<bare>_mt/` the multi-token one
     old_st = _stored(tmp_path, bare, st.judge.prompt_version + "+digest-v5-task-extractive+sj-v10")
     old_mt = _stored(tmp_path, f"{bare}_mt", mt.judge.prompt_version)
-    new_mt = _stored(tmp_path, bare, mt.judge.prompt_version + "+reads-lite")
+    new_mt = _stored(tmp_path, bare, mt.judge.prompt_version + "+fast-last_n")
     assert (old_st.family, old_mt.family, new_mt.family) == (st.name, bare, bare)
     with pytest.raises(RenamedKey):
         _stored(tmp_path, bare, "a-stamp-neither-family-wrote")

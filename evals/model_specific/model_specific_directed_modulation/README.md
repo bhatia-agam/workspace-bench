@@ -118,7 +118,7 @@ row below is re-read on all 98 items (no cached readout exists for the 32 refill
 pre-refill numbers further down are NOT comparable. **What the 2026-10-30/31 WorkspaceBench
 campaign actually ran on this bank:** the campaign's lens of record, the final O-lens
 (`final-olens-rl600-x4` = agu18dec/final_olens `lens_rl_step600`, single bullet, 4 samples per
-activation; Fable decision Q1), at all 11 layers, every single layer and lite, and the Opus 5.5
+activation; Fable decision Q1), at all 11 layers and every single layer, and the Opus 5.5
 prompt-only floor. Those rows carry measured numbers (bench `ea3b960`, judge and summarizer Opus
 5.5; per-layer values in the campaign's `results/model_specific_directed_modulation.json`). The
 no-think and Alice control readouts were produced for the final O-lens
