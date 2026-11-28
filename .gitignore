@@ -9,6 +9,7 @@ logs/
 
 # adapt-bank work products (kept on the RunPod box under /workspace/agam/workspace-bench/adapted/)
 adapted/.grade_cache/
+adapted/*/.report.lock
 adapted/*/gate/
 adapted/*/cand/
 adapted/*/mmh/

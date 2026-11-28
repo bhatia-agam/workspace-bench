@@ -103,7 +103,7 @@ set from before the rename, kept unmigrated on purpose).
 `moral_rationale_options_v2.json`, `moral_rationale_prompt_v2.txt` and
 `agentic_misalignment_prompts_v2.json` pin this repo's own ec-v2 / am-design-v2 builders and
 templates. They are NOT source-repo records: the source-repo files beside them
-(`moral_rationale_options.json`, `moral_rationale_prompt.txt`, `agentic_misalignment_prompts.json`)
+(`moral_rationale_options.json`, `agentic_misalignment_prompts.json`)
 are kept unchanged as the v1 record, and the v1 option lists are still asserted through
 `build_mcs(..., contrast=False)`.
 
@@ -117,10 +117,10 @@ repo's own oa-v2 builder. The source-repo `role_bound_association_options.json` 
 
 ## conjunctive_association v2 pins (plan 0049, 2026-10-30)
 
-`conjunctive_association_options_v2.json` and `conjunctive_association_prompt_v2.txt` pin this
+`conjunctive_association_options_v2.json` pins this
 repo's comp-v2 builder on bank v2 (`items_v2.json`: the cluster grid plus every option's
-role-swapped twin). The source-repo record `conjunctive_association_options.json` /
-`conjunctive_association_prompt.txt` stays unchanged and is still asserted against the v1 file.
+role-swapped twin). The source-repo record `conjunctive_association_options.json`
+stays unchanged and is still asserted against the v1 file.
 
 ## relational_multihop rel-v3 (#209 round 6, 2026-11-01)
 
@@ -134,8 +134,8 @@ is the retired list, still rebuilt by `build_options(..., version="v2")` and che
 `relational_multihop_options_v2.json` pins this repo's own rel-v2 `judge.build_options` (one
 14-line list per item: 13 content options (8 composed chains, 4 single relations, 1 near form;
 see `evals/anti_bag_of_features/relational_multihop/README.md` §Option list), cannot tell last), written by `scripts/make_relational_options.py` (no API; `--check` diffs).
-`relational_multihop_options.json` and `relational_multihop_prompt.txt` are kept unchanged as the
-rel-v1 record (the source repo's two-call X/Y pool); no test reads them any more.
+`relational_multihop_options.json` is kept unchanged as the
+rel-v1 record (the source repo's two-call X/Y pool); no test reads it any more.
 
 ## multihop bank v5 pin (2026-11-04)
 
